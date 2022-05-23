@@ -62,8 +62,8 @@
     /* background-color: var(--color-background); */
     color: var(--color-dark);
     height: 100vh;
-    width: calc(100vw - 4vw);
-    margin-left: 4vw;
+    width: calc(100vw - 4.6vw);
+    margin-left: 4.6vw;
     padding: 1rem;
     position: absolute;
     /* z-index: -1; */
@@ -105,8 +105,8 @@
         margin-left: 10.5vw;
     }
     .contenido-chico {
-        width: calc(100vw - 3vw);
-        margin-left: 3vw;
+        width: calc(100vw - 3.4vw);
+        margin-left: 3.4vw;
     }
 }
 
@@ -136,8 +136,8 @@
 
 @media screen and (max-width: 1200px) {
     .contenidoNormal {
-        width: calc(100vw - 8.5vw);
-        margin-left: 8.5vw;
+        width: calc(100vw - 8vw);
+        margin-left: 8vw;
     }
 }
 

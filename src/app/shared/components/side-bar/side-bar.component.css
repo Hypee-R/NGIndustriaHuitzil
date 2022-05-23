@@ -4,7 +4,7 @@
     /*33px
     /* left: 20px; */
     bottom: 20px;
-    width: 14.2em;
+    width: 12.3em;
     height: 100vh;
     border-radius: 10px;
     box-sizing: initial;
@@ -164,7 +164,7 @@
 
 @media screen and (max-width: 1200px) {
     .navigation {
-        width: 5em;
+        width: 4em;
     }
 }
 

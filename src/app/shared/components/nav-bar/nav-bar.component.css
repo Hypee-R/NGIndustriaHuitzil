@@ -60,12 +60,12 @@ h2 {
 
 .toggle-menu {
     position: absolute;
-    left: 12vw;
+    left: 14vw;
 }
 
 .toggle-menu-chico {
     position: absolute;
-    left: 5vw;
+    left: 6vw;
 }
 
 #toggle-menu i {
@@ -92,10 +92,10 @@ h2 {
 
 @media only screen and (min-width: 1920px) {
     .toggle-menu {
-        left: 8.5vw;
+        left: 10vw;
     }
     .toggle-menu-chico {
-        left: 3.5vw;
+        left: 4vw;
     }
 }
 
