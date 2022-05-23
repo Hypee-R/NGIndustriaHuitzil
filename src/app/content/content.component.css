@@ -1,0 +1,190 @@
+.contenedor {
+    width: 100vw;
+    height: 100vh;
+    /* overflow: auto; */
+    position: fixed;
+    /* z-index: 99; */
+    background-color: var(--color-background);
+}
+
+.sideBar {
+    height: 100vh;
+    width: 15vw;
+    padding: 0;
+    -webkit-transition: all .4s ease;
+    -moz-transition: all .4s ease;
+    -o-transition: all .4s ease;
+    -ms-transition: all .4s ease;
+    transition: all .4s ease;
+}
+
+.sideNav {
+    position: fixed;
+    /* z-index: 4; */
+    padding: 0;
+    height: 58px;
+    -webkit-transition: all .4s ease;
+    -moz-transition: all .4s ease;
+    -o-transition: all .4s ease;
+    -ms-transition: all .4s ease;
+    transition: all .4s ease;
+}
+
+.sideNav-chico {
+    position: fixed;
+    /* z-index: 100; */
+    height: 58px;
+    -webkit-transition: all .4s ease;
+    -moz-transition: all .4s ease;
+    -o-transition: all .4s ease;
+    -ms-transition: all .4s ease;
+    transition: all .4s ease;
+}
+
+.contenidoNormal {
+    background-color: var(--color-background);
+    color: var(--color-dark);
+    height: 100vh;
+    width: calc(100vw - 14.5vw);
+    margin-left: 14.5vw;
+    padding: 1rem;
+    position: absolute;
+    z-index: -1;
+    -webkit-transition: all .4s ease;
+    -moz-transition: all .4s ease;
+    -o-transition: all .4s ease;
+    -ms-transition: all .4s ease;
+    transition: all .4s ease;
+    margin-top: 58px;
+}
+
+.contenido-chico {
+    /* background-color: var(--color-background); */
+    color: var(--color-dark);
+    height: 100vh;
+    width: calc(100vw - 4vw);
+    margin-left: 4vw;
+    padding: 1rem;
+    position: absolute;
+    /* z-index: -1; */
+    -webkit-transition: all .4s ease;
+    -moz-transition: all .4s ease;
+    -o-transition: all .4s ease;
+    -ms-transition: all .4s ease;
+    transition: all .4s ease;
+    margin-top: 58px;
+}
+
+.side-user {
+    top: 48px;
+    right: 1em;
+    background: var(--color-white);
+    color: var(--color-dark);
+    position: absolute;
+    /* z-index: 100; */
+    border-left: 2px solid var(--color-white);
+    width: 14vw;
+    height: auto;
+    padding-bottom: 1em;
+}
+
+.loading {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    /* z-index: 101; */
+    background: rgba(255, 255, 255, 1);
+}
+
+
+/* MONITOR */
+
+@media only screen and (min-width: 1920px) {
+    .contenidoNormal {
+        width: calc(100vw - 10.5vw);
+        margin-left: 10.5vw;
+    }
+    .contenido-chico {
+        width: calc(100vw - 3vw);
+        margin-left: 3vw;
+    }
+}
+
+
+/* LAPTOP */
+
+@media only screen and (max-width: 1280px) {
+    .sideNav {
+        padding-right: 0;
+    }
+    .sideNav-chico {
+        width: calc(100vw - 3vw);
+        left: 3vw;
+    }
+    .contenidoNormal {
+        width: calc(100vw - 15.5vw);
+        margin-left: 15.5vw;
+    }
+    .contenido-chico {
+        width: calc(100vw - 4.5vw);
+        margin-left: 4.5vw;
+    }
+}
+
+
+/* TABLET */
+
+@media screen and (max-width: 1200px) {
+    .contenidoNormal {
+        width: calc(100vw - 8.5vw);
+        margin-left: 8.5vw;
+    }
+}
+
+
+/* CELULAR */
+
+@media only screen and (max-width: 768px) {
+    .sideNav {
+        width: 100vw;
+        height: 65px;
+        padding-right: 0;
+    }
+    .sideBar {
+        z-index: 3;
+        display: none;
+    }
+    .sideBar.toggled {
+        left: 0rem !important;
+    }
+    .side-user {
+        /* z-index: 99; */
+        height: 19vh;
+        width: 51vw !important;
+        right: 3em;
+        border-radius: 0;
+    }
+    .contenidoNormal {
+        width: 100vw;
+        /* background-color: white; */
+        margin-left: 0;
+        /* margin-top: 65px; */
+        padding-right: 0;
+        padding-left: 0;
+    }
+    /* .contenido-outled {
+        padding-top: 2vh;
+    } */
+    .contenedor {
+        background-color: var(--color-background) !important;
+    }
+}
+
+
+/* FALTA RESPONSIVE PARA */
+
+
+/* IPAD AIR ,
+SURFACE PRO 7,
+NEST HUB,
+OPTIMIZAR NEST HUB MAX, */

@@ -1,0 +1,14 @@
+<div id="contenedor" class="container-fluid contenedor">
+    <div class="row">
+        <app-side-bar id="menu" class="sideBar"></app-side-bar>
+        <app-nav-bar id="sidenav" class="sideNav"></app-nav-bar>
+        <div id="Contenido" class="contenidoNormal" *ngIf="userAuth">
+            <div id="carta" class="contenido-outled">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="mostrarSideUser">
+    <app-side-user [@fadeAnimation]="mostrarSideUser" (click)="clickSides($event)" class="side-user shadow"></app-side-user>
+</div>
