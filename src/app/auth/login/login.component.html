@@ -1,49 +1,47 @@
-
 <div class="container">
     <div class="row">
         <div class="col-md-6">
             <div class="card">
-             
-              <img class="logo" src="../../../assets/img/logo_huitzil.png" alt="Login">
-                <div class="text-center">     
-                
+
+                <img class="logo" src="../../../assets/img/logo_huitzil.png" alt="Login">
+                <div class="text-center">
+
                     <h1>Login</h1>
                     <h6>Please enter email & password</h6>
                 </div>
-                <form >
+                <form>
                     <form>
                         <div class="mb-3">
-                          <label for="exampleInputEmail1" class="form-label">Email address</label>
-                          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                          <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                            <label for="exampleInputEmail1" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" #email aria-describedby="emailHelp">
+                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                         </div>
                         <div class="mb-3">
-                          <label for="exampleInputPassword1" class="form-label">Password</label>
-                          <input type="password" class="form-control" id="exampleInputPassword1">
+                            <label for="exampleInputPassword1" class="form-label">Password</label>
+                            <input type="password" class="form-control" #password id="exampleInputPassword1">
                         </div>
-                        
 
-                        <button type="submit"  class="btn btn-primary" (click)="iniciarSesion()">Iniciar Sesion</button>
-                      </form>
-                   
+
+                        <button type="submit" class="btn btn-primary" (click)="iniciarSesion(email.value, password.value)">Iniciar Sesion</button>
+                    </form>
+
                 </form>
                 <p class="social-text">Or Sign in with social platforms</p>
                 <div class="social-media">
-                  <a href="#" class="social-icon">
-                    <i class="fab fa-facebook-f"></i>
-                  </a>
-                  <a href="#" class="social-icon">
-                    <i class="fab fa-twitter"></i>
-                  </a>
-                  <a href="#" class="social-icon">
-                    <i class="fab fa-google"></i>
-                  </a>
-                  <a href="#" class="social-icon">
-                    <i class="fab fa-linkedin-in"></i>
-                  </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
