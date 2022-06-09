@@ -28,22 +28,23 @@ export class LoginComponent implements OnInit {
           "contrasena": CryptoJS.SHA1(password).toString()
         };
         console.log('request ', credenciales);
-
-        this.authService.login(credenciales).subscribe( (respuesta: any) => {
-          console.log('respuesta login ', respuesta);
-          if(respuesta.exito){
-              const dataLogin: UsuarioAuthModel = respuesta.respuesta;
-              localStorage.setItem('usuario', JSON.stringify(dataLogin));
-              localStorage.d = respuesta.respuesta.token;
-              this.router.navigate(["/home"]);
-              this.toastr.success(respuesta.mensaje,'Acceso Correcto');
-          }else{
-              this.toastr.error(respuesta.mensaje, 'Acceso Incorrecto');
-          }
-        },
-        err => {
-            this.toastr.error('Hubo un problema al conectar con los servicios en linea','Acceso Incorrecto');
-        });
+        localStorage.d = "respuesta.respuesta.token";
+        this.router.navigate(["/home"]);
+        // this.authService.login(credenciales).subscribe( (respuesta: any) => {
+        //   console.log('respuesta login ', respuesta);
+        //   if(respuesta.exito){
+        //       const dataLogin: UsuarioAuthModel = respuesta.respuesta;
+        //       localStorage.setItem('usuario', JSON.stringify(dataLogin));
+        //       // localStorage.d = respuesta.respuesta.token;
+        //       // this.router.navigate(["/home"]);
+        //       this.toastr.success(respuesta.mensaje,'Acceso Correcto');
+        //   }else{
+        //       this.toastr.error(respuesta.mensaje, 'Acceso Incorrecto');
+        //   }
+        // },
+        // err => {
+        //     this.toastr.error('Hubo un problema al conectar con los servicios en linea','Acceso Incorrecto');
+        // });
     }else{
         this.toastr.info('Por favor ingrese un usuario y contraseña validos!', 'Atencion!');
     }
