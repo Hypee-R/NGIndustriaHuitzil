@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { VariablesService } from '../../../services/variablesGL.service';
 import { Subscription } from 'rxjs';
+import { Menu } from '../../models/menu.model';
 
 @Component({
   selector: 'app-side-bar',
@@ -12,9 +13,11 @@ export class SideBarComponent implements OnInit, OnDestroy {
 
   sideBarSuscription: Subscription = new Subscription();
   changeMenuSubcripcion: Subscription = new Subscription();
+  menu: Menu[] = [];
   constructor(
     private variablesGL: VariablesService
   ) {
+    this.buildMenu();
 
     //Movil
     this.sideBarSuscription = this.variablesGL.showSideBar.subscribe(stateSide => {
@@ -59,6 +62,22 @@ export class SideBarComponent implements OnInit, OnDestroy {
 
   toggleMenu(){
       this.variablesGL.showSideBar.next(false);
+  }
+
+  buildMenu(){
+    this.menu.push({ title: 'Dashboard', icon: 'fa-solid fa-chart-line', url: '/dashboard' });
+    this.menu.push({ title: 'Inventario', icon: 'fa-solid fa-boxes-stacked', url: '/inventory' });
+    this.menu.push({ title: 'Compras', icon: 'fa-solid fa-cart-shopping', url: '/shopping' });
+    this.menu.push({ title: 'Ventas', icon: 'fa-solid fa-store', url: '/sales' });
+    this.menu.push({ title: 'Solicitudes', icon: 'fa-solid fa-file-import', url: '/request' });
+    this.menu.push({ title: 'Informes', icon: 'fa-solid fa-file-invoice', url: '/reports' });
+    this.menu.push({ title: 'Ubicaciones', icon: 'fa-solid fa-location-dot', url: '/locations' });
+    this.menu.push({ title: 'Categorias', icon: 'fa-solid fa-rectangle-list', url: '/categories' });
+    this.menu.push({ title: 'Proveedores', icon: 'fa-solid fa-users', url: '/providers' });
+    this.menu.push({ title: 'Tallas', icon: 'fa-solid fa-shirt', url: '/sizes' });
+    this.menu.push({ title: 'Mi Perfil', icon: 'fa-solid fa-user-gear', url: '/my-profile' });
+    this.menu.push({ title: 'Usuarios', icon: 'fa-solid fa-user-group', url: '/users' });
+    this.menu.push({ title: 'Roles', icon: 'fa-solid fa-id-badge', url: '/roles' });
   }
 
 }

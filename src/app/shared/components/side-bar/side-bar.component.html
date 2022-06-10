@@ -9,16 +9,16 @@
         </div>
     </div>
     <br>
-    <ul>
+    <ul *ngFor="let menuItem of menu">
         <li class="list" routerLinkActive="active">
             <b></b>
             <b></b>
-            <a routerLink="/home">
-                <span class="icon"><i class="fa-solid fa-house"></i></span>
-                <span class="title">Home</span>
+            <a [routerLink]="menuItem.url">
+                <span class="icon"><i [class]="menuItem.icon"></i></span>
+                <span class="title">{{ menuItem.title }}</span>
             </a>
         </li>
-        <li class="list">
+        <!-- <li class="list">
             <b></b>
             <b></b>
             <a href="#">
@@ -57,6 +57,6 @@
                 <span class="icon"><i class="fa-solid fa-key"></i></span>
                 <span class="title">Password</span>
             </a>
-        </li>
+        </li> -->
     </ul>
 </div>
