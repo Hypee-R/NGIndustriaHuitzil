@@ -1,0 +1,12 @@
+.content {
+    width: 534px;
+    height: 460px;
+    line-height: 400px;
+    margin: 0px auto;
+    text-align: center;
+    /* background-color: #CCCCCC; */
+}
+
+.content img {
+    vertical-align: middle;
+}

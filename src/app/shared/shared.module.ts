@@ -10,6 +10,8 @@ import { SideUserComponent } from './components/side-user/side-user.component';
 //PrimeNG
 import { PanelMenuModule } from 'primeng/panelmenu';
 import {TieredMenuModule} from 'primeng/tieredmenu';
+import { ItemEmptyComponent } from './components/item-empty/item-empty.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 
 
@@ -26,12 +28,16 @@ import {TieredMenuModule} from 'primeng/tieredmenu';
     declarations: [
       NavBarComponent,
       SideBarComponent,
-      SideUserComponent
+      SideUserComponent,
+      ItemEmptyComponent,
+      LoadingComponent
     ],
     exports: [
       NavBarComponent,
       SideBarComponent,
-      SideUserComponent
+      SideUserComponent,
+      ItemEmptyComponent,
+      LoadingComponent,
     ]
 })
 export class SharedModule { }

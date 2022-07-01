@@ -21,6 +21,10 @@ import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { RolesComponent } from './roles/roles.component';
 
+//PrimeNG
+import {TableModule} from 'primeng/table';
+import {DropdownModule} from 'primeng/dropdown';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -28,6 +32,9 @@ import { RolesComponent } from './roles/roles.component';
         ReactiveFormsModule,
         SharedModule,
         ContentRoutingModule,
+        //PrimeNG
+        TableModule,
+        DropdownModule
         // StoreModule.forFeature('viewUsers', usersReducer),
     ],
     declarations: [

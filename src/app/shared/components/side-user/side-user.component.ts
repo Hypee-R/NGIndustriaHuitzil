@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { VariablesService } from '../../../services/variablesGL.service';
 
 @Component({
   selector: 'app-side-user',
@@ -14,15 +15,13 @@ export class SideUserComponent implements OnInit {
   userSubcripcion: Subscription = new Subscription();
 
   constructor(
-    //private auth: AuthService,
-    //private usersService: UsersService,
+    private variablesGL: VariablesService
   ) {
    }
 
   ngOnInit() {}
 
-  logoff() {
-    // this.auth.logoff();
-    // this.usersService.cancelSubsctiptions();
+  logOff() {
+    this.variablesGL.removeCredential();
   }
 }

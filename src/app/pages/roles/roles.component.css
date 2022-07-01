@@ -1,0 +1,32 @@
+.card {
+    height: calc(100vh - 89px);
+    padding-top: 5px;
+    overflow-y: scroll;
+}
+
+.itemAdd {
+    line-height: 2.5em;
+    border-radius: 10px;
+    padding: .2em 1em;
+    background-color: rgb(115, 128, 236);
+    font-weight: bold;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.itemRol {
+    line-height: 2.5em;
+    border-radius: 10px;
+    padding: .2em 1em;
+}
+
+.itemRol:hover {
+    background-color: rgb(115, 128, 236);
+    font-weight: bold;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.overflow {
+    overflow-y: scroll !important;
+}
