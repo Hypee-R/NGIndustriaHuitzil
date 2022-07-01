@@ -21,9 +21,32 @@ import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { RolesComponent } from './roles/roles.component';
 
+
 //PrimeNG
-import {TableModule} from 'primeng/table';
-import {DropdownModule} from 'primeng/dropdown';
+import { ToastModule } from 'primeng/toast';
+import { CardModule } from 'primeng/card';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { InputTextModule } from 'primeng/inputtext';
+
+import { SidebarModule } from 'primeng/sidebar';
+import { TableModule } from 'primeng/table';
+import { CalendarModule } from 'primeng/calendar';
+import { SliderModule } from 'primeng/slider';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ContextMenuModule } from 'primeng/contextmenu';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ToolbarModule } from 'primeng/toolbar';
+import { RatingModule } from 'primeng/rating';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
     imports: [
@@ -32,11 +55,36 @@ import {DropdownModule} from 'primeng/dropdown';
         ReactiveFormsModule,
         SharedModule,
         ContentRoutingModule,
-        //PrimeNG
-        TableModule,
-        DropdownModule
         // StoreModule.forFeature('viewUsers', usersReducer),
-    ],
+        //PrimeNG
+        ToastModule,
+        CardModule,
+        DropdownModule,
+        SplitButtonModule,
+        SidebarModule,
+        TableModule,
+        ButtonModule,
+        InputTextModule,
+        TableModule,
+        CalendarModule,
+        SliderModule,
+        DialogModule,
+        MultiSelectModule,
+        ContextMenuModule,
+        DropdownModule,
+        ButtonModule,
+        ToastModule,
+        InputTextModule,
+        ProgressBarModule,
+        FileUploadModule,
+        ToolbarModule,
+        RatingModule,
+        FormsModule,
+        RadioButtonModule,
+        InputNumberModule,
+        ConfirmDialogModule,
+        InputTextareaModule,
+],  providers: [ConfirmationService],
     declarations: [
         ContentComponent,
         DashboardComponent,
