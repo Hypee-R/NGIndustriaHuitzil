@@ -30,3 +30,70 @@
 .overflow {
     overflow-y: scroll !important;
 }
+
+
+/* CHANGE COLOR BACKGROUND DROPDOWN */
+
+
+/* ::ng-deep .p-background .p-dropdown .p-dropdown-label {
+  color: var(--color-dark);
+}
+
+::ng-deep .p-background .p-dropdown {
+  background: var(--color-white) !important;
+}
+
+::ng-deep .p-background .p-dropdown .p-dropdown-panel {
+  background: var(--color-white) !important;
+  color: var(--color-dark);
+}
+
+::ng-deep .p-background .p-dropdown .p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+  color: var(--color-primary);
+}
+
+::ng-deep .p-background .p-dropdown .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  background: var(--color-white) !important;
+  color: var(--color-dark);
+} */
+
+
+/* FIN CHANGE COLOR DROPDOWN */
+
+
+/* CHANGE COLOR BACKGROUND TABLE */
+
+
+/* ::ng-deep .p-background .p-datatable {
+  background: var(--color-white);
+  color: var(--color-dark);
+}
+
+::ng-deep .p-background .p-datatable .p-datatable-thead>tr>th {
+  background: var(--color-white);
+  color: var(--color-dark);
+}
+
+::ng-deep .p-background .p-datatable .p-datatable-tbody>tr>td {
+  background: var(--color-white);
+  color: var(--color-dark);
+}
+
+::ng-deep .p-background .p-datatable .p-paginator-bottom {
+  background: var(--color-white);
+  color: var(--color-dark);
+}
+
+::ng-deep .p-background .p-datatable .p-paginator .p-paginator-current {
+  background: var(--color-white);
+  color: var(--color-dark);
+}
+
+::ng-deep .p-background .p-datatable .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: var(--color-white);
+  border-color: var(--color-dark-variant);
+  color: var(--color-dark);
+} */
+
+
+/* FIN CHANGE COLOR BACKGROUND TABLE */

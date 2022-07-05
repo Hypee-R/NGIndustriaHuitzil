@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2'
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -30,8 +31,17 @@ export class LoginComponent implements OnInit {
         console.log('request ', credenciales);
         // localStorage.d = "respuesta.respuesta.token";
         // this.router.navigate(["/home"]);
+        Swal.fire({
+            title: 'Por favor espera...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+        });
         this.authService.login(credenciales).subscribe( (respuesta: any) => {
           console.log('respuesta login ', respuesta);
+          Swal.close();
           if(respuesta.exito){
               const dataLogin: UsuarioAuthModel = respuesta.respuesta;
               localStorage.setItem('usuario', JSON.stringify(dataLogin));
@@ -43,6 +53,7 @@ export class LoginComponent implements OnInit {
           }
         },
         err => {
+            Swal.close();
             this.toastr.error('Hubo un problema al conectar con los servicios en linea','Acceso Incorrecto');
         });
     }else{

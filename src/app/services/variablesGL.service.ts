@@ -39,4 +39,8 @@ export class VariablesService {
     location.reload();
   }
 
+  changeTheme(darkTheme: boolean){
+    localStorage.setItem('darkTheme', JSON.stringify(darkTheme));
+  }
+
 }

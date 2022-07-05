@@ -11,5 +11,14 @@
 }
 
 i {
-    font-size: 20rem;
+    font-size: 15rem;
+}
+
+@media screen and (min-width: 1920px) {
+    .center {
+        margin-top: 8rem;
+    }
+    i {
+        font-size: 25rem;
+    }
 }

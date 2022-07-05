@@ -1,3 +1,4 @@
+import { VistaModel } from './vista.model';
 export class UsuarioAuthModel{
   id: number
   usuario: string
@@ -11,4 +12,5 @@ export class UsuarioAuthModel{
   ultimoAcceso: string;
   idRol: number;
   rol: string;
+  vistas: VistaModel[];
 }
