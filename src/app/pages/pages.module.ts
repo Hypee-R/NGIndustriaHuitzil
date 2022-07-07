@@ -47,6 +47,7 @@ import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
+import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 
 @NgModule({
     imports: [
@@ -100,6 +101,7 @@ import { ButtonModule } from 'primeng/button';
         MiPerfilComponent,
         UsuariosComponent,
         RolesComponent,
+        AddUsuarioComponent,
     ]
 })
 export class PagesModule { }

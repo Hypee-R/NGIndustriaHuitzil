@@ -68,7 +68,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
 
   buildMenu(){
     this.user.vistas.forEach(vistaMenu => {
-        this.menu.push({ title: vistaMenu.nombre, icon: this.getIconMenu(vistaMenu.nombre), url: vistaMenu.routerLink });
+        this.menu.push({ title: vistaMenu.nombre, icon: vistaMenu.icon, url: vistaMenu.routerLink });
     });
     console.log('build menu success!!');
 

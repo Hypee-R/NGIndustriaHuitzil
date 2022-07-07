@@ -1,0 +1,58 @@
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Usuario" [modal]="true" styleClass="p-fluid">
+
+    <ng-template pTemplate="content">
+        <div class="field">
+            <label for="nombre">Nombre</label>
+            <input type="text" pInputText id="nombre" [(ngModel)]="usuario.nombre" required autofocus />
+            <small class="p-error" *ngIf="submitted && !usuario.nombre">El nombre es requerido.</small>
+            <small class="p-error" *ngIf="submitted && usuario.nombre?.length > 0 && usuario.nombre?.length <= 2">El nombre debe contener minimo 3 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="apaterno">Apellido Paterno</label>
+            <input type="text" pInputText id="apaterno" [(ngModel)]="usuario.apellidoPaterno" required/>
+            <small class="p-error" *ngIf="submitted && !usuario.apellidoPaterno">El apellido paterno es requerido.</small>
+            <small class="p-error" *ngIf="submitted && usuario.apellidoPaterno?.length > 0 && usuario.apellidoPaterno?.length <= 2">El apellido paterno debe contener minimo 3 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="amaterno">Apellido Materno</label>
+            <input type="text" pInputText id="amaterno" [(ngModel)]="usuario.apellidoMaterno" required/>
+            <small class="p-error" *ngIf="submitted && !usuario.apellidoMaterno">El apellido materno es requerido.</small>
+            <small class="p-error" *ngIf="submitted && usuario.apellidoMaterno?.length > 0 && usuario.apellidoMaterno?.length <= 2">El apellido materno debe contener minimo 3 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="usuario">Rol</label>
+            <p-dropdown class="p-background" [options]="listRoles" [(ngModel)]="usuario.idRol" optionLabel="descripcion" optionValue="idRol" [style]="{'width': '100%'}" placeholder="Selecciona un rol"></p-dropdown>
+            <small class="p-error" *ngIf="submitted && !usuario.idRol">El rol es requerido.</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="usuario">Usuario</label>
+            <input type="text" pInputText id="usuario" [(ngModel)]="usuario.usuario" required/>
+            <small class="p-error" *ngIf="submitted && !usuario.usuario">El usuario es requerido.</small>
+            <small class="p-error" *ngIf="submitted && usuario.usuario?.length > 0 && usuario.usuario?.length <= 3">El usuario debe contener minimo 4 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="telefono">Telefono</label>
+            <input type="tel" pInputText id="telefono" [(ngModel)]="usuario.telefono" required/>
+            <small class="p-error" *ngIf="submitted && !usuario.telefono">El telefono es requerido.</small>
+            <small class="p-error" *ngIf="submitted && usuario.telefono?.length > 0 && usuario.telefono?.length != 10">El telefono debe contener 10 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="correo">Correo</label>
+            <input type="email" pInputText id="correo" [(ngModel)]="usuario.correo" required [pattern]="pattern">
+            <small class="p-error" *ngIf="submitted && !usuario.correo">El correo es requerido.</small>
+            <small class="p-error" *ngIf="submitted && usuario.correo?.length > 0 && !usuario.correo?.match(pattern)">El correo no tiene un formato valido.</small>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveUsuario()"></button>
+    </ng-template>
+
+</p-dialog>

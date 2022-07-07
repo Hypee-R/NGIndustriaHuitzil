@@ -19,10 +19,9 @@
                     <app-item-empty *ngIf="!selectedRol && !loading"></app-item-empty>
                     <app-loading *ngIf="selectedRol && selectedRol.descripcion != '' && loading"></app-loading>
                     <div *ngIf="selectedRol && selectedRol.descripcion != '' && !loading">
-                        <!-- class="overflow" -->
                         <p-dropdown class="p-background" [options]="listVistasDisponibles" [(ngModel)]="selectedVista" optionLabel="nombre" [style]="{'width': '100%'}" placeholder="Selecciona una vista" (onChange)="openConfirmacion()"></p-dropdown>
                         <hr>
-                        <p-table class="p-background" [columns]="cols" [value]="listVistasRol" [paginator]="true" [rows]="rows" selectionMode="single" [(selection)]="selectedViewRol" [showCurrentPageReport]="true" responsiveLayout="scroll" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} nominaciones"
+                        <p-table class="p-background" [columns]="cols" [value]="listVistasRol" [paginator]="true" [rows]="rows" selectionMode="single" [(selection)]="selectedViewRol" [showCurrentPageReport]="true" responsiveLayout="scroll" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} elementos"
                             styleClass="p-datatable-striped">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>

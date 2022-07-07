@@ -41,8 +41,8 @@ export class VistasService {
     );
   }
 
-  eliminaVistaRol(deleteRol: any): Observable<ResponseModel>{
-    return this.http.delete<ResponseModel>(environment.apiService + 'Vistas/EliminaVR', { body: deleteRol })
+  eliminaVistaRol(deleteVistaRol: any): Observable<ResponseModel>{
+    return this.http.delete<ResponseModel>(environment.apiService + 'Vistas/EliminaVR', { body: deleteVistaRol })
     .pipe(
       map (res => res)
     );

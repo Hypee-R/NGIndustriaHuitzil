@@ -2,9 +2,9 @@ import Swal from 'sweetalert2'
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import * as CryptoJS from 'crypto-js';
 import { AuthService } from '../../services/auth.service';
 import { UsuarioAuthModel } from '../../models/usuario-auth.model';
+import { VariablesService } from '../../services/variablesGL.service';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private authService: AuthService,
+    private variablesGL: VariablesService,
   ) { }
 
   ngOnInit(): void {
@@ -26,7 +27,7 @@ export class LoginComponent implements OnInit {
     if(email != "" && email.length > 0 && password != "" && password.length > 0){
         const credenciales = {
           "usuario": email,
-          "contrasena": CryptoJS.SHA1(password).toString()
+          "contrasena": this.variablesGL.getSHA1(password)
         };
         console.log('request ', credenciales);
         // localStorage.d = "respuesta.respuesta.token";

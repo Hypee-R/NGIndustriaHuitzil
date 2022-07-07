@@ -54,11 +54,35 @@ body {
     cursor: pointer;
 }
 
+.card {
+    height: calc(100vh - 89px);
+    padding-top: 5px;
+    /* overflow-y: scroll; */
+}
+
+
+/* TABLET */
+
+@media screen and (max-width: 1200px) {
+    .card {
+        height: auto !important;
+    }
+}
+
+
+/* CELULAR */
+
+@media only screen and (max-width: 768px) {
+    .card {
+        height: auto;
+    }
+}
+
 
 /* CHANGE COLOR SCROLLBAR */
 
 ::-webkit-scrollbar {
-    width: 12px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -94,6 +118,17 @@ body {
 /* FIN THEME CARD PAGES */
 
 
+/* THEME SWEETALERT */
+
+.swal2-container.swal2-center>.swal2-popup {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+
+/* FIN THEME SWEETALERT */
+
+
 /* THEME LOADING */
 
 .rotate {
@@ -111,6 +146,38 @@ body {
 
 
 /* FIN THEME LOADING */
+
+
+/* CHANGE COLOR INPUT */
+
+.p-inputtext {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+
+/* FIN CHANGE COLOR INPUT */
+
+
+/* CHANGE COLOR DIALOG */
+
+.p-dialog .p-dialog-header {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+.p-dialog .p-dialog-content {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+.p-dialog .p-dialog-footer {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+
+/* FIN CHANGE COLOR DIALOG */
 
 
 /* CHANGE COLOR BACKGROUND DROPDOWN */
