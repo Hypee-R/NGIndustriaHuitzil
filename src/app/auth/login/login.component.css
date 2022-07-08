@@ -1,45 +1,50 @@
 .container {
-    top: 10;
-    margin: 800;
-    padding: 800;
-    width: 100%;
-    height: auto;
-    display: block;
-    background-color: #cdb2ec;
-    background-position: center;
-    background-repeat: no-repeat ;
-    background-size: cover;
-    overflow: hidden;
-  }
-  .logo {
-    
-    margin: 100;
-    padding: 100;
-    width: 100%;
-    
-  }
-  .card{
-    margin-top:100px ;
-    border: #cdb2ec;
-    width: 500px;
-    padding:100px;
-    position: center ;
-    top:5%;
-    left:50%;
-    transform: translate(10%, 0%);
-
-    background-color: rgb(153,102,153);
-    color: rgb(236, 236, 34);
+  top: 10;
+  margin: 800;
+  padding: 600;
+  width: 100%;
+   height: auto;
+  display: block;
+  background-color: #cdb2ec;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  /*overflow: hidden;
+  height: auto;
+  width: 60em;
+  margin: 3em auto;
+  border-radius: 10px;
+  justify-content: space-between;
+  overflow: hidden;*/
 }
-   
 
-
-.card label h1
-
-h6{
-color: rgb(14, 9, 9);
-
+.logo {
+  margin: 100;
+  padding: 100;
+  width: 100%;
 }
-label{
-    color:rgb(14, 10, 10);
+
+.card {
+  margin-top: 100px;
+  border: #cdb2ec;
+  width: 500px;
+  padding: 100px;
+  position: center;
+  top: 5%;
+  left: 50%;
+  transform: translate(10%, 0%);
+  background-color: rgb(153,102,153);
+  color: rgb(236, 236, 34);
+}
+
+
+
+  .card label h1
+
+  h6 {
+    color: rgb(14, 9, 9);
+  }
+
+label {
+  color: rgb(14, 10, 10);
 }
