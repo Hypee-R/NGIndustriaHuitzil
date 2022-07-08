@@ -1,1 +1,103 @@
-<p>tallas works!</p>
+<div [ngClass]="{'container': statusPantalla <= 10}">
+
+    <div class="card shadow mb-5 bg-body rounded">
+        <div class="card-header text-uppercase">Tallas</div>
+        <span class="lstick"></span>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+
+                    <app-loading *ngIf="loading"></app-loading>
+
+                    <div *ngIf="!loading && listTallas.length == 0">
+                        <p-toolbar styleClass="mb-4">
+                            <ng-template pTemplate="left">
+                                <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
+                            </ng-template>
+
+                            <ng-template pTemplate="right">
+                                <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
+                            </ng-template>
+                        </p-toolbar>
+
+                        <app-item-empty></app-item-empty>
+                    </div>
+
+                    <div *ngIf="!loading && listTallas.length > 0">
+                        <p-table #dt [value]="listTallas" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['nombre','descripcion']" [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedTallas" [rowHover]="true" dataKey="idTalla" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} tallas"
+                            [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                            <ng-template pTemplate="caption">
+                                <div class="flex align-items-center justify-content-between">
+                                    <h5 class="m-0">Administrar Tallas</h5>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col col-md-7">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
+                                                </div>
+                                                <div class="col">
+                                                    <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m" (click)="deleteSelectedTallas()" [disabled]="!selectedTallas || !selectedTallas.length"></button>
+                                                </div>
+                                                <div class="col">
+                                                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"></p-fileUpload>
+                                                </div>
+                                                <div class="col">
+                                                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-md-5">
+                                            <span class="p-input-icon-left" style="width: 100%;">
+                                            <i class="pi pi-search"></i>
+                                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar..." [style]="{'width': '100%'}"/>
+                                          </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th style="width: 2rem">
+                                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                    </th>
+                                    <th style="width: 3em;"></th>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field == 'nombre' ? '7em' : '25em'}">
+                                            {{col.header}}
+                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr>
+                                    <td>
+                                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                    </td>
+                                    <td>
+                                        <div style="display: inline-flex">
+                                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editTalla(rowData)"></button>
+                                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" style="margin-left: 3px;" (click)="deleteTalla(rowData)"></button>
+                                        </div>
+                                    </td>
+                                    <td *ngFor="let col of columns">
+                                        {{rowData[col.field]}}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <!-- <ng-template pTemplate="summary">
+                              <div class="flex align-items-center justify-content-between">
+                                  En total hay {{listUsuarios ? listUsuarios.length : 0 }} usuarios.
+                              </div>
+                          </ng-template> -->
+                        </p-table>
+
+                    </div>
+                    <app-add-talla [_accion]="accion" [(_editTalla)]="selectedTalla" (saveTalla)="getTallas()" *ngIf="accion != ''"></app-add-talla>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

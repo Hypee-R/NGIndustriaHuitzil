@@ -12,7 +12,7 @@
                     <div *ngIf="!loading && listUsuarios.length == 0">
                         <p-toolbar styleClass="mb-4">
                             <ng-template pTemplate="left">
-                                <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"></button>
+                                <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
                             </ng-template>
 
                             <ng-template pTemplate="right">
@@ -25,7 +25,7 @@
 
                     <div *ngIf="!loading && listUsuarios.length > 0">
                         <p-table #dt [value]="listUsuarios" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['nombre','usuario','rol','telefono','correo']" [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedUsuarios" [rowHover]="true"
-                            dataKey="id" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                            dataKey="idUser" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                             <ng-template pTemplate="caption">
                                 <div class="flex align-items-center justify-content-between">
                                     <h5 class="m-0">Administrar Usuarios</h5>
@@ -61,7 +61,7 @@
                                     <th style="width: 2rem">
                                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                                     </th>
-                                    <th></th>
+                                    <th style="width: 3em;"></th>
                                     <th *ngFor="let col of columns" [pSortableColumn]="col.field" style="width: 8rem;">
                                         <div class="flex justify-content-center align-items-center">
                                             {{col.header}}
@@ -76,7 +76,7 @@
                                         <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                                     </td>
                                     <td>
-                                        <div style="display: flex">
+                                        <div style="display: inline-flex;">
                                             <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editUsuario(rowData)"></button>
                                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" style="margin-left: 3px;" (click)="deleteUsuario(rowData)"></button>
                                         </div>
@@ -92,9 +92,8 @@
                                 </div>
                             </ng-template> -->
                         </p-table>
-
-                        <app-add-usuario [_accion]="accion" [(_editUsuario)]="selectedUsuario" (saveUser)="getUsuarios()" *ngIf="accion != ''"></app-add-usuario>
                     </div>
+                    <app-add-usuario [_accion]="accion" [(_editUsuario)]="selectedUsuario" (saveUser)="getUsuarios()" *ngIf="accion != ''"></app-add-usuario>
                 </div>
             </div>
         </div>
