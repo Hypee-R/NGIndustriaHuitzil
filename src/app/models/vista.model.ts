@@ -5,4 +5,5 @@ export class VistaModel{
   posicion: number;
   routerLink: string;
   visible: boolean;
+  icon: string;
 }

@@ -1,1 +1,183 @@
-<p>ubicaciones works!</p>
+<div [ngClass]="{'container': statusPantalla <= 10}">
+
+    <div class="card shadow mb-5 bg-body rounded">
+        <div class="card-header text-uppercase">ADMINISTRACION DE UBICACIONES</div>
+        <span class="lstick"></span>
+        <div class="card-body">
+
+
+
+
+            <div class="container">
+                <p-toolbar>
+                    <ng-template pTemplate="left">
+                        <h3 class="text-dark">UBICACIONES</h3>
+                    </ng-template>
+                    <ng-template pTemplate="right">
+
+                        <!-- <button pButton pRipple class="p-button-info mr-2" (click)="GenereteReportMasterExcel()" label="Exportar Reporte" icon="pi pi-upload"> </button> -->
+
+                        <button pButton pRipple label="Nueva Ubicacion" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNew()"></button>
+                    </ng-template>
+                </p-toolbar>
+
+                <p-table responsiveLayout="scroll" [value]="listUbicaciones" [rows]="20" [paginator]="true"
+                    [rowsPerPageOptions]="[20,35,50]">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                Direccion
+                            </th>
+                            <th>
+                                Encargado
+                            </th>
+                            <th>
+                                Apellido Paterno
+                            </th>
+                            <th>
+                                Apellido Materno
+                            </th>
+                            <th>
+                                Telefono 1
+                            </th>
+                            <th>
+                                Telefono 2
+                            </th>
+                            <th>
+                                Correo
+                            </th>
+                            <th>
+                                Acciones
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-categoria>
+                        <tr>
+                            <td>
+                                <p>{{categoria.idUbicacion}}</p>
+
+                            </td>
+                            <td>
+                                <p>{{categoria.direccion}}</p>
+
+                            </td>
+                            <td>
+                                <p>{{categoria.nombreEncargado}}</p>
+
+                            </td>
+                            <td>
+                                <p>{{categoria.apellidoPEncargado}}</p>
+
+                            </td>
+                            <td>
+                                <p>{{categoria.apellidoMEncargado}}</p>
+
+                            </td>
+                            <td>
+                                <p>{{categoria.telefono1}}</p>
+
+                            </td>
+                            <td>
+                                <p>{{categoria.telefono2}}</p>
+                            </td>
+                            <td>
+                                <p>{{categoria.correo}}</p>
+                            </td>
+                            <td>
+                                <button pButton pRipple icon="pi pi-trash"
+                                    class="p-button-rounded p-button-warning mx-3"></button>
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between">
+                            Total de Ubicaciones {{listUbicaciones ? listUbicaciones.length : 0 }}.
+                        </div>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <!-- Nueva categoria -->
+            <!-- <p-dialog [(visible)]="visible" [style]="{width: '450px'}" header="Nueva Categoria" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+
+        <form [formGroup]="categoriaForm">
+
+            <div class="field">
+                <label for="id">id:</label>
+                <input type="number" pInputText name="id" class="" value="" [(ngModel)]="categoriaModel.id" formControlName="id" [ngClass]="submitted && categoriaForm.controls['id'].errors ? 'is-invalid' : !submitted && categoriaForm.controls['id'].valid ? 'is-valid' : submitted && categoriaForm.controls['id'].valid ? 'is-valid' : null">
+                <small class="p-error" *ngIf="submitted && !categoriaModel.id">nombre is required.</small>
+
+            </div>
+            <div class="field">
+                <label for="nombre">Nombre:</label>
+                <input type="text" name="nombre" class="" value="" pInputText required [(ngModel)]="categoriaModel.nombre" formControlName="nombre" required/>
+                <small class="p-error" *ngIf="submitted && !categoriaModel.nombre">nombre is required.</small>
+
+            </div>
+
+
+
+        </form>
+
+
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <div>
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="add()"></button>
+        </div>
+
+    </ng-template>
+</p-dialog> -->
+
+            <!-- <p-dialog [(visible)]="edit" [style]="{width: '450px'}" header="Editar Categoria" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+
+        <form [formGroup]="categoriaForm">
+
+            <div class="field">
+                <label for="id">id:</label>
+                <input type="number" pInputText name="id" class="" value="" [(ngModel)]="categoriaModel.id" formControlName="id" [ngClass]="submitted && categoriaForm.controls['id'].errors ? 'is-invalid' : !submitted && categoriaForm.controls['id'].valid ? 'is-valid' : submitted && categoriaForm.controls['id'].valid ? 'is-valid' : null">
+                <small class="p-error" *ngIf="submitted && !categoriaModel.id">Id is required.</small>
+
+            </div>
+            <div class="field">
+                <label for="nombre">Fecha de Inicio:</label>
+                <input type="text" name="nombre" class="" value="" pInputText required [(ngModel)]="categoriaModel.nombre" formControlName="nombre" required/>
+                <small class="p-error" *ngIf="submitted && !categoriaModel.nombre">Nombre is required.</small>
+
+            </div>
+
+
+
+        </form>
+
+
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <div>
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="update()"></button>
+        </div>
+
+
+    </ng-template>
+</p-dialog> -->
+
+
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+        </div>
+    </div>
+
+</div>

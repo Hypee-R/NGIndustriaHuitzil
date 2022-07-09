@@ -50,8 +50,39 @@ body {
     background: var(--color-background);
 }
 
+.pointer {
+    cursor: pointer;
+}
+
+.card {
+    height: calc(100vh - 89px);
+    padding-top: 5px;
+    /* overflow-y: scroll; */
+}
+
+
+/* TABLET */
+
+@media screen and (max-width: 1200px) {
+    .card {
+        height: auto !important;
+    }
+}
+
+
+/* CELULAR */
+
+@media only screen and (max-width: 768px) {
+    .card {
+        height: auto;
+    }
+}
+
+
+/* CHANGE COLOR SCROLLBAR */
+
 ::-webkit-scrollbar {
-    width: 12px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -65,9 +96,11 @@ body {
     background: var(--color-primary);
 }
 
-.pointer {
-    cursor: pointer;
-}
+
+/* FIN CHANGE COLOR SCROLLBAR */
+
+
+/* THEME CARD PAGES */
 
 .lstick {
     width: .3em;
@@ -81,6 +114,23 @@ body {
     color: var(--color-dark) !important;
 }
 
+
+/* FIN THEME CARD PAGES */
+
+
+/* THEME SWEETALERT */
+
+.swal2-container.swal2-center>.swal2-popup {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+
+/* FIN THEME SWEETALERT */
+
+
+/* THEME LOADING */
+
 .rotate {
     animation: rotation 2s infinite linear;
 }
@@ -93,3 +143,112 @@ body {
         transform: rotate(359deg);
     }
 }
+
+
+/* FIN THEME LOADING */
+
+
+/* CHANGE COLOR INPUT */
+
+.p-inputtext {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+
+/* FIN CHANGE COLOR INPUT */
+
+
+/* CHANGE COLOR DIALOG */
+
+.p-dialog .p-dialog-header {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+.p-dialog .p-dialog-content {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+.p-dialog .p-dialog-footer {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+
+/* FIN CHANGE COLOR DIALOG */
+
+
+/* CHANGE COLOR BACKGROUND DROPDOWN */
+
+.p-dropdown .p-dropdown-label {
+    color: var(--color-dark) !important;
+}
+
+.p-dropdown .p-dropdown-label .p-placeholder {
+    color: var(--color-dark) !important;
+}
+
+.p-dropdown {
+    background: var(--color-white) !important;
+}
+
+.p-dropdown .p-dropdown-panel {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+.p-dropdown .p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+    color: var(--color-primary) !important;
+}
+
+.p-dropdown .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+
+/* FIN CHANGE COLOR DROPDOWN */
+
+
+/* CHANGE COLOR BACKGROUND TABLE */
+
+.p-datatable {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+.p-datatable .p-datatable-header {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+.p-datatable .p-datatable-thead>tr>th {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+.p-datatable .p-datatable-tbody>tr>td {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+.p-datatable .p-paginator-bottom {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+.p-datatable .p-paginator .p-paginator-current {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
+.p-datatable .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background: var(--color-white) !important;
+    border-color: var(--color-dark-variant) !important;
+    color: var(--color-dark) !important;
+}
+
+
+/* FIN CHANGE COLOR BACKGROUND TABLE */

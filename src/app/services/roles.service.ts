@@ -28,14 +28,14 @@ export class RolesService {
   }
 
   actualizaRol(actualizaRol: any): Observable<ResponseModel>{
-    return this.http.post<ResponseModel>(environment.apiService + 'Roles/Actualiza', actualizaRol)
+    return this.http.put<ResponseModel>(environment.apiService + 'Roles/Actualiza', actualizaRol)
     .pipe(
       map (res => res)
     );
   }
 
   eliminaRol(deleteRol: any): Observable<ResponseModel>{
-    return this.http.post<ResponseModel>(environment.apiService + 'Roles/Elimina', deleteRol)
+    return this.http.delete<ResponseModel>(environment.apiService + 'Roles/Elimina', { body: deleteRol })
     .pipe(
       map (res => res)
     );

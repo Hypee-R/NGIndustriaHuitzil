@@ -22,7 +22,6 @@ export class RolesComponent implements OnInit {
   listVistasDisponibles: VistaModel[] = [];
   listVistasRol: VistasRolesModel[] = [];
   selectedViewRol: VistasRolesModel;
-  textEmpty: string = "Sin datos para mostrar";
   loading: boolean = false;
   cols: any[] = [];
   rows: number = 0;
@@ -97,7 +96,6 @@ export class RolesComponent implements OnInit {
       confirmButtonText: 'Guardar',
       denyButtonText: `Cancelar`,
     }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         let newVistaRol = {
           IdVistaRol: 0,
@@ -108,7 +106,7 @@ export class RolesComponent implements OnInit {
           if(response.exito){
             this.selectedRol = null;
             this.selectedVista = null;
-            Swal.fire('Datos Guardados!', '', 'success');
+            Swal.fire(response.mensaje, '', 'success');
           }
         });
       } else if (result.isDenied) {
@@ -136,7 +134,7 @@ export class RolesComponent implements OnInit {
           if(response.exito){
             this.selectedRol = null;
             this.selectedVista = null;
-            Swal.fire('Datos Eliminados!', '', 'success');
+            Swal.fire(response.mensaje, '', 'success');
           }
         });
       } else if (result.isDenied) {

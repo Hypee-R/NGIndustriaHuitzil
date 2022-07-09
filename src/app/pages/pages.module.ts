@@ -47,6 +47,9 @@ import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
+import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
+import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
+import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
 
 @NgModule({
     imports: [
@@ -100,6 +103,9 @@ import { ButtonModule } from 'primeng/button';
         MiPerfilComponent,
         UsuariosComponent,
         RolesComponent,
+        AddUsuarioComponent,
+        AddProveedorComponent,
+        AddTallaComponent,
     ]
 })
 export class PagesModule { }

@@ -1,6 +1,6 @@
 .content {
-    width: 534px;
-    height: 460px;
+    width: calc(100vw - 850px);
+    height: calc(100vh - 250px);
     line-height: 400px;
     margin: 0px auto;
     text-align: center;
@@ -9,4 +9,16 @@
 
 .content img {
     vertical-align: middle;
+    width: 50%;
+    height: 50%;
+}
+
+@media screen and (min-width: 1920px) {
+    .content {
+        line-height: 700px;
+    }
+    .content img {
+        width: 30%;
+        height: 30%;
+    }
 }

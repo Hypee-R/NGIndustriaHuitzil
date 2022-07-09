@@ -20,16 +20,13 @@ export class NavBarComponent implements OnInit, OnDestroy {
   constructor(
     private variablesGL: VariablesService
   ) {
-    this.user = {
-      nombre: 'Luis Antonio',
-      apellidos: 'Altamirano Sánchez'
-    }
     this.pantalla = variablesGL.getStatusPantalla();
-
     this.sideUserSubcripcion = this.variablesGL.showSideUser.subscribe(value => this.mostrarSideUser = value );
   }
 
   ngOnInit() {
+    this.user = JSON.parse(localStorage.getItem('usuario'));
+    this.setTheme();
   }
 
   ngOnDestroy(): void {
@@ -45,6 +42,17 @@ export class NavBarComponent implements OnInit, OnDestroy {
     document.body.classList.toggle('dark-theme-variables');
     themeToggler.querySelector('i:nth-child(1)').classList.toggle('active');
     themeToggler.querySelector('i:nth-child(2)').classList.toggle('active');
+    this.variablesGL.changeTheme(this.dark);
+  }
+
+  setTheme(){
+    const themeToggler = document.querySelector(".theme-toggler");
+    this.dark = JSON.parse(localStorage.getItem('darkTheme'));
+    if(this.dark){
+      document.body.classList.toggle('dark-theme-variables');
+      themeToggler.querySelector('i:nth-child(1)').classList.remove('active');
+      themeToggler.querySelector('i:nth-child(2)').classList.add('active');
+    }
   }
 
   toggleMenu(){

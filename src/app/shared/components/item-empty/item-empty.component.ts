@@ -7,7 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ItemEmptyComponent implements OnInit {
 
-  @Input() textEmpty: string;
+  textEmpty: string = "No hay información para mostrar";;
   constructor() { }
 
   ngOnInit(): void {

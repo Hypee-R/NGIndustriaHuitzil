@@ -1,9 +1,10 @@
+import Swal from 'sweetalert2'
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import * as CryptoJS from 'crypto-js';
 import { AuthService } from '../../services/auth.service';
 import { UsuarioAuthModel } from '../../models/usuario-auth.model';
+import { VariablesService } from '../../services/variablesGL.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private authService: AuthService,
+    private variablesGL: VariablesService,
   ) { }
 
   ngOnInit(): void {
@@ -25,13 +27,22 @@ export class LoginComponent implements OnInit {
     if(email != "" && email.length > 0 && password != "" && password.length > 0){
         const credenciales = {
           "usuario": email,
-          "contrasena": CryptoJS.SHA1(password).toString()
+          "contrasena": this.variablesGL.getSHA1(password)
         };
         console.log('request ', credenciales);
         // localStorage.d = "respuesta.respuesta.token";
         // this.router.navigate(["/home"]);
+        Swal.fire({
+            title: 'Por favor espera...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+        });
         this.authService.login(credenciales).subscribe( (respuesta: any) => {
           console.log('respuesta login ', respuesta);
+          Swal.close();
           if(respuesta.exito){
               const dataLogin: UsuarioAuthModel = respuesta.respuesta;
               localStorage.setItem('usuario', JSON.stringify(dataLogin));
@@ -43,6 +54,7 @@ export class LoginComponent implements OnInit {
           }
         },
         err => {
+            Swal.close();
             this.toastr.error('Hubo un problema al conectar con los servicios en linea','Acceso Incorrecto');
         });
     }else{

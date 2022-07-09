@@ -1,0 +1,23 @@
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Talla" [modal]="true" styleClass="p-fluid">
+
+    <ng-template pTemplate="content">
+        <div class="field">
+            <label for="nombre">Nombre</label>
+            <input type="text" pInputText id="nombre" [(ngModel)]="talla.nombre" required autofocus />
+            <small class="p-error" *ngIf="submitted && !talla.nombre">El nombre es requerido.</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="descripcion">Descripción</label>
+            <input type="text" pInputText id="descripcion" [(ngModel)]="talla.descripcion" required/>
+            <small class="p-error" *ngIf="submitted && !talla.descripcion">La descripción es requerida.</small>
+            <small class="p-error" *ngIf="submitted && talla.descripcion?.length > 0 && talla.descripcion?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveDataTalla()"></button>
+    </ng-template>
+
+</p-dialog>

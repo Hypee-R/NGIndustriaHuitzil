@@ -1,6 +1,7 @@
+import * as CryptoJS from 'crypto-js';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ export class VariablesService {
   showSideUser = new Subject<boolean>();
   showSideBar = new Subject<boolean>();
   changeTipoMenu = new Subject<boolean>();
+  showDialog = new BehaviorSubject<boolean>(false);
 
   constructor(
     private router: Router
@@ -37,6 +39,14 @@ export class VariablesService {
     localStorage.d = "";
     localStorage.clear();
     location.reload();
+  }
+
+  changeTheme(darkTheme: boolean){
+    localStorage.setItem('darkTheme', JSON.stringify(darkTheme));
+  }
+
+  getSHA1(data: string){
+    return CryptoJS.SHA1(data).toString()
   }
 
 }
