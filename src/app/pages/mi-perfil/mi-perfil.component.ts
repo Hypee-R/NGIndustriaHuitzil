@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { VariablesService } from 'src/app/services/variablesGL.service';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -7,7 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MiPerfilComponent implements OnInit {
 
-  constructor() { }
+  statusPantalla: number;
+  constructor(
+    private variablesService: VariablesService
+  ) {
+    this.statusPantalla = this.variablesService.getStatusPantalla();
+  }
 
   ngOnInit(): void {
   }

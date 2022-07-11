@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
               const dataLogin: UsuarioAuthModel = respuesta.respuesta;
               localStorage.setItem('usuario', JSON.stringify(dataLogin));
               localStorage.d = respuesta.respuesta.token;
-              this.router.navigate(["/home"]);
+              this.router.navigate(["/dashboard"]);
               this.toastr.success(respuesta.mensaje,'Acceso Correcto');
           }else{
               this.toastr.error(respuesta.mensaje, 'Acceso Incorrecto');
