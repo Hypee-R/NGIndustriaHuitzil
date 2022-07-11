@@ -2,136 +2,125 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
-
+import Swal from 'sweetalert2'
+import { ToastrService } from 'ngx-toastr';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
-
+import { VariablesService } from 'src/app/services/variablesGL.service';
 @Component({
   selector: 'app-ubicaciones',
   templateUrl: './ubicaciones.component.html',
   styleUrls: ['./ubicaciones.component.css']
 })
 export class UbicacionesComponent implements OnInit {
-  statusPantalla: number;
-  listUbicaciones: UbicacionModel[] = [];
-
-  productDialog: boolean;
-
-  products: any ;
-
-  product: any;
-
-  selectedProducts: any;
-
-  submitted: boolean;
-
-  statuses: any[];
-
-
-  constructor( 
-    private messageService: MessageService, 
-    private confirmationService: ConfirmationService,
-    private ubicacionesService: UbicacionesService) { }
-
-  ngOnInit() {
-     // this.ubicacionesService.getUbicaciones().then(data => this.listUbicaciones = data);
-    this.getUbicaciones();
-
-      this.statuses = [
-          {label: 'INSTOCK', value: 'instock'},
-          {label: 'LOWSTOCK', value: 'lowstock'},
-          {label: 'OUTOFSTOCK', value: 'outofstock'}
+  
+    rows = 0;
+    accion = '';
+    cols: any[] = [];
+    statusPantalla: number;
+    loading: boolean = false;
+    selectedTalla: UbicacionModel = new UbicacionModel();
+    selectedTallas: UbicacionModel[];
+    listTallas: UbicacionModel[] = [];
+    constructor(
+      public variablesGL: VariablesService,
+      private UbicacionesService: UbicacionesService,
+      private toastr: ToastrService,
+    ) {
+      this.cols = [
+        { field: 'nombre', header: 'Nombre' },
+        { field: 'descripcion', header: 'Descripción' },
       ];
-  }
-  getUbicaciones(){
-    this.ubicacionesService.getUbicaciones().subscribe((response) => {
-      if(response.exito){
-          this.listUbicaciones = response.respuesta;
+      this.statusPantalla = this.variablesGL.getStatusPantalla();
+      let status = this.variablesGL.getPantalla();
+      if(status == 'celular'){
+        this.rows = 6;
+      }else if(status == 'tablet'){
+        this.rows = 7;
+      }else if(status == 'laptop'){
+        this.rows = 5;
+      }else{
+        this.rows = 11;
       }
-    });
-  }
-
-
-  openNew() {
-      this.product = {};
-      this.submitted = false;
-      this.productDialog = true;
-  }
-
-  deleteSelectedProducts() {
-      this.confirmationService.confirm({
-          message: 'Are you sure you want to delete the selected products?',
-          header: 'Confirm',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-              this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-              this.selectedProducts = null;
-              this.messageService.add({severity:'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
+    }
+  
+    ngOnInit(): void {
+      this.getTallas();
+    }
+  
+    getTallas(){
+        this.loading = true;
+        this.UbicacionesService.getUbicaciones().subscribe(response => {
+          if(response.exito){
+            this.listTallas = response.respuesta;
+            this.loading = false;
           }
+        }, err => {
+          this.loading = false;
+        });
+    }
+  
+    openModalAdd(){
+      this.accion = 'Agregar';
+      this.selectedTalla = new UbicacionModel();
+      setTimeout(() => {
+        this.variablesGL.showDialog.next(true);
+      }, 100);
+    }
+  
+    editTalla(talla: UbicacionModel){
+      this.accion = 'Actualizar';
+      this.selectedTalla = {...talla};
+      setTimeout(() => {
+        this.variablesGL.showDialog.next(true);
+      }, 100);
+    }
+  
+    deleteTalla(talla: UbicacionModel){
+      Swal.fire({
+        title: `Está seguro de eliminar la talla ${talla.direccion}?`,
+        icon: 'question',
+        showDenyButton: true,
+        confirmButtonText: 'Guardar',
+        denyButtonText: `Cancelar`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log(talla);
+  
+          this.UbicacionesService.eliminaUbicacion(talla).subscribe(response => {
+            if(response.exito){
+                this.toastr.success(response.mensaje, 'Exito!!');
+                this.getTallas();
+            }else{
+                this.toastr.error(response.mensaje, 'Ups!!');
+            }
+          }, err => {
+            console.log('error elimina talla ', err);
+            this.toastr.error('Hubo un problema al conectar con los servicios en linea','Ups!!');
+          });
+        } else if (result.isDenied) {
+  
+        }
       });
-  }
-
-  editProduct() {
-      this.product = {};
-      this.productDialog = true;
-  }
-
-  deleteProduct(product: any) {
-      this.confirmationService.confirm({
-          message: 'Are you sure you want to delete ' + product.name + '?',
-          header: 'Confirm',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-              this.products = this.products.filter(val => val.id !== product.id);
-              this.product = {};
-              this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
-          }
+    }
+  
+    deleteSelectedTallas(){
+      Swal.fire({
+        title: `Está seguro de eliminar las ${this.selectedTallas.length} tallas?`,
+        icon: 'question',
+        showDenyButton: true,
+        confirmButtonText: 'Guardar',
+        denyButtonText: `Cancelar`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+            this.selectedTallas.forEach(us => {
+                this.UbicacionesService.eliminaUbicacion(us).subscribe();
+            });
+        } else if (result.isDenied) {
+  
+        }
       });
+    }
+  
+  
   }
-
-  hideDialog() {
-      this.productDialog = false;
-      this.submitted = false;
-  }
-
-  saveProduct() {
-      this.submitted = true;
-
-      if (this.product.name.trim()) {
-          if (this.product.id) {
-              this.products[this.findIndexById(this.product.id)] = this.product;
-              this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
-          }
-          else {
-              this.product.id = this.createId();
-              this.product.image = 'product-placeholder.svg';
-              this.products.push(this.product);
-              this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
-          }
-
-          this.products = [...this.products];
-          this.productDialog = false;
-          this.product = {};
-      }
-  }
-
-  findIndexById(id: string): number {
-      let index = -1;
-      for (let i = 0; i < this.products.length; i++) {
-          if (this.products[i].id === id) {
-              index = i;
-              break;
-          }
-      }
-
-      return index;
-  }
-
-  createId(): string {
-      let id = '';
-      var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      for ( var i = 0; i < 5; i++ ) {
-          id += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return id;
-  }
-}
+  
