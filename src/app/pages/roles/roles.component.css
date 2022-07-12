@@ -21,6 +21,14 @@
     cursor: pointer;
 }
 
+.ml {
+    margin-left: 10px;
+}
+
+.ml-2 {
+    margin-left: 20px;
+}
+
 
 /* CHANGE COLOR BACKGROUND DROPDOWN */
 

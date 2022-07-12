@@ -6,6 +6,7 @@ import { VistasRolesModel } from 'src/app/models/vistas-roles.model';
 import { RolesService } from 'src/app/services/roles.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VistasService } from 'src/app/services/vistas.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-roles',
@@ -17,6 +18,7 @@ export class RolesComponent implements OnInit {
   statusPantalla: number;
   listRoles: RolModel[] = [];
   selectedRol: RolModel;
+  selectedRolDialog: RolModel;
   listVistas: VistaModel[] = [];
   selectedVista: VistaModel;
   listVistasDisponibles: VistaModel[] = [];
@@ -25,7 +27,9 @@ export class RolesComponent implements OnInit {
   loading: boolean = false;
   cols: any[] = [];
   rows: number = 0;
+  accion = '';
   constructor(
+    private toastr: ToastrService,
     private rolesService: RolesService,
     private vistasService: VistasService,
     private variablesService: VariablesService,
@@ -86,6 +90,54 @@ export class RolesComponent implements OnInit {
     this.selectedRol = rol;
     this.loading = true;
     this.getVistasRol(rol);
+  }
+
+  openModalAdd(){
+    this.accion = 'Agregar';
+    this.selectedRolDialog = new RolModel();
+    setTimeout(() => {
+      this.variablesService.showDialog.next(true);
+    }, 100);
+  }
+
+  resetInfo(){
+    this.getRoles();
+    this.selectedRol = null;
+    this.selectedVista = null;
+  }
+
+  editRol(rol: RolModel){
+    this.accion = 'Actualizar';
+    this.selectedRolDialog = {...rol};
+    setTimeout(() => {
+      this.variablesService.showDialog.next(true);
+    }, 100);
+  }
+
+  deleteRol(rol: RolModel){
+    Swal.fire({
+      title: `Está seguro de eliminar el rol ${rol.descripcion}?`,
+      icon: 'question',
+      showDenyButton: true,
+      confirmButtonText: 'Guardar',
+      denyButtonText: `Cancelar`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.rolesService.eliminaRol(rol).subscribe(response => {
+          if(response.exito){
+              this.toastr.success(response.mensaje, 'Exito!!');
+              this.resetInfo();
+          }else{
+              this.toastr.error(response.mensaje, 'Ups!!');
+          }
+        }, err => {
+          console.log('error elimina rol ', err);
+          this.toastr.error('Hubo un problema al conectar con los servicios en linea','Ups!!');
+        });
+      } else if (result.isDenied) {
+
+      }
+    });
   }
 
   openConfirmacion(){

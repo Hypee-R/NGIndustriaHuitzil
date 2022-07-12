@@ -8,9 +8,13 @@
                 <div class="col-12 col-md-3">
                     <h4>Roles</h4>
                     <hr>
-                    <div class="itemAdd" style="text-align: center;"><i class="fa-solid fa-plus"></i></div>
+                    <div class="itemAdd" style="text-align: center;" (click)="openModalAdd()"><i class="fa-solid fa-plus"></i></div>
                     <div *ngFor="let rol of listRoles" style="margin-top: 1em;">
-                        <div class="itemRol" [ngClass]="{'itemAdd': selectedRol?.descripcion == rol.descripcion }" (click)="cargarVistasRol(rol)">{{rol.descripcion}}</div>
+                        <div class="itemRol" [ngClass]="{'itemAdd': selectedRol?.descripcion == rol.descripcion }" (click)="cargarVistasRol(rol)">
+                            <i class="fa-solid fa-pen" (click)="editRol(rol)"></i>
+                            <i class="fa-solid fa-trash ml" (click)="deleteRol(rol)"></i>
+                            <label class="ml-2">{{rol.descripcion}}</label>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 col-md-9">
@@ -43,6 +47,7 @@
                             </ng-template>
                         </p-table>
                     </div>
+                    <app-add-rol [_accion]="accion" [(_editRol)]="selectedRolDialog" (saveRol)="resetInfo()" *ngIf="accion != ''"></app-add-rol>
                 </div>
             </div>
         </div>

@@ -45,6 +45,11 @@
     font-family: 'Poppins', sans-serif;
 }
 
+hr {
+    color: var(--color-dark);
+    border-color: var(--color-dark);
+}
+
 body {
     min-height: 100vh;
     background: var(--color-background);

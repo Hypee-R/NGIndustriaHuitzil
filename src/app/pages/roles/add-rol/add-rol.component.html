@@ -1,0 +1,17 @@
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Rol" [modal]="true" styleClass="p-fluid">
+
+    <ng-template pTemplate="content">
+        <div class="field">
+            <label for="descripcion">Descripción</label>
+            <input type="text" pInputText id="descripcion" [(ngModel)]="rol.descripcion" required/>
+            <small class="p-error" *ngIf="submitted && !rol.descripcion">La descripción es requerida.</small>
+            <small class="p-error" *ngIf="submitted && rol.descripcion?.length > 0 && rol.descripcion?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveDataRol()"></button>
+    </ng-template>
+
+</p-dialog>

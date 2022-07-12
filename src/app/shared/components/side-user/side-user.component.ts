@@ -19,7 +19,9 @@ export class SideUserComponent implements OnInit {
   ) {
    }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.user = JSON.parse(localStorage.getItem('usuario'));
+  }
 
   logOff() {
     this.variablesGL.removeCredential();

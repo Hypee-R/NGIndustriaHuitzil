@@ -43,13 +43,13 @@ import { RatingModule } from 'primeng/rating';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
-import { MessageService } from 'primeng/api';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
 import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
+import { AddRolComponent } from './roles/add-rol/add-rol.component';
+import { MaterialesComponent } from './materiales/materiales.component';
 
 @NgModule({
     imports: [
@@ -87,7 +87,7 @@ import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
         InputNumberModule,
         ConfirmDialogModule,
         InputTextareaModule,
-],  providers: [ConfirmationService],
+],  providers: [],
     declarations: [
         ContentComponent,
         DashboardComponent,
@@ -106,6 +106,8 @@ import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
         AddUsuarioComponent,
         AddProveedorComponent,
         AddTallaComponent,
+        AddRolComponent,
+        MaterialesComponent,
     ]
 })
 export class PagesModule { }

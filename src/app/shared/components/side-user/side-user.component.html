@@ -5,8 +5,17 @@
             <h5 class="mb-0 h-100 d-vertical-left">Mi Cuenta</h5>
         </div>
     </div>
-
+    <hr>
     <ul class="w-100 lista">
+        <li>
+            <i class="fas fa-user icono"></i>{{user.nombre}} {{ user.apellidoPaterno}} {{ user.apellidoMaterno }}
+        </li>
+        <li>
+            <i class="fas fa-lock icono"></i>{{user.rol}}
+        </li>
+        <li routerLink="/my-profile">
+            <i class="fas fa-id-card icono"></i>Mi Perfil
+        </li>
         <li (click)="logOff()">
             <i class="fas fa-power-off icono"></i> Cerrar Sesiòn
         </li>

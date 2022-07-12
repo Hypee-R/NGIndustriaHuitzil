@@ -2,6 +2,7 @@ import * as CryptoJS from 'crypto-js';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class VariablesService {
   }
 
   removeCredential() {
-    this.router.navigate(['/'], { replaceUrl: true });
+    //this.router.navigate(['/'], { replaceUrl: true });
     localStorage.d = "";
     localStorage.clear();
     location.reload();
@@ -47,6 +48,12 @@ export class VariablesService {
 
   getSHA1(data: string){
     return CryptoJS.SHA1(data).toString()
+  }
+
+  checkPassword(group: FormGroup): any {
+    const pass = group.controls.password?.value;
+    const confirmPassword = group.controls.repetirPassword?.value;
+    return pass === confirmPassword ? null : { notSame: true };
   }
 
 }
