@@ -22,21 +22,21 @@ export class UbicacionesService {
   }
 
   agregaUbicacion(request: UbicacionModel): Observable<ResponseModel>{
-    return this.http.post<ResponseModel>(environment.apiService + 'Ubicaciones/Agrega', request)
+    return this.http.post<ResponseModel>(environment.apiService + 'Ubicaciones/AgregaUbicacion', request)
     .pipe(
       map (res => res)
     );
   }
 
   actualizaUbicacion(request: UbicacionModel): Observable<ResponseModel>{
-    return this.http.put<ResponseModel>(environment.apiService + 'Ubicaciones/Actualiza', request)
+    return this.http.put<ResponseModel>(environment.apiService + 'Ubicaciones/ActualizaUbicacion', request)
     .pipe(
       map (res => res)
     );
   }
 
   eliminaUbicacion(request: UbicacionModel): Observable<ResponseModel>{
-    return this.http.delete<ResponseModel>(environment.apiService + 'Ubicaciones/Elimina', { body: request })
+    return this.http.delete<ResponseModel>(environment.apiService + 'Ubicaciones/EliminaUbicacion', { body: request })
     .pipe(
       map (res => res)
     );

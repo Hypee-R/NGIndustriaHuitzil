@@ -7,5 +7,15 @@ export class UbicacionModel{
     telefono1: string;
     telefono2: string;
     correo: string;
-    articulos: any
+    articulos: any;
+    constructor(){
+        this.idUbicacion = 0;
+        this.direccion = '';
+        this.nombreEncargado = '';
+        this.apellidoMEncargado = '';
+        this.telefono1 = '';
+        this.telefono2 = '';
+        this.correo = '';
+
+      }
 }

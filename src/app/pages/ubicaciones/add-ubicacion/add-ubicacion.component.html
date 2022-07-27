@@ -1,0 +1,57 @@
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} ubicacion" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="field">
+            <label for="direccion">Dirreccion</label>
+            <input type="text" pInputText id="direccion" [(ngModel)]="ubicacion.direccion" required autofocus />
+            <small class="p-error" *ngIf="submitted && !ubicacion.direccion">El nombre es requerido.</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="nombreEncargado">Nombre Encargado</label>
+            <input type="text" pInputText id="nombreEncargado" [(ngModel)]="ubicacion.nombreEncargado" required/>
+            <small class="p-error" *ngIf="submitted && !ubicacion.nombreEncargado">La descripción es requerida.</small>
+            <small class="p-error" *ngIf="submitted && ubicacion.nombreEncargado?.length > 0 && ubicacion.nombreEncargado?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="apellidoPEncargado">Apellido Paterno Encargado</label>
+            <input type="text" pInputText id="apellidoPEncargado" [(ngModel)]="ubicacion.apellidoPEncargado" required/>
+            <small class="p-error" *ngIf="submitted && !ubicacion.apellidoPEncargado">La descripción es requerida.</small>
+            <small class="p-error" *ngIf="submitted && ubicacion.apellidoPEncargado?.length > 0 && ubicacion.apellidoPEncargado?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="apellidoMEncargado">Apellido Materno Encargado</label>
+            <input type="text" pInputText id="apellidoMEncargado" [(ngModel)]="ubicacion.apellidoMEncargado" required/>
+            <small class="p-error" *ngIf="submitted && !ubicacion.apellidoMEncargado">La descripción es requerida.</small>
+            <small class="p-error" *ngIf="submitted && ubicacion.apellidoMEncargado?.length > 0 && ubicacion.apellidoMEncargado?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="telefono1">Telefono1</label>
+            <input type="text" pInputText id="telefono1" [(ngModel)]="ubicacion.telefono1" required/>
+            <small class="p-error" *ngIf="submitted && !ubicacion.telefono1">La descripción es requerida.</small>
+            <small class="p-error" *ngIf="submitted && ubicacion.telefono1?.length > 0 && ubicacion.telefono1?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="telefono2">Telefono2</label>
+            <input type="text" pInputText id="telefono2" [(ngModel)]="ubicacion.telefono2" required/>
+            <small class="p-error" *ngIf="submitted && !ubicacion.telefono2">La descripción es requerida.</small>
+            <small class="p-error" *ngIf="submitted && ubicacion.telefono2?.length > 0 && ubicacion.telefono2?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="correo">Correo</label>
+            <input type="text" pInputText id="correo" [(ngModel)]="ubicacion.correo" required/>
+            <small class="p-error" *ngIf="submitted && !ubicacion.correo">La descripción es requerida.</small>
+            <small class="p-error" *ngIf="submitted && ubicacion.correo?.length > 0 && ubicacion.correo?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveDataubicacion()"></button>
+    </ng-template>
+
+</p-dialog>

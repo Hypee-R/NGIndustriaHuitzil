@@ -48,6 +48,8 @@ import { ButtonModule } from 'primeng/button';
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
 import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
+import { AddubicacionComponent } from './ubicaciones/add-ubicacion/add-ubicacion.component';
+import { AddcategoriaComponent } from './categorias/add-categoria/add-categoria.component';
 import { AddRolComponent } from './roles/add-rol/add-rol.component';
 import { MaterialesComponent } from './materiales/materiales.component';
 
@@ -108,6 +110,8 @@ import { MaterialesComponent } from './materiales/materiales.component';
         AddTallaComponent,
         AddRolComponent,
         MaterialesComponent,
+        AddcategoriaComponent,
+        AddubicacionComponent
     ]
 })
 export class PagesModule { }

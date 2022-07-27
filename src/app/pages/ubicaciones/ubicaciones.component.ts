@@ -16,21 +16,29 @@ export class UbicacionesComponent implements OnInit {
     rows = 0;
     accion = '';
     cols: any[] = [];
-    statusPantalla: number;
+    statusPanubicacion: number;
     loading: boolean = false;
-    selectedTalla: UbicacionModel = new UbicacionModel();
-    selectedTallas: UbicacionModel[];
-    listTallas: UbicacionModel[] = [];
+    selectedubicacion: UbicacionModel = new UbicacionModel();
+    selectedubicaciones: UbicacionModel[];
+ 
+
+    listubicacions: UbicacionModel[] = [];
     constructor(
       public variablesGL: VariablesService,
       private UbicacionesService: UbicacionesService,
       private toastr: ToastrService,
     ) {
       this.cols = [
-        { field: 'nombre', header: 'Nombre' },
-        { field: 'descripcion', header: 'Descripción' },
+        { field: 'idUbicacion', header: 'idUbicacion' },
+        { field: 'direccion', header: 'direccion' },
+        { field: 'nombreEncargado', header: 'nombreEncargado' },
+        { field: 'apellidoPEncargado', header: 'apellidoPEncargado' },
+        { field: 'apellidoMEncargado', header: 'apellidoMEncargado' },
+        { field: 'telefono1', header: 'telefono1' },
+        { field: 'telefono2', header: 'telefono2' },
+        { field: 'correo', header: 'correo' },
       ];
-      this.statusPantalla = this.variablesGL.getStatusPantalla();
+      this.statusPanubicacion = this.variablesGL.getStatusPantalla();
       let status = this.variablesGL.getPantalla();
       if(status == 'celular'){
         this.rows = 6;
@@ -44,14 +52,14 @@ export class UbicacionesComponent implements OnInit {
     }
   
     ngOnInit(): void {
-      this.getTallas();
+      this.getubicacions();
     }
   
-    getTallas(){
+    getubicacions(){
         this.loading = true;
         this.UbicacionesService.getUbicaciones().subscribe(response => {
           if(response.exito){
-            this.listTallas = response.respuesta;
+            this.listubicacions = response.respuesta;
             this.loading = false;
           }
         }, err => {
@@ -61,40 +69,40 @@ export class UbicacionesComponent implements OnInit {
   
     openModalAdd(){
       this.accion = 'Agregar';
-      this.selectedTalla = new UbicacionModel();
+      this.selectedubicacion = new UbicacionModel();
       setTimeout(() => {
         this.variablesGL.showDialog.next(true);
       }, 100);
     }
   
-    editTalla(talla: UbicacionModel){
+    editubicacion(ubicacion: UbicacionModel){
       this.accion = 'Actualizar';
-      this.selectedTalla = {...talla};
+      this.selectedubicacion = {...ubicacion};
       setTimeout(() => {
         this.variablesGL.showDialog.next(true);
       }, 100);
     }
   
-    deleteTalla(talla: UbicacionModel){
+    deleteubicacion(ubicacion: UbicacionModel){
       Swal.fire({
-        title: `Está seguro de eliminar la talla ${talla.direccion}?`,
+        title: `Está seguro de eliminar la ubicacion ${ubicacion.direccion}?`,
         icon: 'question',
         showDenyButton: true,
         confirmButtonText: 'Guardar',
         denyButtonText: `Cancelar`,
       }).then((result) => {
         if (result.isConfirmed) {
-          console.log(talla);
+          console.log(ubicacion);
   
-          this.UbicacionesService.eliminaUbicacion(talla).subscribe(response => {
+          this.UbicacionesService.eliminaUbicacion(ubicacion).subscribe(response => {
             if(response.exito){
                 this.toastr.success(response.mensaje, 'Exito!!');
-                this.getTallas();
+                this.getubicacions();
             }else{
                 this.toastr.error(response.mensaje, 'Ups!!');
             }
           }, err => {
-            console.log('error elimina talla ', err);
+            console.log('error elimina ubicacion ', err);
             this.toastr.error('Hubo un problema al conectar con los servicios en linea','Ups!!');
           });
         } else if (result.isDenied) {
@@ -103,16 +111,16 @@ export class UbicacionesComponent implements OnInit {
       });
     }
   
-    deleteSelectedTallas(){
+    deleteSelectedubicacions(){
       Swal.fire({
-        title: `Está seguro de eliminar las ${this.selectedTallas.length} tallas?`,
+        title: `Está seguro de eliminar las ${this.selectedubicaciones.length} ubicacions?`,
         icon: 'question',
         showDenyButton: true,
         confirmButtonText: 'Guardar',
         denyButtonText: `Cancelar`,
       }).then((result) => {
         if (result.isConfirmed) {
-            this.selectedTallas.forEach(us => {
+            this.selectedubicaciones.forEach(us => {
                 this.UbicacionesService.eliminaUbicacion(us).subscribe();
             });
         } else if (result.isDenied) {
