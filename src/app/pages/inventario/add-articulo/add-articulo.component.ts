@@ -11,11 +11,9 @@ import { CategoriaModel } from 'src/app/models/categoria.model';
 import { TallasService } from 'src/app/services/tallas.service';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
+import { DomSanitizer } from '@angular/platform-browser';
 
-interface Country {
-  name: string,
-  code: string
-}
+
 
 @Component({
   selector: 'app-add-articulo',
@@ -48,7 +46,10 @@ export class AddArticuloComponent implements OnInit {
 
   dialogSubscription: Subscription = new Subscription();
 
-  
+  archivos=[]
+  previsualizacion: "'assets/img/default-image.jpg'" ;
+ //previsualizacion: "" ;
+
 
   constructor( 
     private toastr: ToastrService,
@@ -57,6 +58,7 @@ export class AddArticuloComponent implements OnInit {
     private categoriasService:CategoriasService,
     private tallasService:TallasService,
     private ubicacionesService:UbicacionesService,
+    private sanitizer: DomSanitizer
     ) {
       this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
         this.visibleDialog = estado;
@@ -90,22 +92,11 @@ hideDialog() {
   this.variablesGL.showDialog.next(false);
 }
 
-/*capturarCategoria(){
 
-  this.producto.idCategoria=this.selectedCategoria.idCategoria
-}
-capturarTalla(){
-
-  this.producto.idTalla=this.selectedTalla.idTalla
-}
-capturarUbicacion(){
-  
-  this.producto.idUbicacion=this.selectedUbicacion.idUbicacion
-}*/
 
 saveArticulo(){
   this.submitted = true;
-  
+
   if(this.producto.existencia?.length >1){
     //console.log('datos validos!!');
     //console.log('data proveedor ', this.proveedor);
@@ -188,5 +179,39 @@ actualizarArticulo(){
     this.toastr.error('Hubo un problema al conectar con los servicios en linea','Ups!!');
   });
 }
+
+capturarFile(event){
+  const fotografiaCaptura=event.target.files[0]
+  this.extraerBase64(fotografiaCaptura).then((imagen: any) => {
+    this.previsualizacion = imagen.base;
+    this.producto.imagen=imagen.base
+    //console.log(imagen['base']);
+  })
+  //this.archivos.push(fotografiaCaptura)
+  
+
+}
+
+extraerBase64 = async ($event: any) => new Promise((resolve, reject) => {
+  try {
+    const unsafeImg = window.URL.createObjectURL($event);
+    const image = this.sanitizer.bypassSecurityTrustUrl(unsafeImg);
+    const reader = new FileReader();
+    reader.readAsDataURL($event);
+    reader.onload = () => {
+      resolve({
+        base: reader.result
+      });
+    };
+    reader.onerror = error => {
+      resolve({
+        base: null
+      });
+    };
+
+  } catch (e) {
+    return null;
+  }
+})
 
 }

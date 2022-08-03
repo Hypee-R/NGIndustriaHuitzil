@@ -12,6 +12,7 @@ export class productoModel{
   talla:string;
   ubicacion:string;
   categoria:string;
+  imagen:string;
     constructor(){
     this.idArticulo = 0;
     this.unidad = '';
@@ -23,5 +24,6 @@ export class productoModel{
     this.categoria='';
     this.talla='';
     this.ubicacion='';
+    this.imagen=''
   }
 }

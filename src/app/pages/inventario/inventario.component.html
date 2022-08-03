@@ -105,7 +105,7 @@
                                           <p-sortIcon [field]="col.field"></p-sortIcon>
                                       </div>
                                   </th>
-                                  <th>Image</th>
+                                 
                                  
                               </tr>
                               
@@ -121,11 +121,36 @@
                                           <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteArticulo(rowData)" style="margin-left: 3px;"></button>
                                       </div>
                                   </td>
-                                  <td *ngFor="let col of columns">
-                                      {{rowData[col.field]}}
+                                  <td>
+                                    {{rowData['idArticulo']}}
                                   </td>
-                                  <td><img [src]="'assets/img/pantalon.jpg'" width="100" class="shadow-1" /></td>
-                                
+                                  <td>
+                                    {{rowData['descripcion']}}
+                                  </td>
+                                  <td>
+                                    {{rowData['existencia']}}
+                                  </td>
+                                  <td>
+                                    {{rowData['fechaIngreso']}}
+                                  </td>
+                                  <td>
+                                    {{rowData['categoria']}}
+                                  </td>
+                                  <td>
+                                    {{rowData['unidad']}}
+                                  </td>
+                                  <td>
+                                    {{rowData['talla']}}
+                                  </td> 
+                                  <td>
+                                    {{rowData['ubicacion']}}
+                                  </td>
+                                  
+                                  
+                                  <td>
+                                    
+                                    <img [src]=rowData.imagen width="40" height="40%" class="shadow-1" />
+                                  </td>
                               </tr>
                           </ng-template>
                           <!-- <ng-template pTemplate="summary">

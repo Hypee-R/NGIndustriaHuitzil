@@ -14,6 +14,11 @@ import { CatTallaModel } from 'src/app/models/tallas.model';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { CategoriaModel } from 'src/app/models/categoria.model';
 
+export interface imagen64 {
+  id: number,
+  imagen64c: string
+}
+
 @Component({
   selector: 'app-inventario',
   templateUrl: './inventario.component.html',
@@ -26,7 +31,6 @@ export class InventarioComponent implements OnInit {
   product: any;
   selectedProducts: any;
   submitted: boolean;
-  statuses: any[];
   statusPantalla: number;
   loading: boolean = false;
   listArticulos: productoModel[] = [];
@@ -35,7 +39,8 @@ export class InventarioComponent implements OnInit {
   listCategorias:CategoriaModel[]=[];
   selectedArticulo: productoModel = new productoModel();
   selectedArticulos: productoModel[];
-  
+  imagenes:imagen64[]=[]
+ 
   accion = '';
   rows = 0;
   cols: any[] = [];
@@ -44,9 +49,7 @@ export class InventarioComponent implements OnInit {
     public variablesGL: VariablesService,
     private inventarioService: InventarioService,
     private toastr: ToastrService,
-    private categoriaService:CategoriasService,
-    private tallasService:TallasService,
-    private ubicacionesService:TallasService
+    
     
   ) {
 
@@ -60,7 +63,8 @@ export class InventarioComponent implements OnInit {
       { field: 'unidad', header: 'Unidad' },
       { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
-    
+      { fiel:'',header:'Imagen'}
+     
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();
@@ -75,15 +79,8 @@ export class InventarioComponent implements OnInit {
     }
   }
   ngOnInit() {
-    //  this.productService.getProducts().then(data => this.products = data);
-
-      this.statuses = [
-          {label: 'INSTOCK', value: 'instock'},
-          {label: 'LOWSTOCK', value: 'lowstock'},
-          {label: 'OUTOFSTOCK', value: 'outofstock'}
-      ];
-
       this.getArticulos();
+      
   }
 
   openNew() {
@@ -92,85 +89,26 @@ export class InventarioComponent implements OnInit {
       this.productDialog = true;
   }
 
+
   getArticulos(){
     this.loading = true;
-    /*this.tallasService.getTallas().subscribe(response => {
-      if(response.exito){
-        this.listTallas = response.respuesta;
-        this.loading = false;
-      }
-    }, err => {
-      this.loading = false;
-    });*/
     this.inventarioService.getArticulos().subscribe(response => {
       if(response.exito){
         this.listArticulos = response.respuesta;
         this.loading = false;
+        for(let art of this.listArticulos){
+          this.imagenes.push({id:art.idArticulo,imagen64c:art.imagen})
+        }
       }
     }, err => {
       this.loading = false;
     });
-
-  
-
-    
 }
- /* deleteSelectedProducts() {
-      this.confirmationService.confirm({
-          message: 'Are you sure you want to delete the selected products?',
-          header: 'Confirm',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-              this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-              this.selectedProducts = null;
-              this.messageService.add({severity:'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
-          }
-      });
-  }*/
 
   editProduct() {
       this.product = {};
       this.productDialog = true;
   }
-
-  /*deleteProduct(product: any) {
-      this.confirmationService.confirm({
-          message: 'Are you sure you want to delete ' + product.name + '?',
-          header: 'Confirm',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-              this.products = this.products.filter(val => val.id !== product.id);
-              this.product = {};
-              this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
-          }
-      });
-  }
-
-  hideDialog() {
-      this.productDialog = false;
-      this.submitted = false;
-  }
-
-  saveProduct() {
-      this.submitted = true;
-
-      if (this.product.name.trim()) {
-          if (this.product.id) {
-              this.products[this.findIndexById(this.product.id)] = this.product;
-              this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
-          }
-          else {
-              this.product.id = this.createId();
-              this.product.image = 'product-placeholder.svg';
-              this.products.push(this.product);
-              this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
-          }
-
-          this.products = [...this.products];
-          this.productDialog = false;
-          this.product = {};
-      }
-  }*/
 
   findIndexById(id: string): number {
       let index = -1;
@@ -204,7 +142,7 @@ export class InventarioComponent implements OnInit {
 
   /// Editar componetente
   editArticulo(producto: productoModel){
-    console.log(producto)
+   // console.log(producto)
     this.accion = 'Actualizar';
     this.selectedArticulo = {...producto};
     setTimeout(() => {
@@ -233,7 +171,7 @@ export class InventarioComponent implements OnInit {
               this.toastr.error(response.mensaje, 'Ups!!');
           }
         }, err => {
-          console.log('error elimina proveedor ', err);
+          //console.log('error elimina proveedor ', err);
           this.toastr.error('Hubo un problema al conectar con los servicios en linea','Ups!!');
         });
       } else if (result.isDenied) {
@@ -241,4 +179,5 @@ export class InventarioComponent implements OnInit {
       }
     });
   }
+
 }

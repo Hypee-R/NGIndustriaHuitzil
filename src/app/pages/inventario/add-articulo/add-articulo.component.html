@@ -1,11 +1,27 @@
 <p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} producto" [modal]="true" styleClass="p-fluid">
 
     <ng-template pTemplate="content">
+        <label for="descripcion">Imagen</label>
+        <br>
+        
+        <div class="preview-img" *ngIf="previsualizacion" >
+            <img  [src]="previsualizacion" alt="" width="250">
+        </div>
+        <div class="preview-img" *ngIf="!previsualizacion" >
+            <img  [src]="'assets/img/default-image.jpg'" alt="" width="250">
+        </div>
+        
         <div class="field">
-            <label for="unidad">Unidad</label>
-            <input type="text" pInputText id="unidad" [(ngModel)]="producto.unidad" required autofocus />
-            <small class="p-error" *ngIf="submitted && !producto.unidad">La unidad es requerida.</small>
-            <small class="p-error" *ngIf="submitted && producto.unidad?.length > 0 && producto.unidad?.length <= 2">La unidad debe contener minimo 3 caracteres</small>
+            
+            <input (change)="capturarFile($event)"type="file"  />
+            
+        </div>
+        <br>
+        <div class="field">
+            <label for="descripcion">Unidad</label>
+            <input type="text" pInputText id="unidad" [(ngModel)]="producto.unidad" required/>
+            <small class="p-error" *ngIf="submitted && !producto.descripcion">La descripción es requerida.</small>
+            <small class="p-error" *ngIf="submitted && producto.descripcion?.length > 0 && producto.descripcion?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
         </div>
         <br>
         <div class="field">
