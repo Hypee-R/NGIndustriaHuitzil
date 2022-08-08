@@ -13,7 +13,7 @@ export class AuthGuard implements CanLoad {
   ) {}
 
   canLoad(): boolean {
-    if (this.authService.token){
+    if (this.authService.token && this.authService.expiredTimeValid()){
       //console.log("Autenticado");
       return true;
     }else {

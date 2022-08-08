@@ -82,7 +82,8 @@
     position: absolute;
     /* z-index: 100; */
     border-left: 2px solid var(--color-white);
-    width: 14vw;
+    width: 22vw;
+    border-radius: 5px;
     height: auto;
     padding-bottom: 1em;
 }
