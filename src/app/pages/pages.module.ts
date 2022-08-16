@@ -53,6 +53,7 @@ import { AddcategoriaComponent } from './categorias/add-categoria/add-categoria.
 import { AddRolComponent } from './roles/add-rol/add-rol.component';
 import { MaterialesComponent } from './materiales/materiales.component';
 import { AddArticuloComponent } from './inventario/add-articulo/add-articulo.component';
+import {ChartModule} from 'primeng/chart';
 
 @NgModule({
     imports: [
@@ -90,6 +91,7 @@ import { AddArticuloComponent } from './inventario/add-articulo/add-articulo.com
         InputNumberModule,
         ConfirmDialogModule,
         InputTextareaModule,
+        ChartModule
 ],  providers: [],
     declarations: [
         ContentComponent,

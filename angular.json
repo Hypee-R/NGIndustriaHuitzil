@@ -106,7 +106,9 @@
                             "node_modules/primeicons/primeicons.css",
                             "node_modules/ngx-toastr/toastr.css"
                         ],
-                        "scripts": []
+                        "scripts": [
+                            "../node_modules/chart.js/dist/chart.js"
+                        ]
                     }
                 }
             }
