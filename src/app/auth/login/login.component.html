@@ -1,47 +1,45 @@
+<div class="contenedor">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+
+                <img class="logo" src="../../../assets/img/logo_huitzil.png" alt="Login">
+                <div class="text-center">
+
+                    <h1>Iniciar Sesion</h1>
+                    <h6>Por favor ingresa Usuario y Contraseña</h6>
+                </div>
+                <form>
+                    <form>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Usuario</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" #email aria-describedby="emailHelp">
+                            <div id="emailHelp" class="form-text">Ingresa Usuario correcto</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" #password id="exampleInputPassword1">
+                        </div>
 
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-6">
-      <div class="card">
+                        <button type="submit" class="btn btn-primary" (click)="iniciarSesion(email.value, password.value)">Iniciar Sesion</button>
+                    </form>
 
-        <img class="logo" src="../../../assets/img/logo_huitzil.png" alt="Login">
-        <div class="text-center">
+                </form>
+                <!-- <p class="social-text">Iniciar sesión con plataformas sociales</p>
+                <div class="social-media">
 
-          <h1>Iniciar Sesion</h1>
-          <h6>Por favor ingresa Usuario y Contraseña</h6>
-        </div>
-        <form>
-          <form>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label">Usuario</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" #email aria-describedby="emailHelp">
-              <div id="emailHelp" class="form-text">Ingresa Usuario correcto</div>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <br>
+
+
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div> -->
             </div>
-            <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-              <input type="password" class="form-control" #password id="exampleInputPassword1">
-            </div>
-
-
-            <button type="submit" class="btn btn-primary" (click)="iniciarSesion(email.value, password.value)">Iniciar Sesion</button>
-          </form>
-
-        </form>
-        <p class="social-text">Iniciar sesión con plataformas sociales</p>
-        <div class="social-media">
-          
-          <a href="#" class="social-icon">
-            <i class="fab fa-google"></i>
-          </a>
-          <br >
-
-
-          <a href="#" class="social-icon">
-            <i class="fab fa-linkedin-in"></i>
-          </a>
         </div>
-      </div>
     </div>
-  </div>
 </div>
