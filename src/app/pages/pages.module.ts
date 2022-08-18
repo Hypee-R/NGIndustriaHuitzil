@@ -54,6 +54,7 @@ import { AddRolComponent } from './roles/add-rol/add-rol.component';
 import { MaterialesComponent } from './materiales/materiales.component';
 import { AddArticuloComponent } from './inventario/add-articulo/add-articulo.component';
 import {ChartModule} from 'primeng/chart';
+import { AddMaterialComponent } from './materiales/add-material/add-material.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -114,7 +115,8 @@ import {ChartModule} from 'primeng/chart';
         MaterialesComponent,
         AddcategoriaComponent,
         AddubicacionComponent,
-        AddArticuloComponent
+        AddArticuloComponent,
+        AddMaterialComponent
     ]
 })
 export class PagesModule { }

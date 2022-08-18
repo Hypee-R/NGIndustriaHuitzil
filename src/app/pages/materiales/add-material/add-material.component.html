@@ -1,0 +1,47 @@
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Material" [modal]="true" styleClass="p-fluid">
+
+    <ng-template pTemplate="content">
+        <div class="field">
+            <label for="nombre">Nombre</label>
+            <input type="text" pInputText id="nombre" [(ngModel)]="material.nombre" required autofocus />
+            <small class="p-error" *ngIf="submitted && !material.nombre">El nombre es requerido.</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="descripcion">Descripción</label>
+            <input type="text" pInputText id="descripcion" [(ngModel)]="material.descripcion" required/>
+            <small class="p-error" *ngIf="submitted && !material.descripcion">La descripción es requerida.</small>
+            <small class="p-error" *ngIf="submitted && material.descripcion?.length > 0 && material.descripcion?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="precio">Precio</label>
+            <input type="number" pInputText id="precio" [(ngModel)]="material.precio" required/>
+            <small class="p-error" *ngIf="submitted && !material.precio">El precio es requerido.</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="tipo_medicion">Tipo Medición</label>
+            <input type="text" pInputText id="tipo_medicion" [(ngModel)]="material.tipoMedicion" required/>
+            <small class="p-error" *ngIf="submitted && !material.tipoMedicion">El tipo de medición es requerido.</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="estatus">Estatus</label>
+            <input type="text" pInputText id="estatus" [(ngModel)]="material.status" required/>
+            <small class="p-error" *ngIf="submitted && !material.status">El status es requerido.</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="stock">Stock</label>
+            <input type="number" pInputText id="stock" [(ngModel)]="material.stock" required/>
+            <small class="p-error" *ngIf="submitted && !material.stock">El stock es requerido.</small>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveDataMaterial()"></button>
+    </ng-template>
+
+</p-dialog>

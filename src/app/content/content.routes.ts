@@ -12,6 +12,7 @@ import { VentasComponent } from '../pages/ventas/ventas.component';
 import { MiPerfilComponent } from '../pages/mi-perfil/mi-perfil.component';
 import { UsuariosComponent } from '../pages/usuarios/usuarios.component';
 import { RolesComponent } from '../pages/roles/roles.component';
+import { MaterialesComponent } from '../pages/materiales/materiales.component';
 
 export const contentRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
@@ -22,6 +23,7 @@ export const contentRoutes: Routes = [
     { path: 'reports', component: InformesComponent},
     { path: 'locations', component: UbicacionesComponent },
     { path: 'categories', component: CategoriasComponent },
+    { path: 'materials', component: MaterialesComponent },
     { path: 'providers', component: ProveedoresComponent },
     { path: 'sizes', component: TallasComponent },
     { path: 'my-profile', component: MiPerfilComponent },

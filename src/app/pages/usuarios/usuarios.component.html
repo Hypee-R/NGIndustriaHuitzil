@@ -15,9 +15,9 @@
                                 <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
                             </ng-template>
 
-                            <ng-template pTemplate="right">
+                            <!-- <ng-template pTemplate="right">
                                 <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
-                            </ng-template>
+                            </ng-template> -->
                         </p-toolbar>
 
                         <app-item-empty></app-item-empty>
@@ -28,23 +28,23 @@
                             dataKey="idUser" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                             <ng-template pTemplate="caption">
                                 <div class="flex align-items-center justify-content-between">
-                                    <h5 class="m-0">Administrar Usuarios</h5>
-                                    <br>
+                                    <!-- <h5 class="m-0">Administrar Usuarios</h5>
+                                    <br> -->
                                     <div class="row">
                                         <div class="col col-md-7">
                                             <div class="row">
-                                                <div class="col">
+                                                <div class="col col-md-3">
                                                     <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
                                                 </div>
-                                                <div class="col">
+                                                <div class="col col-md-3">
                                                     <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m" (click)="deleteSelectedUsuarios()" [disabled]="!selectedUsuarios || !selectedUsuarios.length"></button>
                                                 </div>
-                                                <div class="col">
+                                                <!-- <div class="col">
                                                     <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"></p-fileUpload>
                                                 </div>
                                                 <div class="col">
                                                     <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
                                         <div class="col col-md-5">
