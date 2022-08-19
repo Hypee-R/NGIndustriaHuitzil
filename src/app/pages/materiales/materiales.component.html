@@ -82,7 +82,16 @@
                                         </div>
                                     </td>
                                     <td *ngFor="let col of columns">
-                                        {{rowData[col.field]}}
+                                        <div *ngIf="col.field != 'proveedores'">
+                                            {{rowData[col.field]}}
+                                        </div>
+                                        <div class="proveedores" *ngIf="col.field == 'proveedores'">
+                                            <div style="margin-left: 5px;" *ngFor="let prov of rowData.proveedores">
+                                                <label class="user-picture pointer">
+                                                <span>{{prov.nombre.charAt(0) + prov.apellidoPaterno.charAt(0)}}</span>
+                                              </label>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </ng-template>

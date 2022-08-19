@@ -7,7 +7,7 @@ export class SolicitudesMaterialModel{
   comentarios: string;
   idProveedorMaterial: number;
   proveedorMaterial: ProveedorMaterialModel;
-  status: boolean;
+  status: string;
   fechaUpdate: Date;
   costoTotal: number;
   idUser: number;
@@ -19,7 +19,7 @@ export class SolicitudesMaterialModel{
     this.comentarios = '';
     this.idProveedorMaterial = 0;
     this.proveedorMaterial = new ProveedorMaterialModel();
-    this.status = true;
+    this.status = '';
     this.fechaUpdate = new Date();
     this.costoTotal = 0;
     this.idUser = 0;

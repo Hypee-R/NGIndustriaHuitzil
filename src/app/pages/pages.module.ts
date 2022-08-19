@@ -56,6 +56,7 @@ import { AddRolComponent } from './roles/add-rol/add-rol.component';
 import { MaterialesComponent } from './materiales/materiales.component';
 import { AddArticuloComponent } from './inventario/add-articulo/add-articulo.component';
 import { AddMaterialComponent } from './materiales/add-material/add-material.component';
+import { AddSolicitudComponent } from './solicitudes/add-solicitud/add-solicitud.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -118,7 +119,8 @@ import { AddMaterialComponent } from './materiales/add-material/add-material.com
         AddcategoriaComponent,
         AddubicacionComponent,
         AddArticuloComponent,
-        AddMaterialComponent
+        AddMaterialComponent,
+        AddSolicitudComponent
     ]
 })
 export class PagesModule { }
