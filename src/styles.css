@@ -160,6 +160,11 @@ body {
     color: var(--color-dark) !important;
 }
 
+.p-toolbar {
+    background: var(--color-white) !important;
+    color: var(--color-dark) !important;
+}
+
 
 /* FIN CHANGE COLOR INPUT */
 

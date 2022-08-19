@@ -27,7 +27,6 @@ import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { InputTextModule } from 'primeng/inputtext';
-
 import { SidebarModule } from 'primeng/sidebar';
 import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
@@ -45,6 +44,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
+import {ChartModule} from 'primeng/chart';
+import {AutoCompleteModule} from 'primeng/autocomplete';
+
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
 import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
@@ -53,7 +55,6 @@ import { AddcategoriaComponent } from './categorias/add-categoria/add-categoria.
 import { AddRolComponent } from './roles/add-rol/add-rol.component';
 import { MaterialesComponent } from './materiales/materiales.component';
 import { AddArticuloComponent } from './inventario/add-articulo/add-articulo.component';
-import {ChartModule} from 'primeng/chart';
 import { AddMaterialComponent } from './materiales/add-material/add-material.component';
 @NgModule({
     imports: [
@@ -91,7 +92,8 @@ import { AddMaterialComponent } from './materiales/add-material/add-material.com
         InputNumberModule,
         ConfirmDialogModule,
         InputTextareaModule,
-        ChartModule
+        ChartModule,
+        AutoCompleteModule
 ],  providers: [],
     declarations: [
         ContentComponent,

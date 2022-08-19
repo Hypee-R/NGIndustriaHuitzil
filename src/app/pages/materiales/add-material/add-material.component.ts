@@ -3,7 +3,9 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { MaterialesModel } from 'src/app/models/materiales.model';
 import { MaterialesService } from 'src/app/services/materiales.service';
+import { ProveedoresService } from 'src/app/services/proveedores.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
+import { CatProveedorModel } from '../../../models/proveedores.model';
 
 @Component({
   selector: 'app-add-material',
@@ -19,12 +21,15 @@ export class AddMaterialComponent implements OnInit {
   submitted = false;
   visibleDialog: boolean;
   accion = '';
+  listProveedores: CatProveedorModel[] = [];
+  listProveedoresAux: CatProveedorModel[] = [];
   material: MaterialesModel = new MaterialesModel();
 
   dialogSubscription: Subscription = new Subscription();
   constructor(
     private toastr: ToastrService,
     private materialesService: MaterialesService,
+    private proveedoresService: ProveedoresService,
     private variablesGL: VariablesService,
   ) {
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
@@ -36,10 +41,33 @@ export class AddMaterialComponent implements OnInit {
           this.accion = this._accion;
         }
     });
+    this.getProveedores();
   }
 
   ngOnInit(): void {
     this.material = this._editMaterial;
+  }
+
+  getProveedores(){
+    this.proveedoresService.getProveedores().subscribe(response => {
+      if(response.exito){
+        this.listProveedores = response.respuesta;
+        this.listProveedoresAux = [...this.listProveedores];
+        console.log('lista proveedores ', this.listProveedoresAux);
+
+      }
+    }, err => {
+      this.listProveedores = [];
+    });
+  }
+
+  search(event){
+    console.log('event search ', event);
+
+    this.listProveedoresAux = this.listProveedores.filter(x => x.encargadoNombre.toLowerCase().includes(event.query.toLowerCase()));
+
+    console.log('results search ', this.listProveedoresAux);
+
   }
 
   ngOnDestroy(): void {

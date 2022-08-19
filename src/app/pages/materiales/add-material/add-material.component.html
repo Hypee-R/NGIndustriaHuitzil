@@ -27,6 +27,12 @@
         </div>
         <br>
         <div class="field">
+            <label for="proveedores">Proveedores de éste Material</label>
+            <p-autoComplete [(ngModel)]="material.proveedores" [suggestions]="listProveedoresAux" (completeMethod)="search($event)" [forceSelection]="true" field="encargadoNombre" [multiple]="true"></p-autoComplete>
+            <!-- <small class="p-error" *ngIf="submitted && !material.stock">El stock es requerido.</small> -->
+        </div>
+        <br>
+        <div class="field">
             <label for="estatus">Estatus</label>
             <input type="text" pInputText id="estatus" [(ngModel)]="material.status" required/>
             <small class="p-error" *ngIf="submitted && !material.status">El status es requerido.</small>
