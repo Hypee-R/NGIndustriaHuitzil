@@ -21,6 +21,13 @@ export class SolicitudesService {
     );
   }
 
+  getProveedoresMateriales(): Observable<ResponseModel>{
+    return this.http.get<ResponseModel>(environment.apiService + 'SolicitudesMateriales/ConsultaProvMat')
+    .pipe(
+      map (res => res)
+    );
+  }
+
   agregaSolicitud(request: SolicitudesMaterialModel): Observable<ResponseModel>{
     return this.http.post<ResponseModel>(environment.apiService + 'SolicitudesMateriales/Agrega', request)
     .pipe(

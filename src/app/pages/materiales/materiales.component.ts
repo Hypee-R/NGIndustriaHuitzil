@@ -32,6 +32,7 @@ export class MaterialesComponent implements OnInit {
       { field: 'tipoMedicion', header: 'Tipo Medición' },
       { field: 'status', header: 'Status' },
       { field: 'stock', header: 'Stock' },
+      { field: 'proveedores', header: 'Proveedores' },
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();

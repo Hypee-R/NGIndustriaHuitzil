@@ -1,0 +1,45 @@
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Solicitud de Material" [modal]="true" styleClass="p-fluid">
+
+    <ng-template pTemplate="content">
+        <div class="field">
+            <label for="materrial">Material</label>
+            <p-dropdown [options]="listMateriales" [(ngModel)]="materialSelectedId" (onChange)="setProveedores()" placeholder="Selecciona un material" optionLabel="nombre" optionValue="idMaterial" [showClear]="true"></p-dropdown>
+            <small class="p-error" *ngIf="submitted && !solicitud.idProveedorMaterial">El material es requerido.</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="proveedor">Proveedor</label>
+            <p-dropdown [options]="listProveedores" [(ngModel)]="proveedorSelectedId" (onChange)="setProveedorMaterial()" placeholder="Selecciona un proveedor" optionLabel="encargadoNombre" optionValue="idProveedor" [showClear]="true" [disabled]="activeProv"></p-dropdown>
+            <small class="p-error" *ngIf="submitted && !solicitud.idProveedorMaterial">El proveedor es requerido.</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="cantidad">Cantidad</label>
+            <input type="number" pInputText id="cantidad" [(ngModel)]="solicitud.cantidad" (ngModelChange)="setCostoTotal()" required/>
+            <small class="p-error" *ngIf="submitted && !solicitud.cantidad">La cantidad es requerida.</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="costo_total">Costo Total</label>
+            <input type="text" pInputText id="costo_total" [(ngModel)]="solicitud.costoTotal" required disabled="true" />
+        </div>
+        <br>
+        <div class="field">
+            <label for="estatus">Estatus</label>
+            <input type="text" pInputText id="estatus" [(ngModel)]="solicitud.status" required/>
+            <small class="p-error" *ngIf="submitted && !solicitud.status">El status es requerido.</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="comentarios">Comentarios</label>
+            <textarea type="text" class="form-control" id="comentarios" name="comentarios" placeholder="Escribe un comentario" [(ngModel)]="solicitud.comentarios" required></textarea>
+            <small class="p-error" *ngIf="submitted && !solicitud.comentarios">Los comentarios son requeridos.</small>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveDataSolicitud()"></button>
+    </ng-template>
+
+</p-dialog>
