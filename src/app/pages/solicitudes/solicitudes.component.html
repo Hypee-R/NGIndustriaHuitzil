@@ -24,8 +24,9 @@
                     </div>
 
                     <div *ngIf="!loading && listSolicitudes.length > 0">
-                        <p-table #dt [value]="listSolicitudes" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['nombre','descripcion']" [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedSolicitudes" [rowHover]="true" dataKey="idSolicitud"
-                            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} solicitudes de materiales" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                        <p-table #dt [value]="listSolicitudes" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['proveedorMaterial.material.nombre','proveedorMaterial.proveedor.nombre','fecha','cantidad','proveedorMaterial.material.precio','costoTotal','status','fechaUpdate','usuario.usuario','comentarios']"
+                            [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedSolicitudes" [rowHover]="true" dataKey="idSolicitud" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} solicitudes de materiales" [showCurrentPageReport]="true"
+                            styleClass="p-datatable-sm">
                             <ng-template pTemplate="caption">
                                 <div class="flex align-items-center justify-content-between">
                                     <!-- <h5 class="m-0">Administrar Solicitudes de Materiales</h5>
@@ -62,10 +63,43 @@
                                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                                     </th>
                                     <th style="width: 3em;"></th>
-                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field" style="width: 14em;">
                                         <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field != 'descripcion' ? '7em' : '13em'}">
-                                            {{col.header}}
-                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+
+                                            <div style="width: 8em;" *ngIf="col.field == 'cantidad' || col.field == 'status' || col.field == 'costoTotal'">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </div>
+
+                                            <div style="width: 15em;" *ngIf="col.field == 'comentarios'">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </div>
+
+                                            <div style="width: 10em;" *ngIf="col.field == 'proveedorMaterial.material.precio'">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </div>
+
+                                            <div style="width: 10em;" *ngIf="col.field == 'proveedorMaterial.material.nombre'">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </div>
+
+                                            <div style="width: 8em;" *ngIf="col.field == 'proveedorMaterial.proveedor.nombre'">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </div>
+
+                                            <div style="width: 10em;" *ngIf="col.field == 'usuario.usuario'">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </div>
+
+                                            <div style="width: 13em;" *ngIf="col.field == 'fecha' || col.field == 'fechaUpdate'">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </div>
                                         </div>
                                     </th>
                                 </tr>
@@ -82,15 +116,28 @@
                                         </div>
                                     </td>
                                     <td *ngFor="let col of columns">
-                                        <div *ngIf="col.field != 'proveedores'">
+                                        <div style="width: 8em;" *ngIf="col.field == 'cantidad' || col.field == 'status' || col.field == 'costoTotal'">
                                             {{rowData[col.field]}}
                                         </div>
-                                        <div class="proveedores" *ngIf="col.field == 'proveedores'">
-                                            <div style="margin-left: 5px;" *ngFor="let prov of rowData.proveedores">
-                                                <label class="user-picture pointer">
-                                              <span>{{prov.nombre.charAt(0) + prov.apellidoPaterno.charAt(0)}}</span>
+                                        <div style="width: 15em;" *ngIf="col.field == 'comentarios'">
+                                            {{rowData[col.field]}}
+                                        </div>
+                                        <div style="width: 10em;" *ngIf="col.field == 'proveedorMaterial.material.precio'">
+                                            {{rowData.proveedorMaterial.material.precio}}
+                                        </div>
+                                        <div style="width: 10em;" *ngIf="col.field == 'proveedorMaterial.material.nombre'">
+                                            {{rowData.proveedorMaterial.material.nombre}}
+                                        </div>
+                                        <div style="width: 8em;" *ngIf="col.field == 'proveedorMaterial.proveedor.nombre' ">
+                                            <label class="user-picture pointer">
+                                              <span>{{rowData.proveedorMaterial.proveedor.nombre.charAt(0) + rowData.proveedorMaterial.proveedor.apellidoPaterno.charAt(0)}}</span>
                                             </label>
-                                            </div>
+                                        </div>
+                                        <div style="width: 10em;" *ngIf="col.field == 'usuario.usuario'">
+                                            {{rowData.usuario.usuario}}
+                                        </div>
+                                        <div style="width: 13em;" *ngIf="col.field == 'fecha' || col.field == 'fechaUpdate'">
+                                            {{rowData[col.field] | date:'dd/MM/yyyy'}}
                                         </div>
                                     </td>
                                 </tr>
@@ -103,7 +150,7 @@
                         </p-table>
 
                     </div>
-                    <app-add-solicitud [_accion]="accion" [(_editSolicitud)]="selectedSolicitud" (saveMaterial)="getSolicitudes()" *ngIf="accion != ''"></app-add-solicitud>
+                    <app-add-solicitud [_accion]="accion" [(_editSolicitud)]="selectedSolicitud" (saveSolicitud)="getSolicitudes()" *ngIf="accion != ''"></app-add-solicitud>
                 </div>
             </div>
         </div>

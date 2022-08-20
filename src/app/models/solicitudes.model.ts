@@ -18,11 +18,11 @@ export class SolicitudesMaterialModel{
     this.cantidad = 0;
     this.comentarios = '';
     this.idProveedorMaterial = 0;
-    this.proveedorMaterial = new ProveedorMaterialModel();
+    this.proveedorMaterial = null;
     this.status = '';
     this.fechaUpdate = new Date();
     this.costoTotal = 0;
     this.idUser = 0;
-    this.usuario = new UsuarioModel();
+    this.usuario = null;
   }
 }

@@ -26,13 +26,16 @@ export class SolicitudesComponent implements OnInit {
     private toastr: ToastrService,
   ) {
     this.cols = [
-      { field: 'nombre', header: 'Nombre' },
-      { field: 'descripcion', header: 'Descripción' },
-      { field: 'precio', header: 'Precio' },
-      { field: 'tipoMedicion', header: 'Tipo Medición' },
+      { field: 'proveedorMaterial.material.nombre', header: 'Material' },
+      { field: 'proveedorMaterial.proveedor.nombre', header: 'Proveedor' },
+      { field: 'fecha', header: 'Fecha Solicitud' },
+      { field: 'cantidad', header: 'Cantidad' },
+      { field: 'proveedorMaterial.material.precio', header: 'Precio Unitario' },
+      { field: 'costoTotal', header: 'Costo Total' },
       { field: 'status', header: 'Status' },
-      { field: 'stock', header: 'Stock' },
-      { field: 'proveedores', header: 'Proveedores' },
+      { field: 'fechaUpdate', header: 'Fecha Actualización' },
+      { field: 'usuario.usuario', header: 'Registrado Por' },
+      { field: 'comentarios', header: 'Comentarios' },
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();
@@ -58,6 +61,8 @@ export class SolicitudesComponent implements OnInit {
           console.log(response.respuesta);
 
           this.listSolicitudes = response.respuesta;
+          console.log('solicitudes ', this.listSolicitudes);
+
           this.loading = false;
         }
       }, err => {
@@ -83,15 +88,16 @@ export class SolicitudesComponent implements OnInit {
 
   deleteSolicitud(solicitud: SolicitudesMaterialModel){
     Swal.fire({
-      title: `Está seguro de eliminar la solicitud material ${solicitud.proveedorMaterial.material.nombre}?`,
+      title: `¿Desea eliminar la solicitud material -> '${solicitud.proveedorMaterial.material.nombre}'?`,
       icon: 'question',
       showDenyButton: true,
-      confirmButtonText: 'Guardar',
+      confirmButtonText: 'Si, Eliminar',
       denyButtonText: `Cancelar`,
     }).then((result) => {
       if (result.isConfirmed) {
         console.log(solicitud);
-
+        solicitud.usuario = null;
+        solicitud.proveedorMaterial = null;
         this.solicitudesService.eliminaSolicitud(solicitud).subscribe(response => {
           if(response.exito){
               this.toastr.success(response.mensaje, 'Exito!!');

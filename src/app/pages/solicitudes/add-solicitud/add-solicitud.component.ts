@@ -41,16 +41,19 @@ export class AddSolicitudComponent implements OnInit {
     private variablesGL: VariablesService,
   ) {
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
+        this.getMateriales();
         this.visibleDialog = estado;
+        this.materialSelectedId = undefined;
+        this.proveedorSelectedId = undefined;
         if(this._editSolicitud){
           this.solicitud = this._editSolicitud;
+          this.materialSelectedId = this._editSolicitud.proveedorMaterial?.idMaterial;
+          this.proveedorSelectedId = this._editSolicitud.proveedorMaterial?.idProveedor
         }
         if(this._accion){
           this.accion = this._accion;
         }
     });
-    this.getMateriales();
-    this.getProveedoresMateriales();
   }
 
   ngOnInit(): void {
@@ -62,6 +65,7 @@ export class AddSolicitudComponent implements OnInit {
       if(response.exito){
         this.listMateriales = response.respuesta;
         console.log('lista materiales ', this.listMateriales);
+        this.getProveedoresMateriales();
       }
     }, err => {
       this.listProveedores = [];
@@ -73,6 +77,12 @@ export class AddSolicitudComponent implements OnInit {
       if(response.exito){
         this.listProveedoresMateriales = response.respuesta;
         console.log('lista proveedores materiales ', this.listProveedoresMateriales);
+        //Esto se hace para poblar el combo de proveedores
+        if(this._editSolicitud){
+
+          this.setProveedores();
+
+        }
       }
     }, err => {
       this.listProveedores = [];
@@ -83,13 +93,11 @@ export class AddSolicitudComponent implements OnInit {
       if(this.dialogSubscription){
         this.dialogSubscription.unsubscribe();
       }
-      this.materialSelectedId = undefined;
-      this.proveedorSelectedId = undefined;
   }
 
   setProveedores(){
     if(this.materialSelectedId){
-      this.listProveedores = this.listMateriales.find(x => x.idMaterial == this.materialSelectedId).proveedores;
+      this.listProveedores = this.listMateriales.find(x => x.idMaterial == this.materialSelectedId)?.proveedores;
       this.activeProv = false;
     }else{
       this.listProveedores = [];
@@ -101,7 +109,6 @@ export class AddSolicitudComponent implements OnInit {
       if(this.materialSelectedId && this.proveedorSelectedId){
         let proveedorMaterial = this.listProveedoresMateriales.find(x => x.idMaterial == this.materialSelectedId && x.idProveedor == this.proveedorSelectedId);
         this.solicitud.idProveedorMaterial = proveedorMaterial.idProveedorMaterial;
-        this.solicitud.proveedorMaterial = proveedorMaterial;
       }else{
         this.solicitud.idProveedorMaterial = 0;
       }
@@ -123,13 +130,14 @@ export class AddSolicitudComponent implements OnInit {
       && this.solicitud.idProveedorMaterial != 0 && this.solicitud.costoTotal > 0){
       let usuarioLogged = JSON.parse(localStorage.getItem('usuario'));
       this.solicitud.idUser = usuarioLogged.id;
-      this.solicitud.usuario = usuarioLogged;
       console.log('datos validos!!');
       console.log('data solicitud ', this.solicitud);
 
       if(this._accion == 'Agregar'){
         this.guardarSolicitud();
       }else{
+        this.solicitud.usuario = null;
+        this.solicitud.proveedorMaterial = null;
         this.actualizarSolicitud();
       }
     }
