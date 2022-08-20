@@ -45,3 +45,17 @@
 label {
     color: rgb(14, 10, 10);
 }
+
+
+/* MONITOR */
+
+@media only screen and (min-width: 1920px) {
+    .card {
+        margin-top: 7em;
+        width: 600px;
+        height: auto;
+        padding: 80px;
+        margin-top: 13em;
+        left: 32%;
+    }
+}
