@@ -1,7 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Injectable } from '@angular/core';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 
+export interface Car {
+  vin;
+  year;
+  brand;
+  color;
+}
 
 
 
@@ -29,6 +35,7 @@ class ventaModel{
 
 
 export class VentasComponent implements OnInit {
+  cars: Car[];
   statusPanubicacion: number;
   loading: boolean = false;
   listVentas: ventaModel[] = [];
@@ -39,13 +46,14 @@ export class VentasComponent implements OnInit {
   cities: any[];
   constructor(
     public variablesGL: VariablesService,
+    
   ) { 
 
     this.cols = [
       { field: 'idProducto', header: 'Producto' },
       { field: 'cantidad',header:'cantidad'},
-      { field: 'totalParcial', header: 'totalParcial' },
-      { field: 'caja', header: 'caja' },
+      // { field: 'totalParcial', header: 'totalParcial' },
+      // { field: 'caja', header: 'caja' },
       //{ field: 'apellidoPEncargado', header: 'apellidoPEncargado' },
       //{ field: 'apellidoMEncargado', header: 'apellidoMEncargado' },
       //{ field: 'telefono1', header: 'telefono1' },
@@ -83,6 +91,7 @@ export class VentasComponent implements OnInit {
 
     this.listVentas.push(venta)
 
+  
 
     //this.listVentas=[venta,venta]
   }

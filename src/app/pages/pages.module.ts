@@ -23,6 +23,7 @@ import { RolesComponent } from './roles/roles.component';
 
 
 //PrimeNG
+import {DataViewModule} from 'primeng/dataview';
 import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { SplitButtonModule } from 'primeng/splitbutton';
@@ -46,7 +47,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import {ChartModule} from 'primeng/chart';
 import {AutoCompleteModule} from 'primeng/autocomplete';
-
+import {DividerModule} from 'primeng/divider';
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
 import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
@@ -94,7 +95,9 @@ import { AddSolicitudComponent } from './solicitudes/add-solicitud/add-solicitud
         ConfirmDialogModule,
         InputTextareaModule,
         ChartModule,
-        AutoCompleteModule
+        AutoCompleteModule,
+        DividerModule,
+        DataViewModule
 ],  providers: [],
     declarations: [
         ContentComponent,
