@@ -42,7 +42,7 @@ export class VentasComponent implements OnInit {
 
     this.cols = [
       { field: 'descripcion', header: 'Producto' },
-      { field: '54',header:'Precio'},
+      { field: 'precio',header:'Precio'},
       { field: 'talla',header:'Talla'},
   
     ];
@@ -120,6 +120,13 @@ export class VentasComponent implements OnInit {
     console.log(product)
     this.listVentas.push(product)
     this.articulos=this.listVentas.length
-    this.total=this.articulos*500*this.value18//(precio)
+    this.total+=product.precio
+    //this.total=this.articulos*500*this.value18//(precio)
+  }
+
+  deleteProduct(product:productoModel){
+    this.listVentas.splice(this.listVentas.indexOf(product),1)
+    this.total -=product.precio
+    this.articulos=this.listVentas.length
   }
 }

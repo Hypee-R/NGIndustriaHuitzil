@@ -179,7 +179,7 @@
                         <p-table #dt [value]="listVentas" [columns]="cols" [rows]="rows" [paginator]="true"
                             [globalFilterFields]="['nombre','descripcion']" [responsive]="true"
                             responsiveLayout="scroll" [rowHover]="true" dataKey="idProducto"
-                            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} ubicacions"
+                            currentPageReportTemplate="Mostrando {first} a {last}  productos"
                             [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                             <ng-template pTemplate="caption">
                                 <div class="flex align-items-center justify-content-between">
@@ -212,7 +212,8 @@
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
                                 <tr>
                                     <td>
-                                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                        <button pButton pRipple icon="pi pi-minus" class="p-button-rounded p-button-danger" style="margin-left: 3px;" (click)="deleteProduct(rowData)"></button>
+                                        
                                     </td>
                                     <div class="field col-9 md:col-1">
 
@@ -227,12 +228,7 @@
                                         {{rowData[col.field]}}
                                     </td>
 
-                                    <td>
-                                        <div style="display: inline-flex">
-
-                                            <button pButton pRipple icon="pi pi-times" class="p-button-rounded p-button-danger" style="margin-left: 3px;"></button>
-                                        </div>
-                                    </td>
+        
                                 </tr>
                             </ng-template>
                         </p-table>
