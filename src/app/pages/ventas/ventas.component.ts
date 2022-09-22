@@ -38,6 +38,7 @@ export class VentasComponent implements OnInit {
   listVentas: ventaModel[] = [];
   lstProducts: productoModel[] = [];
   cols: any[] = [];
+  colsProducts:any[] = [];
   rows = 0;
   value18=21
   value8: any;
@@ -45,7 +46,8 @@ export class VentasComponent implements OnInit {
   accion = '';
 
   ///Modificar
-  listTallas: CatTallaModel[] = [];
+  //listTallas: CatTallaModel[] = [];
+  
   selectedTalla: CatTallaModel = new CatTallaModel();
   selectedTallas: CatTallaModel[];
   constructor(
@@ -57,13 +59,11 @@ export class VentasComponent implements OnInit {
     this.cols = [
       { field: 'idProducto', header: 'Producto' },
       { field: 'cantidad',header:'cantidad'},
-      // { field: 'totalParcial', header: 'totalParcial' },
-      // { field: 'caja', header: 'caja' },
-      //{ field: 'apellidoPEncargado', header: 'apellidoPEncargado' },
-      //{ field: 'apellidoMEncargado', header: 'apellidoMEncargado' },
-      //{ field: 'telefono1', header: 'telefono1' },
-     // { field: 'telefono2', header: 'telefono2' },
-      //{ field: 'correo', header: 'correo' },
+    ];
+
+    this.colsProducts = [
+      { field: 'sku', header: 'SKU' },
+      { field: 'descripcion',header:'PRODUCTO'},
     ];
 
     this.statusPanubicacion = this.variablesGL.getStatusPantalla();
@@ -99,7 +99,8 @@ export class VentasComponent implements OnInit {
       this.inventarioService.searchProduct(this.queryString).subscribe(response => {
         if(response.exito){
           this.variablesGL.hideLoading();
-          this.toastr.success(response.mensaje, 'Exito!');
+          
+          this.toastr.success(response.mensaje, 'Exito!!!');
           this.lstProducts = response.respuesta;
           console.log('resultados de la busqueda: ', this.lstProducts);
         }else{
