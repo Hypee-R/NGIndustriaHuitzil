@@ -30,6 +30,7 @@ export class VentasComponent implements OnInit {
   accion = '';
   articulos=0
   total = 0
+  cantidades:number[]=[]
 
   
   selectedTalla: CatTallaModel = new CatTallaModel();
@@ -117,16 +118,35 @@ export class VentasComponent implements OnInit {
   }
 
   addProduct(product: productoModel){
-    console.log(product)
     this.listVentas.push(product)
-    this.articulos=this.listVentas.length
+    this.articulos+=1
     this.total+=product.precio
-    //this.total=this.articulos*500*this.value18//(precio)
+    this.cantidades.push(1)
+    console.log(this.listVentas.indexOf(product))
+
   }
 
-  deleteProduct(product:productoModel){
-    this.listVentas.splice(this.listVentas.indexOf(product),1)
-    this.total -=product.precio
-    this.articulos=this.listVentas.length
+  deleteProduct(product:productoModel,index:number){
+
+    this.cantidades[index]-=1
+    this.total -= this.listVentas[index].precio
+    this.articulos-=1 
+    if(this.cantidades[index]<1){
+      this.cantidades.splice(index,1)
+      this.listVentas.splice(this.listVentas.indexOf(product),1)
+      this.articulos=this.listVentas.length}
+  }
+
+  addProductVenta(index :number){
+    this.articulos+=1
+    this.cantidades[index]+=1
+    this.total += this.listVentas[index].precio 
+
+  }
+  cancelarCompra(){
+    this.articulos=0
+    this.total=0
+    this.cantidades=[]
+    this.listVentas=[]
   }
 }

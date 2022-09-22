@@ -209,21 +209,49 @@
                                     <th style="width: 1em;">X</th>
                                 </tr>
                             </ng-template>
-                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
+                                
                                 <tr>
                                     <td>
-                                        <button pButton pRipple icon="pi pi-minus" class="p-button-rounded p-button-danger" style="margin-left: 3px;" (click)="deleteProduct(rowData)"></button>
-                                        
+                                        <div style="display: inline-flex">
+                                            <button pButton pRipple icon="pi pi-minus" class="p-button-rounded p-button-danger" (click)="deleteProduct(rowData,i)"></button>
+                                            <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button" (click)="addProductVenta(i)" style="margin-left: 3px;"></button>
+                                        </div>
                                     </td>
-                                    <div class="field col-9 md:col-1">
-
+                                        
+                                    <td>
+                                        <h6>{{cantidades[i]}}</h6>
+                                    </td>
+                                        <!--<p-inputNumber [(ngModel)]="value18" [showButtons]="true"
+                                            buttonLayout="horizontal" inputId="horizontal" spinnerMode="horizontal"
+                                            [step]="1" decrementButtonClass="p-button-danger"
+                                            incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus"
+                                            decrementButtonIcon="pi pi-minus" mode="decimal">
+                                        </p-inputNumber>-->
+                                    
+                                    <!--<td>
+                                        <div class = "row">
+                                            <button pButton pRipple icon="pi pi-minus" class="p-button-rounded p-button-danger" style="margin-left: 3px;" (click)="deleteProduct(rowData)"></button>
+                                          
+                                        </div>
+                                        
+                                      
+                                    </td>
+                                   
+                                    <td>
+                                        <h2>1</h2>
+                                        <button pButton pRipple icon="pi pi-minus" class="p-button-rounded p-button-danger" style="margin-left: 3px;" (click)="deleteProduct(rowData)"></button>
+                                          
+                                    </td>-->
+                                    <!--<div class="field col-9 md:col-1">
+                                            <h6>1</h6>
                                         <p-inputNumber [(ngModel)]="value18" [showButtons]="true"
                                             buttonLayout="horizontal" inputId="horizontal" spinnerMode="horizontal"
                                             [step]="1" decrementButtonClass="p-button-danger"
                                             incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus"
                                             decrementButtonIcon="pi pi-minus" mode="decimal">
                                         </p-inputNumber>
-                                    </div>
+                                    </div>-->
                                     <td *ngFor="let col of columns">
                                         {{rowData[col.field]}}
                                     </td>
@@ -290,7 +318,7 @@
                            <label>Total a pagar:0.00</label>
                         </div>
                         <div class="col-4">
-                            <button pButton type="button" class="p-button-raised p-button-rounded p-button-danger ">Cancelar</button>
+                            <button pButton type="button" class="p-button-raised p-button-rounded p-button-danger " (click)="cancelarCompra()">Cancelar</button>
                         </div>
 
                     </div>
