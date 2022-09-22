@@ -7,22 +7,6 @@ import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 
 
-
-
-class ventaModel{
-  idProducto: string;
-  cantidad:number;
-  caja:string;
-  totalParcial:number;
-  constructor(){
-      this.idProducto = "";
-      this.cantidad=0;
-      this.caja=""
-      this.totalParcial=0
-
-    }
-}
-
 @Component({
   selector: 'app-ventas',
   templateUrl: './ventas.component.html',
@@ -35,18 +19,18 @@ export class VentasComponent implements OnInit {
   statusPanubicacion: number;
   loading: boolean = false;
   queryString: string = '';
-  listVentas: ventaModel[] = [];
+  listVentas: productoModel[] = [];
   lstProducts: productoModel[] = [];
   cols: any[] = [];
   colsProducts:any[] = [];
   rows = 0;
-  value18=21
+  value18=1
   value8: any;
   cities: any[];
   accion = '';
+  articulos=0
+  total = 0
 
-  ///Modificar
-  //listTallas: CatTallaModel[] = [];
   
   selectedTalla: CatTallaModel = new CatTallaModel();
   selectedTallas: CatTallaModel[];
@@ -57,13 +41,16 @@ export class VentasComponent implements OnInit {
   ) {
 
     this.cols = [
-      { field: 'idProducto', header: 'Producto' },
-      { field: 'cantidad',header:'cantidad'},
+      { field: 'descripcion', header: 'Producto' },
+      { field: '54',header:'Precio'},
+      { field: 'talla',header:'Talla'},
+  
     ];
 
     this.colsProducts = [
       { field: 'sku', header: 'SKU' },
-      { field: 'descripcion',header:'PRODUCTO'},
+      { field: 'descripcion',header:'Producto'},
+      { field: 'talla',header: 'Talla'}
     ];
 
     this.statusPanubicacion = this.variablesGL.getStatusPantalla();
@@ -82,15 +69,7 @@ export class VentasComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading=false
-    let venta:ventaModel={idProducto:"Demo1 (Talla 25 ) \n15226 DEMO1",totalParcial:100,caja:"caja1",cantidad:100}
-    this.listVentas.push(venta)
-    this.listVentas.push(venta)
-
-    this.listVentas.push(venta)
-
-
-
-    //this.listVentas=[venta,venta]
+   
   }
 
   getResults(){
@@ -135,5 +114,12 @@ export class VentasComponent implements OnInit {
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
+  }
+
+  addProduct(product: productoModel){
+    console.log(product)
+    this.listVentas.push(product)
+    this.articulos=this.listVentas.length
+    this.total=this.articulos*500*this.value18//(precio)
   }
 }

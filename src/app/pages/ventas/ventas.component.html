@@ -58,7 +58,8 @@
             <ng-template pTemplate="body" let-rowData let-columns="columns">
                 <tr>
                        <td>
-                     <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                     <!--<p-tableCheckbox [value]="rowData"></p-tableCheckbox>-->
+                     <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning" (click)="addProduct(rowData)"></button>
                     </td>
                     
                     <td *ngFor="let col of columns">
@@ -192,7 +193,7 @@
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                     <th style="width: 2rem">
-                                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                       <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox>-->
                                     </th>
                                     <th style="width: 2rem">
                                         Cantidad
@@ -213,7 +214,7 @@
                                     <td>
                                         <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                                     </td>
-                                    <div class="field col-12 md:col-3">
+                                    <div class="field col-9 md:col-1">
 
                                         <p-inputNumber [(ngModel)]="value18" [showButtons]="true"
                                             buttonLayout="horizontal" inputId="horizontal" spinnerMode="horizontal"
@@ -302,10 +303,10 @@
             <div class="container">
                 <div class="row">
                   <div class="col-4">
-                    <label>Articulos:0.00</label>
+                    <label>Articulos: {{articulos}}</label>
                   </div>
                   <div class="col-4">
-                   <label>Totales:0.00</label>
+                   <label>Totales: {{total}}</label>
                   </div>
 
                 </div>
