@@ -32,15 +32,8 @@
                     </div>
                 </div>
                 <div class="col-sm">
-
-
-    <ng-template let-car pTemplate="listItem">
-        <div>
-            {{car.id}}
-        </div>
-    </ng-template>
     <div class ="row">
-        <p-table #dt [value]="lstProducts" [columns]="colsProducts" [rows]="rows" [paginator]="false" [globalFilterFields]="['nombre','descripcion']" [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedTallas" [rowHover]="true" dataKey="idTalla" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+        <p-table #dt [value]="lstProducts" [columns]="colsProducts" [rows]="rows" [paginator]="true" [globalFilterFields]="['nombre','descripcion']" [responsive]="true" responsiveLayout="scroll"  [rowHover]="true" dataKey="idProducto" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
             [showCurrentPageReport]="true" styleClass="p-datatable-sm">
 
             <ng-template pTemplate="header" let-columns>
@@ -58,7 +51,6 @@
             <ng-template pTemplate="body" let-rowData let-columns="columns">
                 <tr>
                        <td>
-                     <!--<p-tableCheckbox [value]="rowData"></p-tableCheckbox>-->
                      <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning" (click)="addProduct(rowData)"></button>
                     </td>
                     
@@ -69,85 +61,10 @@
             </ng-template>
 
         </p-table>
-
-
 </div>
 
                   </div>
             </div>
-            <!-- <br>
-            <div class="row">
-                <div class="col-12">
-                    <div class="col col-md-7">
-                        <div class="row">
-                            <div class="col">
-                                <div class="p-fluid grid">
-                                    <div class="col">
-                                        <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [options]="cities" [(ngModel)]="value8" optionLabel="name" class="ng-invalid ng-dirty" placeholder="Dropdown"></p-dropdown>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-                           <div class="col">
-                                <div class="p-fluid grid">
-                                    <div class="col">
-                                        <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [options]="cities" [(ngModel)]="value8" optionLabel="name" class="ng-invalid ng-dirty" placeholder="Dropdown"></p-dropdown>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="col">
-                                <div class="p-fluid grid">
-                                    <div class="col">
-                                        <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [options]="cities" [(ngModel)]="value8" optionLabel="name" class="ng-invalid ng-dirty" placeholder="Dropdown"></p-dropdown>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br> -->
-            <!-- <div class="row">
-                <div class="col-12">
-                    <div class="col col-md-7">
-                        <div class="row">
-                            <div class="col">
-                                <div class="p-fluid grid">
-                                    <div class="col">
-                                        <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [options]="cities" [(ngModel)]="value8" optionLabel="name" class="ng-invalid ng-dirty" placeholder="Dropdown"></p-dropdown>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-                            <div class="col">
-                                <div class="p-fluid grid">
-                                    <div class="col">
-                                        <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [options]="cities" [(ngModel)]="value8" optionLabel="name" class="ng-invalid ng-dirty" placeholder="Dropdown"></p-dropdown>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div> -->
         </div>
         <span class="lstick"></span>
         <div class="card-body">
@@ -155,25 +72,6 @@
                 <div class="col-8">
 
                     <app-loading *ngIf="loading"></app-loading>
-
-                    <div *ngIf="!loading && listVentas.length == 0">
-                        <p-toolbar styleClass="mb-4">
-                            <ng-template pTemplate="left">
-                                <button pButton pRipple label="Agregar" icon="pi pi-plus"
-                                    class="p-button-success mr-2"></button>
-                            </ng-template>
-
-                            <ng-template pTemplate="right">
-                                <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import"
-                                    chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
-                            </ng-template>
-                        </p-toolbar>
-                        <app-item-empty></app-item-empty>
-                    </div>
-
-
-
-
 
                     <div *ngIf="!loading && listVentas.length > 0">
                         <p-table #dt [value]="listVentas" [columns]="cols" [rows]="rows" [paginator]="true"
@@ -193,7 +91,7 @@
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                     <th style="width: 2rem">
-                                       <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox>-->
+                                   
                                     </th>
                                     <th style="width: 2rem">
                                         Cantidad
@@ -222,36 +120,6 @@
                                     <td>
                                         <h6>{{cantidades[i]}}</h6>
                                     </td>
-                                        <!--<p-inputNumber [(ngModel)]="value18" [showButtons]="true"
-                                            buttonLayout="horizontal" inputId="horizontal" spinnerMode="horizontal"
-                                            [step]="1" decrementButtonClass="p-button-danger"
-                                            incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus"
-                                            decrementButtonIcon="pi pi-minus" mode="decimal">
-                                        </p-inputNumber>-->
-                                    
-                                    <!--<td>
-                                        <div class = "row">
-                                            <button pButton pRipple icon="pi pi-minus" class="p-button-rounded p-button-danger" style="margin-left: 3px;" (click)="deleteProduct(rowData)"></button>
-                                          
-                                        </div>
-                                        
-                                      
-                                    </td>
-                                   
-                                    <td>
-                                        <h2>1</h2>
-                                        <button pButton pRipple icon="pi pi-minus" class="p-button-rounded p-button-danger" style="margin-left: 3px;" (click)="deleteProduct(rowData)"></button>
-                                          
-                                    </td>-->
-                                    <!--<div class="field col-9 md:col-1">
-                                            <h6>1</h6>
-                                        <p-inputNumber [(ngModel)]="value18" [showButtons]="true"
-                                            buttonLayout="horizontal" inputId="horizontal" spinnerMode="horizontal"
-                                            [step]="1" decrementButtonClass="p-button-danger"
-                                            incrementButtonClass="p-button-success" incrementButtonIcon="pi pi-plus"
-                                            decrementButtonIcon="pi pi-minus" mode="decimal">
-                                        </p-inputNumber>
-                                    </div>-->
                                     <td *ngFor="let col of columns">
                                         {{rowData[col.field]}}
                                     </td>

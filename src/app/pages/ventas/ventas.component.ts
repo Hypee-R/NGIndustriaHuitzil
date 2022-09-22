@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { productoModel } from 'src/app/models/productos.model';
-import { CatTallaModel } from 'src/app/models/tallas.model';
-import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 
@@ -24,17 +22,11 @@ export class VentasComponent implements OnInit {
   cols: any[] = [];
   colsProducts:any[] = [];
   rows = 0;
-  value18=1
-  value8: any;
-  cities: any[];
   accion = '';
   articulos=0
   total = 0
   cantidades:number[]=[]
 
-  
-  selectedTalla: CatTallaModel = new CatTallaModel();
-  selectedTallas: CatTallaModel[];
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
