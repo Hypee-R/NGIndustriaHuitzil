@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { productoModel } from 'src/app/models/productos.model.';
+import { productoModel } from 'src/app/models/productos.model';
 /*import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';*/
 //import { CatProveedorModel } from 'src/app/models/proveedores.model';
@@ -40,7 +40,7 @@ export class InventarioComponent implements OnInit {
   selectedArticulo: productoModel = new productoModel();
   selectedArticulos: productoModel[];
   imagenes:imagen64[]=[]
- 
+
   accion = '';
   rows = 0;
   cols: any[] = [];
@@ -49,13 +49,14 @@ export class InventarioComponent implements OnInit {
     public variablesGL: VariablesService,
     private inventarioService: InventarioService,
     private toastr: ToastrService,
-    
-    
+
+
   ) {
 
-    
+
     this.cols = [
       { field: 'idArticulo', header: 'ID' },
+      { field: 'sku', header: 'SKU' },
       { field: 'descripcion', header: 'Descripcion' },
       { field: 'existencia', header: 'Existencia' },
       { field: 'fechaIngreso', header: 'Fecha Ingreso' },
@@ -64,7 +65,7 @@ export class InventarioComponent implements OnInit {
       { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
       { fiel:'',header:'Imagen'}
-     
+
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();
@@ -80,7 +81,7 @@ export class InventarioComponent implements OnInit {
   }
   ngOnInit() {
       this.getArticulos();
-      
+
   }
 
   openNew() {
@@ -95,6 +96,8 @@ export class InventarioComponent implements OnInit {
     this.inventarioService.getArticulos().subscribe(response => {
       if(response.exito){
         this.listArticulos = response.respuesta;
+        console.log('articulos ', this.listArticulos);
+
         this.loading = false;
         for(let art of this.listArticulos){
           this.imagenes.push({id:art.idArticulo,imagen64c:art.imagen})

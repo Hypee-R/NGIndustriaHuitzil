@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { productoModel } from 'src/app/models/productos.model';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
+import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 
 
@@ -31,15 +34,19 @@ class ventaModel{
 export class VentasComponent implements OnInit {
   statusPanubicacion: number;
   loading: boolean = false;
+  queryString: string = '';
   listVentas: ventaModel[] = [];
+  lstProducts: productoModel[] = [];
   cols: any[] = [];
   rows = 0;
   value18=21
   value8: any;
   cities: any[];
   constructor(
-    public variablesGL: VariablesService,
-  ) { 
+    private toastr: ToastrService,
+    private variablesGL: VariablesService,
+    private inventarioService: InventarioService
+  ) {
 
     this.cols = [
       { field: 'idProducto', header: 'Producto' },
@@ -85,6 +92,28 @@ export class VentasComponent implements OnInit {
 
 
     //this.listVentas=[venta,venta]
+  }
+
+  getResults(){
+    if(this.queryString && this.queryString.trim().length > 0){
+      this.variablesGL.showLoading();
+      this.inventarioService.searchProduct(this.queryString).subscribe(response => {
+        if(response.exito){
+          this.variablesGL.hideLoading();
+          this.toastr.success(response.mensaje, 'Exito!');
+          this.lstProducts = response.respuesta;
+          console.log('resultados de la busqueda: ', this.lstProducts);
+        }else{
+          this.variablesGL.hideLoading();
+          this.toastr.error(response.mensaje, 'Error!');
+        }
+      }, err => {
+        this.variablesGL.hideLoading();
+        this.toastr.error('Hubo un error al buscar los productos', 'Error!');
+      });
+    }else{
+      this.toastr.error('Ingrese un elemento de busqueda', 'Atención!');
+    }
   }
 
 }

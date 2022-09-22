@@ -3,7 +3,7 @@ import { map, Observable } from 'rxjs';
 import { ResponseModel } from '../models/response.model';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { productoModel } from '../models/productos.model.';
+import { productoModel } from '../models/productos.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class InventarioService {
     .pipe(
       map (res => res)
     );
-    
+
   }
 
   agregaArticulo(request:productoModel): Observable<ResponseModel>{
@@ -41,6 +41,10 @@ export class InventarioService {
     .pipe(
       map (res => res)
     );
+  }
+
+  searchProduct(queryString: string): Observable<ResponseModel> {
+    return this.http.get<ResponseModel>(environment.apiService + `Inventario/SearchProduct?queryString=${queryString}`)
   }
 
 

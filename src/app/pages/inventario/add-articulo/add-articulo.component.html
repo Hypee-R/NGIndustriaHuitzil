@@ -3,18 +3,18 @@
     <ng-template pTemplate="content">
         <label for="descripcion">Imagen</label>
         <br>
-        
+
         <div class="preview-img" *ngIf="previsualizacion" >
             <img  [src]="previsualizacion" alt="" width="250">
         </div>
         <div class="preview-img" *ngIf="!previsualizacion" >
             <img  [src]="'assets/img/default-image.jpg'" alt="" width="250">
         </div>
-        
+
         <div class="field">
-            
+
             <input (change)="capturarFile($event)"type="file"  />
-            
+
         </div>
         <br>
         <div class="field">
@@ -29,6 +29,13 @@
             <input type="text" pInputText id="descripcion" [(ngModel)]="producto.descripcion" required/>
             <small class="p-error" *ngIf="submitted && !producto.descripcion">La descripción es requerida.</small>
             <small class="p-error" *ngIf="submitted && producto.descripcion?.length > 0 && producto.descripcion?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="sku">SKU</label>
+            <input type="text" pInputText id="sku" [(ngModel)]="producto.sku" required/>
+            <small class="p-error" *ngIf="submitted && !producto.sku">El sku es requerido.</small>
+            <small class="p-error" *ngIf="submitted && producto.sku?.length > 0 && producto.sku?.length <= 2">El sku debe contener minimo 3 caracteres</small>
         </div>
         <br>
         <div class="field">
@@ -60,7 +67,7 @@
             <label for="idTalla">Talla</label>
             <p-dropdown [options]="listTallas" [(ngModel)]="producto.idTalla" optionValue="idTalla" placeholder="Selecciona una talla" optionLabel="nombre" [style]="{'width': '100%'}"></p-dropdown>
         </div>
-       
+
     </ng-template>
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>

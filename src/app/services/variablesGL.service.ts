@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2'
 import * as CryptoJS from 'crypto-js';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -54,6 +55,21 @@ export class VariablesService {
     const pass = group.controls.password?.value;
     const confirmPassword = group.controls.repetirPassword?.value;
     return pass === confirmPassword ? null : { notSame: true };
+  }
+
+  showLoading(){
+    Swal.fire({
+      title: 'Por favor espera...',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+  }
+
+  hideLoading(){
+    Swal.close();
   }
 
 }

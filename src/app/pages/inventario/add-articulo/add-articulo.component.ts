@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { productoModel } from 'src/app/models/productos.model.';
+import { productoModel } from 'src/app/models/productos.model';
 import { CatTallaModel } from 'src/app/models/tallas.model';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
@@ -32,7 +32,7 @@ export class AddArticuloComponent implements OnInit {
   accion = '';
   producto: productoModel = new productoModel();
   pattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
-  
+
 
   listCategorias: CategoriaModel[] = [];
   listTallas: CatTallaModel[] = [];
@@ -51,7 +51,7 @@ export class AddArticuloComponent implements OnInit {
  //previsualizacion: "" ;
 
 
-  constructor( 
+  constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
     private articuloService: InventarioService,
@@ -76,7 +76,7 @@ export class AddArticuloComponent implements OnInit {
     this.producto = this._editproducto;
     this.getCampos();
 
-   
+
   }
 
   ngOnDestroy(): void {
@@ -84,7 +84,7 @@ export class AddArticuloComponent implements OnInit {
       this.dialogSubscription.unsubscribe();
     }
 
-    
+
 }
 hideDialog() {
   this.submitted = false;
@@ -111,7 +111,7 @@ saveArticulo(){
 }
 
 getCampos(){
- 
+
   this.categoriasService.getCategorias().subscribe(response => {
     if(response.exito){
       for(let categoria of response.respuesta){
@@ -119,10 +119,10 @@ getCampos(){
       }
     }
   }, err => {
-  
+
   });
 
-  
+
   this.tallasService.getTallas().subscribe(response => {
     if(response.exito){
       for(let talla of response.respuesta){
@@ -130,10 +130,10 @@ getCampos(){
       }
     }
   }, err => {
-  
+
   });
 
-  
+
   this.ubicacionesService.getUbicaciones().subscribe(response => {
     if(response.exito){
       for(let ubicacion of response.respuesta){
@@ -141,12 +141,12 @@ getCampos(){
       }
     }
   }, err => {
-  
+
   });
 }
 
 guardarArticulo(){
-  
+
   this.articuloService.agregaArticulo(this.producto).subscribe(response => {
     if(response.exito){
         this.toastr.success(response.mensaje, 'Exito!!');
@@ -188,7 +188,7 @@ capturarFile(event){
     //console.log(imagen['base']);
   })
   //this.archivos.push(fotografiaCaptura)
-  
+
 
 }
 
