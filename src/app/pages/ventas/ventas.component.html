@@ -40,34 +40,27 @@
         </div>
     </ng-template>
     <div class ="row">
-        <p-table #dt [value]="listTallas" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['nombre','descripcion']" [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedTallas" [rowHover]="true" dataKey="idTalla" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+        <p-table #dt [value]="lstProducts" [columns]="colsProducts" [rows]="rows" [paginator]="false" [globalFilterFields]="['nombre','descripcion']" [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedTallas" [rowHover]="true" dataKey="idTalla" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
             [showCurrentPageReport]="true" styleClass="p-datatable-sm">
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th style="width: 2rem">
-                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                    </th>
+                    
                     <th style="width: 3em;"></th>
                     <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                         <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field == 'nombre' ? '7em' : '25em'}">
                             {{col.header}}
-                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                           
                         </div>
                     </th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-columns="columns">
                 <tr>
-                    <td>
-                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                       <td>
+                     <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                     </td>
-                    <td>
-                        <div style="display: inline-flex">
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" ></button>
-                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" style="margin-left: 3px;" ></button>
-                        </div>
-                    </td>
+                    
                     <td *ngFor="let col of columns">
                         {{rowData[col.field]}}
                     </td>
