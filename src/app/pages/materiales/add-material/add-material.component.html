@@ -15,6 +15,18 @@
         </div>
         <br>
         <div class="field">
+          <label for="proveedores">Proveedores de éste Material</label>
+          <p-autoComplete [(ngModel)]="material.proveedores" [suggestions]="listProveedoresAux" (completeMethod)="searchProveedor($event)" [forceSelection]="true" field="encargadoNombre" [multiple]="true"></p-autoComplete>
+          <!-- <small class="p-error" *ngIf="submitted && !material.stock">El stock es requerido.</small> -->
+        </div>
+        <br>
+        <div class="field">
+          <label for="proveedores">Ubicaciones de éste Material</label>
+          <p-autoComplete [(ngModel)]="material.ubicaciones" [suggestions]="listUbicacionesAux" (completeMethod)="searchUbicacion($event)" [forceSelection]="true" field="direccion" [multiple]="true"></p-autoComplete>
+          <!-- <small class="p-error" *ngIf="submitted && !material.stock">El stock es requerido.</small> -->
+        </div>
+        <br>
+        <div class="field">
             <label for="precio">Precio</label>
             <input type="number" pInputText id="precio" [(ngModel)]="material.precio" required/>
             <small class="p-error" *ngIf="submitted && !material.precio">El precio es requerido.</small>
@@ -24,12 +36,6 @@
             <label for="tipo_medicion">Tipo Medición</label>
             <input type="text" pInputText id="tipo_medicion" [(ngModel)]="material.tipoMedicion" required/>
             <small class="p-error" *ngIf="submitted && !material.tipoMedicion">El tipo de medición es requerido.</small>
-        </div>
-        <br>
-        <div class="field">
-            <label for="proveedores">Proveedores de éste Material</label>
-            <p-autoComplete [(ngModel)]="material.proveedores" [suggestions]="listProveedoresAux" (completeMethod)="search($event)" [forceSelection]="true" field="encargadoNombre" [multiple]="true"></p-autoComplete>
-            <!-- <small class="p-error" *ngIf="submitted && !material.stock">El stock es requerido.</small> -->
         </div>
         <br>
         <div class="field">

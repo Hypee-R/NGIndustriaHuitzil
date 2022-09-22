@@ -63,7 +63,7 @@
                                     </th>
                                     <th style="width: 3em;"></th>
                                     <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                        <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field == 'nombre' ? '7em' : '25em'}">
+                                        <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': '13em'}">
                                             {{col.header}}
                                             <p-sortIcon [field]="col.field"></p-sortIcon>
                                         </div>

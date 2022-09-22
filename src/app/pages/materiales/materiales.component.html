@@ -82,7 +82,7 @@
                                         </div>
                                     </td>
                                     <td *ngFor="let col of columns">
-                                        <div *ngIf="col.field != 'proveedores'">
+                                        <div *ngIf="col.field != 'proveedores' && col.field != 'ubicaciones'">
                                             {{rowData[col.field]}}
                                         </div>
                                         <div class="proveedores" *ngIf="col.field == 'proveedores'">
@@ -90,6 +90,11 @@
                                                 <label class="user-picture pointer">
                                                 <span>{{prov.nombre.charAt(0) + prov.apellidoPaterno.charAt(0)}}</span>
                                               </label>
+                                            </div>
+                                        </div>
+                                        <div class="proveedores" *ngIf="col.field == 'ubicaciones'">
+                                            <div style="margin-left: 5px;" *ngFor="let ubi of rowData.ubicaciones">
+                                              <span class="badge rounded-pill text-bg-primary">{{ubi.direccion}}</span>
                                             </div>
                                         </div>
                                     </td>

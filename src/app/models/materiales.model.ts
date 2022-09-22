@@ -1,4 +1,5 @@
 import { CatProveedorModel } from './proveedores.model';
+import { UbicacionModel } from './ubicacion.model';
 export class MaterialesModel{
   idMaterial: number;
   nombre: string;
@@ -9,6 +10,7 @@ export class MaterialesModel{
   stock: string;
   visible: boolean;
   proveedores: CatProveedorModel[];
+  ubicaciones: UbicacionModel[];
   constructor(){
     this.idMaterial = 0;
     this.nombre = '';
@@ -19,5 +21,6 @@ export class MaterialesModel{
     this.stock = '';
     this.visible = true;
     this.proveedores = [];
+    this.ubicaciones = [];
   }
 }
