@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { productoModel } from 'src/app/models/productos.model';
+import { CatTallaModel } from 'src/app/models/tallas.model';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
@@ -29,9 +30,8 @@ class ventaModel{
 })
 
 
-
-
 export class VentasComponent implements OnInit {
+
   statusPanubicacion: number;
   loading: boolean = false;
   queryString: string = '';
@@ -42,6 +42,12 @@ export class VentasComponent implements OnInit {
   value18=21
   value8: any;
   cities: any[];
+  accion = '';
+
+  ///Modificar
+  listTallas: CatTallaModel[] = [];
+  selectedTalla: CatTallaModel = new CatTallaModel();
+  selectedTallas: CatTallaModel[];
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -51,21 +57,13 @@ export class VentasComponent implements OnInit {
     this.cols = [
       { field: 'idProducto', header: 'Producto' },
       { field: 'cantidad',header:'cantidad'},
-      { field: 'totalParcial', header: 'totalParcial' },
-      { field: 'caja', header: 'caja' },
+      // { field: 'totalParcial', header: 'totalParcial' },
+      // { field: 'caja', header: 'caja' },
       //{ field: 'apellidoPEncargado', header: 'apellidoPEncargado' },
       //{ field: 'apellidoMEncargado', header: 'apellidoMEncargado' },
       //{ field: 'telefono1', header: 'telefono1' },
      // { field: 'telefono2', header: 'telefono2' },
       //{ field: 'correo', header: 'correo' },
-    ];
-
-    this.cities = [
-      { name: "New York", code: "NY" },
-      { name: "Rome", code: "RM" },
-      { name: "London", code: "LDN" },
-      { name: "Istanbul", code: "IST" },
-      { name: "Paris", code: "PRS" }
     ];
 
     this.statusPanubicacion = this.variablesGL.getStatusPantalla();
@@ -89,6 +87,7 @@ export class VentasComponent implements OnInit {
     this.listVentas.push(venta)
 
     this.listVentas.push(venta)
+
 
 
     //this.listVentas=[venta,venta]
@@ -116,4 +115,24 @@ export class VentasComponent implements OnInit {
     }
   }
 
+  openCashRegister(){
+    this.accion = 'Abrir';
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
+
+  closeCashRegister(){
+    this.accion = 'Cerrar';
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
+
+  statusRegistrer(){
+    this.accion = 'Cerrar';
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
 }
