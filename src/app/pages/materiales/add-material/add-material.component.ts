@@ -2,8 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { MaterialesModel } from 'src/app/models/materiales.model';
+import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { MaterialesService } from 'src/app/services/materiales.service';
 import { ProveedoresService } from 'src/app/services/proveedores.service';
+import { UbicacionesService } from 'src/app/services/ubicaciones.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { CatProveedorModel } from '../../../models/proveedores.model';
 
@@ -23,14 +25,17 @@ export class AddMaterialComponent implements OnInit {
   accion = '';
   listProveedores: CatProveedorModel[] = [];
   listProveedoresAux: CatProveedorModel[] = [];
+  listUbicaciones: UbicacionModel[] = [];
+  listUbicacionesAux: UbicacionModel[] = [];
   material: MaterialesModel = new MaterialesModel();
 
   dialogSubscription: Subscription = new Subscription();
   constructor(
     private toastr: ToastrService,
+    private variablesGL: VariablesService,
     private materialesService: MaterialesService,
     private proveedoresService: ProveedoresService,
-    private variablesGL: VariablesService,
+    private ubicacionesService: UbicacionesService,
   ) {
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
         this.visibleDialog = estado;
@@ -42,6 +47,7 @@ export class AddMaterialComponent implements OnInit {
         }
     });
     this.getProveedores();
+    this.getUbicaciones();
   }
 
   ngOnInit(): void {
@@ -54,20 +60,34 @@ export class AddMaterialComponent implements OnInit {
         this.listProveedores = response.respuesta;
         this.listProveedoresAux = [...this.listProveedores];
         console.log('lista proveedores ', this.listProveedoresAux);
-
       }
     }, err => {
       this.listProveedores = [];
     });
   }
 
-  search(event){
+  getUbicaciones(){
+    this.ubicacionesService.getUbicaciones().subscribe(response => {
+      if(response.exito){
+        this.listUbicaciones = response.respuesta;
+        this.listUbicacionesAux = [...this.listUbicaciones];
+        console.log('lista ubicaciones ', this.listUbicacionesAux);
+      }
+    }, err => {
+      this.listUbicaciones = [];
+    });
+  }
+
+  searchProveedor(event){
     console.log('event search ', event);
-
     this.listProveedoresAux = this.listProveedores.filter(x => x.encargadoNombre.toLowerCase().includes(event.query.toLowerCase()));
-
     console.log('results search ', this.listProveedoresAux);
+  }
 
+  searchUbicacion(event){
+    console.log('event search ', event);
+    this.listUbicacionesAux = this.listUbicaciones.filter(x => x.direccion.toLowerCase().includes(event.query.toLowerCase()));
+    console.log('results search ', this.listProveedoresAux);
   }
 
   ngOnDestroy(): void {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { productoModel } from 'src/app/models/productos.model.';
+import { productoModel } from 'src/app/models/productos.model';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 
@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private inventarioService: InventarioService,
     private variablesService: VariablesService
-    ) 
+    )
     {
     this.statusPantalla = this.variablesService.getStatusPantalla();
 
@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
 
     this.getArticulos()
-    
+
     this.basicOptions = {
       plugins: {
           legend: {
@@ -101,7 +101,7 @@ export class DashboardComponent implements OnInit {
         this.listArticulos = response.respuesta;
         for (let articulo of this.listArticulos){
               this.labels.push(articulo.descripcion)
-              
+
             this.color="#"
 	        for(var i = 0; i < 6; i++){
 		    this.color = this.color + this.simbolos[Math.floor(Math.random() * 16)];
@@ -110,7 +110,7 @@ export class DashboardComponent implements OnInit {
             this.colores.push(this.color)
         }
         this.loading = false;
-        
+
       }
       console.log(this.listArticulos)
     }, err => {

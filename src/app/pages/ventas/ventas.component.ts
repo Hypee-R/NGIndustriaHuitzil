@@ -1,5 +1,7 @@
-import { Component, OnInit,Injectable } from '@angular/core';
-import { UbicacionModel } from 'src/app/models/ubicacion.model';
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { productoModel } from 'src/app/models/productos.model';
+import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 
 export interface Car {
@@ -9,22 +11,6 @@ export interface Car {
   color;
 }
 
-
-
-class ventaModel{
-  idProducto: string;
-  cantidad:number;
-  caja:string;
-  totalParcial:number;
-  constructor(){
-      this.idProducto = "";
-      this.cantidad=0;
-      this.caja=""
-      this.totalParcial=0
-
-    }
-}
-
 @Component({
   selector: 'app-ventas',
   templateUrl: './ventas.component.html',
@@ -32,41 +18,37 @@ class ventaModel{
 })
 
 
-
-
 export class VentasComponent implements OnInit {
-  cars: Car[];
   statusPanubicacion: number;
   loading: boolean = false;
-  listVentas: ventaModel[] = [];
+  queryString: string = '';
+  listVentas: productoModel[] = [];
+  lstProducts: productoModel[] = [];
   cols: any[] = [];
+  colsProducts:any[] = [];
   rows = 0;
-  value18=21
-  value8: any;
-  cities: any[];
+  accion = '';
+  articulos=0
+  total = 0
+  cantidades:number[]=[]
+
   constructor(
-    public variablesGL: VariablesService,
-    
-  ) { 
+    private toastr: ToastrService,
+    private variablesGL: VariablesService,
+    private inventarioService: InventarioService
+  ) {
 
     this.cols = [
-      { field: 'idProducto', header: 'Producto' },
-      { field: 'cantidad',header:'cantidad'},
-      // { field: 'totalParcial', header: 'totalParcial' },
-      // { field: 'caja', header: 'caja' },
-      //{ field: 'apellidoPEncargado', header: 'apellidoPEncargado' },
-      //{ field: 'apellidoMEncargado', header: 'apellidoMEncargado' },
-      //{ field: 'telefono1', header: 'telefono1' },
-     // { field: 'telefono2', header: 'telefono2' },
-      //{ field: 'correo', header: 'correo' },
+      { field: 'descripcion', header: 'Producto' },
+      { field: 'precio',header:'Precio'},
+      { field: 'talla',header:'Talla'},
+
     ];
 
-    this.cities = [
-      { name: "New York", code: "NY" },
-      { name: "Rome", code: "RM" },
-      { name: "London", code: "LDN" },
-      { name: "Istanbul", code: "IST" },
-      { name: "Paris", code: "PRS" }
+    this.colsProducts = [
+      { field: 'sku', header: 'SKU' },
+      { field: 'descripcion',header:'Producto'},
+      { field: 'talla',header: 'Talla'}
     ];
 
     this.statusPanubicacion = this.variablesGL.getStatusPantalla();
@@ -85,15 +67,83 @@ export class VentasComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading=false
-    let venta:ventaModel={idProducto:"Demo1 (Talla 25 ) \n15226 DEMO1",totalParcial:100,caja:"caja1",cantidad:100}
-    this.listVentas.push(venta)
-    this.listVentas.push(venta)
 
-    this.listVentas.push(venta)
-
-  
-
-    //this.listVentas=[venta,venta]
   }
 
+  getResults(){
+    if(this.queryString && this.queryString.trim().length > 0){
+      this.variablesGL.showLoading();
+      this.inventarioService.searchProduct(this.queryString).subscribe(response => {
+        if(response.exito){
+          this.variablesGL.hideLoading();
+
+          this.toastr.success(response.mensaje, 'Exito!!!');
+          this.lstProducts = response.respuesta;
+          console.log('resultados de la busqueda: ', this.lstProducts);
+        }else{
+          this.variablesGL.hideLoading();
+          this.toastr.error(response.mensaje, 'Error!');
+        }
+      }, err => {
+        this.variablesGL.hideLoading();
+        this.toastr.error('Hubo un error al buscar los productos', 'Error!');
+      });
+    }else{
+      this.toastr.error('Ingrese un elemento de busqueda', 'Atención!');
+    }
+  }
+
+  openCashRegister(){
+    this.accion = 'Abrir';
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
+
+  closeCashRegister(){
+    this.accion = 'Cerrar';
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
+
+  statusRegistrer(){
+    this.accion = 'Cerrar';
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
+
+  addProduct(product: productoModel){
+    this.listVentas.push(product)
+    this.articulos+=1
+    this.total+=product.precio
+    this.cantidades.push(1)
+    console.log(this.listVentas.indexOf(product))
+
+  }
+
+  deleteProduct(product:productoModel,index:number){
+
+    this.cantidades[index]-=1
+    this.total -= this.listVentas[index].precio
+    this.articulos-=1
+    if(this.cantidades[index]<1){
+      this.cantidades.splice(index,1)
+      this.listVentas.splice(this.listVentas.indexOf(product),1)
+      this.articulos=this.listVentas.length}
+  }
+
+  addProductVenta(index :number){
+    this.articulos+=1
+    this.cantidades[index]+=1
+    this.total += this.listVentas[index].precio
+
+  }
+  cancelarCompra(){
+    this.articulos=0
+    this.total=0
+    this.cantidades=[]
+    this.listVentas=[]
+  }
 }

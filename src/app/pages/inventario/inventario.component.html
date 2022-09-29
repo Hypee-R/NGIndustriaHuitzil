@@ -94,7 +94,7 @@
                           </ng-template>
                           <ng-template pTemplate="header" let-columns>
                               <tr>
-                                
+
                                   <th style="width: 2rem">
                                       <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                                   </th>
@@ -105,10 +105,10 @@
                                           <p-sortIcon [field]="col.field"></p-sortIcon>
                                       </div>
                                   </th>
-                                 
-                                 
+
+
                               </tr>
-                              
+
                           </ng-template>
                           <ng-template pTemplate="body" let-rowData let-columns="columns">
                               <tr>
@@ -123,6 +123,9 @@
                                   </td>
                                   <td>
                                     {{rowData['idArticulo']}}
+                                  </td>
+                                  <td>
+                                    {{rowData['sku']}}
                                   </td>
                                   <td>
                                     {{rowData['descripcion']}}
@@ -141,15 +144,18 @@
                                   </td>
                                   <td>
                                     {{rowData['talla']}}
-                                  </td> 
+                                  </td>
                                   <td>
                                     {{rowData['ubicacion']}}
                                   </td>
                                   
-                                  
+                                      
                                   <td>
-                                    
+
                                     <img [src]=rowData.imagen width="40" height="40%" class="shadow-1" />
+                                  </td>
+                                  <td>
+                                    {{rowData['precio']}}
                                   </td>
                               </tr>
                           </ng-template>

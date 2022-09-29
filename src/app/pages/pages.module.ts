@@ -58,6 +58,7 @@ import { MaterialesComponent } from './materiales/materiales.component';
 import { AddArticuloComponent } from './inventario/add-articulo/add-articulo.component';
 import { AddMaterialComponent } from './materiales/add-material/add-material.component';
 import { AddSolicitudComponent } from './solicitudes/add-solicitud/add-solicitud.component';
+import { OpenCashComponent } from './ventas/open-cash/open-cash.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -96,8 +97,7 @@ import { AddSolicitudComponent } from './solicitudes/add-solicitud/add-solicitud
         InputTextareaModule,
         ChartModule,
         AutoCompleteModule,
-        DividerModule,
-        DataViewModule
+        DividerModule
 ],  providers: [],
     declarations: [
         ContentComponent,
@@ -123,7 +123,8 @@ import { AddSolicitudComponent } from './solicitudes/add-solicitud/add-solicitud
         AddubicacionComponent,
         AddArticuloComponent,
         AddMaterialComponent,
-        AddSolicitudComponent
+        AddSolicitudComponent,
+        OpenCashComponent
     ]
 })
 export class PagesModule { }
