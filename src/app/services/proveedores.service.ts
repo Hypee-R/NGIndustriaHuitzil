@@ -42,4 +42,9 @@ export class ProveedoresService {
     );
   }
 
+  searchCliente(queryString: string): Observable<ResponseModel> {
+    return this.http.get<ResponseModel>(environment.apiService + `Proveedores/searchCliente?queryString=${queryString}`)
+  }
+
+
 }

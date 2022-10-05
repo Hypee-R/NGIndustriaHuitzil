@@ -4,6 +4,7 @@ import { productoModel } from 'src/app/models/productos.model';
 import { CatTallaModel } from 'src/app/models/tallas.model';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { InventarioService } from 'src/app/services/inventario.service';
+import { ProveedoresService } from 'src/app/services/proveedores.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 
 
@@ -19,6 +20,7 @@ export class VentasComponent implements OnInit {
   statusPanubicacion: number;
   loading: boolean = false;
   queryString: string = '';
+  queryStringClient: string = '';
   listVentas: productoModel[] = [];
   lstProducts: productoModel[] = [];
   cols: any[] = [];
@@ -30,6 +32,7 @@ export class VentasComponent implements OnInit {
   accion = '';
   articulos=0
   total = 0
+  clienteName  : string = '';
 
   
   selectedTalla: CatTallaModel = new CatTallaModel();
@@ -37,7 +40,9 @@ export class VentasComponent implements OnInit {
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
-    private inventarioService: InventarioService
+    private inventarioService: InventarioService,
+    private proveedoresService: ProveedoresService
+    
   ) {
 
     this.cols = [
@@ -84,6 +89,29 @@ export class VentasComponent implements OnInit {
           console.log('resultados de la busqueda: ', this.lstProducts);
         }else{
           this.variablesGL.hideLoading();
+          this.toastr.error(response.mensaje, 'Error!');
+        }
+      }, err => {
+        this.variablesGL.hideLoading();
+        this.toastr.error('Hubo un error al buscar los productos', 'Error!');
+      });
+    }else{
+      this.toastr.error('Ingrese un elemento de busqueda', 'Atención!');
+    }
+  }
+  getResultsClients(){
+    if(this.queryStringClient && this.queryStringClient.trim().length > 0){
+      this.variablesGL.showLoading();
+      this.proveedoresService.searchCliente(this.queryStringClient).subscribe(response => {
+        if(response.exito){
+          this.variablesGL.hideLoading();
+          
+          this.toastr.success(response.mensaje, 'Exito!!!');
+          this.clienteName = response.respuesta[0].nombre;
+          console.log('resultados de la busqueda: ', this.clienteName);
+        }else{
+          this.variablesGL.hideLoading();
+          this.clienteName = '';
           this.toastr.error(response.mensaje, 'Error!');
         }
       }, err => {

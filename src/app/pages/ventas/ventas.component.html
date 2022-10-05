@@ -12,8 +12,8 @@
                                 <div class="col-12 md:col-4">
                                     <div class="p-inputgroup">
                                         <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
-                                        <input type="text" pInputText placeholder="Cliente sin cita previa">
-                                        <button type="button" pButton pRipple icon="pi pi-plus" styleClass="p-button-warn"></button>
+                                        <input type="text" pInputText placeholder="Cliente" [(ngModel)]="queryStringClient">
+                                        <button type="button" pButton pRipple icon="pi pi-plus" styleClass="p-button-warn"  (click)="getResultsClients()"></button>
                                     </div>
                                 </div>
                             </div>
@@ -290,6 +290,14 @@
                     </div>
                     <p-divider>Datos de compra</p-divider>
                     <div class="row">
+                        <div class="col-4">
+                            <label>Cliente:{{this.clienteName}}</label>
+                         </div>
+                     
+
+                    </div>
+                    <div class="row">
+                       
                         <div class="col-4">
                            <label>Total a pagar:0.00</label>
                         </div>
