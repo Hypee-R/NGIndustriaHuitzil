@@ -13,6 +13,7 @@ export class productoModel{
   ubicacion:string;
   categoria:string;
   imagen:string;
+  precio:number;
   sku: string;
     constructor(){
     this.idArticulo = 0;
@@ -26,6 +27,7 @@ export class productoModel{
     this.talla='';
     this.ubicacion='';
     this.imagen='';
+    this.precio = 0;
     this.sku = '';
   }
 }

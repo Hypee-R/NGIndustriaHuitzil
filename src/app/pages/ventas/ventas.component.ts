@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { productoModel } from 'src/app/models/productos.model';
-import { CatTallaModel } from 'src/app/models/tallas.model';
-import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { ProveedoresService } from 'src/app/services/proveedores.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 
+export interface Car {
+  vin;
+  year;
+  brand;
+  color;
+}
 
 @Component({
   selector: 'app-ventas',
@@ -16,7 +20,6 @@ import { VariablesService } from 'src/app/services/variablesGL.service';
 
 
 export class VentasComponent implements OnInit {
-
   statusPanubicacion: number;
   loading: boolean = false;
   queryString: string = '';
@@ -26,17 +29,12 @@ export class VentasComponent implements OnInit {
   cols: any[] = [];
   colsProducts:any[] = [];
   rows = 0;
-  value18=1
-  value8: any;
-  cities: any[];
   accion = '';
   articulos=0
   total = 0
   clienteName  : string = '';
+  cantidades:number[]=[]
 
-  
-  selectedTalla: CatTallaModel = new CatTallaModel();
-  selectedTallas: CatTallaModel[];
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -47,9 +45,9 @@ export class VentasComponent implements OnInit {
 
     this.cols = [
       { field: 'descripcion', header: 'Producto' },
-      { field: '54',header:'Precio'},
+      { field: 'precio',header:'Precio'},
       { field: 'talla',header:'Talla'},
-  
+
     ];
 
     this.colsProducts = [
@@ -74,7 +72,7 @@ export class VentasComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading=false
-   
+
   }
 
   getResults(){
@@ -83,7 +81,7 @@ export class VentasComponent implements OnInit {
       this.inventarioService.searchProduct(this.queryString).subscribe(response => {
         if(response.exito){
           this.variablesGL.hideLoading();
-          
+
           this.toastr.success(response.mensaje, 'Exito!!!');
           this.lstProducts = response.respuesta;
           console.log('resultados de la busqueda: ', this.lstProducts);
@@ -145,9 +143,35 @@ export class VentasComponent implements OnInit {
   }
 
   addProduct(product: productoModel){
-    console.log(product)
     this.listVentas.push(product)
-    this.articulos=this.listVentas.length
-    this.total=this.articulos*500*this.value18//(precio)
+    this.articulos+=1
+    this.total+=product.precio
+    this.cantidades.push(1)
+    console.log(this.listVentas.indexOf(product))
+
+  }
+
+  deleteProduct(product:productoModel,index:number){
+
+    this.cantidades[index]-=1
+    this.total -= this.listVentas[index].precio
+    this.articulos-=1
+    if(this.cantidades[index]<1){
+      this.cantidades.splice(index,1)
+      this.listVentas.splice(this.listVentas.indexOf(product),1)
+      this.articulos=this.listVentas.length}
+  }
+
+  addProductVenta(index :number){
+    this.articulos+=1
+    this.cantidades[index]+=1
+    this.total += this.listVentas[index].precio
+
+  }
+  cancelarCompra(){
+    this.articulos=0
+    this.total=0
+    this.cantidades=[]
+    this.listVentas=[]
   }
 }

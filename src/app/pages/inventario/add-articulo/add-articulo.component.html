@@ -32,6 +32,13 @@
         </div>
         <br>
         <div class="field">
+            <label for="precio">Precio</label>
+            <input type="text" pInputText id="precio" [(ngModel)]="producto.precio" required/>
+            <small class="p-error" *ngIf="submitted && !producto.precio">El precio es requerido.</small>
+        </div>
+        <br>
+        <br>
+        <div class="field">
             <label for="sku">SKU</label>
             <input type="text" pInputText id="sku" [(ngModel)]="producto.sku" required/>
             <small class="p-error" *ngIf="submitted && !producto.sku">El sku es requerido.</small>

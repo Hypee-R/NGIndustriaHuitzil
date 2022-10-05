@@ -23,6 +23,7 @@ import { RolesComponent } from './roles/roles.component';
 
 
 //PrimeNG
+import {DataViewModule} from 'primeng/dataview';
 import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { SplitButtonModule } from 'primeng/splitbutton';

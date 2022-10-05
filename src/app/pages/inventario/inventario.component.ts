@@ -64,7 +64,8 @@ export class InventarioComponent implements OnInit {
       { field: 'unidad', header: 'Unidad' },
       { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
-      { fiel:'',header:'Imagen'}
+      { fiel:'',header:'Imagen'},
+      { field: 'precio',header:'precio'},
 
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
