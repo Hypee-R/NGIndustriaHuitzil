@@ -116,7 +116,7 @@ export class VentasComponent implements OnInit {
         }
       }, err => {
         this.variablesGL.hideLoading();
-        this.toastr.error('Hubo un error al buscar los productos', 'Error!');
+        this.toastr.error('Hubo un error al buscar cliente', 'Error!');
       });
     }else{
       this.toastr.error('Ingrese un elemento de busqueda', 'Atención!');
