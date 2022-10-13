@@ -70,6 +70,8 @@ export class VentasComponent implements OnInit {
 
   }
 
+  selectedValues: string[] = [];
+
   ngOnInit(): void {
     this.loading=false
 
