@@ -55,16 +55,16 @@ export class InventarioComponent implements OnInit {
 
 
     this.cols = [
-      { field: 'idArticulo', header: 'ID' },
+      // { field: 'idArticulo', header: 'ID' },
+      { fiel:'',header:'Imagen'},
       { field: 'sku', header: 'SKU' },
       { field: 'descripcion', header: 'Descripcion' },
       { field: 'existencia', header: 'Existencia' },
-      { field: 'fechaIngreso', header: 'Fecha Ingreso' },
-      { field:'categoria',header:'Categoria'},
-      { field: 'unidad', header: 'Unidad' },
+      // { field: 'fechaIngreso', header: 'Fecha Ingreso' },
+      // { field:'categoria',header:'Categoria'},
+      // { field: 'unidad', header: 'Unidad' },
       { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
-      { fiel:'',header:'Imagen'},
       { field: 'precio',header:'precio'},
 
     ];

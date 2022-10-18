@@ -13,8 +13,8 @@
                                     <div class="p-inputgroup">
                                         <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
                                         <input type="text" pInputText placeholder="Cliente" [(ngModel)]="queryStringClient">
-                                        <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn"  (click)="getResultsClients()"></button>
-                                        <button type="button" pButton pRipple icon="pi pi-plus" styleClass="p-button-danger" ></button>
+                                        <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn" (click)="getResultsClients()"></button>
+                                        <button type="button" pButton pRipple icon="pi pi-plus" styleClass="p-button-danger"></button>
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
                             <button pButton type="button" class="p-button-raised p-button-rounded" (click)="closeCashRegister()">Cerrar caja</button>
                         </div>
                         <div class="col-4">
-                            <button pButton type="button" class="p-button-raised p-button-rounded" (click)="closeCashRegister()">Estado caja</button>
+                            <button pButton type="button" class="p-button-raised p-button-rounded" (click)="statusCashRegister()">Estado caja</button>
                         </div>
 
 
@@ -159,7 +159,7 @@
                     </div>
                     <p-divider>Tipos de pago</p-divider>
                     <div class="row">
-                       
+
                         <div class="col-4">
                             <button pButton type="button" class="p-button-raised p-button-rounded">Venta a credito</button>
                         </div>
@@ -181,14 +181,14 @@
                     <div class="row">
                         <div class="col-4">
                             <label>Cliente:{{this.clienteName}}</label>
-                         </div>
-                     
+                        </div>
+
 
                     </div>
                     <div class="row">
-                       
+
                         <div class="col-4">
-                           <label>Total a pagar:0.00</label>
+                            <label>Total a pagar:0.00</label>
                         </div>
                         <div class="col-4">
                             <button pButton type="button" class="p-button-raised p-button-rounded p-button-danger " (click)="cancelarCompra()">Cancelar</button>
@@ -212,5 +212,5 @@
         </div>
 
     </div>
-    <app-open-cash [_accion]="accion" *ngIf="accion != ''"></app-open-cash>
+    <app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
 </div>

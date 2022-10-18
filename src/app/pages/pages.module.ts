@@ -97,7 +97,7 @@ import { OpenCashComponent } from './ventas/open-cash/open-cash.component';
         InputTextareaModule,
         ChartModule,
         AutoCompleteModule,
-        DividerModule
+        DividerModule,
 ],  providers: [],
     declarations: [
         ContentComponent,

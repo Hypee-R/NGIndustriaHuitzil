@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { CajaModel } from 'src/app/models/caja.model';
 import { productoModel } from 'src/app/models/productos.model';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { ProveedoresService } from 'src/app/services/proveedores.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
+import { VentasService } from 'src/app/services/ventas.service';
 
 export interface Car {
   vin;
@@ -35,12 +37,15 @@ export class VentasComponent implements OnInit {
   clienteName  : string = '';
   cantidades:number[]=[]
 
+  cashModel: CajaModel;
+
   constructor(
     private toastr: ToastrService,
+    private ventasService: VentasService,
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
-    private proveedoresService: ProveedoresService
-    
+    private proveedoresService: ProveedoresService,
+
   ) {
 
     this.cols = [
@@ -105,7 +110,7 @@ export class VentasComponent implements OnInit {
       this.proveedoresService.searchCliente(this.queryStringClient).subscribe(response => {
         if(response.exito){
           this.variablesGL.hideLoading();
-          
+
           this.toastr.success(response.mensaje, 'Exito!!!');
           this.clienteName = response.respuesta[0].nombre;
           console.log('resultados de la busqueda: ', this.clienteName);
@@ -125,23 +130,17 @@ export class VentasComponent implements OnInit {
 
   openCashRegister(){
     this.accion = 'Abrir';
-    setTimeout(() => {
-      this.variablesGL.showDialog.next(true);
-    }, 100);
+    this.getCaja();
   }
 
   closeCashRegister(){
     this.accion = 'Cerrar';
-    setTimeout(() => {
-      this.variablesGL.showDialog.next(true);
-    }, 100);
+    this.getCaja();
   }
 
-  statusRegistrer(){
-    this.accion = 'Cerrar';
-    setTimeout(() => {
-      this.variablesGL.showDialog.next(true);
-    }, 100);
+  statusCashRegister(){
+    this.accion = 'Status';
+    this.getCaja();
   }
 
   addProduct(product: productoModel){
@@ -175,5 +174,81 @@ export class VentasComponent implements OnInit {
     this.total=0
     this.cantidades=[]
     this.listVentas=[]
+  }
+
+  getCaja(){
+      this.ventasService.getCaja().subscribe(resp => {
+        console.log('data vcaja ', resp);
+        if(resp.exito){
+          this.cashModel = resp.respuesta;
+
+
+          if(this.cashModel.fecha != null && this.cashModel.fechaCierre == null){
+              if(this.accion == 'Abrir'){
+                console.log('No se puede abrir caja, hay una abierta...');
+                this.toastr.info('Actualmente hay una caja abierta', 'Atención!');
+                return;
+              }
+              // else if(this.accion == 'Cerrar'){
+              //   console.log('No hay una caja abierta para cerrar');
+              //   this.toastr.info('No hay caja abierta para cerrar', 'Atención!');
+              //   return;
+              // }
+          }else if(this.cashModel.fecha != null && this.cashModel.fechaCierre != null){
+              if(this.accion == 'Abrir'){
+                console.log('Abrir caja...');
+                this.cashModel = new CajaModel();
+              }else if(this.accion == 'Cerrar'){
+                console.log('ya está cerrada la caja');
+                this.toastr.info('Ya está cerrada la caja', 'Atención!');
+                this.accion = 'Status';
+              }
+          }
+
+          // if(this.accion == 'Abrir' && this.cashModel.fecha != null && this.cashModel.fechaCierre != null){
+          //     console.log('Abrir caja...');
+          //     this.cashModel = new CajaModel();
+          // }else if(this.accion == 'Abrir' && this.cashModel.fecha != null && this.cashModel.fechaCierre == null){
+          //   console.log('No se puede abrir caja, hay una abierta...');
+          //   this.toastr.info('Actualmente hay una caja abierta', 'Atención!');
+          //   return;
+          // }
+
+          // // if(this.accion == 'Cerrar' && this.cashModel.fechaCierre == null){
+          // //     console.log('Cerrar caja...');
+          // // }else
+          // if(this.accion == 'Cerrar' && this.cashModel.fecha != null && this.cashModel.fechaCierre == null){
+          //     console.log('No hay una caja abierta para cerrar');
+          //     this.toastr.info('No hay caja abierta para cerrar', 'Atención!');
+          //     return;
+          // }else if(this.accion == 'Cerrar' && this.cashModel.fecha != null && this.cashModel.fechaCierre != null){
+          //     console.log('ya está cerrada la caja');
+          //     this.toastr.info('Ya está cerrada la caja', 'Atención!');
+          //     this.accion = 'Status';
+          //     // return;
+          // }
+
+          setTimeout(() => {
+            this.variablesGL.showDialog.next(true);
+          }, 100);
+
+
+        }else{
+
+          if(this.accion == 'Abrir'){
+            this.cashModel = new CajaModel();
+            setTimeout(() => {
+              this.variablesGL.showDialog.next(true);
+            }, 100);
+          }else{
+            this.toastr.info(resp.mensaje, 'Atención!');
+          }
+
+        }
+      },
+      err => {
+        this.toastr.error('Error al obtener status de la caja', 'Error!');
+        this.cashModel = new CajaModel();
+      });
   }
 }

@@ -1,35 +1,61 @@
 <p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Caja" [modal]="true" styleClass="p-fluid">
 
     <ng-template pTemplate="content">
-        <div class="field">
-            <label for="nombre">Empleado</label>
-            <input type="text" pInputText id="nombre" [(ngModel)]="talla.nombre" required autofocus />
-            <small class="p-error" *ngIf="submitted && !talla.nombre">El nombre es requerido.</small>
-        </div>
-        <br>
-        <div class="field">
-            <label for="descripcion">Monto</label>
-            <input type="text" pInputText id="descripcion" [(ngModel)]="talla.descripcion" required/>
-            <small class="p-error" *ngIf="submitted && !talla.descripcion">La descripción es requerida.</small>
-            <small class="p-error" *ngIf="submitted && talla.descripcion?.length > 0 && talla.descripcion?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
-        </div>
-        <div class="field">
-            <label for="descripcion">Fecha</label>
-            <input type="text" pInputText id="descripcion" [(ngModel)]="talla.descripcion" required/>
-            <small class="p-error" *ngIf="submitted && !talla.descripcion">La descripción es requerida.</small>
-            <small class="p-error" *ngIf="submitted && talla.descripcion?.length > 0 && talla.descripcion?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
-        </div>
-        <div class="field">
-            <label for="descripcion">Hora</label>
-            <input type="text" pInputText id="descripcion" [(ngModel)]="talla.descripcion" required/>
-            <small class="p-error" *ngIf="submitted && !talla.descripcion">La descripción es requerida.</small>
-            <small class="p-error" *ngIf="submitted && talla.descripcion?.length > 0 && talla.descripcion?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
-        </div>
+
+        <ng-container *ngIf="accion == 'Abrir'; else cerrarTemplate">
+            <div class="field">
+                <label for="descripcion">Monto</label>
+                <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.monto" required/>
+                <small class="p-error" *ngIf="submitted && !openCashModel.monto || openCashModel?.monto == 0">El monto es requerido.</small>
+            </div>
+            <div class="field">
+                <label for="descripcion">Fecha y Hora</label>
+                <p-calendar [(ngModel)]="fecha" [showTime]="true" [showSeconds]="true" inputId="time" required="true" dateFormat="dd/mm/yy"></p-calendar>
+                <small class="p-error" *ngIf="submitted && !fecha">La fecha y hora es requerida.</small>
+            </div>
+        </ng-container>
+
+        <!-- EN CERRAR MOSTRAR SOLO CAMPOS CERRAR -->
+        <ng-template #cerrarTemplate>
+            <ng-container *ngIf="accion == 'Cerrar'; else statusTemplate">
+                <div class="field">
+                    <label for="descripcion">Monto Cierre</label>
+                    <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.montoCierre" required/>
+                    <small class="p-error" *ngIf="submitted && !openCashModel.montoCierre || openCashModel?.montoCierre == 0">La monto cierre es requerido.</small>
+                </div>
+                <div class="field">
+                    <label for="descripcion">Fecha y Hora Cierre</label>
+                    <p-calendar [(ngModel)]="fechaCierre" [showTime]="true" [showSeconds]="true" inputId="time" required="true" dateFormat="dd/mm/yy"></p-calendar>
+                    <small class="p-error" *ngIf="submitted && !fechaCierre">La fecha y hora de cierre es requerida.</small>
+                </div>
+            </ng-container>
+        </ng-template>
+
+        <!-- EN STATUS MOSTRAR TODOS LOS DATOS -->
+        <ng-template #statusTemplate>
+            <div class="field">
+                <label for="descripcion">Monto</label>
+                <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.monto" required readonly/>
+            </div>
+            <div class="field">
+                <label for="descripcion">Fecha y Hora</label>
+                <p-calendar [(ngModel)]="fecha" [showTime]="true" [showSeconds]="true" inputId="time" required="true" dateFormat="dd/mm/yy" readonlyInput="true" disabled="true"></p-calendar>
+            </div>
+            <div class="field">
+                <label for="descripcion">Monto Cierre</label>
+                <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.montoCierre" required readonly/>
+            </div>
+            <div class="field">
+                <label for="descripcion">Fecha y Hora Cierre</label>
+                <p-calendar [(ngModel)]="fechaCierre" [showTime]="true" [showSeconds]="true" inputId="time" required="true" dateFormat="dd/mm/yy" readonlyInput="true" disabled="true"></p-calendar>
+            </div>
+        </ng-template>
+
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" ></button>
-        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" ></button>
+        <button pButton pRipple label="Cerrar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" [disabled]="accion == 'Status'" (click)="saveCaja()"></button>
     </ng-template>
 
 </p-dialog>
