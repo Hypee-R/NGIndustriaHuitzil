@@ -59,6 +59,7 @@ import { AddArticuloComponent } from './inventario/add-articulo/add-articulo.com
 import { AddMaterialComponent } from './materiales/add-material/add-material.component';
 import { AddSolicitudComponent } from './solicitudes/add-solicitud/add-solicitud.component';
 import { OpenCashComponent } from './ventas/open-cash/open-cash.component';
+import { OpenProductosComponent } from './ventas/open-productos/open-productos.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -124,7 +125,8 @@ import { OpenCashComponent } from './ventas/open-cash/open-cash.component';
         AddArticuloComponent,
         AddMaterialComponent,
         AddSolicitudComponent,
-        OpenCashComponent
+        OpenCashComponent,
+        OpenProductosComponent
     ]
 })
 export class PagesModule { }

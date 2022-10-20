@@ -27,11 +27,14 @@ export class VentasComponent implements OnInit {
   queryString: string = '';
   queryStringClient: string = '';
   listVentas: productoModel[] = [];
-  lstProducts: productoModel[] = [];
+  articles: productoModel[];
+  articlesSelected : productoModel[] = []
+  //lstProducts: productoModel[] = [];
   cols: any[] = [];
-  colsProducts:any[] = [];
+  //colsProducts:any[] = [];
   rows = 0;
   accion = '';
+  openProducts = '';
   articulos=0
   total = 0
   clienteName  : string = '';
@@ -55,22 +58,16 @@ export class VentasComponent implements OnInit {
 
     ];
 
-    this.colsProducts = [
-      { field: 'sku', header: 'SKU' },
-      { field: 'descripcion',header:'Producto'},
-      { field: 'talla',header: 'Talla'}
-    ];
-
     this.statusPanubicacion = this.variablesGL.getStatusPantalla();
       let status = this.variablesGL.getPantalla();
       if(status == 'celular'){
-        this.rows = 6;
+        this.rows = 8;
       }else if(status == 'tablet'){
-        this.rows = 7;
+        this.rows = 9;
       }else if(status == 'laptop'){
-        this.rows = 5;
+        this.rows = 7;
       }else{
-        this.rows = 11;
+        this.rows = 12;
       }
 
   }
@@ -82,28 +79,7 @@ export class VentasComponent implements OnInit {
 
   }
 
-  getResults(){
-    if(this.queryString && this.queryString.trim().length > 0){
-      this.variablesGL.showLoading();
-      this.inventarioService.searchProduct(this.queryString).subscribe(response => {
-        if(response.exito){
-          this.variablesGL.hideLoading();
-
-          this.toastr.success(response.mensaje, 'Exito!!!');
-          this.lstProducts = response.respuesta;
-          console.log('resultados de la busqueda: ', this.lstProducts);
-        }else{
-          this.variablesGL.hideLoading();
-          this.toastr.error(response.mensaje, 'Error!');
-        }
-      }, err => {
-        this.variablesGL.hideLoading();
-        this.toastr.error('Hubo un error al buscar los productos', 'Error!');
-      });
-    }else{
-      this.toastr.error('Ingrese un elemento de busqueda', 'Atención!');
-    }
-  }
+  
   getResultsClients(){
     if(this.queryStringClient && this.queryStringClient.trim().length > 0){
       this.variablesGL.showLoading();
@@ -128,12 +104,23 @@ export class VentasComponent implements OnInit {
     }
   }
 
+  openProductsM(){
+   this.accion = ''
+   this.openProducts ="Productos"
+   this.articlesSelected = []
+   this.getArticulos()
+   //this.getCaja();
+  }
+
   openCashRegister(){
+    this.openProducts = ""
     this.accion = 'Abrir';
+   
     this.getCaja();
   }
 
   closeCashRegister(){
+    this.openProducts = ""
     this.accion = 'Cerrar';
     this.getCaja();
   }
@@ -143,17 +130,16 @@ export class VentasComponent implements OnInit {
     this.getCaja();
   }
 
-  addProduct(product: productoModel){
+  /*addProduct(product: productoModel){
     this.listVentas.push(product)
     this.articulos+=1
     this.total+=product.precio
     this.cantidades.push(1)
     console.log(this.listVentas.indexOf(product))
 
-  }
+  }*/
 
   deleteProduct(product:productoModel,index:number){
-
     this.cantidades[index]-=1
     this.total -= this.listVentas[index].precio
     this.articulos-=1
@@ -163,10 +149,11 @@ export class VentasComponent implements OnInit {
       this.articulos=this.listVentas.length}
   }
 
-  addProductVenta(index :number){
+  addProductVenta(product : productoModel){
     this.articulos+=1
-    this.cantidades[index]+=1
-    this.total += this.listVentas[index].precio
+    this.cantidades.push(1)
+    this.listVentas.push(product)
+    this.total += product.precio
 
   }
   cancelarCompra(){
@@ -175,7 +162,18 @@ export class VentasComponent implements OnInit {
     this.cantidades=[]
     this.listVentas=[]
   }
-
+  getArticulos(){
+    this.inventarioService.getArticulos().subscribe(response => {
+      if(response.exito){
+        this.articles = response.respuesta;
+        setTimeout(() => {
+          this.variablesGL.showDialog.next(true);
+          }, 100);
+      }
+    }, err => {
+        console.log(err)
+    });
+}
   getCaja(){
       this.ventasService.getCaja().subscribe(resp => {
         console.log('data vcaja ', resp);
