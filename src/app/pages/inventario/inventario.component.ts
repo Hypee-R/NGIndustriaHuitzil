@@ -97,8 +97,7 @@ export class InventarioComponent implements OnInit {
     this.inventarioService.getArticulos().subscribe(response => {
       if(response.exito){
         this.listArticulos = response.respuesta;
-        console.log('articulos ', this.listArticulos);
-
+        // console.log('articulos ', this.listArticulos);
         this.loading = false;
         for(let art of this.listArticulos){
           this.imagenes.push({id:art.idArticulo,imagen64c:art.imagen})

@@ -37,10 +37,10 @@ export class VariablesService {
   }
 
   removeCredential() {
-    //this.router.navigate(['/'], { replaceUrl: true });
+    this.router.navigate(['/login'], { replaceUrl: true });
     localStorage.d = "";
     localStorage.clear();
-    location.reload();
+    //location.reload();
   }
 
   changeTheme(darkTheme: boolean){
@@ -70,6 +70,15 @@ export class VariablesService {
 
   hideLoading(){
     Swal.close();
+  }
+
+  getSucursal(){
+    return localStorage.getItem('sucursal');
+  }
+
+  setSucursal(value: string){
+    localStorage.removeItem('sucursal');
+    localStorage.setItem('sucursal', value);
   }
 
 }

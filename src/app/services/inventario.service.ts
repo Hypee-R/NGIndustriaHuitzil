@@ -4,16 +4,20 @@ import { ResponseModel } from '../models/response.model';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { productoModel } from '../models/productos.model';
+import { VariablesService } from './variablesGL.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InventarioService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private variablesGL: VariablesService) { }
 
   getArticulos(): Observable<ResponseModel>{
-    return this.http.get<ResponseModel>(environment.apiService + 'Inventario/Consulta')
+    let sucursal = this.variablesGL.getSucursal() ?? "all";
+    return this.http.get<ResponseModel>(environment.apiService + `Inventario/Consulta?sucursal=${sucursal}`)
     .pipe(
       map (res => res)
     );
@@ -44,7 +48,8 @@ export class InventarioService {
   }
 
   searchProduct(queryString: string): Observable<ResponseModel> {
-    return this.http.get<ResponseModel>(environment.apiService + `Inventario/SearchProduct?queryString=${queryString}`)
+    let sucursal = this.variablesGL.getSucursal() ?? "all";
+    return this.http.get<ResponseModel>(environment.apiService + `Inventario/SearchProduct?queryString=${queryString}&sucursal=${sucursal}`);
   }
 
 

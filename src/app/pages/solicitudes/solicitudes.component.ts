@@ -58,11 +58,8 @@ export class SolicitudesComponent implements OnInit {
       this.loading = true;
       this.solicitudesService.getSolicitudes().subscribe(response => {
         if(response.exito){
-          console.log(response.respuesta);
-
+          // console.log(response.respuesta);
           this.listSolicitudes = response.respuesta;
-          console.log('solicitudes ', this.listSolicitudes);
-
           this.loading = false;
         }
       }, err => {

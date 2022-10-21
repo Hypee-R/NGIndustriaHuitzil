@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2';
 import { Component, OnInit, ChangeDetectorRef, HostListener, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessageService } from 'primeng/api';
@@ -5,6 +6,9 @@ import { flipInXAnimation } from '../shared/animations/flipinX';
 import { fadeAnimation } from '../shared/animations/fade';
 import { SlideAnimation } from '../shared/animations/slide';
 import { VariablesService } from '../services/variablesGL.service';
+import { UbicacionesService } from '../services/ubicaciones.service';
+import { UsuarioAuthModel } from '../models/usuario-auth.model';
+import { UbicacionModel } from '../models/ubicacion.model';
 
 @Component({
   selector: 'app-content',
@@ -14,10 +18,11 @@ import { VariablesService } from '../services/variablesGL.service';
   providers: [MessageService],
 })
 export class ContentComponent implements OnInit, OnDestroy {
-  userAuth: any;
+  userAuth: UsuarioAuthModel;
 
-  mostrarSideUser: boolean = false;
   contador: number = 0;
+  lstUbicaciones: UbicacionModel[] = [];
+  mostrarSideUser: boolean = false;
 
   sideUserSubscripcion: Subscription = new Subscription();
   userSubscripcion: Subscription = new Subscription();
@@ -27,15 +32,19 @@ export class ContentComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private variablesGL: VariablesService,
+    private ubicacionesService: UbicacionesService,
   ) {
-    // this.userSubcripcion = this.store.select('auth', 'user').subscribe((user: any) => {
-    //   if (user && user.id)
-    //     this.userAuth = user;
-    // });
 
-    this.userAuth = {
-      nombre: 'Luis Antonio',
-      apellidos: 'Altamirano Sánchez'
+    this.userAuth = JSON.parse(localStorage.getItem('usuario'));
+
+    //Selecciona sucursal perfil vendedor
+    if(this.userAuth.rol == 'Vendedor'){
+        let sucursal = variablesGL.getSucursal();
+        if(!sucursal){
+          this.getSucursales();
+        }else{
+          console.log('Ya selecciono sucursal... ->',sucursal);
+        }
     }
 
     // Tipo de menu en pantalla (Laptop +)
@@ -111,5 +120,43 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.mostrarSideUser = false;
     this.contador = 0;
     this.variablesGL.showSideUser.next(false);
+  }
+
+  getSucursales(){
+      this.ubicacionesService.getUbicaciones().subscribe(response => {
+        if(response.exito){
+          this.lstUbicaciones = response.respuesta;
+          this.selectSucursal();
+        }
+      });
+  }
+
+  selectSucursal(){
+     Swal.fire({
+      title: 'Vendedor',
+      input: "select",
+      text: "Selecciona una sucursal",
+      icon: "warning",
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      inputOptions: this.lstUbicaciones.map(ubicacion => ubicacion.direccion),
+      inputPlaceholder: 'Selecciona...',
+      inputValidator: (value) => {
+        return new Promise((resolve) => {
+          if(value){
+            resolve('')
+          }else{
+            resolve('Selecciona una opcion')
+          }
+        })
+      },
+      showCancelButton: false,
+      showConfirmButton: true,
+     }).then(respuesta => {
+        let sucursalSelected = this.lstUbicaciones[respuesta.value];
+        console.log('option selected? -> ', sucursalSelected.direccion);
+        this.variablesGL.setSucursal(sucursalSelected.direccion);
+
+     })
   }
 }

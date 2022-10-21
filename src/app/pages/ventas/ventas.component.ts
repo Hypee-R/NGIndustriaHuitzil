@@ -148,7 +148,7 @@ export class VentasComponent implements OnInit {
     this.articulos+=1
     this.total+=product.precio
     this.cantidades.push(1)
-    console.log(this.listVentas.indexOf(product))
+    // console.log(this.listVentas.indexOf(product))
 
   }
 

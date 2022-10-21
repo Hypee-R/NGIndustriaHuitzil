@@ -1,0 +1,84 @@
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} producto" [modal]="true" styleClass="p-fluid">
+
+    <!-- <ng-template pTemplate="content">
+      <label for="descripcion">Imagen</label>
+      <br>
+
+      <div class="preview-img" *ngIf="previsualizacion" >
+          <img  [src]="previsualizacion" alt="" width="250">
+      </div>
+      <div class="preview-img" *ngIf="!previsualizacion" >
+          <img  [src]="'assets/img/default-image.jpg'" alt="" width="250">
+      </div>
+
+      <div class="field">
+
+          <input (change)="capturarFile($event)"type="file"  />
+
+      </div>
+      <br>
+      <div class="field">
+          <label for="descripcion">Unidad</label>
+          <input type="text" pInputText id="unidad" [(ngModel)]="producto.unidad" required/>
+          <small class="p-error" *ngIf="submitted && !producto.descripcion">La descripción es requerida.</small>
+          <small class="p-error" *ngIf="submitted && producto.descripcion?.length > 0 && producto.descripcion?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+      </div>
+      <br>
+      <div class="field">
+          <label for="descripcion">Descripción</label>
+          <input type="text" pInputText id="descripcion" [(ngModel)]="producto.descripcion" required/>
+          <small class="p-error" *ngIf="submitted && !producto.descripcion">La descripción es requerida.</small>
+          <small class="p-error" *ngIf="submitted && producto.descripcion?.length > 0 && producto.descripcion?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+      </div>
+      <br>
+      <div class="field">
+          <label for="precio">Precio</label>
+          <input type="text" pInputText id="precio" [(ngModel)]="producto.precio" required/>
+          <small class="p-error" *ngIf="submitted && !producto.precio">El precio es requerido.</small>
+      </div>
+      <br>
+      <br>
+      <div class="field">
+          <label for="sku">SKU</label>
+          <input type="text" pInputText id="sku" [(ngModel)]="producto.sku" required/>
+          <small class="p-error" *ngIf="submitted && !producto.sku">El sku es requerido.</small>
+          <small class="p-error" *ngIf="submitted && producto.sku?.length > 0 && producto.sku?.length <= 2">El sku debe contener minimo 3 caracteres</small>
+      </div>
+      <br>
+      <div class="field">
+          <label for="existencia">Existencia</label>
+          <input type="text" pInputText id="existencia" [(ngModel)]="producto.existencia" required/>
+          <small class="p-error" *ngIf="submitted && !producto.existencia">La existencia es requerida.</small>
+          <small class="p-error" *ngIf="submitted && producto.existencia?.length > 0 && producto.existencia?.length <= 1">existencia debe contener minimo 2 caracteres</small>
+      </div>
+      <br>
+      <div class="field">
+          <label for="fecha">Fecha de ingreso</label>
+          <input type="date" pInputText id="idFecha" [(ngModel)]="producto.fechaIngreso" required/>
+          <small class="p-error" *ngIf="submitted && !producto.fechaIngreso">La Fecha de ingreso es requerida.</small>
+          <small class="p-error" *ngIf="submitted && producto.fechaIngreso?.length > 0 && producto.fechaIngreso?.length <= 3">El telefono debe contener minimo 4 caracteres</small>
+      </div>
+      <br>
+       <div class="field">
+          <label for="idCategoria">Categoria</label>
+          <p-dropdown [options]="listCategorias" [(ngModel)]="producto.idCategoria" optionValue="idCategoria" placeholder="Selecciona una categoria" optionLabel="descripcion" [style]="{'width': '100%'}"></p-dropdown>
+
+      </div>
+      <br>
+       <div class="field">
+          <label for="idUbicacion">Ubicación</label>
+          <p-dropdown [options]="listUbicaciones" [(ngModel)]="producto.idUbicacion" optionValue="idUbicacion" placeholder="Selecciona una ubicacion" optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
+      </div>
+      <br>
+       <div class="field">
+          <label for="idTalla">Talla</label>
+          <p-dropdown [options]="listTallas" [(ngModel)]="producto.idTalla" optionValue="idTalla" placeholder="Selecciona una talla" optionLabel="nombre" [style]="{'width': '100%'}"></p-dropdown>
+      </div>
+
+  </ng-template>
+  <ng-template pTemplate="footer">
+      <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+      <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveArticulo()"></button>
+  </ng-template> -->
+
+</p-dialog>
