@@ -61,6 +61,7 @@ import { AddSolicitudComponent } from './solicitudes/add-solicitud/add-solicitud
 import { OpenCashComponent } from './ventas/open-cash/open-cash.component';
 import { CambiosYDevolucionesComponent } from './cambios-y-devoluciones/cambios-y-devoluciones.component';
 import { AddCambioDevolucionComponent } from './cambios-y-devoluciones/add-cambio-devolucion/add-cambio-devolucion.component';
+import { OpenProductosComponent } from './ventas/open-productos/open-productos.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -128,7 +129,8 @@ import { AddCambioDevolucionComponent } from './cambios-y-devoluciones/add-cambi
         AddSolicitudComponent,
         OpenCashComponent,
         CambiosYDevolucionesComponent,
-        AddCambioDevolucionComponent
+        AddCambioDevolucionComponent,
+        OpenProductosComponent
     ]
 })
 export class PagesModule { }
