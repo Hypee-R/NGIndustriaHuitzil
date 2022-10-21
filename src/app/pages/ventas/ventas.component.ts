@@ -2,17 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CajaModel } from 'src/app/models/caja.model';
 import { productoModel } from 'src/app/models/productos.model';
+import { productoVentaModel } from 'src/app/models/productoVenta.model';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { ProveedoresService } from 'src/app/services/proveedores.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from 'src/app/services/ventas.service';
-
-export interface Car {
-  vin;
-  year;
-  brand;
-  color;
-}
 
 @Component({
   selector: 'app-ventas',
@@ -26,9 +20,11 @@ export class VentasComponent implements OnInit {
   loading: boolean = false;
   queryString: string = '';
   queryStringClient: string = '';
-  listVentas: productoModel[] = [];
-  articles: productoModel[];
+  listVentas: productoVentaModel[] = [];
+  articles: productoModel[] = [];
   articlesSelected : productoModel[] = []
+  articlesShell : productoVentaModel[] =[] ;
+  openCash :Boolean = false
   //lstProducts: productoModel[] = [];
   cols: any[] = [];
   //colsProducts:any[] = [];
@@ -52,9 +48,11 @@ export class VentasComponent implements OnInit {
   ) {
 
     this.cols = [
+      { field: 'cantidad',header:'Cantidad'},
       { field: 'descripcion', header: 'Producto' },
       { field: 'precio',header:'Precio'},
       { field: 'talla',header:'Talla'},
+      { field: 'sku',header:'SKU'}
 
     ];
 
@@ -109,14 +107,13 @@ export class VentasComponent implements OnInit {
    this.openProducts ="Productos"
    this.articlesSelected = []
    this.getArticulos()
-   //this.getCaja();
   }
 
   openCashRegister(){
     this.openProducts = ""
     this.accion = 'Abrir';
-   
     this.getCaja();
+ 
   }
 
   closeCashRegister(){
@@ -130,37 +127,44 @@ export class VentasComponent implements OnInit {
     this.getCaja();
   }
 
-  /*addProduct(product: productoModel){
-    this.listVentas.push(product)
+
+  deleteProduct(product:productoVentaModel,index:number){
+    if(this.articlesShell[index].cantidad>1){
+    this.articlesShell[index].cantidad -= 1
+    
+    }
+    else{
+      this.articlesShell.splice(this.articlesShell.indexOf(product),1)
+    }
+    this.total -= product.precio
+    this.articulos -=1
+  }
+
+
+  addArticle(product:productoVentaModel,index: number){
+    this.articlesShell[index].cantidad+=1
     this.articulos+=1
-    this.total+=product.precio
-    this.cantidades.push(1)
-    console.log(this.listVentas.indexOf(product))
-
-  }*/
-
-  deleteProduct(product:productoModel,index:number){
-    this.cantidades[index]-=1
-    this.total -= this.listVentas[index].precio
-    this.articulos-=1
-    if(this.cantidades[index]<1){
-      this.cantidades.splice(index,1)
-      this.listVentas.splice(this.listVentas.indexOf(product),1)
-      this.articulos=this.listVentas.length}
+    this.total += product.precio
+ 
   }
 
   addProductVenta(product : productoModel){
+    let artc = new productoVentaModel()
+    artc.descripcion = product.descripcion
+    artc.precio = product.precio
+    artc.talla = product.talla
+    artc.sku = product.sku
+    artc.idArticulo = product.idArticulo
+    this.articlesShell.push(artc)
     this.articulos+=1
-    this.cantidades.push(1)
-    this.listVentas.push(product)
     this.total += product.precio
 
   }
   cancelarCompra(){
     this.articulos=0
     this.total=0
-    this.cantidades=[]
-    this.listVentas=[]
+    this.articlesShell = []
+   
   }
   getArticulos(){
     this.inventarioService.getArticulos().subscribe(response => {
