@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CajaModel } from 'src/app/models/caja.model';
 import { productoModel } from 'src/app/models/productos.model';
@@ -16,6 +16,7 @@ import { VentasService } from 'src/app/services/ventas.service';
 
 
 export class VentasComponent implements OnInit {
+  @Output() _articulosS = new EventEmitter<productoModel>();  
   statusPanubicacion: number;
   loading: boolean = false;
   queryString: string = '';
@@ -253,4 +254,40 @@ export class VentasComponent implements OnInit {
         this.cashModel = new CajaModel();
       });
   }
+
+  onchangeShear(){
+    // alert("detecte la busqueda")
+    if(this.queryString && this.queryString.trim().length > 0){
+      this.variablesGL.showLoading();
+      this.inventarioService.searchProduct(this.queryString).subscribe(response => {
+        if(response.exito){
+          this.variablesGL.hideLoading();
+
+          this.toastr.success(response.mensaje, 'Exito!!!');
+          console.log('resultados de la busqueda: ', response.respuesta);
+          this.queryString="";
+        
+         
+          let artc = new productoModel()
+        artc.descripcion=response.respuesta[0].descripcion
+        artc.precio=response.respuesta[0].precio
+         artc.talla=response.respuesta[0].talla
+         artc.sku=response.respuesta[0].sku
+         artc.idArticulo=response.respuesta[0].idArticulo
+         this.addProductVenta(artc);
+          
+        
+        }else{
+          this.variablesGL.hideLoading();
+          this.toastr.error(response.mensaje, 'Error!');
+        }
+      }, err => {
+        this.variablesGL.hideLoading();
+        this.toastr.error('Hubo un error al buscar los productos', 'Error!');
+      });
+    }else{
+      this.toastr.error('Ingrese un elemento de busqueda', 'Atención!');
+    }
+  }
+ 
 }
