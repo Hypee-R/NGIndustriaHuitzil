@@ -139,6 +139,10 @@ getCampos(){
       for(let ubicacion of response.respuesta){
         this.listUbicaciones.push(ubicacion)
       }
+      if(this.variablesGL.getSucursal()){
+        let ubiPreselected = this.listUbicaciones.find(x => x.direccion == this.variablesGL.getSucursal());
+        this.producto.idUbicacion = ubiPreselected.idUbicacion;
+      }
     }
   }, err => {
 

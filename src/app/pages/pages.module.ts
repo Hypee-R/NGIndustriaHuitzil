@@ -59,6 +59,8 @@ import { AddArticuloComponent } from './inventario/add-articulo/add-articulo.com
 import { AddMaterialComponent } from './materiales/add-material/add-material.component';
 import { AddSolicitudComponent } from './solicitudes/add-solicitud/add-solicitud.component';
 import { OpenCashComponent } from './ventas/open-cash/open-cash.component';
+import { CambiosYDevolucionesComponent } from './cambios-y-devoluciones/cambios-y-devoluciones.component';
+import { AddCambioDevolucionComponent } from './cambios-y-devoluciones/add-cambio-devolucion/add-cambio-devolucion.component';
 import { OpenProductosComponent } from './ventas/open-productos/open-productos.component';
 @NgModule({
     imports: [
@@ -126,6 +128,8 @@ import { OpenProductosComponent } from './ventas/open-productos/open-productos.c
         AddMaterialComponent,
         AddSolicitudComponent,
         OpenCashComponent,
+        CambiosYDevolucionesComponent,
+        AddCambioDevolucionComponent,
         OpenProductosComponent
     ]
 })

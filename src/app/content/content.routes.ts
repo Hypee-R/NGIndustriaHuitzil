@@ -13,11 +13,13 @@ import { MiPerfilComponent } from '../pages/mi-perfil/mi-perfil.component';
 import { UsuariosComponent } from '../pages/usuarios/usuarios.component';
 import { RolesComponent } from '../pages/roles/roles.component';
 import { MaterialesComponent } from '../pages/materiales/materiales.component';
+import { CambiosYDevolucionesComponent } from '../pages/cambios-y-devoluciones/cambios-y-devoluciones.component';
 
 export const contentRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
     { path: 'inventory', component: InventarioComponent },
     { path: 'shopping', component: ComprasComponent },
+    { path: 'returns', component: CambiosYDevolucionesComponent },
     { path: 'sales', component: VentasComponent },
     { path: 'request', component: SolicitudesComponent },
     { path: 'reports', component: InformesComponent},

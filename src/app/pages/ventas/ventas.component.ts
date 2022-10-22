@@ -16,7 +16,7 @@ import { VentasService } from 'src/app/services/ventas.service';
 
 
 export class VentasComponent implements OnInit {
-  @Output() _articulosS = new EventEmitter<productoModel>();  
+  @Output() _articulosS = new EventEmitter<productoModel>();
   statusPanubicacion: number;
   loading: boolean = false;
   queryString: string = '';
@@ -78,7 +78,7 @@ export class VentasComponent implements OnInit {
 
   }
 
-  
+
   getResultsClients(){
     if(this.queryStringClient && this.queryStringClient.trim().length > 0){
       this.variablesGL.showLoading();
@@ -114,7 +114,7 @@ export class VentasComponent implements OnInit {
     this.openProducts = ""
     this.accion = 'Abrir';
     this.getCaja();
- 
+
   }
 
   closeCashRegister(){
@@ -132,7 +132,7 @@ export class VentasComponent implements OnInit {
   deleteProduct(product:productoVentaModel,index:number){
     if(this.articlesShell[index].cantidad>1){
     this.articlesShell[index].cantidad -= 1
-    
+
     }
     else{
       this.articlesShell.splice(this.articlesShell.indexOf(product),1)
@@ -146,7 +146,7 @@ export class VentasComponent implements OnInit {
     this.articlesShell[index].cantidad+=1
     this.articulos+=1
     this.total += product.precio
- 
+
   }
 
   addProductVenta(product : productoModel){
@@ -165,7 +165,7 @@ export class VentasComponent implements OnInit {
     this.articulos=0
     this.total=0
     this.articlesShell = []
-   
+
   }
   getArticulos(){
     this.inventarioService.getArticulos().subscribe(response => {
@@ -266,8 +266,8 @@ export class VentasComponent implements OnInit {
           this.toastr.success(response.mensaje, 'Exito!!!');
           console.log('resultados de la busqueda: ', response.respuesta);
           this.queryString="";
-        
-         
+
+
           let artc = new productoModel()
         artc.descripcion=response.respuesta[0].descripcion
         artc.precio=response.respuesta[0].precio
@@ -275,8 +275,8 @@ export class VentasComponent implements OnInit {
          artc.sku=response.respuesta[0].sku
          artc.idArticulo=response.respuesta[0].idArticulo
          this.addProductVenta(artc);
-          
-        
+
+
         }else{
           this.variablesGL.hideLoading();
           this.toastr.error(response.mensaje, 'Error!');
@@ -289,5 +289,5 @@ export class VentasComponent implements OnInit {
       this.toastr.error('Ingrese un elemento de busqueda', 'Atención!');
     }
   }
- 
+
 }
