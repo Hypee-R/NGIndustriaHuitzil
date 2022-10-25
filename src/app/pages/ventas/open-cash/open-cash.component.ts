@@ -39,12 +39,12 @@ export class OpenCashComponent implements OnInit {
         }
         if(this._caja){
           this.openCashModel = this._caja;
-          this.fecha = this.openCashModel.fecha != '' ? this.getFormatoFecha(this.openCashModel.fecha) : new Date();
+          this.fecha = this.openCashModel.fecha != '' ? this.variablesGL.getFormatoFecha(this.openCashModel.fecha) : new Date();
           if(this.accion == 'Cerrar'){
             this.fechaCierre = null;
           }
           if(this.openCashModel.montoCierre != null && this.accion == 'Status'){
-            this.fechaCierre = this.openCashModel.fechaCierre != null ? this.getFormatoFecha(this.openCashModel.fechaCierre) : new Date();
+            this.fechaCierre = this.openCashModel.fechaCierre != null ? this.variablesGL.getFormatoFecha(this.openCashModel.fechaCierre) : new Date();
           }
         }
       }
@@ -79,7 +79,8 @@ export class OpenCashComponent implements OnInit {
 
   saveCaja(){
     this.submitted = true;
-    this.setFormatoFecha();
+    this.openCashModel.fecha = this.fecha ? this.variablesGL.setFormatoFecha(this.fecha) : '';
+    this.openCashModel.fechaCierre = this.fechaCierre ? this.variablesGL.setFormatoFecha(this.fechaCierre) : '';
     console.log('datos ', this.openCashModel);
 
     if(this.accion == 'Abrir' && this.openCashModel.monto > 0 && this.openCashModel.fecha.length > 0){
@@ -119,23 +120,6 @@ export class OpenCashComponent implements OnInit {
         this.toastr.error('La fecha de cierre debe ser posterior a la fecha que se abrió la caja', 'Error');
       }
     }
-  }
-
-  setFormatoFecha(){
-      this.openCashModel.fecha = this.fecha ? this.datePipe.transform(this.fecha,'dd/MM/yyyy hh:mm:ss a') : '';
-      this.openCashModel.fechaCierre = this.fechaCierre ? this.datePipe.transform(this.fechaCierre,'dd/MM/yyyy hh:mm:ss a') : '';
-  }
-
-  getFormatoFecha(fecha: string){
-    const [dateComponents, timeComponents] = fecha.split(' ');
-
-    console.log(dateComponents); // 👉️ "07/21/2024"
-    console.log(timeComponents); // 👉️ "04:24:37"
-
-    const [day, month, year] = dateComponents.split('/');
-    const [hours, minutes, seconds] = timeComponents.split(':');
-
-    return new Date(+year, +month - 1, +day, +hours, +minutes, +seconds);
   }
 
 }

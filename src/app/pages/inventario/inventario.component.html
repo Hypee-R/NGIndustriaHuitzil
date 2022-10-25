@@ -61,7 +61,7 @@
 
                     <div *ngIf="!loading && listArticulos.length > 0">
                         <p-table #dt [value]="listArticulos" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedArticulos" [rowHover]="true"
-                            dataKey="idProducto" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Articulos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                            dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Articulos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                             <ng-template pTemplate="caption">
                                 <div class="flex align-items-center justify-content-between">
                                     <h5 class="m-0">Inventario de Articulos</h5>

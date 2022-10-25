@@ -24,6 +24,7 @@ import { RolesComponent } from './roles/roles.component';
 
 //PrimeNG
 import {DataViewModule} from 'primeng/dataview';
+import {BadgeModule} from 'primeng/badge';
 import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { SplitButtonModule } from 'primeng/splitbutton';
@@ -44,10 +45,13 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
 import {ChartModule} from 'primeng/chart';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {DividerModule} from 'primeng/divider';
+
+
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
 import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
@@ -62,6 +66,7 @@ import { OpenCashComponent } from './ventas/open-cash/open-cash.component';
 import { CambiosYDevolucionesComponent } from './cambios-y-devoluciones/cambios-y-devoluciones.component';
 import { AddCambioDevolucionComponent } from './cambios-y-devoluciones/add-cambio-devolucion/add-cambio-devolucion.component';
 import { OpenProductosComponent } from './ventas/open-productos/open-productos.component';
+import { SelectInventarioComponent } from './cambios-y-devoluciones/select-inventario/select-inventario.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -71,6 +76,7 @@ import { OpenProductosComponent } from './ventas/open-productos/open-productos.c
         ContentRoutingModule,
         // StoreModule.forFeature('viewUsers', usersReducer),
         //PrimeNG
+        BadgeModule,
         ToastModule,
         CardModule,
         DropdownModule,
@@ -89,6 +95,7 @@ import { OpenProductosComponent } from './ventas/open-productos/open-productos.c
         ButtonModule,
         ToastModule,
         InputTextModule,
+        OverlayPanelModule,
         ProgressBarModule,
         FileUploadModule,
         ToolbarModule,
@@ -130,7 +137,8 @@ import { OpenProductosComponent } from './ventas/open-productos/open-productos.c
         OpenCashComponent,
         CambiosYDevolucionesComponent,
         AddCambioDevolucionComponent,
-        OpenProductosComponent
+        OpenProductosComponent,
+        SelectInventarioComponent
     ]
 })
 export class PagesModule { }

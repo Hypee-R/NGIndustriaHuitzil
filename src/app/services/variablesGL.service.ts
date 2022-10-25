@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class VariablesService {
   changeTipoMenu = new Subject<boolean>();
   showDialog = new BehaviorSubject<boolean>(false);
 
+  datePipe = new DatePipe("en-US");
   constructor(
     private router: Router
   ) {
@@ -79,6 +81,22 @@ export class VariablesService {
   setSucursal(value: string){
     localStorage.removeItem('sucursal');
     localStorage.setItem('sucursal', value);
+  }
+
+  setFormatoFecha(fecha: string | Date){
+    return this.datePipe.transform(fecha,'dd/MM/yyyy hh:mm:ss a');
+  }
+
+  getFormatoFecha(fecha: string){
+    const [dateComponents, timeComponents] = fecha.split(' ');
+
+    console.log(dateComponents); // 👉️ "07/21/2024"
+    console.log(timeComponents); // 👉️ "04:24:37"
+
+    const [day, month, year] = dateComponents.split('/');
+    const [hours, minutes, seconds] = timeComponents.split(':');
+
+    return new Date(+year, +month - 1, +day, +hours, +minutes, +seconds);
   }
 
 }
