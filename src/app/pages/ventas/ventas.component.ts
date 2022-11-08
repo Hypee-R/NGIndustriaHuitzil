@@ -60,13 +60,13 @@ export class VentasComponent implements OnInit {
     this.statusPanubicacion = this.variablesGL.getStatusPantalla();
       let status = this.variablesGL.getPantalla();
       if(status == 'celular'){
-        this.rows = 8;
+        this.rows = 6;
       }else if(status == 'tablet'){
-        this.rows = 9;
-      }else if(status == 'laptop'){
         this.rows = 7;
+      }else if(status == 'laptop'){
+        this.rows = 4;
       }else{
-        this.rows = 12;
+        this.rows = 11;
       }
 
   }

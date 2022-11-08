@@ -67,6 +67,7 @@ import { CambiosYDevolucionesComponent } from './cambios-y-devoluciones/cambios-
 import { AddCambioDevolucionComponent } from './cambios-y-devoluciones/add-cambio-devolucion/add-cambio-devolucion.component';
 import { OpenProductosComponent } from './ventas/open-productos/open-productos.component';
 import { SelectInventarioComponent } from './cambios-y-devoluciones/select-inventario/select-inventario.component';
+import { RefreshTableDirective } from './ventas/directiva/refresh-table.directive';
 @NgModule({
     imports: [
         CommonModule,
@@ -138,7 +139,8 @@ import { SelectInventarioComponent } from './cambios-y-devoluciones/select-inven
         CambiosYDevolucionesComponent,
         AddCambioDevolucionComponent,
         OpenProductosComponent,
-        SelectInventarioComponent
+        SelectInventarioComponent,
+        RefreshTableDirective
     ]
 })
 export class PagesModule { }
