@@ -35,13 +35,17 @@
                               
                             </div>
                           </div>
-                        <app-loading *ngIf="loading"></app-loading>
+                        <app-loading *ngIf="loading" ></app-loading>
                         <div *ngIf="!loading">
-                            <p-table #dt [value]="articlesShell" [columns]="cols" [rows]="rows" [paginator]="true"
+                            <p-table 
+                                *appRefreshTable = "articulos"
+                                    #dt [value]="articlesShell" [columns]="cols" [rows]="rows" [paginator]="true"
                                 [globalFilterFields]="['nombre','descripcion']" [responsive]="true"
                                 responsiveLayout="scroll" [rowHover]="true" dataKey="idProducto"
                                 currentPageReportTemplate="Mostrando {first} a {last}  productos"
-                                [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                                [showCurrentPageReport]="true" styleClass="p-datatable-sm"
+                                
+                                >
                                 <ng-template pTemplate="caption">
                                     <div class="flex align-items-center justify-content-between">
 
@@ -50,7 +54,7 @@
                                         </div>
                                     </div>
                                 </ng-template>
-                                <ng-template pTemplate="header" let-columns>
+                                <ng-template  pTemplate="header" let-columns>
                                     <tr>
                                         <th style="width: 2rem">
                                         </th>
