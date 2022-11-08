@@ -266,3 +266,21 @@ body {
 .lbl {
     color: var(--color-dark);
 }
+
+.text-muted {
+    --bs-text-opacity: 1;
+    color: rgba(var(--color-dark-variant), .75)!important;
+}
+
+.user-picture-ranking {
+    border-radius: 50%;
+    /* margin-top: .4rem; */
+    height: 3.5rem;
+    width: 3.5rem;
+    background-color: #90a4ae;
+    color: #eaeaea;
+    font-size: 1.1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

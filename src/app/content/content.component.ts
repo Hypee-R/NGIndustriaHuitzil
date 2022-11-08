@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2';
 import { Component, OnInit, ChangeDetectorRef, HostListener, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { flipInXAnimation } from '../shared/animations/flipinX';
 import { fadeAnimation } from '../shared/animations/fade';
@@ -9,6 +9,7 @@ import { VariablesService } from '../services/variablesGL.service';
 import { UbicacionesService } from '../services/ubicaciones.service';
 import { UsuarioAuthModel } from '../models/usuario-auth.model';
 import { UbicacionModel } from '../models/ubicacion.model';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-content',
@@ -24,17 +25,18 @@ export class ContentComponent implements OnInit, OnDestroy {
   lstUbicaciones: UbicacionModel[] = [];
   mostrarSideUser: boolean = false;
 
+  dashboardPageSubscription: Subscription = new Subscription();
   sideUserSubscripcion: Subscription = new Subscription();
-  userSubscripcion: Subscription = new Subscription();
   sideBarSubscripcion: Subscription = new Subscription();
   changeMenuSubscripcion: Subscription = new Subscription();
 
+  isDashboardPage: boolean;
   constructor(
+    private router: Router,
     private cdRef: ChangeDetectorRef,
     private variablesGL: VariablesService,
     private ubicacionesService: UbicacionesService,
   ) {
-
     this.userAuth = JSON.parse(localStorage.getItem('usuario'));
 
     //Selecciona sucursal perfil vendedor
@@ -80,20 +82,32 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.sideUserSubscripcion = this.variablesGL.showSideUser.subscribe(value => {
       this.mostrarSideUser = value;
     });
+
+    //Scroll en dashboard page
+    this.dashboardPageSubscription = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event) => {
+        let url = event['url']
+       console.log('The URL changed to: ' + url);
+       url == '/dashboard' ? this.isDashboardPage = true : this.isDashboardPage = false;
+    });
   }
 
   ngOnInit() {
   }
 
   ngOnDestroy() {
+    if (this.changeMenuSubscripcion) {
+      this.changeMenuSubscripcion.unsubscribe();
+    }
+    if(this.sideBarSubscripcion){
+      this.sideBarSubscripcion.unsubscribe();
+    }
     if (this.sideUserSubscripcion) {
       this.sideUserSubscripcion.unsubscribe();
     }
-    if (this.userSubscripcion) {
-      this.userSubscripcion.unsubscribe();
-    }
-    if (this.changeMenuSubscripcion) {
-      this.changeMenuSubscripcion.unsubscribe();
+    if(this.dashboardPageSubscription){
+      this.dashboardPageSubscription.unsubscribe();
     }
   }
 

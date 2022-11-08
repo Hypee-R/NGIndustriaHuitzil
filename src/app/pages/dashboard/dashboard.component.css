@@ -1,4 +1,104 @@
-.card {
-    height: calc(100vh - 89px);
-    padding-top: 5px;
+.sales,
+.expenses,
+.income {
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    margin-top: 1.2rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+
+.sales:hover,
+.expenses:hover,
+.income:hover {
+    box-shadow: none;
+}
+
+.sales span,
+.expenses span,
+.income span {
+    background: var(--color-primary);
+    padding: 0.5rem .9rem;
+    border-radius: 50%;
+    color: var(--color-white);
+    font-size: 1.4rem;
+}
+
+.expenses span {
+    background: var(--color-danger);
+}
+
+.income span {
+    background: var(--color-success);
+}
+
+.sales .middle,
+.expenses .middle,
+.income .middle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.middle h3 {
+    margin: 1rem 0 0.6rem;
+    font-size: 1rem;
+}
+
+.middle .progress {
+    position: relative;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+}
+
+.middle svg {
+    width: 7rem;
+    height: 7rem;
+    background: var(--color-white);
+}
+
+.middle svg circle {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 14;
+    stroke-linecap: round;
+    transform: translate(5px, 5px);
+    stroke-dasharray: 110;
+    stroke-dashoffset: 92;
+}
+
+.sales svg circle {
+    stroke-dasharray: 200;
+    stroke-dashoffset: -30;
+}
+
+.expenses svg circle {
+    stroke-dasharray: 80;
+    stroke-dashoffset: 20;
+}
+
+.income svg circle {
+    stroke-dasharray: 110;
+    stroke-dashoffset: 35;
+}
+
+.middle .progress .number {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-dark);
+}
+
+.sales small,
+.expenses small,
+.income small {
+    margin-top: 1.6rem;
+    display: block;
 }

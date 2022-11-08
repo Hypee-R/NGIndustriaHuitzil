@@ -2,7 +2,7 @@
     <div class="row">
         <app-side-bar id="menu" class="sideBar"></app-side-bar>
         <app-nav-bar id="sidenav" class="sideNav"></app-nav-bar>
-        <div id="Contenido" class="contenidoNormal" *ngIf="userAuth">
+        <div id="Contenido" class="contenidoNormal" [ngClass]="{'dashboard-page': isDashboardPage }" *ngIf="userAuth">
             <div id="carta" class="contenido-outled">
                 <router-outlet></router-outlet>
             </div>
