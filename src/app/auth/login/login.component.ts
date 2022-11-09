@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
           "usuario": email,
           "contrasena": this.variablesGL.getSHA1(password)
         };
-        console.log('request ', credenciales);
+        // console.log('request ', credenciales);
         // localStorage.d = "respuesta.respuesta.token";
         // this.router.navigate(["/home"]);
         Swal.fire({
@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
               const dataLogin: UsuarioAuthModel = respuesta.respuesta;
               localStorage.setItem('usuario', JSON.stringify(dataLogin));
               localStorage.d = respuesta.respuesta.token;
-              this.router.navigate(["/dashboard"]);
+              this.router.navigate([dataLogin?.vistas[0]?.routerLink ?? '/dashboard']);
               this.toastr.success(respuesta.mensaje,'Acceso Correcto');
           }else{
               this.toastr.error(respuesta.mensaje, 'Acceso Incorrecto');

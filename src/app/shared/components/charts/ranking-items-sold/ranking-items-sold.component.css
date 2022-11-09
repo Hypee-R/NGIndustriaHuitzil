@@ -1,0 +1,32 @@
+.best-articles {
+    background: var(--color-white);
+    padding: var(--padding-1);
+    border-radius: var(--card-border-radius);
+    /* margin-top: 1rem; */
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+
+.best-articles:hover {
+    box-shadow: none;
+}
+
+h5 {
+    font-weight: bolder;
+}
+
+i {
+    font-size: 4rem;
+}
+
+.gold {
+    color: goldenrod;
+}
+
+.silver {
+    color: silver;
+}
+
+.bronze {
+    color: sienna;
+}

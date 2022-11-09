@@ -1,43 +1,120 @@
 <div [ngClass]="{'container': statusPantalla <= 10}">
-    <div class="card shadow mb-5 bg-body rounded">
-        <div class="card-header text-uppercase">Dashboard</div>
-        <span class="lstick"></span>
-       <div class="card-body">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="container">
-                        <div class="center">
 
-                            <p-card >
-                                <h5>Ventas/Consumo</h5>
-                                <p-chart type="line" [data]="lineStylesData" [options]="basicOptions"></p-chart>
-                            </p-card>  
+    <app-loading *ngIf="loading"></app-loading>
+
+    <div class="dashboard-page" *ngIf="!loading">
+
+        <div class="row">
+            <div class="col col-md-4">
+
+                <!-- SALES -->
+                <div class="sales">
+                    <span><i class="fa-solid fa-dollar-sign"></i></span>
+                    <!-- <span><i class="fa-solid fa-store"></i></span> -->
+                    <div class="middle">
+                        <div class="left">
+                            <h3>{{ dashboard.cards[0].title }}</h3>
+                            <h1>{{ dashboard.cards[0].value | currency:'MXN' }} </h1>
                         </div>
-                        
+                        <!-- <div class="progress">
+                        <svg>
+                            <circle cx='38' cy='38' r='36'></circle>
+                        </svg>
+                        <div class="number">
+                            <p>81%</p>
+                        </div>
+                    </div> -->
                     </div>
-                    
-                    
+                    <!-- <small class="text-muted">Last 24 hours</small> -->
                 </div>
-                <div class="col-md-4">
-                    <div class="container">
-                        <p-card>
-                            <h5>Inventario</h5>
-                            <p-chart type="doughnut" [data]="data" [options]="chartOptions"></p-chart>
-                        </p-card>   
-                    </div>
-                    <br>
-                   
-                    
-                </div>
-                <div class="col-md-4">
-                    <div class="container">
-                        <p-card>
-                            <h5>Material</h5>
-                            <p-chart type="polarArea" [data]="data" [options]="chartOptions"></p-chart>
-                        </p-card>                        
-                    </div>
-                    <br>             
-                </div>
+                <!-- END OF SALES -->
+
             </div>
-       </div>
+            <div class="col col-md-4">
+
+                <!-- EXPENSES -->
+                <div class="expenses">
+                    <span><i class="fa-solid fa-file-invoice-dollar"></i></span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>{{ dashboard.cards[1].title }}</h3>
+                            <h1>{{ dashboard.cards[1].value | currency:'MXN' }}</h1>
+                        </div>
+                        <!-- <div class="progress">
+                        <svg>
+                            <circle cx='38' cy='38' r='36'></circle>
+                        </svg>
+                        <div class="number">
+                            <p>62%</p>
+                        </div>
+                    </div> -->
+                    </div>
+                    <!-- <small class="text-muted">Last 24 hours</small> -->
+                </div>
+                <!-- END OF EXPENSES -->
+
+            </div>
+            <div class="col col-md-4">
+
+                <!-- INCOME -->
+                <div class="income">
+                    <span><i class="fa-solid fa-circle-dollar-to-slot"></i></span>
+                    <!-- <span><i class="fa-solid fa-dollar-sign"></i></span> -->
+                    <div class="middle">
+                        <div class="left">
+                            <h3>{{ dashboard.cards[2].title }}</h3>
+                            <h1>{{ dashboard.cards[2].value | currency:'MXN' }}</h1>
+                        </div>
+                        <!-- <div class="progress">
+                        <svg>
+                            <circle cx='38' cy='38' r='36'></circle>
+                        </svg>
+                        <div class="number">
+                            <p>44%</p>
+                        </div>
+                    </div> -->
+                    </div>
+                    <!-- <small class="text-muted">Last 24 hours</small> -->
+                </div>
+                <!-- END OF INCOME -->
+
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <!-- GRAPH SALES FOR MONTH -->
+            <div class="col col-md-8" kll>
+                <app-sales-payment-type [_data]="dashboard.barchart"></app-sales-payment-type>
+            </div>
+            <!-- END GRAPH SALES FOR MONTH -->
+
+
+            <!-- RANKING BEST SELLING ITEMS -->
+            <div class="col col-md-4">
+                <app-ranking-items-sold [_data]="dashboard.rankingA"></app-ranking-items-sold>
+            </div>
+            <!-- END RANKING BEST SELLING ITEMS -->
+        </div>
+
+        <div class="row mt-5">
+
+            <!-- RANKING EMPLOYEE WITH MORE SALES -->
+            <div class="col col-md-4">
+                <app-employee-sales-ranking [_data]="dashboard.rankingE"></app-employee-sales-ranking>
+            </div>
+            <!-- END RANKING EMPLOYEE WITH MORE SALES -->
+            <div class="col"></div>
+            <!-- RANKING LOCATION WITH MORE SALES -->
+            <div class="col col-md-4">
+                <app-sales-location-ranking [_data]="dashboard.rankingS"></app-sales-location-ranking>
+            </div>
+            <!-- END RANKING LOCATION WITH MORE SALES -->
+            <div class="col col-md-3"></div>
+
+        </div>
+
+        <br>
+        <br>
+
+    </div>
 </div>

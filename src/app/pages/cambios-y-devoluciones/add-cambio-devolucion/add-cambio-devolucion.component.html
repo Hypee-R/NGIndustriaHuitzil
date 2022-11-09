@@ -1,0 +1,335 @@
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '960px'}" header="{{accion}} Cambio y/o Devolucion" [modal]="true" styleClass="p-fluid">
+
+    <ng-template pTemplate="content">
+
+        <ng-container *ngIf="accion == 'Agregar'; else detailsTemplate">
+
+            <div class="field">
+                <div class="row">
+                    <div class="col-9">
+                        <label for="noTicket" class="lbl">No Ticket</label>
+                        <input type="text" pInputText id="noTicket" [(ngModel)]="noTicketVenta" placeholder="Ingresa el no ticket del que desea realizar algún cambio..." autofocus (keyup)="findSale($event)" />
+                    </div>
+                    <div class="col-3" style="padding-top: 1.5em;">
+                        <p-button label="Search" icon="pi pi-search" [loading]="loadResultVenta" [disabled]="noTicketVenta.length == 0" (onClick)="findSale(null)"></p-button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div class="field" *ngIf="ventaByNoTicket.length > 0">
+                <div class="text-center">
+                    <h4>Datos de la Venta</h4>
+                </div>
+
+                <p-table [value]="ventaByNoTicket" dataKey="idVenta" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem"></th>
+                            <th>No Ticket</th>
+                            <th>Fecha</th>
+                            <th>Tipo Pago</th>
+                            <th>Tipo Venta</th>
+                            <th>No Articulos</th>
+                            <th>Subtotal</th>
+                            <th>Total</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-venta let-expanded="expanded">
+                        <tr>
+                            <td>
+                                <button type="button" pButton pRipple [pRowToggler]="venta" pTooltip="Articulos Vendidos" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                            </td>
+                            <td>
+                                <p-badge [value]="venta.noTicket" severity="danger" styleClass="mr-2"></p-badge>
+                            </td>
+                            <td>{{venta.fecha | date: 'dd-MM-yyyy'}}</td>
+                            <td>{{venta.tipoPago}}</td>
+                            <td>{{venta.tipoVenta}}</td>
+                            <td>
+                                <p-badge [value]="venta.noArticulos" severity="primary" styleClass="mr-2" size="large"></p-badge>
+                            </td>
+                            <td>{{venta.subtotal | currency:'MXN' }}</td>
+                            <td>{{venta.total | currency:'MXN' }}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="rowexpansion" let-venta>
+                        <tr>
+                            <td colspan="10">
+                                <div class="p-3">
+                                    <p-table [value]="venta.ventaArticulo" dataKey="idVentaArticulo">
+                                        <ng-template pTemplate="header">
+                                            <tr class="row-accessories">
+                                                <th style="width: 2em;"></th>
+                                                <th>Imagen</th>
+                                                <th pSortableColumn="articulo.sku">SKU
+                                                    <p-sortIcon field="articulo.sku"></p-sortIcon>
+                                                </th>
+                                                <th pSortableColumn="articulo.descripcion">Descripción
+                                                    <p-sortIcon field="articulo.descripcion"></p-sortIcon>
+                                                </th>
+                                                <th pSortableColumn="cantidad">Cantidad
+                                                    <p-sortIcon field="cantidad"></p-sortIcon>
+                                                </th>
+                                                <th pSortableColumn="precioUnitario">Precio Unitario
+                                                    <p-sortIcon field="precioUnitario"></p-sortIcon>
+                                                </th>
+                                                <th pSortableColumn="subtotal">Subtotal
+                                                    <p-sortIcon field="subtotal"></p-sortIcon>
+                                                </th>
+                                                <th style="width: 4rem"></th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-article let-expanded="expandedArticulos">
+                                            <tr>
+                                                <td>
+                                                    <button type="button" pButton pRipple [pRowToggler]="article" pTooltip="Cambios Realizados" class="p-button-text p-button-rounded p-button-plain" [icon]="article.expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" (click)="article.expanded = !article.expanded"></button>
+                                                </td>
+                                                <td> <img src="assets/img/only_logo_huitzil.png" width="40" height="40%" class="shadow-1" /> </td>
+                                                <td [ngClass]="{'text-decoration-line-through': article.cantidad == 0}">{{article.articulo.sku}}</td>
+                                                <td [ngClass]="{'text-decoration-line-through': article.cantidad == 0}">{{article.articulo.descripcion}}</td>
+                                                <td>
+                                                    <p-badge [value]="article.cantidad" [severity]="article.cantidad == 0 ? 'danger' : 'warning'" styleClass="mr-2" size="large"></p-badge>
+                                                </td>
+                                                <td>{{article.precioUnitario | currency:'MXN' }}</td>
+                                                <td>{{article.subtotal | currency:'MXN' }}</td>
+                                                <td>
+                                                    <p-button type="button" icon="pi pi-sort-alt" pTooltip="Cambiar Articulo" (onClick)="changeArticle($event, panel, article)"></p-button>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="rowexpansion" let-article>
+                                            <tr>
+                                                <td colspan="10">
+                                                    <div class="p-3">
+                                                        <p-table [value]="article.cambiosArticulo" dataKey="idCambioDevolucion">
+                                                            <ng-template pTemplate="header">
+                                                                <tr>
+                                                                    <th>Cantidad</th>
+                                                                    <th colspan="5">Detalle del cambio y/o devolución del producto</th>
+                                                                    <!-- <th>Imagen</th>
+                                                                    <th>SKU</th>
+                                                                    <th>Descripción</th>
+                                                                    <th>Cantidad</th>
+                                                                    <th>Precio</th>
+                                                                    <th>Talla</th> -->
+                                                                    <th style="width: 4rem"></th>
+                                                                </tr>
+                                                            </ng-template>
+                                                            <ng-template pTemplate="body" let-cambio>
+                                                                <tr style="background-color: rgba(0, 0, 0, .15) !important;">
+                                                                    <td>
+                                                                        <p-badge [value]="cambio.cantidad" severity="success" styleClass="mr-2" size="large"></p-badge>
+                                                                    </td>
+                                                                    <td>
+                                                                        <img [src]="cambio?.articulo?.imagen" width="40" height="40%" class="shadow-1" />
+                                                                    </td>
+                                                                    <td>{{cambio?.articulo?.sku}}</td>
+                                                                    <td>{{cambio?.articulo?.descripcion}}</td>
+                                                                    <td>{{cambio?.articulo?.talla}}</td>
+                                                                    <td>{{cambio?.articulo?.precio | currency:'MXN' }}</td>
+                                                                    <td>
+                                                                        <button pButton class="p-button-danger" type="button" icon="pi pi-trash" pTooltip="Quitar Articulo" (click)="onDeleteArticuloCambio(cambio)"></button>
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-template>
+                                                            <ng-template pTemplate="emptymessage">
+                                                                <tr>
+                                                                    <td colspan="6">No hay cambios realizados en éste articulo.</td>
+                                                                </tr>
+                                                            </ng-template>
+                                                        </p-table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+                <p-overlayPanel #panel [dismissable]="true" [showCloseIcon]="true" [draggable]="true" [style]="{'margin-left': margin_l, 'margin-top': margin_t}">
+                    <!-- [style]="{'margin-top': '3rem', 'margin-left': '-25.5rem'}" 1360px -->
+                    <!-- [style]="{'margin-top': '10rem', 'margin-left': '9rem'}" 1920px -->
+                    <ng-template pTemplate>
+                        <app-select-inventario [articleSelected]="ventaArticleSelected.articulo" (onChangeArticle)="onSetChangeArticle($event)"></app-select-inventario>
+                    </ng-template>
+                </p-overlayPanel>
+
+            </div>
+
+            <div class="field" *ngIf="cambioDevolucion">
+                <br>
+                <br>
+                <div class="text-center">
+                    <h4>Datos del Cambio y/o Devolución</h4>
+                </div>
+
+                <p-table [value]="cambiosDevoluciones" dataKey="name" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <!-- <th style="width: 3rem"></th> -->
+                            <th>No Ticket</th>
+                            <th>Fecha</th>
+                            <th>No Articulos</th>
+                            <th>A favor cliente</th>
+                            <th>Total a Pagar</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-cambio let-expanded="expanded">
+                        <tr>
+                            <!-- <td>
+                                <button type="button" pButton pRipple [pRowToggler]="cambio" pTooltip="Articulos Vendidos" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                            </td> -->
+                            <td>
+                                <p-badge [value]="ventaByNoTicket[0].noTicket" severity="danger" styleClass="mr-2"></p-badge>
+                            </td>
+                            <td>{{cambio.fecha | date: 'dd-MM-yyyy'}}</td>
+                            <td>
+                                <p-badge [value]="cambio.noArticulos" severity="success" styleClass="mr-2" size="large"></p-badge>
+                            </td>
+                            <td *ngIf="cambio.subtotal < 0">{{ cambio.subtotal | currency:'MXN' }}</td>
+                            <td *ngIf="cambio.subtotal >= 0">{{ 0.00 | currency:'MXN' }}</td>
+                            <td *ngIf="cambio.total > 0">{{ cambio.subtotal | currency:'MXN' }}</td>
+                            <td *ngIf="cambio.total <= 0">{{ 0.00 | currency:'MXN' }}</td>
+                        </tr>
+                    </ng-template>
+                    <!-- <ng-template pTemplate="rowexpansion" let-cambio>
+                        <tr>
+                            <td colspan="10">
+                                <div class="p-3">
+                                    <p-table [value]="cambio.cambiosDevolucionesArticulos" dataKey="idCambioDevolucion">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th colspan="3">Información Articulo Anterior</th>
+                                                <th colspan="1">Cantidad</th>
+                                                <th colspan="5">Información Articulo Nuevo</th>
+                                                <th colspan="1"></th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-cambio>
+                                            <tr>
+                                                <td>
+                                                    <img src="assets/img/only_logo_huitzil.png" width="40" height="40%" class="shadow-1" /> </td>
+                                                <td class="text-decoration-line-through">{{cambio.ventaArticulo.articulo.sku}}</td>
+                                                <td class="text-decoration-line-through">{{cambio.ventaArticulo.articulo.descripcion}}</td>
+                                                <td>
+                                                    <p-badge [value]="cambio.cantidad" severity="warning" styleClass="mr-2" size="large"></p-badge>
+                                                </td>
+                                                <td>
+                                                    <img [src]="cambio.articulo.imagen" width="40" height="40%" class="shadow-1" />
+                                                </td>
+                                                <td>{{cambio.articulo.sku}}</td>
+                                                <td>{{cambio.articulo.descripcion}}</td>
+                                                <td>{{cambio.articulo.talla}}</td>
+                                                <td>{{cambio.articulo.precio | currency:'MXN' }}</td>
+                                                <td>
+                                                    <p-button class="p-button-danger" type="button" icon="pi pi-trash" pTooltip="Quitar Articulo"></p-button>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="6">There are no order for this product yet.</td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template> -->
+                </p-table>
+
+            </div>
+
+        </ng-container>
+
+        <ng-template #detailsTemplate>
+            <ng-container>
+                <div class="text-center">
+                    <h4>Detalles del Cambio y/o Devolución</h4>
+                </div>
+                <hr>
+                <p-table #dt [value]="detailsCambiosDevoluciones" [rows]="rows" [paginator]="false" dataKey="idCambioDevolucion" [globalFilterFields]="['venta.noTicket']" [responsive]="true" responsiveLayout="scroll" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem"></th>
+                            <th>No Ticket</th>
+                            <th>Fecha</th>
+                            <th>No Articulos</th>
+                            <th>A favor cliente</th>
+                            <th>Total a Pagar</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-cambio let-expanded="expanded">
+                        <tr>
+                            <td>
+                                <button type="button" pButton pRipple [pRowToggler]="cambio" pTooltip="Cambios Realizados" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                            </td>
+                            <td>
+                                <p-badge [value]="cambio?.venta?.noTicket" severity="danger" size="large" styleClass="mr-2"></p-badge>
+                            </td>
+                            <td>{{cambio.fecha | date: 'dd/MM/yyyy, h:mm a'}}</td>
+                            <td>
+                                <p-badge [value]="cambio.noArticulos" severity="success" styleClass="mr-2" size="large"></p-badge>
+                            </td>
+                            <td *ngIf="cambio.subtotal < 0">{{ cambio.subtotal | currency:'MXN' }}</td>
+                            <td *ngIf="cambio.subtotal >= 0">{{ 0.00 | currency:'MXN' }}</td>
+                            <td *ngIf="cambio.total > 0">{{ cambio.subtotal | currency:'MXN' }}</td>
+                            <td *ngIf="cambio.total <= 0">{{ 0.00 | currency:'MXN' }}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="rowexpansion" let-cambio>
+                        <tr>
+                            <td colspan="10">
+                                <div class="p-3">
+                                    <p-table [value]="cambio.cambiosDevolucionesArticulos" dataKey="idCambioDevolucion">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th colspan="3">Información Articulo Anterior</th>
+                                                <th colspan="1">Cantidad</th>
+                                                <th colspan="5">Información Articulo Nuevo</th>
+                                                <th colspan="1"></th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-cambio>
+                                            <tr>
+                                                <td>
+                                                    <img src="assets/img/only_logo_huitzil.png" width="40" height="40%" class="shadow-1" /> </td>
+                                                <td class="text-decoration-line-through">{{cambio.ventaArticulo.articulo.sku}}</td>
+                                                <td class="text-decoration-line-through">{{cambio.ventaArticulo.articulo.descripcion}}</td>
+                                                <td>
+                                                    <p-badge [value]="cambio.cantidad" severity="warning" styleClass="mr-2" size="large"></p-badge>
+                                                </td>
+                                                <td>
+                                                    <img [src]="cambio.articulo.imagen" width="40" height="40%" class="shadow-1" />
+                                                </td>
+                                                <td>{{cambio.articulo.sku}}</td>
+                                                <td>{{cambio.articulo.descripcion}}</td>
+                                                <td>{{cambio.articulo.talla}}</td>
+                                                <td>{{cambio.articulo.precio | currency:'MXN' }}</td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="6">There are no order for this product yet.</td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </ng-container>
+        </ng-template>
+
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" [disabled]="accion != 'Agregar' || !cambioDevolucion" (click)="onSaveCambioDevolucion()"></button>
+    </ng-template>
+
+</p-dialog>

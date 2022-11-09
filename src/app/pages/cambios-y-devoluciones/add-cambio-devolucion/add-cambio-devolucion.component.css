@@ -1,0 +1,7 @@
+:host>>>.p-datatable .p-datatable-thead>tr>th {
+    padding: .5rem .5rem;
+}
+
+:host>>>.p-datatable .p-datatable-tbody>tr>td {
+    padding: .5rem .5rem;
+}

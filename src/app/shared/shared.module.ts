@@ -12,6 +12,11 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import {TieredMenuModule} from 'primeng/tieredmenu';
 import { ItemEmptyComponent } from './components/item-empty/item-empty.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { SalesPaymentTypeComponent } from './components/charts/sales-payment-type/sales-payment-type.component';
+import { SalesLocationRankingComponent } from './components/charts/sales-location-ranking/sales-location-ranking.component';
+import { EmployeeSalesRankingComponent } from './components/charts/employee-sales-ranking/employee-sales-ranking.component';
+import { RankingItemsSoldComponent } from './components/charts/ranking-items-sold/ranking-items-sold.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 
 
@@ -21,6 +26,8 @@ import { LoadingComponent } from './components/loading/loading.component';
       FormsModule,
       RouterModule,
       ReactiveFormsModule,
+      //ApexCharts
+      NgApexchartsModule,
       //PrimeNG
       PanelMenuModule,
       TieredMenuModule,
@@ -30,7 +37,11 @@ import { LoadingComponent } from './components/loading/loading.component';
       SideBarComponent,
       SideUserComponent,
       ItemEmptyComponent,
-      LoadingComponent
+      LoadingComponent,
+      SalesPaymentTypeComponent,
+      SalesLocationRankingComponent,
+      EmployeeSalesRankingComponent,
+      RankingItemsSoldComponent
     ],
     exports: [
       NavBarComponent,
@@ -38,6 +49,10 @@ import { LoadingComponent } from './components/loading/loading.component';
       SideUserComponent,
       ItemEmptyComponent,
       LoadingComponent,
+      SalesPaymentTypeComponent,
+      SalesLocationRankingComponent,
+      EmployeeSalesRankingComponent,
+      RankingItemsSoldComponent,
     ]
 })
 export class SharedModule { }

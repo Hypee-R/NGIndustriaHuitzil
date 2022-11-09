@@ -1,0 +1,55 @@
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '1000px'}" header="{{accion}}" [modal]="true" styleClass="p-fluid">
+
+    <ng-template pTemplate="content">
+
+        <ng-container *ngIf="accion == 'Productos'">
+
+            <div class="col-12 md:col-3">
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                    <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras" [(ngModel)]="queryString">
+                    <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn" (click)="getResults()"></button>
+                </div>
+            </div>
+
+            <br>
+            <div class="row">
+                <p-table #dt [value]="articles" [columns]="colsProducts" [rows]="rows" [paginator]="true" [globalFilterFields]="['nombre','descripcion']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true" dataKey="idProducto" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+                    [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+
+                            <th style="width: 2em;"></th>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field == 'nombre' ? '7em' : '12em'}">
+                                    {{col.header}}
+
+                                </div>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr>
+                            <td>
+                                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning" (click)="addProduct(rowData)"></button>
+                            </td>
+
+                            <td *ngFor="let col of columns">
+                                {{rowData[col.field]}}
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                </p-table>
+            </div>
+        </ng-container>
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cerrar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="closeModal()"></button>
+    </ng-template>
+
+</p-dialog>

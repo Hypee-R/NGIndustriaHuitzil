@@ -55,16 +55,16 @@ export class InventarioComponent implements OnInit {
 
 
     this.cols = [
-      { field: 'idArticulo', header: 'ID' },
+      // { field: 'idArticulo', header: 'ID' },
+      { fiel:'',header:'Imagen'},
       { field: 'sku', header: 'SKU' },
       { field: 'descripcion', header: 'Descripcion' },
       { field: 'existencia', header: 'Existencia' },
-      { field: 'fechaIngreso', header: 'Fecha Ingreso' },
-      { field:'categoria',header:'Categoria'},
-      { field: 'unidad', header: 'Unidad' },
+      // { field: 'fechaIngreso', header: 'Fecha Ingreso' },
+      // { field:'categoria',header:'Categoria'},
+      // { field: 'unidad', header: 'Unidad' },
       { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
-      { fiel:'',header:'Imagen'},
       { field: 'precio',header:'precio'},
 
     ];
@@ -75,7 +75,7 @@ export class InventarioComponent implements OnInit {
     }else if(status == 'tablet'){
       this.rows = 7;
     }else if(status == 'laptop'){
-      this.rows = 4;
+      this.rows = 5;
     }else{
       this.rows = 11;
     }
@@ -97,8 +97,7 @@ export class InventarioComponent implements OnInit {
     this.inventarioService.getArticulos().subscribe(response => {
       if(response.exito){
         this.listArticulos = response.respuesta;
-        console.log('articulos ', this.listArticulos);
-
+        // console.log('articulos ', this.listArticulos);
         this.loading = false;
         for(let art of this.listArticulos){
           this.imagenes.push({id:art.idArticulo,imagen64c:art.imagen})
