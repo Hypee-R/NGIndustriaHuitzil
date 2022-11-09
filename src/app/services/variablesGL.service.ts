@@ -65,7 +65,7 @@ export class VariablesService {
       allowEscapeKey: false,
       allowOutsideClick: false,
       didOpen: () => {
-        Swal.showLoading();
+        Swal.showLoading(null);
       }
     });
   }

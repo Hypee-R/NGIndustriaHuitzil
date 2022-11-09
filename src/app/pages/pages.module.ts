@@ -47,7 +47,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
-import {ChartModule} from 'primeng/chart';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {DividerModule} from 'primeng/divider';
 
@@ -106,7 +105,6 @@ import { RefreshTableDirective } from './ventas/directiva/refresh-table.directiv
         InputNumberModule,
         ConfirmDialogModule,
         InputTextareaModule,
-        ChartModule,
         AutoCompleteModule,
         DividerModule,
 ],  providers: [],

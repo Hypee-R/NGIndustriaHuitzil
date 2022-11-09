@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
             allowEscapeKey: false,
             allowOutsideClick: false,
             didOpen: () => {
-              Swal.showLoading();
+              Swal.showLoading(null);
             }
         });
         this.authService.login(credenciales).subscribe( (respuesta: any) => {
