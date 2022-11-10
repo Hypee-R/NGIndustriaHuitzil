@@ -88,7 +88,7 @@ export class ContentComponent implements OnInit, OnDestroy {
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event) => {
         let url = event['url']
-       console.log('The URL changed to: ' + url);
+      //  console.log('The URL changed to: ' + url);
        url == '/dashboard' ? this.isDashboardPage = true : this.isDashboardPage = false;
     });
   }

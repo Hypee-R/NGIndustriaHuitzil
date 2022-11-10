@@ -48,7 +48,7 @@ export class CambiosYDevolucionesComponent implements OnInit {
           cambio.fecha = this.variablesGL.getFormatoFecha(cambio.fecha).toString();
         });;
         this.loading = false;
-        console.log('cambios devoluciones --> ', this.lstCambiosDevoluciones);
+        // console.log('cambios devoluciones --> ', this.lstCambiosDevoluciones);
 
       }else{
         this.lstCambiosDevoluciones = [];

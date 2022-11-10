@@ -110,7 +110,7 @@ export class AddCambioDevolucionComponent implements OnInit, OnDestroy {
           this.loadResultVenta = true;
 
           this.ventasService.searchVentaByNoTicket(this.noTicketVenta).subscribe(response => {
-              console.log('resultados de la busqueda -> ', response);
+              // console.log('resultados de la busqueda -> ', response);
               if(response.exito){
                 this.toastr.success(response.mensaje, 'Success!');
                 this.ventaByNoTicket = response.respuesta;

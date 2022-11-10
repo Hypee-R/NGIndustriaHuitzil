@@ -90,8 +90,8 @@ export class VariablesService {
   getFormatoFecha(fecha: string){
     const [dateComponents, timeComponents] = fecha.split(' ');
 
-    console.log(dateComponents); // 👉️ "07/21/2024"
-    console.log(timeComponents); // 👉️ "04:24:37"
+    // console.log(dateComponents); // 👉️ "07/21/2024"
+    // console.log(timeComponents); // 👉️ "04:24:37"
 
     const [day, month, year] = dateComponents.split('/');
     const [hours, minutes, seconds] = timeComponents.split(':');
