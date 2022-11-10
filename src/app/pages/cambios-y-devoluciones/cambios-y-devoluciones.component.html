@@ -66,7 +66,7 @@
                                     <td>
                                         <p-badge [value]="cambio.noArticulos" severity="success" styleClass="mr-2" size="large"></p-badge>
                                     </td>
-                                    <td *ngIf="cambio.subtotal < 0">{{ cambio.subtotal | currency:'MXN' }}</td>
+                                    <td *ngIf="cambio.subtotal < 0">{{ (cambio.subtotal * (-1)) | currency:'MXN' }}</td>
                                     <td *ngIf="cambio.subtotal >= 0">{{ 0.00 | currency:'MXN' }}</td>
                                     <td *ngIf="cambio.total > 0">{{ cambio.subtotal | currency:'MXN' }}</td>
                                     <td *ngIf="cambio.total <= 0">{{ 0.00 | currency:'MXN' }}</td>

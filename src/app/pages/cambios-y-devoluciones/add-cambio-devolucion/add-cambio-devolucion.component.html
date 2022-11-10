@@ -85,7 +85,7 @@
                                                 <td>
                                                     <button type="button" pButton pRipple [pRowToggler]="article" pTooltip="Cambios Realizados" class="p-button-text p-button-rounded p-button-plain" [icon]="article.expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" (click)="article.expanded = !article.expanded"></button>
                                                 </td>
-                                                <td> <img src="assets/img/only_logo_huitzil.png" width="40" height="40%" class="shadow-1" /> </td>
+                                                <td> <img [src]="article.articulo.imagen" width="40" height="40%" class="shadow-1" /> </td>
                                                 <td [ngClass]="{'text-decoration-line-through': article.cantidad == 0}">{{article.articulo.sku}}</td>
                                                 <td [ngClass]="{'text-decoration-line-through': article.cantidad == 0}">{{article.articulo.descripcion}}</td>
                                                 <td>
@@ -190,7 +190,7 @@
                             <td>
                                 <p-badge [value]="cambio.noArticulos" severity="success" styleClass="mr-2" size="large"></p-badge>
                             </td>
-                            <td *ngIf="cambio.subtotal < 0">{{ cambio.subtotal | currency:'MXN' }}</td>
+                            <td *ngIf="cambio.subtotal < 0">{{ (cambio.subtotal * (-1)) | currency:'MXN' }}</td>
                             <td *ngIf="cambio.subtotal >= 0">{{ 0.00 | currency:'MXN' }}</td>
                             <td *ngIf="cambio.total > 0">{{ cambio.subtotal | currency:'MXN' }}</td>
                             <td *ngIf="cambio.total <= 0">{{ 0.00 | currency:'MXN' }}</td>
@@ -297,7 +297,7 @@
                                         <ng-template pTemplate="body" let-cambio>
                                             <tr>
                                                 <td>
-                                                    <img src="assets/img/only_logo_huitzil.png" width="40" height="40%" class="shadow-1" /> </td>
+                                                    <img src="cambio.ventaArticulo.articulo.imagen" width="40" height="40%" class="shadow-1" /> </td>
                                                 <td class="text-decoration-line-through">{{cambio.ventaArticulo.articulo.sku}}</td>
                                                 <td class="text-decoration-line-through">{{cambio.ventaArticulo.articulo.descripcion}}</td>
                                                 <td>

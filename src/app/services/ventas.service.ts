@@ -38,6 +38,13 @@ export class VentasService {
     );
   }
 
+  searchVentaByNoTicket(noTicket: string): Observable<ResponseModel>{
+    return this.http.get<ResponseModel>(environment.apiService + `Ventas/Returns/SearchSale?noTicket=${noTicket}`)
+    .pipe(
+      map (res => res)
+    );
+  }
+
   getCambiosDevoluciones(): Observable<ResponseModel>{
     return this.http.get<ResponseModel>(environment.apiService + `Ventas/Returns/Consulta`)
     .pipe(

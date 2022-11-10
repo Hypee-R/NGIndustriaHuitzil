@@ -52,6 +52,7 @@ export class AddCambioDevolucionComponent implements OnInit, OnDestroy {
   rows: number;
   constructor(
     private toastr: ToastrService,
+    private ventasService: VentasService,
     private variablesGL: VariablesService,
     private cambioDevolucionService: VentasService,
   ) {
@@ -107,11 +108,26 @@ export class AddCambioDevolucionComponent implements OnInit, OnDestroy {
         if(!existeCambio){
 
           this.loadResultVenta = true;
-          let result = new VentaModel();
-          setTimeout(() => {
-            this.ventaByNoTicket.push(result);
+
+          this.ventasService.searchVentaByNoTicket(this.noTicketVenta).subscribe(response => {
+              console.log('resultados de la busqueda -> ', response);
+              if(response.exito){
+                this.toastr.success(response.mensaje, 'Success!');
+                this.ventaByNoTicket = response.respuesta;
+                this.ventaByNoTicket[0].fecha = this.variablesGL.getFormatoFecha(this.ventaByNoTicket[0].fecha).toString();
+              }else{
+                this.toastr.warning(response.mensaje, 'Error!');
+              }
+              this.loadResultVenta = false;
+          }, err => {
+            this.toastr.error('Ocurrió un error, comuniquese con el administrador', 'Error!');
             this.loadResultVenta = false;
-          }, 800);
+          });
+          // let result = new VentaModel();
+          // setTimeout(() => {
+          //   this.ventaByNoTicket.push(result);
+          //   this.loadResultVenta = false;
+          // }, 800);
 
         }else{
           this.toastr.error('La venta ya tiene algún cambio realizado','Error!');
@@ -212,6 +228,7 @@ export class AddCambioDevolucionComponent implements OnInit, OnDestroy {
           this.toastr.success(response.mensaje, 'Exito!');
           this.variablesGL.showDialog.next(false);
           this.initVariables();
+          this.saveCambioDevolucion.emit(true);
         }else{
           this.toastr.error(response.mensaje, 'Error!');
           this.initVariables();
