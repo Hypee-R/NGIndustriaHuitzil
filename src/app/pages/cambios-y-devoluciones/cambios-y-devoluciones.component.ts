@@ -29,7 +29,7 @@ export class CambiosYDevolucionesComponent implements OnInit {
     }else if(status == 'tablet'){
       this.rows = 7;
     }else if(status == 'laptop'){
-      this.rows = 4;
+      this.rows = 5;
     }else{
       this.rows = 11;
     }
@@ -46,7 +46,7 @@ export class CambiosYDevolucionesComponent implements OnInit {
         this.lstCambiosDevoluciones = response.respuesta
         this.lstCambiosDevoluciones.forEach(cambio => {
           cambio.fecha = this.variablesGL.getFormatoFecha(cambio.fecha).toString();
-        });;
+        });
         this.loading = false;
         // console.log('cambios devoluciones --> ', this.lstCambiosDevoluciones);
 
