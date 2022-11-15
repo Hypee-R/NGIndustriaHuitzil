@@ -7,6 +7,8 @@ import { InventarioService } from 'src/app/services/inventario.service';
 import { ProveedoresService } from 'src/app/services/proveedores.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from 'src/app/services/ventas.service';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService,ConfirmEventType, MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-ventas',
@@ -16,6 +18,7 @@ import { VentasService } from 'src/app/services/ventas.service';
 
 
 export class VentasComponent implements OnInit {
+  display: boolean = false;
   @Output() _articulosS = new EventEmitter<productoModel>();
   statusPanubicacion: number;
   loading: boolean = false;
@@ -45,7 +48,8 @@ export class VentasComponent implements OnInit {
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
     private proveedoresService: ProveedoresService,
-
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {
 
     this.cols = [
@@ -289,5 +293,15 @@ export class VentasComponent implements OnInit {
       this.toastr.error('Ingrese un elemento de busqueda', 'Atención!');
     }
   }
+
+  showDialog() {
+    if(this.articulos==0){
+      this.toastr.warning('No hay Articulos por pagar', 'Atención!');
+    }else{
+      this.display = true;
+    }
+  
+}
+
 
 }

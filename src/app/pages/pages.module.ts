@@ -67,6 +67,7 @@ import { AddCambioDevolucionComponent } from './cambios-y-devoluciones/add-cambi
 import { OpenProductosComponent } from './ventas/open-productos/open-productos.component';
 import { SelectInventarioComponent } from './cambios-y-devoluciones/select-inventario/select-inventario.component';
 import { RefreshTableDirective } from './ventas/directiva/refresh-table.directive';
+import {ConfirmationService,MessageService} from 'primeng/api';
 @NgModule({
     imports: [
         CommonModule,
@@ -107,7 +108,7 @@ import { RefreshTableDirective } from './ventas/directiva/refresh-table.directiv
         InputTextareaModule,
         AutoCompleteModule,
         DividerModule,
-],  providers: [],
+],  providers: [ConfirmationService,MessageService],
     declarations: [
         ContentComponent,
         DashboardComponent,

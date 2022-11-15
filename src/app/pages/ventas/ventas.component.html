@@ -101,9 +101,13 @@
                                     <label>Articulos: {{articulos}}</label>
                                 </div>
                                 <div class="col-4">
-                                    <label>Totales: {{total}}</label>
+                                    <label>Totales:$ {{total}} MXN</label>
                                 </div>
+                                <div class="col-4">
+                                    <!-- <button (click)="confirm()" pButton icon="pi pi-check" label="Confirm"></button> -->
 
+                                    <button pButton type="button"  (click)="showDialog()" class="p-button-raised p-button-rounded p-button-success" >PAGAR</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -177,7 +181,7 @@
                         </div>
 
                     </div>
-                    <p-divider>Tipos de pago</p-divider>
+                    <!-- <p-divider>Tipos de pago</p-divider>
                     <div class="row justify">
 
                         <div class="col-sm-2">
@@ -197,7 +201,7 @@
                             <button pButton type="button" class="p-button-raised p-button-rounded p-button-success "
                                 icon="pi pi-wallet"></button>
                         </div>
-                    </div>
+                    </div> -->
 
                   
                 </div>
@@ -209,4 +213,37 @@
     <app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
     <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected"
         *ngIf="openProducts != ''" (_articulosS)="addProductVenta($event)"></app-open-productos>
+
+  
+
+
+<p-dialog header="Seleccionar Tipo de pago!!" [(visible)]="display" [style]="{width: '50vw'}">
+    <div class="row">
+
+        <div class="col-sm-4">
+    
+      <button pButton type="button" label="Tarjeta" icon="pi pi-credit-card" class="p-button-warning" badge="8" badgeClass="p-badge-info"></button>
+
+        </div>
+      
+        <div class="col-sm-4">
+            <button pButton type="button" label="Efectivo" icon="pi pi-money-bill" class="p-button-secondary" badge="8" badgeClass="p-badge-info"></button>
+     
+        </div>
+
+       <div class="col-sm-4">
+        <button pButton type="button" label="Multiple" icon="pi pi-money-bill" class="p-button-success" badge="8" badgeClass="p-badge-info"></button>
+      
+        </div> 
+
+        <div class="col-sm-2">
+  
+     </div> 
+ 
+    </div>
+    <ng-template pTemplate="footer">
+        <!-- <p-button icon="pi pi-times" (click)="display=false" label="Cancelar" styleClass="p-button-text"></p-button> -->
+    </ng-template>
+</p-dialog>
+        
 </div>
