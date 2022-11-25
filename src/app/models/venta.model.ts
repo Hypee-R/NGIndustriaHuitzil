@@ -25,10 +25,10 @@ export class VentaModel {
       this.subtotal = 1350.00;
       this.total = 1350.00;
       this.ventaArticulo = [
-        { idVentaArticulo: 1, idVenta: 1, idArticulo: 1, cantidad: 3, precioUnitario: 250.00, subtotal: 750.00,
+        { idVentaArticulo: 95, idVenta: 1, idArticulo: 8, cantidad: 3, precioUnitario: 250.00, subtotal: 750.00,
           articulo:
           {
-            idArticulo : 1,
+            idArticulo : 2,
             unidad: "5",
             existencia: "10",
             descripcion: "Playeras tipo polo blancas",
