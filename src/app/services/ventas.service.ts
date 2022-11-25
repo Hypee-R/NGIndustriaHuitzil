@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { ResponseModel } from '../models/response.model';
 import { CajaModel } from '../models/caja.model';
 import { CambiosDevolucionesModel } from '../models/cambios-devoluciones.model';
+import { VentaModel } from '../models/venta.model';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +62,14 @@ export class VentasService {
 
   putCambiosDevoluciones(request: CambiosDevolucionesModel): Observable<ResponseModel>{
     return this.http.put<ResponseModel>(environment.apiService + 'Ventas/Returns/Actualiza', request)
+    .pipe(
+      map (res => res)
+    );
+  }
+
+
+  postRegistroVenta(request: VentaModel): Observable<ResponseModel>{
+    return this.http.post<ResponseModel>(environment.apiService + 'Ventas/Sales/Agrega', request)
     .pipe(
       map (res => res)
     );
