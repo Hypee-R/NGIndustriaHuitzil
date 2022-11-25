@@ -11,6 +11,7 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ConfirmationService,ConfirmEventType, MessageService} from 'primeng/api';
 import { jsPDF } from "jspdf";
 import html2canvas from 'html2canvas';
+import { VentaModel } from 'src/app/models/venta.model';
 
 @Component({
   selector: 'app-ventas',
@@ -43,7 +44,7 @@ export class VentasComponent implements OnInit {
   totalLetra="";
   clienteName  : string = '';
   cantidades:number[]=[]
-  
+  RegistraVenta: VentaModel = new VentaModel();
 
   cashModel: CajaModel;
   CurrentDate = new Date();
@@ -508,5 +509,29 @@ numeroALetras(num, currency) {
   else
       return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
 };
+
+
+
+PostVentaRegistro()
+{
+  console.log("==============venta==============");
+  console.log(this.RegistraVenta);
+  
+  this.ventasService.postRegistroVenta(this.RegistraVenta).subscribe(resp => {
+    console.log('data=> ', resp);
+
+      console.log(resp);
+       if(resp.exito){
+           this.toastr.success(resp.mensaje, 'Exito!');
+          
+       }else{
+           this.toastr.info(resp.mensaje, 'Atención!')
+       }
+  },
+  err => {
+    console.log('error -> ', err);
+    this.toastr.error('Ocurrió un error al hacer la operación','Error!');
+  });
+}
 
 }
