@@ -88,15 +88,36 @@ export class VariablesService {
   }
 
   getFormatoFecha(fecha: string){
-    const [dateComponents, timeComponents] = fecha.split(' ');
+    const [dateComponents, timeComponents, ap, mm] = fecha.split(' ');
 
     // console.log(dateComponents); // 👉️ "07/21/2024"
     // console.log(timeComponents); // 👉️ "04:24:37"
-
+    // console.log(ap); // 👉️ "a. p."
+    // console.log(mm); // 👉️ "m. m."
     const [day, month, year] = dateComponents.split('/');
     const [hours, minutes, seconds] = timeComponents.split(':');
 
-    return new Date(+year, +month - 1, +day, +hours, +minutes, +seconds);
+    let hora = 0;
+    //PM
+    if(ap.includes('p')){
+      if(Number.parseInt(hours) != 12){
+        hora = Number.parseInt(hours)+12;
+      }else{
+        hora = Number.parseInt(hours);
+      }
+    }
+    //AM
+    else{
+      if(Number.parseInt(hours) != 12){
+        hora = Number.parseInt(hours);
+      }else{
+        hora = Number.parseInt(hours)-12;
+      }
+    }
+
+    // console.log(hora);
+
+    return new Date(+year, +month - 1, +day, +hora, +minutes, +seconds);
   }
 
 }
