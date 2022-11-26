@@ -5,7 +5,14 @@
     <div class="dashboard-page" *ngIf="!loading">
 
         <div class="row">
-            <div class="col col-md-4">
+            <div class="col-12" *ngIf="locations">
+              <p-dropdown [options]="years" [(ngModel)]="selectedYear" placeholder="Selecciona el año" [showClear]="true"></p-dropdown>
+              <p-dropdown [options]="locations" [(ngModel)]="selectedLocation" placeholder="Selecciona sucursal" optionLabel="direccion" optionValue="idUbicacion" [showClear]="true" [style]="{'margin-left': '1em'}"></p-dropdown>
+              <button pButton pRipple type="button" label="Aplicar" class="p-button-success" (click)="sendFilters()" [style]="{'margin-left': '1em'}"></button>
+              <!-- <p-button class="p-button-success" label="Aplicar" (onClick)="sendFilters()"></p-button> -->
+            </div>
+
+            <div class="col col-md-4" *ngIf="dashboard.cards?.length > 0">
 
                 <!-- SALES -->
                 <div class="sales">
@@ -14,7 +21,7 @@
                     <div class="middle">
                         <div class="left">
                             <h3>{{ dashboard.cards[0].title }}</h3>
-                            <h1>{{ dashboard.cards[0].value | currency:'MXN' }} </h1>
+                            <h2>{{ dashboard.cards[0].value | currency:'MXN' }} </h2>
                         </div>
                         <!-- <div class="progress">
                         <svg>
@@ -30,7 +37,7 @@
                 <!-- END OF SALES -->
 
             </div>
-            <div class="col col-md-4">
+            <div class="col col-md-4" *ngIf="dashboard.cards?.length > 0">
 
                 <!-- EXPENSES -->
                 <div class="expenses">
@@ -38,7 +45,7 @@
                     <div class="middle">
                         <div class="left">
                             <h3>{{ dashboard.cards[1].title }}</h3>
-                            <h1>{{ dashboard.cards[1].value | currency:'MXN' }}</h1>
+                            <h2>{{ dashboard.cards[1].value | currency:'MXN' }}</h2>
                         </div>
                         <!-- <div class="progress">
                         <svg>
@@ -54,7 +61,7 @@
                 <!-- END OF EXPENSES -->
 
             </div>
-            <div class="col col-md-4">
+            <div class="col col-md-4" *ngIf="dashboard.cards?.length > 0">
 
                 <!-- INCOME -->
                 <div class="income">
@@ -63,7 +70,7 @@
                     <div class="middle">
                         <div class="left">
                             <h3>{{ dashboard.cards[2].title }}</h3>
-                            <h1>{{ dashboard.cards[2].value | currency:'MXN' }}</h1>
+                            <h2>{{ dashboard.cards[2].value | currency:'MXN' }}</h2>
                         </div>
                         <!-- <div class="progress">
                         <svg>
@@ -83,14 +90,14 @@
 
         <div class="row mt-5">
             <!-- GRAPH SALES FOR MONTH -->
-            <div class="col col-md-8" kll>
+            <div class="col col-md-8" *ngIf="dashboard.barchart">
                 <app-sales-payment-type [_data]="dashboard.barchart"></app-sales-payment-type>
             </div>
             <!-- END GRAPH SALES FOR MONTH -->
 
 
             <!-- RANKING BEST SELLING ITEMS -->
-            <div class="col col-md-4">
+            <div class="col col-md-4" *ngIf="dashboard.rankingA">
                 <app-ranking-items-sold [_data]="dashboard.rankingA"></app-ranking-items-sold>
             </div>
             <!-- END RANKING BEST SELLING ITEMS -->
@@ -99,13 +106,13 @@
         <div class="row mt-5">
 
             <!-- RANKING EMPLOYEE WITH MORE SALES -->
-            <div class="col col-md-4">
+            <div class="col col-md-4" *ngIf="dashboard.rankingE">
                 <app-employee-sales-ranking [_data]="dashboard.rankingE"></app-employee-sales-ranking>
             </div>
             <!-- END RANKING EMPLOYEE WITH MORE SALES -->
             <div class="col"></div>
             <!-- RANKING LOCATION WITH MORE SALES -->
-            <div class="col col-md-4">
+            <div class="col col-md-4" *ngIf="dashboard.rankingS">
                 <app-sales-location-ranking [_data]="dashboard.rankingS"></app-sales-location-ranking>
             </div>
             <!-- END RANKING LOCATION WITH MORE SALES -->

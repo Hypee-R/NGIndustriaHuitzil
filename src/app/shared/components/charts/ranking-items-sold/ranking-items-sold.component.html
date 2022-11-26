@@ -2,25 +2,25 @@
     <div class="col-12 text-center">
         <h5>{{ _data.title }}</h5>
     </div>
-    <div class="col col-md-12 text-center">
+    <div class="col col-md-12 text-center" *ngIf="_data.ranking[0]">
         <img src="assets/img/only_logo_huitzil.png" width="57" height="50" class="shadow-1" />
         <br>
-        <label class="text-muted">{{ _data.ranking[0].descripcion }}</label>
+        <label class="text-muted">{{ _data.ranking[0]?.descripcion }}</label>
         <br>
         <i class="fa-solid fa-medal gold"></i>
     </div>
-    <div class="col col-md-5 text-center">
+    <div class="col col-md-5 text-center" *ngIf="_data.ranking[1]">
         <img src="assets/img/only_logo_huitzil.png" width="57" height="50" class="shadow-1" />
         <br>
-        <label class="text-muted">{{ _data.ranking[1].descripcion }}</label>
+        <label class="text-muted">{{ _data.ranking[1]?.descripcion }}</label>
         <br>
         <i class="fa-solid fa-medal silver"></i>
     </div>
     <div class="col col-md-2"></div>
-    <div class="col col-md-5 text-center">
+    <div class="col col-md-5 text-center" *ngIf="_data.ranking[2]">
         <img src="assets/img/only_logo_huitzil.png" width="57" height="50" class="shadow-1" />
         <br>
-        <label class="text-muted">{{ _data.ranking[2].descripcion }}</label>
+        <label class="text-muted">{{ _data.ranking[2]?.descripcion }}</label>
         <br>
         <i class="fa-solid fa-medal bronze"></i>
     </div>

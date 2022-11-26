@@ -2,34 +2,34 @@
     <div class="col-12 text-center">
         <h5>{{ _data.title }}</h5>
     </div>
-    <div class="col col-md-12 text-center">
+    <div class="col col-md-12 text-center" *ngIf="_data.ranking[0]">
         <div class="center">
             <label class="user-picture-ranking pointer">
-              <span>{{ _data.ranking[0].noVentas }}</span>
+              <span>{{ _data.ranking[0]?.noVentas }}</span>
             </label>
         </div>
-        <label class="text-muted">{{ _data.ranking[0].descripcion }}</label>
+        <label class="text-muted">{{ _data.ranking[0]?.descripcion }}</label>
         <br>
         <i class="fa-solid fa-medal gold"></i>
     </div>
-    <div class="col col-md-4 text-center">
+    <div class="col col-md-4 text-center" *ngIf="_data.ranking[1]">
         <div class="center">
             <label class="user-picture-ranking pointer">
-              <span>{{ _data.ranking[1].noVentas }}</span>
+              <span>{{ _data.ranking[1]?.noVentas }}</span>
             </label>
         </div>
-        <label class="text-muted">{{ _data.ranking[1].descripcion }}</label>
+        <label class="text-muted">{{ _data.ranking[1]?.descripcion }}</label>
         <br>
         <i class="fa-solid fa-medal silver"></i>
     </div>
     <div class="col col-md-4"></div>
-    <div class="col col-md-4 text-center">
+    <div class="col col-md-4 text-center" *ngIf="_data.ranking[2]">
         <div class="center">
             <label class="user-picture-ranking pointer">
-              <span>{{ _data.ranking[2].noVentas }}</span>
+              <span>{{ _data.ranking[2]?.noVentas }}</span>
             </label>
         </div>
-        <label class="text-muted">{{ _data.ranking[2].descripcion}}</label>
+        <label class="text-muted">{{ _data.ranking[2]?.descripcion}}</label>
         <br>
         <i class="fa-solid fa-medal bronze"></i>
     </div>

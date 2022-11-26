@@ -35,6 +35,13 @@ export class UsuariosService {
     );
   }
 
+  updatePassword(idUser: number, newPassword: string): Observable<ResponseModel>{
+    return this.http.put<ResponseModel>(environment.apiService + 'Usuarios/ActualizaPsw', {idUser, newPassword})
+    .pipe(
+      map (res => res)
+    );
+  }
+
   eliminaUsuario(request: UsuarioModel): Observable<ResponseModel>{
     return this.http.delete<ResponseModel>(environment.apiService + 'Usuarios/Elimina', { body: request })
     .pipe(

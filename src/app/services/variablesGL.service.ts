@@ -56,7 +56,12 @@ export class VariablesService {
   checkPassword(group: FormGroup): any {
     const pass = group.controls.password?.value;
     const confirmPassword = group.controls.repetirPassword?.value;
-    return pass === confirmPassword ? null : { notSame: true };
+
+    if(pass.length > 6){
+      return pass === confirmPassword ? null : { notSame: true };
+    }else{
+      return { notSame: true }
+    }
   }
 
   showLoading(){
@@ -88,18 +93,21 @@ export class VariablesService {
   }
 
   getFormatoFecha(fecha: string){
+    console.log('fecha ', fecha);
+
     const [dateComponents, timeComponents, ap, mm] = fecha.split(' ');
 
     // console.log(dateComponents); // 👉️ "07/21/2024"
     // console.log(timeComponents); // 👉️ "04:24:37"
-    // console.log(ap); // 👉️ "a. p."
+    console.log(ap); // 👉️ "a. p."
     // console.log(mm); // 👉️ "m. m."
     const [day, month, year] = dateComponents.split('/');
     const [hours, minutes, seconds] = timeComponents.split(':');
 
     let hora = 0;
+    hora = Number.parseInt(hours);
     //PM
-    if(ap.includes('p')){
+    if(ap?.includes('p')){
       if(Number.parseInt(hours) != 12){
         hora = Number.parseInt(hours)+12;
       }else{
@@ -107,7 +115,7 @@ export class VariablesService {
       }
     }
     //AM
-    else{
+    else if(ap?.includes('a')){
       if(Number.parseInt(hours) != 12){
         hora = Number.parseInt(hours);
       }else{
