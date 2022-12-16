@@ -34,6 +34,12 @@
                                             El campo es requerido
                                         </div>
                                     </div>
+                                    <div class="text-danger" *ngIf="!validPswAct && formContrasena.get('contrasenaActual').value?.length > 0">
+                                      Contraseña invalida...
+                                    </div>
+                                    <div class="text-success" *ngIf="validPswAct && formContrasena.get('contrasenaActual').value?.length > 0">
+                                      Contraseña valida...
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -57,7 +63,7 @@
                             </div>
                         </div>
                         <div class="d-grid gap-2 col-6 mx-auto">
-                            <button class="btn btn-primary" type="submit">Actualizar</button>
+                            <button class="btn btn-primary" type="submit" [disabled]="formContrasena.status == 'INVALID'">Actualizar</button>
                         </div>
                     </form>
                 </div>

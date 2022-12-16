@@ -4,48 +4,50 @@
         <span class="lstick"></span>
 
         <div class="card-body">
-            
+
 
             <div class="row">
-                
+
 
                 <div class="col-md-9">
                     <div class="row">
 
                         <div class="container">
                             <div class="row">
-                              
+
                                 <div class="col-6 md:col-4">
                                     <div class="p-inputgroup">
                                         <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
-                                        <input type="text" pInputText placeholder="Cliente" [(ngModel)]="queryStringClient">
-                                        <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn"  (click)="getResultsClients()"></button>
-                                        <button type="button" pButton pRipple icon="pi pi-plus" styleClass="p-button-danger" ></button>
+                                        <input type="text" pInputText placeholder="Cliente"
+                                            [(ngModel)]="queryStringClient">
+                                        <button type="button" pButton pRipple icon="pi pi-search"
+                                            styleClass="p-button-warn" (click)="getResultsClients()"></button>
+                                        <button type="button" pButton pRipple icon="pi pi-plus"
+                                            styleClass="p-button-danger"></button>
                                     </div>
-                               
-                              </div>
-                              <div class="col-6 md:col-4">
-                                <div class="p-inputgroup">
-                                    <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
-                                    <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras" [(ngModel)]="queryString" autofocus   (change)="onchangeShear()">
-                                    <!-- <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn"></button> -->
+
                                 </div>
-                           
-                          </div>
-                              
+                                <div class="col-6 md:col-4">
+                                    <div class="p-inputgroup">
+                                        <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                                        <input type="text" pInputText
+                                            placeholder="Ingrese el nombre del producto/SKU/codigo de barras"
+                                            [(ngModel)]="queryString" autofocus (change)="onchangeShear()">
+                                        <!-- <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn"></button> -->
+                                    </div>
+
+                                </div>
+
                             </div>
-                          </div>
-                        <app-loading *ngIf="loading" ></app-loading>
+                        </div>
+                        <app-loading *ngIf="loading"></app-loading>
+
                         <div *ngIf="!loading">
-                            <p-table 
-                                *appRefreshTable = "articulos"
-                                    #dt [value]="articlesShell" [columns]="cols" [rows]="rows" [paginator]="true"
-                                [globalFilterFields]="['nombre','descripcion']" [responsive]="true"
-                                responsiveLayout="scroll" [rowHover]="true" dataKey="idProducto"
+                            <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" [columns]="cols"
+                                [rows]="rows" [paginator]="true" [globalFilterFields]="['nombre','descripcion']"
+                                [responsive]="true" responsiveLayout="scroll" [rowHover]="true" dataKey="idProducto"
                                 currentPageReportTemplate="Mostrando {first} a {last}  productos"
-                                [showCurrentPageReport]="true" styleClass="p-datatable-sm"
-                                
-                                >
+                                [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                                 <ng-template pTemplate="caption">
                                     <div class="flex align-items-center justify-content-between">
 
@@ -54,7 +56,7 @@
                                         </div>
                                     </div>
                                 </ng-template>
-                                <ng-template  pTemplate="header" let-columns>
+                                <ng-template pTemplate="header" let-columns>
                                     <tr>
                                         <th style="width: 2rem">
                                         </th>
@@ -101,39 +103,45 @@
                                     <label>Articulos: {{articulos}}</label>
                                 </div>
                                 <div class="col-4">
-                                    <label>Totales: {{total}}</label>
+                                    <label>Totales:$ {{total}} MXN</label>
                                 </div>
+                                <div class="col-4">
+                                    <!-- <button (click)="confirm()" pButton icon="pi pi-check" label="Confirm"></button> -->
 
+                                    <button pButton type="button" (click)="showDialog()"
+                                        class="p-button-raised p-button-rounded p-button-success">PAGAR</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="container">
                         <div class="row">
-                          
+
                             <div class="col-12 md:col-4">
                                 <p-divider>Datos de compra</p-divider>
-                    <div class="row">
-                        <div class="col-4">
-                            <label>Cliente:{{this.clienteName}}</label>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label>Cliente:{{this.clienteName}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <!-- <label>Total a pagar:0.00</label> -->
+                                    </div>
+                                    <div class="col-4">
+                                        <button pButton type="button"
+                                            class="p-button-raised p-button-rounded p-button-danger "
+                                            (click)="cancelarCompra()">Cancelar</button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
-                    <div class="row">
-
-                        <div class="col-4">
-                            <!-- <label>Total a pagar:0.00</label> -->
-                        </div>
-                        <div class="col-4">
-                            <button pButton type="button" class="p-button-raised p-button-rounded p-button-danger "
-                                (click)="cancelarCompra()">Cancelar</button>
-                        </div>
-
-                    </div>
-                          </div>
-                       
-                          
-                        </div>
-                      </div>
                 </div>
                 <div class="col-md-3">
                     <p-divider>Producto</p-divider>
@@ -164,12 +172,13 @@
                     <p-divider>Acciones</p-divider>
                     <div class="row justify">
                         <div class="col-sm-2">
-                            <button pButton type="button" class="p-button-raised p-button-rounded"
-                                icon="pi pi-file-o"></button>
+                            <button pButton type="button" class="p-button-raised p-button-rounded" icon="pi pi-file-o" 
+                                (click)="showDialogCotizacion()"></button>
                         </div>
                         <div class="col-sm-2">
-                            <button pButton type="button" class="p-button-raised p-button-rounded"
+                            <button pButton type="button" class="p-button-raised p-button-rounded" 
                                 icon="pi pi-desktop"></button>
+
                         </div>
                         <div class="col-sm-2">
                             <button pButton type="button" class="p-button-raised p-button-rounded p-button-danger"
@@ -177,7 +186,7 @@
                         </div>
 
                     </div>
-                    <p-divider>Tipos de pago</p-divider>
+                    <!-- <p-divider>Tipos de pago</p-divider>
                     <div class="row justify">
 
                         <div class="col-sm-2">
@@ -197,16 +206,211 @@
                             <button pButton type="button" class="p-button-raised p-button-rounded p-button-success "
                                 icon="pi pi-wallet"></button>
                         </div>
-                    </div>
+                    </div> -->
 
-                  
+
                 </div>
             </div>
         </div>
 
     </div>
-   
+
     <app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
     <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected"
         *ngIf="openProducts != ''" (_articulosS)="addProductVenta($event)"></app-open-productos>
+
+
+
+
+    <p-dialog header="Seleccionar Tipo de pago!!" [(visible)]="display" [style]="{width: '50vw'}">
+        <div class="row">
+
+            <div class="col-sm-4">
+
+                <button pButton type="button" label="Tarjeta" icon="pi pi-credit-card" class="p-button-warning"
+                    badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro()"></button>
+
+            </div>
+
+            <div class="col-sm-4">
+                <button pButton type="button" label="Efectivo" icon="pi pi-money-bill" class="p-button-secondary"
+                    badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro()"></button>
+
+            </div>
+
+            <div class="col-sm-4">
+                <button pButton type="button" label="Multiple" icon="pi pi-money-bill" class="p-button-success"
+                    badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro()"></button>
+
+            </div>
+
+            <div class="col-sm-2">
+
+            </div>
+
+        </div>
+        <ng-template pTemplate="footer">
+            <!-- <p-button icon="pi pi-times" (click)="display=false" label="Cancelar" styleClass="p-button-text"></p-button> -->
+        </ng-template>
+    </p-dialog>
+
+
+
+    <p-dialog header="Cotización " [(visible)]="displayCotizacion" [style]="{width: '50vw'}">
+        <div class="row"  id="htmlData">
+           <div class="row">
+            <div class="col-sm-6">
+                <p>UNIFORMES HUITZIL</p> 
+                <p>CP</p>
+            </div>
+            <div class="col-sm-6">
+               <p>FECHA:<span id ="fecha">{{CurrentDate | date:'dd-MM-yyyy'}}</span></p> 
+            </div>
+           
+        </div>
+        <hr>
+        <div class="row">
+            
+            <div class="col-sm-6">
+                <p>Cliente:{{this.clienteName}}</p>
+                <p>Calle:</p>
+                <p>Colonia:</p>
+                <p>Poblacion:</p>
+            </div>
+            <div class="col-sm-6">
+                <p>Vendedor</p>
+                <p>Cotización
+                <p>
+            </div>
+        </div>
+<hr>
+            <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" [columns]="cols" [rows]="rows"
+             
+                styleClass="p-datatable-sm">
+                <ng-template pTemplate="caption">
+                    <div class="flex align-items-center justify-content-between">
+
+                        
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width: 2rem">
+                        </th>
+                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                            <div class="flex justify-content-center align-items-center"
+                                [ngStyle]="{'width': col.field == 'nombre' ? '7em' : '15em'}">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </div>
+                        </th>
+
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
+
+                    <tr>
+
+                        <td></td>
+
+                        <td *ngFor="let col of columns">
+                            {{rowData[col.field]}}
+                        </td>
+
+
+                    </tr>
+                </ng-template>
+            </p-table>
+<hr>
+            <div class="row">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-4">
+                            <label>Articulos: {{articulos}}</label>
+                        </div>
+                        <div class="col-4">
+                            <label>Totales:$ {{total}} MXN</label>
+                        </div>
+                        <div class="col-4">
+                            <label>{{totalLetra}} </label>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <ng-template pTemplate="footer">
+
+            <button class="btn col col-lg-4 btn-danger btn-block ml-4" (click)="downloadPDF()">Descargar Cotizacion PDF</button>
+        </ng-template>
+    </p-dialog>
+
 </div>
+<!-- impresiom de ticket -->
+<div style="visibility: hidden;" id="print" class="print">
+    <div nz-col style="text-align: center;">
+      <h2>TICKET:5353</h2>
+      <h3>CAJERO:JOSE DANIEL DE JESUS</h3>
+       <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" [columns]="cols" [rows]="rows"
+             
+                styleClass="p-datatable-sm">
+                <ng-template pTemplate="caption">
+                    <div class="flex align-items-center justify-content-between">
+
+                        
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width: 2rem">
+                        </th>
+                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                            <div class="flex justify-content-center align-items-center"
+                                [ngStyle]="{'width': col.field == 'nombre' ? '7em' : '15em'}">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </div>
+                        </th>
+
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
+
+                    <tr>
+
+                        <td></td>
+
+                        <td *ngFor="let col of columns">
+                            {{rowData[col.field]}}
+                        </td>
+
+
+                    </tr>
+                </ng-template>
+            </p-table>
+      <div class="row">
+        <div class="container">
+            <div class="row">
+                <div class="col-4">
+                    <label>Articulos: {{articulos}}</label>
+                </div>
+                <div class="col-4">
+                    <label>Totales:$ {{total}} MXN</label>
+                </div>
+                <div class="col-4">
+                    <label>{{totalLetra}} </label>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+      <p>***GRACIAS POR SU PREFERENCIA***</p>
+    </div>
+   
+
+  </div>
+  
+  

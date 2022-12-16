@@ -13,46 +13,46 @@ export class DashboardService {
     private http: HttpClient
   ){}
 
-  getDashboard(){
+  getDashboard(year: string, idSucursal: number){
     return forkJoin ({
-      cards: this.getCards(),
-      chartBar: this.getChartBar(),
-      rankingArticles: this.getRankingArticles(),
-      rankingEmpleados: this.getRankingEmpleados(),
-      rankingSucursales: this.getRankingSucursales(),
+      cards: this.getCards(year, idSucursal),
+      chartBar: this.getChartBar(year, idSucursal),
+      rankingArticles: this.getRankingArticles(year, idSucursal),
+      rankingEmpleados: this.getRankingEmpleados(year, idSucursal),
+      rankingSucursales: this.getRankingSucursales(year),
     });
   }
 
-  getCards(): Observable<ResponseModel>{
-    return this.http.get<ResponseModel>(environment.apiService + `Dashboard/Cards?idSucursal=${1}`)
+  getCards(year: string, idSucursal: number): Observable<ResponseModel>{
+    return this.http.get<ResponseModel>(environment.apiService + `Dashboard/Cards?year=${year}&idSucursal=${idSucursal}`)
     .pipe(
       map (res => res)
     );
   }
 
-  getChartBar(): Observable<ResponseModel>{
-    return this.http.get<ResponseModel>(environment.apiService + `Dashboard/ChartBar?idSucursal=${1}`)
+  getChartBar(year: string, idSucursal: number): Observable<ResponseModel>{
+    return this.http.get<ResponseModel>(environment.apiService + `Dashboard/ChartBar?year=${year}&idSucursal=${idSucursal}`)
     .pipe(
       map (res => res)
     );
   }
 
-  getRankingArticles(): Observable<ResponseModel>{
-    return this.http.get<ResponseModel>(environment.apiService + `Dashboard/RankingArticles`)
+  getRankingArticles(year: string, idSucursal: number): Observable<ResponseModel>{
+    return this.http.get<ResponseModel>(environment.apiService + `Dashboard/RankingArticles?year=${year}&idSucursal=${idSucursal}`)
     .pipe(
       map (res => res)
     );
   }
 
-  getRankingEmpleados(): Observable<ResponseModel>{
-    return this.http.get<ResponseModel>(environment.apiService + `Dashboard/RankingEmpleados`)
+  getRankingEmpleados(year: string, idSucursal: number): Observable<ResponseModel>{
+    return this.http.get<ResponseModel>(environment.apiService + `Dashboard/RankingEmpleados?year=${year}&idSucursal=${idSucursal}`)
     .pipe(
       map (res => res)
     );
   }
 
-  getRankingSucursales(): Observable<ResponseModel>{
-    return this.http.get<ResponseModel>(environment.apiService + `Dashboard/RankingSucursales`)
+  getRankingSucursales(year: string): Observable<ResponseModel>{
+    return this.http.get<ResponseModel>(environment.apiService + `Dashboard/RankingSucursales?year=${year}`)
     .pipe(
       map (res => res)
     );
