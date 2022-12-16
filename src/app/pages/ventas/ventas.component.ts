@@ -12,6 +12,8 @@ import { ConfirmationService, ConfirmEventType, MessageService } from 'primeng/a
 import { jsPDF } from "jspdf";
 import html2canvas from 'html2canvas';
 import { VentaModel } from 'src/app/models/venta.model';
+import { VentaArticuloModel } from 'src/app/models/VentaArticulo.Model';
+
 
 @Component({
   selector: 'app-ventas',
@@ -32,6 +34,8 @@ export class VentasComponent implements OnInit {
   articles: productoModel[] = [];
   articlesSelected: productoModel[] = []
   articlesShell: productoVentaModel[] = [];
+  ventaArticulo:VentaArticuloModel[]=[];
+  
   openCash: Boolean = false
   //lstProducts: productoModel[] = [];
   cols: any[] = [];
@@ -45,7 +49,6 @@ export class VentasComponent implements OnInit {
   clienteName: string = '';
   cantidades: number[] = []
   RegistraVenta: VentaModel = new VentaModel();
-
   cashModel: CajaModel;
   CurrentDate = new Date();
   constructor(
@@ -509,10 +512,81 @@ export class VentasComponent implements OnInit {
 
   PostVentaRegistro() {
     console.log("==============venta==============");
-    console.log(this.RegistraVenta);
-    // this.RegistraVenta.idVenta=1;
-    // this.RegistraVenta.idCaja=18;
+    this.articlesShell.forEach(element => {
+      const  vt = new VentaArticuloModel();
+      vt.idVentaArticulo= 95;
+      vt.idVenta= 1;
+      vt.idArticulo= 8;
+      vt.cantidad= 3;
+      vt. precioUnitario= 250.00;
+      vt.subtotal= 750.00;
+      vt.articulo=element;
+       this.ventaArticulo.push(vt) ;
+      // console.log(element)
+    });
 
+    //console.log(this.RegistraVenta);
+    this.RegistraVenta.idVenta = 1;
+    this.RegistraVenta.idCaja = 18;
+    this.RegistraVenta.fecha = new Date().toLocaleString();
+    this.RegistraVenta.noTicket = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString();
+    this.RegistraVenta.subtotal = this.total;
+    this.RegistraVenta.tipoPago = "EFECTIVO";
+    this.RegistraVenta.tipoVenta = "CONTADO";
+    this.RegistraVenta.total = this.total;
+    this.RegistraVenta.ventaArticulo =this.ventaArticulo;
+   
+    //  [
+    //   {
+    //     idVentaArticulo: 95,
+    //     idVenta: 1,
+    //     idArticulo: 8,
+    //     cantidad: 3,
+    //     precioUnitario: 250.00,
+    //     subtotal: 750.00,
+    //     articulo:
+    //     {
+    //       idArticulo: 2,
+    //       unidad: "5",
+    //       existencia: "10",
+    //       descripcion: "Playeras tipo polo blancas",
+    //       fechaIngreso: "2022-08-17",
+    //       idUbicacion: 1,
+    //       idCategoria: 1,
+    //       idTalla: 3,
+    //       talla: "M",
+    //       ubicacion: "Coyoacan",
+    //       categoria: "Playera tipo polo",
+    //       imagen: "",
+    //       precio: 250.00,
+    //       sku: "01PTPM"
+    //     },
+    //     venta: null
+    //   },
+    //   {
+    //     idVentaArticulo: 2, idVenta: 1, idArticulo: 2, cantidad: 3, precioUnitario: 200.00, subtotal: 600.00,
+    //     articulo:
+    //     {
+    //       idArticulo: 2,
+    //       unidad: "5",
+    //       existencia: "50",
+    //       descripcion: "Playeras tipo polo",
+    //       fechaIngreso: "2022-10-19",
+    //       idUbicacion: 2,
+    //       idCategoria: 1,
+    //       idTalla: 1,
+    //       talla: "XS",
+    //       ubicacion: "Almacen 2",
+    //       categoria: "Playera tipo polo",
+    //       imagen: "",
+    //       precio: 200.00,
+    //       sku: "01PTXS"
+    //     },
+    //     venta: null
+    //   }
+    // ]
+
+      console.log(this.RegistraVenta);
     this.ventasService.postRegistroVenta(this.RegistraVenta).subscribe(resp => {
       console.log('data=> ', resp);
 
@@ -538,5 +612,7 @@ export class VentasComponent implements OnInit {
         this.toastr.error('Ocurrió un error al hacer la operación', 'Error!');
       });
   }
+
+
 
 }
