@@ -92,10 +92,6 @@ export class VariablesService {
     return this.datePipe.transform(fecha,'dd/MM/yyyy hh:mm:ss a');
   }
 
-  setFormatoFecha24(fecha: string | Date){
-    return this.datePipe.transform(fecha,'dd/MM/yyyy hh:mm:ss');
-  }
-
   getFormatoFecha(fecha: string){
     console.log('fecha ', fecha);
 

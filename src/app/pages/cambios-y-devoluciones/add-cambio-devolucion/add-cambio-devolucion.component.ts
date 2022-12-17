@@ -215,7 +215,7 @@ export class AddCambioDevolucionComponent implements OnInit, OnDestroy {
 
   onSaveCambioDevolucion(){
     let cambioDevolucionRequest = {...this.cambioDevolucion};
-    cambioDevolucionRequest.fecha = this.variablesGL.setFormatoFecha24(cambioDevolucionRequest.fecha);
+    cambioDevolucionRequest.fecha = this.variablesGL.setFormatoFecha(cambioDevolucionRequest.fecha);
     cambioDevolucionRequest.cambiosDevolucionesArticulos.forEach(cambio => {
       //cambio.articulo = null;
       cambio.ventaArticulo.cambiosArticulo = null;
