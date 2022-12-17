@@ -514,20 +514,20 @@ export class VentasComponent implements OnInit {
     console.log("==============venta==============");
     this.articlesShell.forEach(element => {
       const  vt = new VentaArticuloModel();
-      vt.idVentaArticulo= 95;
+      vt.idVentaArticulo= 23;
       vt.idVenta= 1;
-      vt.idArticulo= 8;
-      vt.cantidad= 3;
-      vt. precioUnitario= 250.00;
-      vt.subtotal= 750.00;
+      vt.idArticulo=element.idArticulo;
+      vt.cantidad= element.cantidad;
+      vt.precioUnitario=element.precio;
+      vt.subtotal=  this.total;
       vt.articulo=element;
-       this.ventaArticulo.push(vt) ;
-      // console.log(element)
+    
+      this.ventaArticulo.push(vt) ;
+       console.log(element)
     });
 
-    //console.log(this.RegistraVenta);
     this.RegistraVenta.idVenta = 1;
-    this.RegistraVenta.idCaja = 18;
+    this.RegistraVenta.idCaja = 34;
     this.RegistraVenta.fecha = new Date().toLocaleString();
     this.RegistraVenta.noTicket = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString();
     this.RegistraVenta.subtotal = this.total;
@@ -587,6 +587,7 @@ export class VentasComponent implements OnInit {
     // ]
 
       console.log(this.RegistraVenta);
+      console.log(JSON.stringify(this.RegistraVenta))
     this.ventasService.postRegistroVenta(this.RegistraVenta).subscribe(resp => {
       console.log('data=> ', resp);
 
