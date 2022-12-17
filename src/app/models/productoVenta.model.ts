@@ -19,7 +19,7 @@ export class productoVentaModel{
       this.unidad = '';
       this.descripcion = '';
       this.existencia = '';
-      this.fechaIngreso= '';
+      this.fechaIngreso= '2022-10-19';
       this.idCategoria = 0;
       this.idTalla =  0;
       this.categoria='';
