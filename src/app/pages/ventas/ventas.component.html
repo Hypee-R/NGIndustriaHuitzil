@@ -58,11 +58,11 @@
                                 </ng-template>
                                 <ng-template pTemplate="header" let-columns>
                                     <tr>
-                                        <th style="width: 2rem">
+                                        <th style="width: 1rem">
                                         </th>
                                         <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                             <div class="flex justify-content-center align-items-center"
-                                                [ngStyle]="{'width': col.field == 'nombre' ? '7em' : '15em'}">
+                                                [ngStyle]="{'width': col.field == 'nombre' ? '5em' : '5em'}">
                                                 {{col.header}}
                                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                                             </div>
@@ -348,11 +348,14 @@
     </p-dialog>
 
 </div>
+
+
 <!-- impresiom de ticket -->
 <div style="visibility: hidden;" id="print" class="print">
     <div nz-col style="text-align: center;">
-        <h2>TICKET:5353</h2>
-        <h3>CAJERO:JOSE DANIEL DE JESUS</h3>
+        <img src="assets/img/logo_huitzil.png" alt="" width="150" height="35" class="d-inline-block align-text-top">
+        <h2>TICKET: {{RegistraVenta.noTicket}}</h2>
+        <h3>CAJA: {{RegistraVenta.idCaja}}</h3>
         <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" [columns]="cols" [rows]="rows"
             styleClass="p-datatable-sm">
             <ng-template pTemplate="caption">

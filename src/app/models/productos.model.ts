@@ -1,4 +1,5 @@
 import { CatTallaModel } from "./tallas.model";
+import {formatDate} from '@angular/common';
 
 export class productoModel{
   idArticulo: number;
