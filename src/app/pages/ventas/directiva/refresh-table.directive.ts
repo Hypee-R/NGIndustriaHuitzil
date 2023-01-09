@@ -17,7 +17,6 @@ export class RefreshTableDirective implements OnChanges{
   ngOnChanges(changes: SimpleChanges): void {
     
     if(changes['appRefreshTable']){
-      console.log("cambie")
       this.viewContainerRef.clear()
       this.viewContainerRef.createEmbeddedView(this.templateRef)
 
