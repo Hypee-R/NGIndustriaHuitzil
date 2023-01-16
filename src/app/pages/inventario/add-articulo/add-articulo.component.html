@@ -53,10 +53,11 @@
         </div>
         <br>
         <div class="field">
-            <label for="fecha">Fecha de ingreso</label>
+            <label for="fecha">Fecha de ingreso</label>: {{producto.fechaIngreso| date:'dd-MM-yyyy'}}
+
             <input type="date" pInputText id="idFecha" [(ngModel)]="producto.fechaIngreso" required/>
             <small class="p-error" *ngIf="submitted && !producto.fechaIngreso">La Fecha de ingreso es requerida.</small>
-            <small class="p-error" *ngIf="submitted && producto.fechaIngreso?.length > 0 && producto.fechaIngreso?.length <= 3">El telefono debe contener minimo 4 caracteres</small>
+            <small class="p-error" *ngIf="submitted && producto.fechaIngreso?.length > 0 && producto.fechaIngreso?.length <= 3">Se debe Contener fecha de ingreso</small>
         </div>
         <br>
          <div class="field">

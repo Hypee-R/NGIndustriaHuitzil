@@ -145,7 +145,7 @@ export class InventarioComponent implements OnInit {
 
   /// Editar componetente
   editArticulo(producto: productoModel){
-   // console.log(producto)
+    console.log(producto)
     this.accion = 'Actualizar';
     this.selectedArticulo = {...producto};
     setTimeout(() => {
@@ -156,6 +156,8 @@ export class InventarioComponent implements OnInit {
   ///Eliminar componetne
 
   deleteArticulo(articulo: productoModel){
+    console.log(articulo)
+    console.log(articulo.descripcion)
     Swal.fire({
       title: `Está seguro de eliminar el proveedor ${articulo.descripcion}?`,
       icon: 'question',
