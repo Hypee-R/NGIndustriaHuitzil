@@ -510,12 +510,11 @@ export class VentasComponent implements OnInit {
 
 
 
-  PostVentaRegistro() {
+  PostVentaRegistro(tipoVenta:string) {
  
     this.articlesShell.forEach(element => {
       const  vt = new VentaArticuloModel();
-    //  vt.idVentaArticulo= 95;
-     // vt.idVenta= 1;
+ 
       vt.idArticulo= element.idArticulo;
       vt.cantidad= element.cantidad;
       vt.precioUnitario= element.precio;
@@ -528,13 +527,11 @@ export class VentasComponent implements OnInit {
     const locale = 'en-US';
     const formattedDate = formatDate(new Date, format, locale);
 
-
-   // this.RegistraVenta.idVenta = 1;
     this.RegistraVenta.idCaja =this.cashModel.idCaja;
     this.RegistraVenta.fecha = new Date().toLocaleString();
     this.RegistraVenta.noTicket =Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString()+formattedDate.replace(/(-)+/g, "").trim();;
     this.RegistraVenta.subtotal = this.total;
-    this.RegistraVenta.tipoPago = "EFECTIVO";
+    this.RegistraVenta.tipoPago = tipoVenta;
     this.RegistraVenta.tipoVenta = "CONTADO";
     this.RegistraVenta.total = this.total;
     this.RegistraVenta.ventaArticulo =this.ventaArticulo;

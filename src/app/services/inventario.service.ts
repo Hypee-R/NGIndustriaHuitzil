@@ -25,6 +25,8 @@ export class InventarioService {
   }
 
   agregaArticulo(request:productoModel): Observable<ResponseModel>{
+
+    console.log(request)
     return this.http.post<ResponseModel>(environment.apiService + 'Inventario/Agrega', request)
     .pipe(
       map (res => res)

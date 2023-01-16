@@ -24,7 +24,7 @@
                     </div>
 
                     <div *ngIf="!loading && listTallas.length > 0">
-                        <p-table #dt [value]="listTallas" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['nombre','descripcion']" [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedTallas" [rowHover]="true" dataKey="idTalla" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} tallas"
+                        <p-table #dt [value]="listTallas" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['idTalla','nombre','descripcion']" [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedTallas" [rowHover]="true" dataKey="idTalla" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} tallas"
                             [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                             <ng-template pTemplate="caption">
                                 <div class="flex align-items-center justify-content-between">
