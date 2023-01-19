@@ -528,7 +528,8 @@ export class VentasComponent implements OnInit {
     const formattedDate = formatDate(new Date, format, locale);
 
     this.RegistraVenta.idCaja =this.cashModel.idCaja;
-    this.RegistraVenta.fecha = new Date().toLocaleString();
+    this.RegistraVenta.fecha = "2023-01-18T00:00:00";
+
     this.RegistraVenta.noTicket =Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString()+formattedDate.replace(/(-)+/g, "").trim();;
     this.RegistraVenta.subtotal = this.total;
     this.RegistraVenta.tipoPago = tipoVenta;
