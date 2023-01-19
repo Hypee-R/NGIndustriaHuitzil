@@ -26,6 +26,8 @@ export class TallasComponent implements OnInit {
     private toastr: ToastrService,
   ) {
     this.cols = [
+      
+      { field: 'idTalla', header: 'idTalla' },
       { field: 'nombre', header: 'Nombre' },
       { field: 'descripcion', header: 'Descripción' },
     ];
@@ -51,6 +53,7 @@ export class TallasComponent implements OnInit {
       this.tallasService.getTallas().subscribe(response => {
         if(response.exito){
           this.listTallas = response.respuesta;
+          console.log(  this.listTallas);
           this.loading = false;
         }
       }, err => {

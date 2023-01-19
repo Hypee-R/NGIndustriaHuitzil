@@ -168,6 +168,7 @@ guardarArticulo(){
 }
 
 actualizarArticulo(){
+  console.log(this.producto)
   this.articuloService.actualizaArticulo(this.producto).subscribe(response => {
     if(response.exito){
         this.toastr.success(response.mensaje, 'Exito!!');
