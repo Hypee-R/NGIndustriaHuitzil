@@ -223,6 +223,29 @@
 
     <p-dialog header="Seleccionar Tipo de pago!!" [(visible)]="display" [style]="{width: '50vw'}">
         <div class="row">
+            <div class="col-sm-4">
+
+              
+
+            </div>
+            <div class="col-sm-4">
+
+                <label for="impresora">Impresora:&nbsp;</label>
+                <select id="impresora" [(ngModel)]="impresoraSeleccionada">
+                  <option *ngFor="let impresora of impresoras" [ngValue]="impresora">{{impresora}}</option>
+                </select>
+
+            </div>
+            <div class="col-sm-4">
+
+              
+
+            </div>
+         
+        </div>
+   
+<br>
+        <div class="row">
 
             <div class="col-sm-4">
 
@@ -240,7 +263,11 @@
             <div class="col-sm-4">
                 <button pButton type="button" label="Multiple" icon="pi pi-money-bill" class="p-button-success"
                     badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro('MULTIPLE')"></button>
-
+               <Br>
+            
+                TARJETA: <input >
+                <br>
+                EFECTIVO: <input >
             </div>
 
             <div class="col-sm-2">
