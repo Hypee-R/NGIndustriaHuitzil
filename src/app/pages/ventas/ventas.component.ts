@@ -14,7 +14,7 @@ import html2canvas from 'html2canvas';
 import { VentaModel } from 'src/app/models/venta.model';
 import { VentaArticuloModel } from 'src/app/models/VentaArticulo.Model';
 import { formatDate } from '@angular/common';
-
+import ConectorPluginV3 from "src/app/ConectorPluginV3";
 
 @Component({
   selector: 'app-ventas',
@@ -24,6 +24,11 @@ import { formatDate } from '@angular/common';
 
 
 export class VentasComponent implements OnInit {
+
+  impresoras = [];
+  impresoraSeleccionada: string = "";
+  mensaje: string = "";
+
   display: boolean = false;
   displayCotizacion: boolean = false;
   @Output() _articulosS = new EventEmitter<productoModel>();
@@ -85,9 +90,10 @@ export class VentasComponent implements OnInit {
 
   selectedValues: string[] = [];
 
-  ngOnInit(): void {
+  async  ngOnInit() {
     this.loading = false
     this.getCaja();
+    this.impresoras = await ConectorPluginV3.obtenerImpresoras();
   }
 
 
@@ -510,7 +516,7 @@ export class VentasComponent implements OnInit {
 
 
 
-  PostVentaRegistro(tipoVenta:string) {
+   async PostVentaRegistro(tipoVenta:string) {
  
     this.articlesShell.forEach(element => {
       const  vt = new VentaArticuloModel();
@@ -540,25 +546,58 @@ export class VentasComponent implements OnInit {
     
 
       console.log(JSON.stringify(this.RegistraVenta));
-    this.ventasService.postRegistroVenta(this.RegistraVenta).subscribe(resp => {
+    this.ventasService.postRegistroVenta(this.RegistraVenta).subscribe(async resp => {
       console.log('data=> ', resp);
 
       console.log(JSON.stringify(resp));
       if (resp.exito) {
         this.toastr.success(resp.mensaje, 'Exito!');
         // Extraemos el 
-        const printContent = document.getElementById("print");
-        const WindowPrt = window.open('', '', 'left=0,top=50,width=900,height=900,toolbar=0,scrollbars=0,status=0');
-        WindowPrt.document.write(printContent.innerHTML);
-        WindowPrt.document.close();
-        WindowPrt.focus();
-        WindowPrt.print();
-        WindowPrt.close();
-
-
-      } else {
-        this.toastr.info(resp.mensaje, 'Atención!')
+        // const printContent = document.getElementById("print");
+        // const WindowPrt = window.open('', '', 'left=0,top=50,width=900,height=900,toolbar=0,scrollbars=0,status=0');
+        // WindowPrt.document.write(printContent.innerHTML);
+        // WindowPrt.document.close();
+        // WindowPrt.focus();
+        // WindowPrt.print();
+        // WindowPrt.close();
+       
+          //code
+          const conector = new ConectorPluginV3();
+    conector
+    .Iniciar()
+      
+    .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+    .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+    .Feed(1)
+    .EscribirTexto("***UniformesHuitzil***")
+    .Feed(1)
+    .EscribirTexto("Caja:"+this.cashModel.idCaja)
+    .Feed(1)
+    .EscribirTexto("Ticket:"+this.RegistraVenta.noTicket)
+    .Feed(1)
+    .EscribirTexto("Articulos:"+this.articulos)
+    .Feed(1)
+    .EscribirTexto("Total:"+this.total+"MXN")
+    //  .Feed(1)
+    // .EscribirTexto(this.totalLetra)
+    .Feed(1)
+    .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+    .Feed(1)
+    .Iniciar()
+    .Feed(1);
+    const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+    if (respuesta == true) {
+      console.log("Impresión correcta");
+    } else {
+      console.log("Error: " + respuesta);
+    }
+  
+        
+        
+         
       }
+
+      
     },
       err => {
         console.log('error -> ', err);
@@ -566,6 +605,41 @@ export class VentasComponent implements OnInit {
       });
   }
 
-
+   async probarImpresion() {
+    // if (!this.impresoraSeleccionada) {
+    //   return alert("Seleccione una impresora");
+    // }
+  
+    // if (!this.mensaje) {
+    //   return alert("Escribe un mensaje");
+    // }
+    const conector = new ConectorPluginV3();
+    conector
+      .Iniciar()
+      
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+      .DescargarImagenDeInternetEImprimir("assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+     
+    
+      .EscribirTexto("Caja:"+this.cashModel.idCaja)
+      .Feed(1)
+      .EscribirTexto("Ticket:"+this.RegistraVenta.noTicket)
+      .Feed(1)
+      .EscribirTexto("Articulos:"+this.articulos)
+      .Feed(1)
+      .EscribirTexto("Total:"+this.total)
+      .Feed(1)
+      .EscribirTexto(this.totalLetra)
+      .Feed(1)
+      .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+      .Iniciar()
+      .Feed(1);
+    const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+    if (respuesta == true) {
+      console.log("Impresión correcta");
+    } else {
+      console.log("Error: " + respuesta);
+    }
+  }
 
 }
