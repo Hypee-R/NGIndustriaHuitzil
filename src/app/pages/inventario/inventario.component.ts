@@ -296,7 +296,7 @@ export class InventarioComponent implements OnInit {
         this.productoFile.unidad= arr[i].unidad,
         this.productoFile.existencia= arr[i].existencia,
         this.productoFile.descripcion=arr[i].descripcion,
-        this.productoFile.fechaIngreso= arr[i].fechaIngreso,
+        this.productoFile.fechaIngreso= "2023-01-18",
         this.productoFile. idUbicacion=  parseInt( arr[i].idUbicacion),
         this.productoFile. idCategoria= parseInt(  arr[i].idCategoria),
         this.productoFile.  idTalla= parseInt(  arr[i].idTalla),
