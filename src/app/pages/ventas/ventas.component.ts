@@ -565,7 +565,6 @@ export class VentasComponent implements OnInit {
           const conector = new ConectorPluginV3();
     conector
     .Iniciar()
-      
     .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
     .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
     .Feed(1)
@@ -577,14 +576,24 @@ export class VentasComponent implements OnInit {
     .Feed(1)
     .EscribirTexto("Articulos:"+this.articulos)
     .Feed(1)
+    // .EscribirTexto("")
+    // .Feed(1)
     .EscribirTexto("Total:"+this.total+"MXN")
     //  .Feed(1)
     // .EscribirTexto(this.totalLetra)
     .Feed(1)
     .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
     .Feed(1)
+    .EscribirTexto(
+      "***Si requiere factura solo se \
+          podrá expedir el día de compra,\
+          de lo contrario se  contemplará en \
+          ventas al Público en General..***")
+          .Feed(1)
+          .EscribirTexto("Suc. Frontera: 8666350209  Suc Monclova: 8666320215")
     .Iniciar()
     .Feed(1);
+    
     const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
     if (respuesta == true) {
       console.log("Impresión correcta");
@@ -632,6 +641,11 @@ export class VentasComponent implements OnInit {
       .EscribirTexto(this.totalLetra)
       .Feed(1)
       .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+      .Feed(1)
+      .EscribirTexto("***Si requiere factura solo se podrá expedir el día de compra, ***")
+      .EscribirTexto("de lo contrario se  contemplará en ventas al Público en General..***")
+      .Feed(1)
+      .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
       .Iniciar()
       .Feed(1);
     const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
