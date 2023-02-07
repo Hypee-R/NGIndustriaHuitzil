@@ -24,9 +24,9 @@ import ConectorPluginV3 from "src/app/ConectorPluginV3";
 
 
 export class VentasComponent implements OnInit {
-
+  cadenaProductos :string ="\n";
   impresoras = [];
-  impresoraSeleccionada: string = "";
+  impresoraSeleccionada: string = "TicketsZebraSistema";
   mensaje: string = "";
 
   display: boolean = false;
@@ -93,7 +93,7 @@ export class VentasComponent implements OnInit {
   async  ngOnInit() {
     this.loading = false
     this.getCaja();
-    this.impresoras = await ConectorPluginV3.obtenerImpresoras();
+   // this.impresoras = await ConectorPluginV3.obtenerImpresoras();
   }
 
 
@@ -526,8 +526,12 @@ export class VentasComponent implements OnInit {
       vt.precioUnitario= element.precio;
       vt.subtotal= element.precio;
       vt.articulo=element;
+
+  
+  this.cadenaProductos+=element.descripcion+" "+element.cantidad+" "+"$"+element.precio+"MXN"+"\n".toString()
        this.ventaArticulo.push(vt);
     });
+    console.log(this.cadenaProductos);
 
     const format = 'dd-MM-yyyy';
     const locale = 'en-US';
@@ -549,20 +553,12 @@ export class VentasComponent implements OnInit {
     this.ventasService.postRegistroVenta(this.RegistraVenta).subscribe(async resp => {
       console.log('data=> ', resp);
 
-      console.log(JSON.stringify(resp));
+     // console.log(this.cadenaProductos.toString());
       if (resp.exito) {
         this.toastr.success(resp.mensaje, 'Exito!');
-        // Extraemos el 
-        // const printContent = document.getElementById("print");
-        // const WindowPrt = window.open('', '', 'left=0,top=50,width=900,height=900,toolbar=0,scrollbars=0,status=0');
-        // WindowPrt.document.write(printContent.innerHTML);
-        // WindowPrt.document.close();
-        // WindowPrt.focus();
-        // WindowPrt.print();
-        // WindowPrt.close();
-       
-          //code
-          const conector = new ConectorPluginV3();
+     
+     //code
+    const conector = new ConectorPluginV3();
     conector
     .Iniciar()
     .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
@@ -576,37 +572,38 @@ export class VentasComponent implements OnInit {
     .Feed(1)
     .EscribirTexto("Articulos:"+this.articulos)
     .Feed(1)
-    // .EscribirTexto("")
-    // .Feed(1)
+    .EscribirTexto(this.cadenaProductos)
+    .Feed(1)
     .EscribirTexto("Total:"+this.total+"MXN")
-    //  .Feed(1)
-    // .EscribirTexto(this.totalLetra)
-    .Feed(1)
+    .Feed(2)
+    .EscribirTexto(this.totalLetra = this.numeroALetras(this.total, {
+      plural: 'PESOS MEXICANOS',
+      singular: 'PESO MEXICANO',
+      centPlural: 'CENTAVOS',
+      centSingular: 'CENTAVO'
+    }))
+    .Feed(2)
     .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+    .Feed(2)
+    .EscribirTexto("***Si requiere factura solo se podra expedir el dia de compra, de lo contrario se contemplara en ventas al Publico en General..***")
     .Feed(1)
-    .EscribirTexto(
-      "***Si requiere factura solo se \
-          podrá expedir el día de compra,\
-          de lo contrario se  contemplará en \
-          ventas al Público en General..***")
-          .Feed(1)
-          .EscribirTexto("Suc. Frontera: 8666350209  Suc Monclova: 8666320215")
+    .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
+    .Feed(2)
+    .Corte(1)
     .Iniciar()
     .Feed(1);
     
+    console.log(this.impresoraSeleccionada)
     const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+    
     if (respuesta == true) {
       console.log("Impresión correcta");
     } else {
       console.log("Error: " + respuesta);
     }
   
-        
-        
-         
       }
-
-      
+    
     },
       err => {
         console.log('error -> ', err);
@@ -614,46 +611,5 @@ export class VentasComponent implements OnInit {
       });
   }
 
-   async probarImpresion() {
-    // if (!this.impresoraSeleccionada) {
-    //   return alert("Seleccione una impresora");
-    // }
   
-    // if (!this.mensaje) {
-    //   return alert("Escribe un mensaje");
-    // }
-    const conector = new ConectorPluginV3();
-    conector
-      .Iniciar()
-      
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-      .DescargarImagenDeInternetEImprimir("assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-     
-    
-      .EscribirTexto("Caja:"+this.cashModel.idCaja)
-      .Feed(1)
-      .EscribirTexto("Ticket:"+this.RegistraVenta.noTicket)
-      .Feed(1)
-      .EscribirTexto("Articulos:"+this.articulos)
-      .Feed(1)
-      .EscribirTexto("Total:"+this.total)
-      .Feed(1)
-      .EscribirTexto(this.totalLetra)
-      .Feed(1)
-      .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
-      .Feed(1)
-      .EscribirTexto("***Si requiere factura solo se podrá expedir el día de compra, ***")
-      .EscribirTexto("de lo contrario se  contemplará en ventas al Público en General..***")
-      .Feed(1)
-      .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
-      .Iniciar()
-      .Feed(1);
-    const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
-    if (respuesta == true) {
-      console.log("Impresión correcta");
-    } else {
-      console.log("Error: " + respuesta);
-    }
-  }
-
 }
