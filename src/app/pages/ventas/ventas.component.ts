@@ -26,7 +26,7 @@ import ConectorPluginV3 from "src/app/ConectorPluginV3";
 export class VentasComponent implements OnInit {
   cadenaProductos :string ="\n";
   impresoras = [];
-  impresoraSeleccionada: string = "TicketsZebraSistema";
+  impresoraSeleccionada: string = "BIXOLON SRP-330II";
   mensaje: string = "";
 
   display: boolean = false;
