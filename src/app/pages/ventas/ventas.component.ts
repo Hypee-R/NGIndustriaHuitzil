@@ -7,8 +7,6 @@ import { InventarioService } from 'src/app/services/inventario.service';
 import { ProveedoresService } from 'src/app/services/proveedores.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from 'src/app/services/ventas.service';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService, ConfirmEventType, MessageService } from 'primeng/api';
 import { jsPDF } from "jspdf";
 import html2canvas from 'html2canvas';
 import { VentaModel } from 'src/app/models/venta.model';
@@ -24,9 +22,9 @@ import ConectorPluginV3 from "src/app/ConectorPluginV3";
 
 
 export class VentasComponent implements OnInit {
-  cadenaProductos :string ="\n";
+  cadenaProductos: string = "\n";
   impresoras = [];
-  impresoraSeleccionada: string = "BIXOLON SRP-330II";
+  impresoraSeleccionada: string = "TicketsZebraSistema";
   mensaje: string = "";
 
   display: boolean = false;
@@ -40,8 +38,8 @@ export class VentasComponent implements OnInit {
   articles: productoModel[] = [];
   articlesSelected: productoModel[] = []
   articlesShell: productoVentaModel[] = [];
-  ventaArticulo:VentaArticuloModel[]=[];
-  
+  ventaArticulo: VentaArticuloModel[] = [];
+
   openCash: Boolean = false
   //lstProducts: productoModel[] = [];
   cols: any[] = [];
@@ -90,10 +88,9 @@ export class VentasComponent implements OnInit {
 
   selectedValues: string[] = [];
 
-  async  ngOnInit() {
+  async ngOnInit() {
     this.loading = false
     this.getCaja();
-   // this.impresoras = await ConectorPluginV3.obtenerImpresoras();
   }
 
 
@@ -174,7 +171,7 @@ export class VentasComponent implements OnInit {
     artc.talla = product.talla
     artc.sku = product.sku
     artc.idArticulo = product.idArticulo
-    artc.fechaIngreso=product.fechaIngreso
+    artc.fechaIngreso = product.fechaIngreso
     this.articlesShell.push(artc)
     this.articulos += 1
     this.total += product.precio
@@ -211,11 +208,7 @@ export class VentasComponent implements OnInit {
             this.toastr.info('Actualmente hay una caja abierta', 'Atención!');
             return;
           }
-          // else if(this.accion == 'Cerrar'){
-          //   console.log('No hay una caja abierta para cerrar');
-          //   this.toastr.info('No hay caja abierta para cerrar', 'Atención!');
-          //   return;
-          // }
+        
         } else if (this.cashModel.fecha != null && this.cashModel.fechaCierre != null) {
           if (this.accion == 'Abrir') {
             console.log('Abrir caja...');
@@ -227,28 +220,7 @@ export class VentasComponent implements OnInit {
           }
         }
 
-        // if(this.accion == 'Abrir' && this.cashModel.fecha != null && this.cashModel.fechaCierre != null){
-        //     console.log('Abrir caja...');
-        //     this.cashModel = new CajaModel();
-        // }else if(this.accion == 'Abrir' && this.cashModel.fecha != null && this.cashModel.fechaCierre == null){
-        //   console.log('No se puede abrir caja, hay una abierta...');
-        //   this.toastr.info('Actualmente hay una caja abierta', 'Atención!');
-        //   return;
-        // }
-
-        // // if(this.accion == 'Cerrar' && this.cashModel.fechaCierre == null){
-        // //     console.log('Cerrar caja...');
-        // // }else
-        // if(this.accion == 'Cerrar' && this.cashModel.fecha != null && this.cashModel.fechaCierre == null){
-        //     console.log('No hay una caja abierta para cerrar');
-        //     this.toastr.info('No hay caja abierta para cerrar', 'Atención!');
-        //     return;
-        // }else if(this.accion == 'Cerrar' && this.cashModel.fecha != null && this.cashModel.fechaCierre != null){
-        //     console.log('ya está cerrada la caja');
-        //     this.toastr.info('Ya está cerrada la caja', 'Atención!');
-        //     this.accion = 'Status';
-        //     // return;
-        // }
+      
 
         setTimeout(() => {
           this.variablesGL.showDialog.next(true);
@@ -516,94 +488,96 @@ export class VentasComponent implements OnInit {
 
 
 
-   async PostVentaRegistro(tipoVenta:string) {
- 
+  async PostVentaRegistro(tipoPago: string) {
+
     this.articlesShell.forEach(element => {
-      const  vt = new VentaArticuloModel();
- 
-      vt.idArticulo= element.idArticulo;
-      vt.cantidad= element.cantidad;
-      vt.precioUnitario= element.precio;
-      vt.subtotal= element.precio;
-      vt.articulo=element;
+      const vt = new VentaArticuloModel();
 
-  
-  this.cadenaProductos+=element.descripcion+" "+element.cantidad+" "+"$"+element.precio+"MXN"+"\n".toString()
-       this.ventaArticulo.push(vt);
+      vt.idArticulo = element.idArticulo;
+      vt.cantidad = element.cantidad;
+      vt.precioUnitario = element.precio;
+      vt.subtotal = element.precio;
+      vt.articulo = element;
+
+      //Genera Cadena para Impresion Ticket con salto de pagina
+      this.cadenaProductos += element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + "\n".toString()
+      
+      this.ventaArticulo.push(vt);
     });
-    console.log(this.cadenaProductos);
 
-    const format = 'dd-MM-yyyy';
+    const format = 'yyyy-MM-dd';
     const locale = 'en-US';
     const formattedDate = formatDate(new Date, format, locale);
 
-    this.RegistraVenta.idCaja =this.cashModel.idCaja;
-    this.RegistraVenta.fecha = "2023-01-18T00:00:00";
-
-    this.RegistraVenta.noTicket =Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString()+formattedDate.replace(/(-)+/g, "").trim();;
+    this.RegistraVenta.idCaja = this.cashModel.idCaja;
+    this.RegistraVenta.fecha = formattedDate;
+    this.RegistraVenta.noArticulos = this.articlesShell.length
+    this.RegistraVenta.noTicket = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
     this.RegistraVenta.subtotal = this.total;
-    this.RegistraVenta.tipoPago = tipoVenta;
-    this.RegistraVenta.tipoVenta = "CONTADO";
+    this.RegistraVenta.tipoPago = tipoPago;
+    this.RegistraVenta.tipoVenta = tipoPago;
     this.RegistraVenta.total = this.total;
-    this.RegistraVenta.ventaArticulo =this.ventaArticulo;
-   
-    
+    this.RegistraVenta.ventaArticulo = this.ventaArticulo;
 
-      console.log(JSON.stringify(this.RegistraVenta));
+
+
+    console.log(JSON.stringify(this.RegistraVenta));
     this.ventasService.postRegistroVenta(this.RegistraVenta).subscribe(async resp => {
       console.log('data=> ', resp);
 
-     // console.log(this.cadenaProductos.toString());
       if (resp.exito) {
         this.toastr.success(resp.mensaje, 'Exito!');
-     
-     //code
-    const conector = new ConectorPluginV3();
-    conector
-    .Iniciar()
-    .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-    .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-    .Feed(1)
-    .EscribirTexto("***UniformesHuitzil***")
-    .Feed(1)
-    .EscribirTexto("Caja:"+this.cashModel.idCaja)
-    .Feed(1)
-    .EscribirTexto("Ticket:"+this.RegistraVenta.noTicket)
-    .Feed(1)
-    .EscribirTexto("Articulos:"+this.articulos)
-    .Feed(1)
-    .EscribirTexto(this.cadenaProductos)
-    .Feed(1)
-    .EscribirTexto("Total:"+this.total+"MXN")
-    .Feed(2)
-    .EscribirTexto(this.totalLetra = this.numeroALetras(this.total, {
-      plural: 'PESOS MEXICANOS',
-      singular: 'PESO MEXICANO',
-      centPlural: 'CENTAVOS',
-      centSingular: 'CENTAVO'
-    }))
-    .Feed(2)
-    .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
-    .Feed(2)
-    .EscribirTexto("***Si requiere factura solo se podra expedir el dia de compra, de lo contrario se contemplara en ventas al Publico en General..***")
-    .Feed(1)
-    .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
-    .Feed(2)
-    .Corte(1)
-    .Iniciar()
-    .Feed(1);
-    
-    console.log(this.impresoraSeleccionada)
-    const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
-    
-    if (respuesta == true) {
-      console.log("Impresión correcta");
-    } else {
-      console.log("Error: " + respuesta);
-    }
-  
+
+        //code Impresion
+        const conector = new ConectorPluginV3();
+        conector
+          .Iniciar()
+          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+          .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+          .Feed(1)
+          .EscribirTexto("***UniformesHuitzil***")
+          .Feed(1)
+          .EscribirTexto("Caja:" + this.cashModel.idCaja)
+          .Feed(1)
+          .EscribirTexto("Ticket:" + this.RegistraVenta.noTicket)
+          .Feed(1)
+          .EscribirTexto("Articulos:" + this.articulos)
+          .Feed(1)
+          .EscribirTexto(this.cadenaProductos)
+          .Feed(1)
+          .EscribirTexto("Total:" + this.total + "MXN")
+          .Feed(2)
+          .EscribirTexto(this.totalLetra = this.numeroALetras(this.total, {
+            plural: 'PESOS MEXICANOS',
+            singular: 'PESO MEXICANO',
+            centPlural: 'CENTAVOS',
+            centSingular: 'CENTAVO'
+          }))
+          .Feed(2)
+          .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+          .Feed(2)
+          .EscribirTexto("***Si requiere factura solo se podra expedir el dia de compra, de lo contrario se contemplara en ventas al Publico en General..***")
+          .Feed(1)
+          .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
+          .Feed(2)
+          .Corte(1)
+          .Iniciar()
+          .Feed(1);
+
+        
+        const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+
+        if (respuesta == true) {
+          this.cadenaProductos=""
+          // this.RegistraVenta= new VentaModel();
+          // this.ventaArticulo= [];
+          console.log("Impresión correcta");
+        } else {
+          console.log("Error: " + respuesta);
+        }
+
       }
-    
+
     },
       err => {
         console.log('error -> ', err);
@@ -611,5 +585,5 @@ export class VentasComponent implements OnInit {
       });
   }
 
-  
+
 }
