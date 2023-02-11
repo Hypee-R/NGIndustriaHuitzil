@@ -27,6 +27,8 @@ export class AddMaterialComponent implements OnInit {
   listProveedoresAux: CatProveedorModel[] = [];
   listUbicaciones: UbicacionModel[] = [];
   listUbicacionesAux: UbicacionModel[] = [];
+  lstTipoMedicion: string[] = ['BULTO', 'CAJA', 'KILO', 'ROLLO'];
+  lstEstatus: string[] = ['DISPONIBLE', 'EXISTENCIA', 'SOLICITADO', 'RECIBIDO'];
   material: MaterialesModel = new MaterialesModel();
 
   dialogSubscription: Subscription = new Subscription();
@@ -136,6 +138,7 @@ export class AddMaterialComponent implements OnInit {
 
   actualizarMaterial(){
     this.materialesService.actualizaMaterial(this.material).subscribe(response => {
+      console.log(response);
       if(response.exito){
           this.toastr.success(response.mensaje, 'Exito!!');
           this.hideDialog();
