@@ -81,7 +81,7 @@ export class VentasComponent implements OnInit {
     } else if (status == 'laptop') {
       this.rows = 4;
     } else {
-      this.rows = 9;
+      this.rows = 7
     }
 
   }
@@ -252,20 +252,32 @@ export class VentasComponent implements OnInit {
       this.variablesGL.showLoading();
       this.inventarioService.searchProduct(this.queryString).subscribe(response => {
         if (response.exito) {
-          this.variablesGL.hideLoading();
+console.log(response)
 
-          this.toastr.success(response.mensaje, 'Exito!!!');
-          console.log('resultados de la busqueda: ', response.respuesta);
+          if(response.respuesta[0].existencia=="0"){
+
+
+            this.toastr.error("No hay Stock del Producto", 'Error!');
+            this.variablesGL.hideLoading();
+          }else{
+          this.variablesGL.hideLoading();
           this.queryString = "";
 
+        
+           
 
-          let artc = new productoModel()
-          artc.descripcion = response.respuesta[0].descripcion
-          artc.precio = response.respuesta[0].precio
-          artc.talla = response.respuesta[0].talla
-          artc.sku = response.respuesta[0].sku
-          artc.idArticulo = response.respuesta[0].idArticulo
-          this.addProductVenta(artc);
+            this.toastr.success(response.mensaje, 'Exito!');
+            let artc = new productoModel()
+            artc.descripcion = response.respuesta[0].descripcion
+            artc.precio = response.respuesta[0].precio
+            artc.talla = response.respuesta[0].talla
+            artc.sku = response.respuesta[0].sku
+            artc.idArticulo = response.respuesta[0].idArticulo
+            artc.fechaIngreso = response.respuesta[0].fechaIngreso
+            this.addProductVenta(artc);
+       
+          }
+          
 
 
         } else {
@@ -282,11 +294,36 @@ export class VentasComponent implements OnInit {
   }
 
   showDialog() {
-    if (this.articulos == 0) {
-      this.toastr.warning('No hay Articulos por pagar', 'Atención!');
-    } else {
-      this.display = true;
-    }
+    this.ventasService.getCaja().subscribe(resp => {
+      console.log('Pagar Valida Caja ', resp);
+      if (resp.exito) {
+        this.cashModel = resp.respuesta;
+
+        if(this.cashModel.fechaCierre !==  null){
+          this.toastr.error("Caja Cerrada Abrir nueva", 'Error!');
+         } else{ 
+          
+          if (this.articulos == 0) {
+          this.toastr.warning('No hay Articulos por pagar', 'Atención!');
+        }else{
+          this.display = true;
+    
+        }
+      } 
+      
+
+        
+
+      } 
+    },
+      err => {
+        this.toastr.error('Error al obtener status de la caja', 'Error!');
+        this.cashModel = new CajaModel();
+      });
+
+
+
+  
 
   }
 
@@ -489,6 +526,8 @@ export class VentasComponent implements OnInit {
 
 
   async PostVentaRegistro(tipoPago: string) {
+  
+
 
     this.articlesShell.forEach(element => {
       const vt = new VentaArticuloModel();
@@ -565,13 +604,15 @@ export class VentasComponent implements OnInit {
           .Feed(1);
 
         
-        const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+       // const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+        const respuesta = true;
 
         if (respuesta == true) {
           this.cadenaProductos=""
-          // this.RegistraVenta= new VentaModel();
-          // this.ventaArticulo= [];
+          this.RegistraVenta= new VentaModel();
+          this.ventaArticulo= [];
           console.log("Impresión correcta");
+          this.display = false;
         } else {
           console.log("Error: " + respuesta);
         }
