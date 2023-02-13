@@ -7,7 +7,7 @@
             <div class="col-12 md:col-3">
                 <div class="p-inputgroup">
                     <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
-                    <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras" [(ngModel)]="queryString">
+                    <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras" [(ngModel)]="queryString" (change)="getResults()">
                     <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn" (click)="getResults()"></button>
                 </div>
             </div>
@@ -30,15 +30,17 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr [ngClass] = "{'highlight' : rowData.existencia == 0}">
-                            <td>
+                        <tr >
+
+                               
+                            <td  *ngIf="rowData.existencia != 0">
                                 <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning" (click)="addProduct(rowData)"></button>
                             </td>
-                            <td *ngIf="rowData.existencia == 0" >
-                               
                                 
+                            <td  *ngIf="rowData.existencia == 0">
+                             <label >Sin stock</label>
                             </td>
-                            
+                          
 
                             <td *ngFor="let col of columns">
                                 {{rowData[col.field]}}

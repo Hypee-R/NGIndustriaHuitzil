@@ -251,8 +251,7 @@ export class VentasComponent implements OnInit {
     if (this.queryString && this.queryString.trim().length > 0) {
       this.variablesGL.showLoading();
       this.inventarioService.searchProduct(this.queryString).subscribe(response => {
-        if (response.exito) {
-console.log(response)
+        if (response.exito) {console.log(response)
 
           if(response.respuesta[0].existencia=="0"){
 
@@ -527,8 +526,6 @@ console.log(response)
 
   async PostVentaRegistro(tipoPago: string) {
   
-
-
     this.articlesShell.forEach(element => {
       const vt = new VentaArticuloModel();
 
@@ -608,9 +605,14 @@ console.log(response)
         const respuesta = true;
 
         if (respuesta == true) {
+          //Limpiar objetos al finalizar una compra correcta
           this.cadenaProductos=""
           this.RegistraVenta= new VentaModel();
           this.ventaArticulo= [];
+          this.articulos=0
+          this.total=0
+          this.articlesShell=null;
+
           console.log("Impresión correcta");
           this.display = false;
         } else {
