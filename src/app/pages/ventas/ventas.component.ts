@@ -53,13 +53,13 @@ export class VentasComponent implements OnInit {
   total = 0
   totalLetra = "";
 
-  // PROBAR VARIABLES
+  //Busqueda CLIENTES
   clienteName: string = '';
   resultsClientes:  CatProveedorModel[];
   selectedclienteNameAdvanced: CatProveedorModel;
-  filteredCountries: CatProveedorModel[];
-  countries: CatProveedorModel[];
-  // PROBAR VARIABLES
+  filteredClients: CatProveedorModel[];
+  clientes: CatProveedorModel[];
+  //Busqueda CLIENTES
 
 
   cantidades: number[] = []
@@ -108,9 +108,9 @@ export class VentasComponent implements OnInit {
     
 
        this.toastr.success(response.mensaje, 'Exito!!!');
-        this.countries = response.respuesta;
+        this.clientes = response.respuesta;
 
-        console.log('resultados de la busqueda: ', JSON.stringify(  this.countries ));
+        console.log('resultados de la busqueda: ', JSON.stringify(  this.clientes ));
 
 
       } else {
@@ -128,14 +128,14 @@ export class VentasComponent implements OnInit {
     //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
     let filtered: any[] = [];
     let query = event.query;
-    for (let i = 0; i < this.countries.length; i++) {
-      let country = this.countries[i];
+    for (let i = 0; i < this.clientes.length; i++) {
+      let country = this.clientes[i];
       if (country.nombre.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filtered.push(country);
       }
     }
 
-    this.filteredCountries = filtered;
+    this.filteredClients = filtered;
 
 
   }
