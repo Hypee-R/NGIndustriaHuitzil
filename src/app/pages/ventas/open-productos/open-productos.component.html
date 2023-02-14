@@ -22,7 +22,7 @@
 
                             <th style="width: 2em;"></th>
                             <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field == 'nombre' ? '7em' : '12em'}">
+                                <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field == 'descripcion' ? '12em' : '4em'}">
                                     {{col.header}}
 
                                 </div>

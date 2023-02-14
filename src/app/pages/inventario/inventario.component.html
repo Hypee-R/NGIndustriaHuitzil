@@ -21,6 +21,8 @@
                                 <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
                                
                             </ng-template>
+
+                            
                         </p-toolbar>
 
                         <app-item-empty></app-item-empty>
@@ -43,11 +45,13 @@
                                                     <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m" [disabled]="!selectedArticulos || !selectedArticulos.length"></button>
                                                 </div>
                                                 <div class="col">
-                                                    <input class="form-control" type="file" id="formFileDisabled"   #fileImportInput name="File Upload"  id="txtFileUpload" (change)="fileChangeListener($event)" accept=".csv"/>
-                                                    <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"></p-fileUpload> -->
+                                                    <input class="form-control " type="file" id="formFileDisabled"   #fileImportInput name="File Upload"  id="txtFileUpload" (change)="fileChangeListener($event)" accept=".csv"/>
+                                                   
+                                                        <!-- <p-fileUpload mode="basic" ccept=".csv"  id="formFileDisabled"   #fileImportInput name="File Upload"  id="txtFileUpload"   label="Importar" chooseLabel="Import" class="mr-2 inline-block"  (change)="fileChangeListener($event)"></p-fileUpload> -->
+                                                
                                                 </div>
                                                 <div class="col">
-                                                    <!-- <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button> -->
+                                                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"(click)="Excel()" style="margin-left: 10px;"></button>
                                                 </div>
                                             </div>
                                         </div>

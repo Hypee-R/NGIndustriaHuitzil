@@ -16,7 +16,16 @@
                             <div class="row">
 
                                 <div class="col-6 md:col-4">
-                                    <div class="p-inputgroup">
+                                    <p-autoComplete [(ngModel)]="selectedclienteNameAdvanced" [suggestions]="filteredCountries"
+                                    (completeMethod)="getResultsClients($event)" field="nombre" [dropdown]="true">
+                                    <ng-template let-country pTemplate="item">
+                                      <div class="country-item">
+                                        <div>{{country.nombre}}</div>
+                                      </div>
+                                    </ng-template>
+                                  </p-autoComplete>
+
+                                    <!-- <div class="p-inputgroup">
                                         <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
                                         <input type="text" pInputText placeholder="Cliente"
                                             [(ngModel)]="queryStringClient">
@@ -24,7 +33,7 @@
                                             styleClass="p-button-warn" (click)="getResultsClients()"></button>
                                         <button type="button" pButton pRipple icon="pi pi-plus"
                                             styleClass="p-button-danger"></button>
-                                    </div>
+                                    </div> -->
 
                                 </div>
                                 <div class="col-6 md:col-4">
@@ -120,8 +129,9 @@
                             <div class="col-12 md:col-4">
                                 <p-divider>Datos de compra</p-divider>
                                 <div class="row">
-                                    <div class="col-4">
-                                        <label>Cliente:{{this.clienteName}}</label>
+                                    <div class="col-4" *ngIf="this.selectedclienteNameAdvanced  ">
+                                     
+                                     <label>Cliente:{{this.selectedclienteNameAdvanced.nombre}}</label> 
                                     </div>
                                 </div>
                                 <div class="row">

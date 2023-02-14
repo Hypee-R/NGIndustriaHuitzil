@@ -68,6 +68,7 @@ import { OpenProductosComponent } from './ventas/open-productos/open-productos.c
 import { SelectInventarioComponent } from './cambios-y-devoluciones/select-inventario/select-inventario.component';
 import { RefreshTableDirective } from './ventas/directiva/refresh-table.directive';
 import {ConfirmationService,MessageService} from 'primeng/api';
+import {ToggleButtonModule} from 'primeng/togglebutton';
 @NgModule({
     imports: [
         CommonModule,
@@ -108,6 +109,7 @@ import {ConfirmationService,MessageService} from 'primeng/api';
         InputTextareaModule,
         AutoCompleteModule,
         DividerModule,
+        ToggleButtonModule,
 ],  providers: [ConfirmationService,MessageService],
     declarations: [
         ContentComponent,

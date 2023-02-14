@@ -13,6 +13,8 @@ import { VentaModel } from 'src/app/models/venta.model';
 import { VentaArticuloModel } from 'src/app/models/VentaArticulo.Model';
 import { formatDate } from '@angular/common';
 import ConectorPluginV3 from "src/app/ConectorPluginV3";
+import { CatProveedorModel } from 'src/app/models/proveedores.model';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-ventas',
@@ -50,7 +52,16 @@ export class VentasComponent implements OnInit {
   articulos = 0
   total = 0
   totalLetra = "";
+
+  // PROBAR VARIABLES
   clienteName: string = '';
+  resultsClientes:  CatProveedorModel[];
+  selectedclienteNameAdvanced: CatProveedorModel;
+  filteredCountries: CatProveedorModel[];
+  countries: CatProveedorModel[];
+  // PROBAR VARIABLES
+
+
   cantidades: number[] = []
   RegistraVenta: VentaModel = new VentaModel();
   cashModel: CajaModel;
@@ -91,32 +102,44 @@ export class VentasComponent implements OnInit {
   async ngOnInit() {
     this.loading = false
     this.getCaja();
-  }
+    this.proveedoresService.getProveedores().subscribe(response => {
+      if (response.exito) {
+      
+    
+
+       this.toastr.success(response.mensaje, 'Exito!!!');
+        this.countries = response.respuesta;
+
+        console.log('resultados de la busqueda: ', JSON.stringify(  this.countries ));
 
 
-  getResultsClients() {
-    if (this.queryStringClient && this.queryStringClient.trim().length > 0) {
-      this.variablesGL.showLoading();
-      this.proveedoresService.searchCliente(this.queryStringClient).subscribe(response => {
-        if (response.exito) {
-          this.variablesGL.hideLoading();
-
-          this.toastr.success(response.mensaje, 'Exito!!!');
-          this.clienteName = response.respuesta[0].nombre;
-          console.log('resultados de la busqueda: ', this.clienteName);
-        } else {
-          this.variablesGL.hideLoading();
-          this.clienteName = '';
-          this.toastr.error(response.mensaje, 'Error!');
-        }
-      }, err => {
+      } else {
         this.variablesGL.hideLoading();
-        this.toastr.error('Hubo un error al buscar cliente', 'Error!');
-      });
-    } else {
-      this.toastr.error('Ingrese un elemento de busqueda', 'Atención!');
-    }
+       
+        this.toastr.error(response.mensaje, 'Error!');
+      }
+    }, err => {
+      this.variablesGL.hideLoading();
+      this.toastr.error('Hubo un error al buscar cliente', 'Error!');
+    });
   }
+  getResultsClients(event) {
+    console.log(event.query)
+    //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
+    let filtered: any[] = [];
+    let query = event.query;
+    for (let i = 0; i < this.countries.length; i++) {
+      let country = this.countries[i];
+      if (country.nombre.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(country);
+      }
+    }
+
+    this.filteredCountries = filtered;
+
+
+  }
+
 
   openProductsM() {
     this.accion = ''
