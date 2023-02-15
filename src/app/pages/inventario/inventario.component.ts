@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { productoModel } from 'src/app/models/productos.model';
-/*import { ConfirmationService } from 'primeng/api';
-import { MessageService } from 'primeng/api';*/
-//import { CatProveedorModel } from 'src/app/models/proveedores.model';
+
 import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
-
+import * as XLSX from 'xlsx';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { CategoriasService } from 'src/app/services/categorias.service';
@@ -70,15 +68,16 @@ export class InventarioComponent implements OnInit {
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();
-    if (status == 'celular') {
+    if(status == 'celular'){
       this.rows = 6;
-    } else if (status == 'tablet') {
+    }else if(status == 'tablet'){
       this.rows = 7;
-    } else if (status == 'laptop') {
-      this.rows = 5;
-    } else {
-      this.rows = 11;
+    }else if(status == 'laptop'){
+      this.rows = 7;
+    }else{
+      this.rows = 7;
     }
+  
   }
   ngOnInit() {
     this.getArticulos();
@@ -97,7 +96,7 @@ export class InventarioComponent implements OnInit {
     this.inventarioService.getArticulos().subscribe(response => {
       if (response.exito) {
         this.listArticulos = response.respuesta;
-        // console.log('articulos ', this.listArticulos);
+        console.log('articulos ', this.listArticulos);
         this.loading = false;
         for (let art of this.listArticulos) {
           this.imagenes.push({ id: art.idArticulo, imagen64c: art.imagen })
@@ -184,11 +183,32 @@ export class InventarioComponent implements OnInit {
       }
     });
   }
-
+  Excel() {
+   
+   let ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.listArticulos.map(row => ({
+    id_articulo: row.idArticulo ,
+    unidad: row.unidad,
+    existencia: row.existencia,
+    descripcion: row.descripcion,
+    fecha_ingreso: row.fechaIngreso,
+    id_ubicacion: row.idUbicacion,
+    id_categoria: row.idCategoria,
+    id_talla: row.idTalla,
+    imagen: "",
+    sku: row.sku,
+    precio: row.precio,
+  })), { header: ['id_articulo','unidad','existencia','descripcion','fecha_ingreso','id_ubicacion','id_categoria','id_talla','imagen','sku','precio'] })
+   const wb: XLSX.WorkBook = XLSX.utils.book_new();
+   XLSX.utils.book_append_sheet(wb, ws, 'InventarioProductos');
+   XLSX.writeFile(wb, 'Inventario'+new Date().toISOString()+'.csv')
+   return this.toastr.success('Exportado con exito!!', 'Exito');
+  }
 
   //Carga con Excel
   @ViewChild('fileImportInput') fileImportInput: any;
   fileChangeListener($event: any): void {
+
+
     console.log("Recorremos el archivo")
     let text = [];
     let files = $event.srcElement.files;
@@ -293,7 +313,7 @@ export class InventarioComponent implements OnInit {
         this.productoFile.unidad= arr[i].unidad,
         this.productoFile.existencia= arr[i].existencia,
         this.productoFile.descripcion=arr[i].descripcion,
-        this.productoFile.fechaIngreso= "2023-01-18",
+        this.productoFile.fechaIngreso=arr[i].fechaIngreso,
         this.productoFile. idUbicacion=  parseInt( arr[i].idUbicacion),
         this.productoFile. idCategoria= parseInt(  arr[i].idCategoria),
         this.productoFile.  idTalla= parseInt(  arr[i].idTalla),
@@ -338,6 +358,8 @@ this.getArticulos()
   }
 
 }
+
+
 
 export class CSVRecord {
 

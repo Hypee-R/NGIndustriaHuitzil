@@ -16,6 +16,12 @@ export class VentasService {
     private http: HttpClient
   ){}
 
+  getVentas(): Observable<ResponseModel>{
+    return this.http.get<ResponseModel>(environment.apiService + 'Ventas/Sales')
+    .pipe(
+      map (res => res)
+    );
+  }
   getCaja(): Observable<ResponseModel>{
     return this.http.get<ResponseModel>(environment.apiService + `Ventas/Cash/Consulta?param=${this.user.id}`)
     .pipe(

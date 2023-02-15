@@ -38,7 +38,7 @@ export class OpenProductosComponent implements OnInit {
         { field: 'descripcion',header:'Producto'},
         { field: 'talla',header: 'Talla'},
         { field: 'precio',header:'Precio'},
-        { field: 'existencia',header:'existencias'}
+        { field: 'existencia',header:'Existencia'}
         
       ];
       this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {

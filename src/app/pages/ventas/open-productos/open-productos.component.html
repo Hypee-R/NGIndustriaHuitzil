@@ -3,11 +3,16 @@
     <ng-template pTemplate="content">
 
         <ng-container *ngIf="accion == 'Productos'">
-
+            <div class="col-12 md:col-3">
+                <div class="p-inputgroup">
+                    Articulos Agregados a la venta:
+                </div>
+            </div>
+  
             <div class="col-12 md:col-3">
                 <div class="p-inputgroup">
                     <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
-                    <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras" [(ngModel)]="queryString">
+                    <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras" [(ngModel)]="queryString" (change)="getResults()">
                     <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn" (click)="getResults()"></button>
                 </div>
             </div>
@@ -22,7 +27,7 @@
 
                             <th style="width: 2em;"></th>
                             <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field == 'nombre' ? '7em' : '12em'}">
+                                <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field == 'descripcion' ? '12em' : '4em'}">
                                     {{col.header}}
 
                                 </div>
@@ -30,10 +35,17 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr>
-                            <td>
+                        <tr >
+
+                               
+                            <td  *ngIf="rowData.existencia != 0">
                                 <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning" (click)="addProduct(rowData)"></button>
                             </td>
+                                
+                            <td  *ngIf="rowData.existencia == 0">
+                             <label >Sin stock</label>
+                            </td>
+                          
 
                             <td *ngFor="let col of columns">
                                 {{rowData[col.field]}}
