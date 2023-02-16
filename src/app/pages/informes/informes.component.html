@@ -28,7 +28,7 @@
                     <div *ngIf="!loading && ventas.length > 0">
                         <div class="row" id="htmlData">
                         <p-table #dt [value]="ventas" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['tipoPago', 'tipoVenta', 'noTicket','fecha']" [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedVentas" [rowHover]="true"
-                            dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Articulos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                            dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Ventas" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                             <ng-template pTemplate="caption">
                                 <div class="flex align-items-center justify-content-between">
                                     <h5 class="m-0">Informe de ventas</h5>
