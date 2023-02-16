@@ -227,7 +227,7 @@
     </div>
 
     <app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
-    <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected"
+    <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected" [_nArticles]="articulos"
         *ngIf="openProducts != ''" (_articulosS)="addProductVenta($event)"></app-open-productos>
 
 

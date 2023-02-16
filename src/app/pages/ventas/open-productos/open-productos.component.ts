@@ -16,6 +16,7 @@ export class OpenProductosComponent implements OnInit {
     @Input() _accion: string;
     @Input() _articles: productoModel[];
     @Input() _articlesSelected: productoModel[];
+    @Input() _nArticles : number;
     @Output() _articulosS = new EventEmitter<productoModel>();  
     loading: boolean = false;
     rows = 0;
@@ -27,6 +28,7 @@ export class OpenProductosComponent implements OnInit {
     articles: productoModel[] = [];
     colsProducts:any[] = [];
     dialogSubscription: Subscription = new Subscription();
+    articlesAddSales = 0
     constructor(
       private toastr: ToastrService,
       private variablesGL: VariablesService,
@@ -51,7 +53,7 @@ export class OpenProductosComponent implements OnInit {
           
           this.articles = this._articles
           this.articlesSelected = this._articlesSelected
-       
+         this.articlesAddSales = this._nArticles
         }
       });
   
@@ -68,7 +70,7 @@ export class OpenProductosComponent implements OnInit {
     }
   
     ngOnInit(): void {
-    
+        
       
     }
   
@@ -110,7 +112,7 @@ export class OpenProductosComponent implements OnInit {
   }
 
   addProduct(product: productoModel){
-
+    this.articlesAddSales += 1
     this._articulosS.emit(product)
   }
 
