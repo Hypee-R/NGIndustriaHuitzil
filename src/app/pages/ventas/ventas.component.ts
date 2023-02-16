@@ -40,12 +40,11 @@ export class VentasComponent implements OnInit {
   articles: productoModel[] = [];
   articlesSelected: productoModel[] = []
   articlesShell: productoVentaModel[] = [];
+ 
   ventaArticulo: VentaArticuloModel[] = [];
 
   openCash: Boolean = false
-  //lstProducts: productoModel[] = [];
   cols: any[] = [];
-  //colsProducts:any[] = [];
   rows = 0;
   accion = '';
   openProducts = '';
@@ -60,6 +59,14 @@ export class VentasComponent implements OnInit {
   filteredClients: CatProveedorModel[];
   clientes: CatProveedorModel[];
   //Busqueda CLIENTES
+
+  // Busqueda Productos
+  //clienteName: string = '';
+  resultsArticles:  productoModel[];
+  selectedArticleNameAdvanced: productoModel;
+  filteredArticle: productoModel[];
+  articlesS: productoModel[];
+   // Busqueda Productos
 
 
   cantidades: number[] = []
@@ -102,17 +109,12 @@ export class VentasComponent implements OnInit {
   async ngOnInit() {
     this.loading = false
     this.getCaja();
+   
     this.proveedoresService.getProveedores().subscribe(response => {
       if (response.exito) {
-      
-    
-
-       this.toastr.success(response.mensaje, 'Exito!!!');
+      // this.toastr.success("Se consultaron los clientes ", 'Exito!!!');
         this.clientes = response.respuesta;
-
         console.log('resultados de la busqueda: ', JSON.stringify(  this.clientes ));
-
-
       } else {
         this.variablesGL.hideLoading();
        
@@ -124,10 +126,11 @@ export class VentasComponent implements OnInit {
     });
   }
 
+
+
  
   getResultsClients(event) {
     console.log(event.query)
-    //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
     let filtered: any[] = [];
     let query = event.query;
     for (let i = 0; i < this.clientes.length; i++) {
@@ -136,14 +139,41 @@ export class VentasComponent implements OnInit {
         filtered.push(country);
       }
     }
-
     this.filteredClients = filtered;
-
-
   }
 
 
+  getResultsArticles(event) {
+   
+    let filtered: productoModel[] = [];
+    let query = event.query;
+    for (let i = 0; i < this.articlesS.length; i++) {
+      let country = this.articlesS[i];
+      if (country.sku.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(country);
+      }
+    }
+    console.log(filtered)
+
+    if(filtered.length!=0){
+      let artc = new productoModel()
+      artc.descripcion = filtered[0].descripcion
+      artc.precio = filtered[0].precio
+      artc.talla = filtered[0].talla
+      artc.sku = filtered[0].sku
+      artc.idArticulo = filtered[0].idArticulo
+      artc.fechaIngreso = filtered[0].fechaIngreso
+   this.addProductVenta(artc);
+    }
+
+
+    this.filteredArticle = filtered;
+  }
+
+
+
   openProductsM() {
+    this.variablesGL.showLoading();
     this.accion = ''
     this.openProducts = "Productos"
     this.articlesSelected = []
@@ -211,7 +241,9 @@ export class VentasComponent implements OnInit {
   getArticulos() {
     this.inventarioService.getArticulos().subscribe(response => {
       if (response.exito) {
+        console.log(response.respuesta)
         this.articles = response.respuesta;
+        this.variablesGL.hideLoading();
         setTimeout(() => {
           this.variablesGL.showDialog.next(true);
         }, 100);
@@ -220,6 +252,8 @@ export class VentasComponent implements OnInit {
       console.log(err)
     });
   }
+
+  
   getCaja() {
     this.ventasService.getCaja().subscribe(resp => {
       console.log('data vcaja ', resp);
@@ -273,6 +307,8 @@ export class VentasComponent implements OnInit {
 
   onchangeShear() {
     // alert("detecte la busqueda")
+
+
     if (this.queryString && this.queryString.trim().length > 0) {
       this.variablesGL.showLoading();
       this.inventarioService.searchProduct(this.queryString).subscribe(response => {
