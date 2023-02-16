@@ -21,8 +21,7 @@
                                     (completeMethod)="getResultsClients($event)" field="nombre" [dropdown]="true"  >
                                     <ng-template let-country pTemplate="item">
                                       <div class="country-item ">
-                                        <div>{{country.nombre}}</div>
-                                      </div>
+                                        <div>{{country.nombre}}</div>    </div>
                                     </ng-template>
                                   </p-autoComplete>
 
@@ -132,9 +131,10 @@
                             <div class="col-12 md:col-4">
                                 <p-divider>Datos de compra</p-divider>
                                 <div class="row">
-                                    <div class="col-4" *ngIf="this.selectedclienteNameAdvanced  ">
+                                    <div class="col-4" *ngIf="this.selectedclienteNameAdvanced">
                                      
-                                     <label>Cliente:{{this.selectedclienteNameAdvanced.nombre}}</label> 
+                                     <label  *ngIf=" this.selectedclienteNameAdvanced.nombre!=undefined">Cliente:{{this.selectedclienteNameAdvanced.nombre+" "+this.selectedclienteNameAdvanced.apellidoPaterno}}</label> 
+                                     <label  *ngIf=" this.selectedclienteNameAdvanced.nombre==undefined" >Cliente:{{this.clienteName}}</label> 
                                     </div>
                                 </div>
                                 <div class="row">
@@ -273,19 +273,37 @@
             </div>
 
             <div class="col-sm-4">
-                <button pButton type="button" label="Multiple" icon="pi pi-money-bill" class="p-button-success"
-                    badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro('MULTIPLE')"></button>
-               <Br>
+                <!-- <button pButton type="button" label="Multiple" icon="pi pi-money-bill" class="p-button-success"
+                    badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro('MULTIPLE')"></button> -->
+              
+            </div>
+
+          
+
+        </div>
+        <p-divider align="center">
+            <span class="p-tag">Pago Multiple</span>
+        </p-divider>
+        <div class="row">
             
-                TARJETA: <input >
-                <br>
-                EFECTIVO: <input >
+            <div class="col-sm-4" >
+
+                <!-- <p-inputNumber  [(ngModel)]="totalMultipleT"    placeholder="Tarjeta" title="Tarjeta"   (onKeyDown)="onchangeTotal($event)" ></p-inputNumber> -->
+                <input type="text" [(ngModel)]="totalMultipleT"  (keypress)="onchangeTotal($event)">
             </div>
 
-            <div class="col-sm-2">
-
+            <div class="col-sm-4">
+                <!-- <p-inputNumber placeholder="Efectivo"  [(ngModel)]="totalMultipleF"     title="Efectivo"   (onKeyDown)="onchangeTotal($event)"></p-inputNumber> -->
+                <input type="text" [(ngModel)]="totalMultipleF"  (keypress)="onchangeTotal($event)">
             </div>
 
+            <div class="col-sm-4">
+               Total:$ {{this.total}}
+               Cobrado:${{  this.totalMultiple}}
+               <button pButton type="button" label="Multiple" icon="pi pi-money-bill" class="p-button-success"
+               badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro('MULTIPLE')"></button>
+               <!-- <p-knob   [(ngModel)]="totalMultiple"   [min]="0" [max]="this.total+1" disabled="true"></p-knob> -->
+            </div>
         </div>
         <ng-template pTemplate="footer">
             <!-- <p-button icon="pi pi-times" (click)="display=false" label="Cancelar" styleClass="p-button-text"></p-button> -->

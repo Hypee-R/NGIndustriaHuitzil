@@ -49,7 +49,7 @@ import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {DividerModule} from 'primeng/divider';
-
+import {KnobModule} from 'primeng/knob';
 
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
@@ -78,6 +78,7 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
         ContentRoutingModule,
         // StoreModule.forFeature('viewUsers', usersReducer),
         //PrimeNG
+        KnobModule,
         BadgeModule,
         ToastModule,
         CardModule,
