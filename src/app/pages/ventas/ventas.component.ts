@@ -51,7 +51,9 @@ export class VentasComponent implements OnInit {
   articulos = 0
   total = 0
   totalLetra = "";
-
+  totalMultiple = 0
+  totalMultipleF = 0
+  totalMultipleT = 0
   //Busqueda CLIENTES
   clienteName: string = '';
   resultsClientes:  CatProveedorModel[];
@@ -114,7 +116,7 @@ export class VentasComponent implements OnInit {
       if (response.exito) {
       // this.toastr.success("Se consultaron los clientes ", 'Exito!!!');
         this.clientes = response.respuesta;
-        console.log('resultados de la busqueda: ', JSON.stringify(  this.clientes ));
+      // console.log('resultados de la busqueda: ', JSON.stringify(  this.clientes ));
       } else {
         this.variablesGL.hideLoading();
        
@@ -139,7 +141,11 @@ export class VentasComponent implements OnInit {
         filtered.push(country);
       }
     }
+  
     this.filteredClients = filtered;
+    console.log(   this.filteredClients);
+    this.clienteName=event.query;
+    //this.selectedclienteNameAdvanced.nombre=event.query;
   }
 
 
@@ -306,7 +312,7 @@ export class VentasComponent implements OnInit {
   }
 
   onchangeShear() {
-    // alert("detecte la busqueda")
+     //alert("detecte la busqueda")
 
 
     if (this.queryString && this.queryString.trim().length > 0) {
@@ -586,6 +592,119 @@ export class VentasComponent implements OnInit {
 
 
   async PostVentaRegistro(tipoPago: string) {
+if(tipoPago=="MULTIPLE")
+{
+ if(this.totalMultiple===this.total){
+
+  this.articlesShell.forEach(element => {
+    const vt = new VentaArticuloModel();
+
+    vt.idArticulo = element.idArticulo;
+    vt.cantidad = element.cantidad;
+    vt.precioUnitario = element.precio;
+    vt.subtotal = element.precio;
+    vt.articulo = element;
+
+    //Genera Cadena para Impresion Ticket con salto de pagina
+    this.cadenaProductos += element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + "\n".toString()
+    
+    this.ventaArticulo.push(vt);
+  });
+
+  const format = 'yyyy-MM-dd';
+  const locale = 'en-US';
+  const formattedDate = formatDate(new Date, format, locale);
+
+  this.RegistraVenta.idCaja = this.cashModel.idCaja;
+  this.RegistraVenta.fecha = formattedDate;
+  this.RegistraVenta.noArticulos = this.articlesShell.length
+  this.RegistraVenta.noTicket = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
+  this.RegistraVenta.subtotal = this.total;
+  this.RegistraVenta.tipoPago = tipoPago;
+  this.RegistraVenta.tipoVenta = tipoPago;
+  this.RegistraVenta.total = this.total;
+  this.RegistraVenta.ventaArticulo = this.ventaArticulo;
+
+
+
+  console.log(JSON.stringify(this.RegistraVenta));
+  this.ventasService.postRegistroVenta(this.RegistraVenta).subscribe(async resp => {
+    console.log('data=> ', resp);
+
+    if (resp.exito) {
+      this.toastr.success(resp.mensaje, 'Exito!');
+
+      //code Impresion
+      const conector = new ConectorPluginV3();
+      conector
+        .Iniciar()
+        .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+        .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+        .Feed(1)
+        .EscribirTexto("***UniformesHuitzil***")
+        .Feed(1)
+        .EscribirTexto("Caja:" + this.cashModel.idCaja)
+        .Feed(1)
+        .EscribirTexto("Ticket:" + this.RegistraVenta.noTicket)
+        .Feed(1)
+        .EscribirTexto("Articulos:" + this.articulos)
+        .Feed(1)
+        .EscribirTexto(this.cadenaProductos)
+        .Feed(1)
+        .EscribirTexto("Total:" + this.total + "MXN")
+        .Feed(2)
+        .EscribirTexto(this.totalLetra = this.numeroALetras(this.total, {
+          plural: 'PESOS MEXICANOS',
+          singular: 'PESO MEXICANO',
+          centPlural: 'CENTAVOS',
+          centSingular: 'CENTAVO'
+        }))
+        .Feed(2)
+        .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+        .Feed(2)
+        .EscribirTexto("***Si requiere factura solo se podra expedir el dia de compra, de lo contrario se contemplara en ventas al Publico en General..***")
+        .Feed(1)
+        .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
+        .Feed(2)
+        .Corte(1)
+        .Iniciar()
+        .Feed(1);
+
+      
+     // const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+      const respuesta = true;
+
+      if (respuesta == true) {
+        //Limpiar objetos al finalizar una compra correcta
+        this.cadenaProductos=""
+        this.RegistraVenta= new VentaModel();
+        this.ventaArticulo= [];
+        this.articulos=0
+        this.total=0
+        this.articlesShell=null;
+
+        console.log("Impresión correcta");
+        this.display = false;
+      } else {
+        console.log("Error: " + respuesta);
+      }
+
+    }
+
+  },
+    err => {
+      console.log('error -> ', err);
+      this.toastr.error('Ocurrió un error al hacer la operación', 'Error!');
+    });
+
+ }else{
+  this.toastr.error("Error el importe no esta completo", 'Error!');
+
+ }
+
+}else{
+
+
   
     this.articlesShell.forEach(element => {
       const vt = new VentaArticuloModel();
@@ -687,7 +806,16 @@ export class VentasComponent implements OnInit {
         console.log('error -> ', err);
         this.toastr.error('Ocurrió un error al hacer la operación', 'Error!');
       });
+    }
   }
 
+
+  onchangeTotal(event) {
+
+   
+    
+    this.totalMultiple=this.totalMultipleT * 1 + this.totalMultipleF * 1
+console.log( this.totalMultiple)
+  }
 
 }
