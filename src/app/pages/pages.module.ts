@@ -69,6 +69,8 @@ import { SelectInventarioComponent } from './cambios-y-devoluciones/select-inven
 import { RefreshTableDirective } from './ventas/directiva/refresh-table.directive';
 import {ConfirmationService,MessageService} from 'primeng/api';
 import {ToggleButtonModule} from 'primeng/togglebutton';
+import { ClientesComponent } from './clientes/clientes.component';
+import { AddClienteComponent } from './clientes/add-cliente/add-cliente.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -136,12 +138,14 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
         AddArticuloComponent,
         AddMaterialComponent,
         AddSolicitudComponent,
+        AddClienteComponent,
         OpenCashComponent,
         CambiosYDevolucionesComponent,
         AddCambioDevolucionComponent,
         OpenProductosComponent,
         SelectInventarioComponent,
-        RefreshTableDirective
+        RefreshTableDirective,
+        ClientesComponent
     ]
 })
 export class PagesModule { }
