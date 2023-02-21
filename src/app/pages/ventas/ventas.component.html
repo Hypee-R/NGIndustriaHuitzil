@@ -19,9 +19,9 @@
                                     
                                     <p-autoComplete [(ngModel)]="selectedclienteNameAdvanced" [suggestions]="filteredClients"    placeholder="Ingrese el nombre del cliente" size="40"
                                     (completeMethod)="getResultsClients($event)" field="nombre" [dropdown]="true"  >
-                                    <ng-template let-country pTemplate="item">
-                                      <div class="country-item ">
-                                        <div>{{country.nombre}}</div>    </div>
+                                    <ng-template let-cliente pTemplate="item">
+                                      <div class="cliente-item ">
+                                        <div>{{cliente.nombre}}</div>    </div>
                                     </ng-template>
                                   </p-autoComplete>
 
@@ -133,8 +133,8 @@
                                 <div class="row">
                                     <div class="col-4" *ngIf="this.selectedclienteNameAdvanced">
                                      
-                                     <label  *ngIf=" this.selectedclienteNameAdvanced.nombre!=undefined">Cliente:{{this.selectedclienteNameAdvanced.nombre+" "+this.selectedclienteNameAdvanced.apellidoPaterno}}</label> 
-                                     <label  *ngIf=" this.selectedclienteNameAdvanced.nombre==undefined" >Cliente:{{this.clienteName}}</label> 
+                                     <label  *ngIf=" this.selectedclienteNameAdvanced.nombre!=undefined">Cliente: {{this.selectedclienteNameAdvanced.nombre+" "+this.selectedclienteNameAdvanced.apellidoPaterno}}</label> 
+                                     <label  *ngIf=" this.selectedclienteNameAdvanced.nombre==undefined" >Cliente: {{this.clienteName}}</label> 
                                     </div>
                                 </div>
                                 <div class="row">
@@ -329,10 +329,12 @@
             <div class="row">
 
                 <div class="col-sm-6">
-                    <p>Cliente:{{this.clienteName}}</p>
-                    <p>Calle:</p>
-                    <p>Colonia:</p>
-                    <p>Poblacion:</p>
+                    <p  *ngIf=" this.selectedclienteNameAdvanced.nombre!=undefined">Cliente: {{this.selectedclienteNameAdvanced.nombre+" "+this.selectedclienteNameAdvanced.apellidoPaterno}}</p> 
+                    <p  *ngIf=" this.selectedclienteNameAdvanced.nombre==undefined" >Cliente: {{this.clienteName}}</p> 
+                    <p  *ngIf=" this.selectedclienteNameAdvanced.direccion!=undefined">Calle: {{this.selectedclienteNameAdvanced.direccion}}</p> 
+                    <p  *ngIf=" this.selectedclienteNameAdvanced.direccion==undefined" >Calle: "N/A"</p>
+                    <p  *ngIf=" this.selectedclienteNameAdvanced.telefono1!=undefined">Teléfono: {{this.selectedclienteNameAdvanced.telefono1}}</p> 
+                    <p  *ngIf=" this.selectedclienteNameAdvanced.telefono2==undefined" >Teléfono: "N/A"</p>
                 </div>
                 <div class="col-sm-6">
                     <p>Vendedor</p>

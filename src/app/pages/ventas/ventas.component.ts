@@ -4,7 +4,6 @@ import { CajaModel } from 'src/app/models/caja.model';
 import { productoModel } from 'src/app/models/productos.model';
 import { productoVentaModel } from 'src/app/models/productoVenta.model';
 import { InventarioService } from 'src/app/services/inventario.service';
-import { ProveedoresService } from 'src/app/services/proveedores.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { jsPDF } from "jspdf";
@@ -13,8 +12,8 @@ import { VentaModel } from 'src/app/models/venta.model';
 import { VentaArticuloModel } from 'src/app/models/VentaArticulo.Model';
 import { formatDate } from '@angular/common';
 import ConectorPluginV3 from "src/app/ConectorPluginV3";
-import { CatProveedorModel } from 'src/app/models/proveedores.model';
-import { Console } from 'console';
+import { ClientesService } from 'src/app/services/clientes.service';
+import { CatClienteModel } from 'src/app/models/clientes.model';
 
 @Component({
   selector: 'app-ventas',
@@ -56,10 +55,10 @@ export class VentasComponent implements OnInit {
   totalMultipleT = 0
   //Busqueda CLIENTES
   clienteName: string = '';
-  resultsClientes:  CatProveedorModel[];
-  selectedclienteNameAdvanced: CatProveedorModel;
-  filteredClients: CatProveedorModel[];
-  clientes: CatProveedorModel[];
+  //resultsClientes:  CatProveedorModel[];
+  selectedclienteNameAdvanced: CatClienteModel ;
+  filteredClients: CatClienteModel[];
+  clientes: CatClienteModel[];
   //Busqueda CLIENTES
 
   // Busqueda Productos
@@ -80,9 +79,9 @@ export class VentasComponent implements OnInit {
     private ventasService: VentasService,
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
-    private proveedoresService: ProveedoresService,
+    private clientesService: ClientesService
   ) {
-
+    this.selectedclienteNameAdvanced= new CatClienteModel()
     this.cols = [
       { field: 'cantidad', header: 'Cantidad' },
       { field: 'descripcion', header: 'Producto' },
@@ -112,7 +111,7 @@ export class VentasComponent implements OnInit {
     this.loading = false
     this.getCaja();
    
-    this.proveedoresService.getProveedores().subscribe(response => {
+    this.clientesService.getClientes().subscribe(response => {
       if (response.exito) {
       // this.toastr.success("Se consultaron los clientes ", 'Exito!!!');
         this.clientes = response.respuesta;
@@ -132,18 +131,18 @@ export class VentasComponent implements OnInit {
 
  
   getResultsClients(event) {
-    console.log(event.query)
+    //console.log(event.query)
     let filtered: any[] = [];
     let query = event.query;
     for (let i = 0; i < this.clientes.length; i++) {
-      let country = this.clientes[i];
-      if (country.nombre.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-        filtered.push(country);
+      let cliente = this.clientes[i];
+      if (cliente.nombre.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(cliente);
       }
     }
   
     this.filteredClients = filtered;
-    console.log(   this.filteredClients);
+    //console.log(this.filteredClients);
     this.clienteName=event.query;
     //this.selectedclienteNameAdvanced.nombre=event.query;
   }
