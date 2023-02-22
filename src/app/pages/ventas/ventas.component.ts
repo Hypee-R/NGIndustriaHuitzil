@@ -50,9 +50,9 @@ export class VentasComponent implements OnInit {
   articulos = 0
   total = 0
   totalLetra = "";
-  totalMultiple = 0
-  totalMultipleF = 0
-  totalMultipleT = 0
+  totalMultiple : number;
+  totalMultipleF :number;
+  totalMultipleT :number;
   //Busqueda CLIENTES
   clienteName: string = '';
   //resultsClientes:  CatProveedorModel[];
@@ -115,6 +115,7 @@ export class VentasComponent implements OnInit {
       if (response.exito) {
       // this.toastr.success("Se consultaron los clientes ", 'Exito!!!');
         this.clientes = response.respuesta;
+        console.log( this.clientes);
       // console.log('resultados de la busqueda: ', JSON.stringify(  this.clientes ));
       } else {
         this.variablesGL.hideLoading();
@@ -593,6 +594,7 @@ export class VentasComponent implements OnInit {
   async PostVentaRegistro(tipoPago: string) {
 if(tipoPago=="MULTIPLE")
 {
+  this.totalMultiple=this.totalMultipleT  + this.totalMultipleF 
  if(this.totalMultiple===this.total){
 
   this.articlesShell.forEach(element => {
@@ -715,7 +717,7 @@ if(tipoPago=="MULTIPLE")
       vt.articulo = element;
 
       //Genera Cadena para Impresion Ticket con salto de pagina
-      this.cadenaProductos += element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + "\n".toString()
+      this.cadenaProductos += element.cantidad + " " +element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + "\n".toString()
       
       this.ventaArticulo.push(vt);
     });
@@ -723,6 +725,7 @@ if(tipoPago=="MULTIPLE")
     const format = 'yyyy-MM-dd';
     const locale = 'en-US';
     const formattedDate = formatDate(new Date, format, locale);
+
 
     this.RegistraVenta.idCaja = this.cashModel.idCaja;
     this.RegistraVenta.fecha = formattedDate;
@@ -750,7 +753,7 @@ if(tipoPago=="MULTIPLE")
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
           .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
           .Feed(1)
-          .EscribirTexto("***UniformesHuitzil***")
+          .EscribirTexto("Fecha de Compra: "+formatDate(new Date, "dd/MM/yyyy", locale))
           .Feed(1)
           .EscribirTexto("Caja:" + this.cashModel.idCaja)
           .Feed(1)
@@ -773,15 +776,15 @@ if(tipoPago=="MULTIPLE")
           .Feed(2)
           .EscribirTexto("***Si requiere factura solo se podra expedir el dia de compra, de lo contrario se contemplara en ventas al Publico en General..***")
           .Feed(1)
-          .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
+          .EscribirTexto("Suc.Frontera:8666350209 Suc.Monclova:8666320215")
           .Feed(2)
           .Corte(1)
           .Iniciar()
           .Feed(1);
 
         
-       // const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
-        const respuesta = true;
+        const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+       // const respuesta = true;
 
         if (respuesta == true) {
           //Limpiar objetos al finalizar una compra correcta
@@ -811,10 +814,10 @@ if(tipoPago=="MULTIPLE")
 
   onchangeTotal(event) {
 
-   
+   console.log(event)
     
-    this.totalMultiple=this.totalMultipleT * 1 + this.totalMultipleF * 1
-console.log( this.totalMultiple)
+     this.totalMultiple=this.totalMultipleT  + this.totalMultipleF 
+// console.log( this.totalMultiple)
   }
 
 }

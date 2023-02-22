@@ -240,8 +240,8 @@
               
 
             </div>
-            <div class="col-sm-4">
-
+            <div class="col-sm-4" align="center">
+                <span class="p-tag">  Total:$ {{this.total}}</span>
                 <!-- <label for="impresora">Impresora:&nbsp;</label>
                 <select id="impresora" [(ngModel)]="impresoraSeleccionada">
                   <option *ngFor="let impresora of impresoras" [ngValue]="impresora">{{impresora}}</option>
@@ -256,27 +256,24 @@
          
         </div>
    
-<br>
+
+
         <div class="row">
 
-            <div class="col-sm-4">
+            <div class="col-sm-6" align="center">
 
-                <button pButton type="button" label="Tarjeta" icon="pi pi-credit-card" class="p-button-warning"
+                <button pButton type="button" label="Tarjeta" icon="pi pi-credit-card" class="p-button-warning p-button-lg"
                     badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro('TARJETA')"></button>
 
             </div>
-
-            <div class="col-sm-4">
-                <button pButton type="button" label="Efectivo" icon="pi pi-money-bill" class="p-button-secondary"
+        
+            <div class="col-sm-6" align="center">
+                <button pButton type="button" label="Efectivo" icon="pi pi-money-bill" class="p-button-secondary p-button-lg"
                     badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro('EFECTIVO')"></button>
 
             </div>
 
-            <div class="col-sm-4">
-                <!-- <button pButton type="button" label="Multiple" icon="pi pi-money-bill" class="p-button-success"
-                    badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro('MULTIPLE')"></button> -->
-              
-            </div>
+          
 
           
 
@@ -288,19 +285,24 @@
             
             <div class="col-sm-4" >
 
-                <!-- <p-inputNumber  [(ngModel)]="totalMultipleT"    placeholder="Tarjeta" title="Tarjeta"   (onKeyDown)="onchangeTotal($event)" ></p-inputNumber> -->
-                <input type="text" [(ngModel)]="totalMultipleT"  (keypress)="onchangeTotal($event)">
+                <p-inputNumber  [(ngModel)]="totalMultipleT"    placeholder="Tarjeta" title="Tarjeta"   (onFocus)="onchangeTotal($event)" ></p-inputNumber>
+                <!-- <input type="text" [(ngModel)]="totalMultipleT"  (keypress)="onchangeTotal($event)"> -->
+                <!-- <input type="text" pInputText [(ngModel)]="totalMultipleT">  -->
             </div>
 
             <div class="col-sm-4">
-                <!-- <p-inputNumber placeholder="Efectivo"  [(ngModel)]="totalMultipleF"     title="Efectivo"   (onKeyDown)="onchangeTotal($event)"></p-inputNumber> -->
-                <input type="text" [(ngModel)]="totalMultipleF"  (keypress)="onchangeTotal($event)">
+                <p-inputNumber placeholder="Efectivo"  [(ngModel)]="totalMultipleF"     title="Efectivo"   (onFocus)="onchangeTotal($event)"></p-inputNumber>
+                <!-- <input type="text" [(ngModel)]="totalMultipleF"  (keypress)="onchangeTotal($event)"> -->
+                <!-- <input type="text" pInputText [(ngModel)]="totalMultipleF">  -->
             </div>
 
             <div class="col-sm-4">
-               Total:$ {{this.total}}
-               Cobrado:${{  this.totalMultiple}}
-               <button pButton type="button" label="Multiple" icon="pi pi-money-bill" class="p-button-success"
+             
+               <!-- Cobrado:${{  this.totalMultiple}} -->
+
+               <!-- <span class="p-ml-2">Cobrado:${{ this.totalMultiple}}</span> -->
+
+               <button pButton type="button" label="Multiple" icon="pi pi-money-bill" class="p-button-success  p-button-lg"
                badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro('MULTIPLE')"></button>
                <!-- <p-knob   [(ngModel)]="totalMultiple"   [min]="0" [max]="this.total+1" disabled="true"></p-knob> -->
             </div>
