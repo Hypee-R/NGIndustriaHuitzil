@@ -48,6 +48,9 @@ export class AddArticuloComponent implements OnInit {
 
   archivos=[]
   previsualizacion: "'assets/img/default-image.jpg'" ;
+  sku = ""
+  noEtiquetas = []
+  noEtiquetasPrint = 0
  //previsualizacion: "" ;
 
 
@@ -69,6 +72,15 @@ export class AddArticuloComponent implements OnInit {
         if(this._accion){
           this.accion = this._accion;
         }
+        if(this._accion == "Codigo de Barras"){
+            this.noEtiquetas = []
+            this.sku = this._editproducto.sku
+            this.noEtiquetasPrint = Number(this._editproducto.existencia)
+            for (let i = 0 ; i< Number(this._editproducto.existencia); i++){
+                this.noEtiquetas.push(1)
+            }
+            
+        }
     });
 
     }
@@ -85,7 +97,6 @@ export class AddArticuloComponent implements OnInit {
       this.dialogSubscription.unsubscribe();
     }
 
-
 }
 hideDialog() {
   this.submitted = false;
@@ -96,9 +107,9 @@ hideDialog() {
 
 
 saveArticulo(){
-  this.submitted = true;
-
-  if(this.producto.existencia?.length >1){
+  this.submitted = true;  
+  if(this._accion != 'Codigo de Barras'){
+    if(this.producto.existencia?.length > 0){
     //console.log('datos validos!!');
     //console.log('data proveedor ', this.proveedor);
 
@@ -109,6 +120,13 @@ saveArticulo(){
     }
 
   }
+}
+else{
+  console.log("print etiquetas")
+  this.submitted = false;
+  this.variablesGL.showDialog.next(false);
+ 
+}
 }
 
 getCampos(){
@@ -219,5 +237,12 @@ extraerBase64 = async ($event: any) => new Promise((resolve, reject) => {
     return null;
   }
 })
+
+  printCodeBars(){
+
+    //let codeZtl = "^XA^FO40,40^BY3^BCN,150,Y,N,N^FD>;>600PGO14>^FS^XZ"
+    let codeZtlP = "^XA^FO40,40^BY3^BCN,150,Y,N,N^FD>;>6"+this._editproducto.sku+">^FS^XZ"
+    console.log(codeZtlP)
+  }
 
 }

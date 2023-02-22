@@ -153,6 +153,13 @@ export class InventarioComponent implements OnInit {
     }, 100);
   }
 
+  viewCodebar(producto : productoModel){
+    this.accion = 'Codigo de Barras'
+    this.selectedArticulo = { ...producto };
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
   ///Eliminar componetne
 
   deleteArticulo(articulo: productoModel) {
