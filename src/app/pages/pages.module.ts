@@ -71,6 +71,7 @@ import {ConfirmationService,MessageService} from 'primeng/api';
 import {ToggleButtonModule} from 'primeng/togglebutton';
 import { ClientesComponent } from './clientes/clientes.component';
 import { AddClienteComponent } from './clientes/add-cliente/add-cliente.component';
+import { NgxBarcode6Module } from 'ngx-barcode6';
 @NgModule({
     imports: [
         CommonModule,
@@ -113,6 +114,7 @@ import { AddClienteComponent } from './clientes/add-cliente/add-cliente.componen
         AutoCompleteModule,
         DividerModule,
         ToggleButtonModule,
+        NgxBarcode6Module
 ],  providers: [ConfirmationService,MessageService],
     declarations: [
         ContentComponent,

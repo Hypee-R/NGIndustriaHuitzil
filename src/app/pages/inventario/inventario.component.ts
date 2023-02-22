@@ -54,7 +54,7 @@ export class InventarioComponent implements OnInit {
 
     this.cols = [
       // { field: 'idArticulo', header: 'ID' },
-      { fiel: '', header: 'Imagen' },
+      { field: '', header: 'Imagen' },
       { field: 'sku', header: 'SKU' },
       { field: 'descripcion', header: 'Descripcion' },
       { field: 'existencia', header: 'Existencia' },
@@ -64,6 +64,7 @@ export class InventarioComponent implements OnInit {
       { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
       { field: 'precio', header: 'precio' },
+      { field: '', header: 'Etiqueta'}
 
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
