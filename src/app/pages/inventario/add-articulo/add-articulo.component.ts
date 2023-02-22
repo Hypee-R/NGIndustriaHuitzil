@@ -47,13 +47,13 @@ export class AddArticuloComponent implements OnInit {
   dialogSubscription: Subscription = new Subscription();
 
   archivos=[]
-  previsualizacion: "'assets/img/default-image.jpg'" ;
+  previsualizacion;
   sku = ""
   noEtiquetas = []
   noEtiquetasPrint = 0
  //previsualizacion: "" ;
 
-
+  imageSource;
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -65,9 +65,11 @@ export class AddArticuloComponent implements OnInit {
     ) {
       this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
         this.visibleDialog = estado;
+        this.previsualizacion = "'assets/img/default-image.jpg'" 
         if(this._editproducto){
           this.producto = this._editproducto;
-          //this.previsualizacion = this._editproducto.imagen
+          this.previsualizacion = this.sanitizer.bypassSecurityTrustResourceUrl(this._editproducto.imagen)
+          this.imageSource = this.sanitizer.bypassSecurityTrustResourceUrl(this._editproducto.imagen);
         }
         if(this._accion){
           this.accion = this._accion;

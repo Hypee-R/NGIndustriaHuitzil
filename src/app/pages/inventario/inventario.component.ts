@@ -145,7 +145,7 @@ export class InventarioComponent implements OnInit {
 
   /// Editar componetente
   editArticulo(producto: productoModel) {
-    console.log(producto)
+    //console.log(producto)
     this.accion = 'Actualizar';
     this.selectedArticulo = { ...producto };
     setTimeout(() => {
