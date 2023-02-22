@@ -1,15 +1,17 @@
 <p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} producto" [modal]="true" styleClass="p-fluid">
 
-    <ng-template pTemplate="content">
+<ng-template pTemplate="content">
+    <div *ngIf="accion != 'Codigo de Barras'">
         <label for="descripcion">Imagen</label>
         <br>
-
+        
         <div class="preview-img" *ngIf="previsualizacion" >
             <img  [src]="previsualizacion" alt="" width="250">
         </div>
         <div class="preview-img" *ngIf="!previsualizacion" >
             <img  [src]="'assets/img/default-image.jpg'" alt="" width="250">
         </div>
+        
 
         <div class="field">
 
@@ -49,7 +51,7 @@
             <label for="existencia">Existencia</label>
             <input type="text" pInputText id="existencia" [(ngModel)]="producto.existencia" required/>
             <small class="p-error" *ngIf="submitted && !producto.existencia">La existencia es requerida.</small>
-            <small class="p-error" *ngIf="submitted && producto.existencia?.length > 0 && producto.existencia?.length <= 1">existencia debe contener minimo 2 caracteres</small>
+            <small class="p-error" *ngIf="submitted && producto.existencia?.length > 0 && producto.existencia?.length < 0">existencia debe contener minimo 1 caracteres</small>
         </div>
         <br>
         <div class="field">
@@ -75,7 +77,38 @@
             <label for="idTalla">Talla</label>
             <p-dropdown [options]="listTallas" [(ngModel)]="producto.idTalla" optionValue="idTalla" placeholder="Selecciona una talla" optionLabel="nombre" [style]="{'width': '100%'}"></p-dropdown>
         </div>
+    </div>
+    <div  *ngIf="accion === 'Codigo de Barras'"> 
+            <p>{{_editproducto.descripcion}}</p>
 
+            <div *ngIf = 'noEtiquetas.length != 0'>
+
+
+                <div class="container">
+                    <div class="row">
+                      <div class="col-md">
+                        Cantidad 
+                      </div>
+                      <div class="col-md">
+                        <input type="number" pInputText id="noEtiquetas" min = "1" max = {{noEtiquetas.length}} [(ngModel)]="noEtiquetasPrint" required/>
+                        </div>
+                      <div class="col-md">
+                        <button pButton pRipple icon="pi pi-print" class="p-button-rounded p-button-help"  style="margin-left: 3px;" (click)="printCodeBars()"></button>
+                      </div>
+                      <div class="col-md">
+                        </div>
+                    </div>
+                  </div>                       
+            <ngx-barcode6 *ngFor="let etiqueta of noEtiquetas"
+                [bc-format]="'CODE128'"
+                [bc-value]= "sku"
+                [bc-display-value]="true">
+            </ngx-barcode6>
+            </div>
+            <div *ngIf = 'noEtiquetas.length == 0'>
+                <p>Sin existencias en almacén</p>
+            </div>
+    </div>
     </ng-template>
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>

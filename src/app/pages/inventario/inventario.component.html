@@ -133,13 +133,7 @@
                                         {{rowData['precio']}}
                                     </td>
                                     <td>
-                                        <ngx-barcode6
-                                        [bc-format]="'CODE128'"
-                                        [bc-value]= "rowData['sku']"
-                                        [bc-display-value]="true"
-                                      >
-                                      </ngx-barcode6>
-                                        <button pButton pRipple icon="pi pi-qrcode" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;"></button>
+                                        <button pButton pRipple icon="pi pi-qrcode" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" (click)="viewCodebar(rowData)"></button>
                                     </td>
                                 </tr>
                             </ng-template>
