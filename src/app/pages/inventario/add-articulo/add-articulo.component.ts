@@ -64,6 +64,7 @@ export class AddArticuloComponent implements OnInit {
         this.visibleDialog = estado;
         if(this._editproducto){
           this.producto = this._editproducto;
+          //this.previsualizacion = this._editproducto.imagen
         }
         if(this._accion){
           this.accion = this._accion;
