@@ -10,8 +10,8 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-4 md:col-3">
-                                    <p-autoComplete [(ngModel)]="selectedclienteNameAdvanced" [suggestions]="filteredClients"    placeholder="Ingrese el nombre del cliente" size="40"
-                                    (completeMethod)="getResultsClients($event)" field="nombre" [dropdown]="true"  >
+                                    <p-autoComplete [(ngModel)]="selectedclienteNameAdvanced"  (ngModelChange)="cambie()" [suggestions]="filteredClients"    placeholder="Ingrese el nombre del cliente" size="40"
+                                    (completeMethod)="getResultsClients($event)" field="nombre" [dropdown]="true">
                                     <ng-template let-cliente pTemplate="item">
                                       <div class="cliente-item ">
                                         <div>{{cliente.nombre }} {{cliente.apellidoPaterno}} {{cliente.apellidoMaterno}}</div>  
@@ -20,13 +20,9 @@
                                   </p-autoComplete>
                                 </div>
                                 <div class="col-4 md:col-3" >
-                                    <button pButton pRipple label="Consultar" icon="pi pi-book" type="button" class="p-button-success" (click)="nuevoApartado()"></button>
+                                    <button pButton pRipple label="Consultar" icon="pi pi-book" type="button" class="p-button-success" (click)="consultaApartado()"></button>
                                 </div>
                                 <div class="col-4 md:col-3">
-                                    
-                                   
-
-                               
                                 </div>
                             </div>
                         </div>
@@ -34,23 +30,140 @@
                 </div>
                 <div class="col-12">
                     <br>
+                    <div *ngIf="apartadoByUser">
+                        <p-table #dt [value]="listApartados" [columns]="cols" [rows]="rows" [paginator]="false"  [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll"  
+                        dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Articulos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                        <ng-template pTemplate="caption">
+                            <div class="flex align-items-center justify-content-between">
+                                <h5 class="m-0">Articulos Apartados de {{selectedclienteNameAdvanced.nombre }} {{selectedclienteNameAdvanced.apellidoPaterno}} {{selectedclienteNameAdvanced.apellidoMaterno}}</h5>
+                                <br>
+                                <!--<div class="row">
+                                    <div class="col col-md-7">
+                                        <div class="row">
+                                            <div class="col">
+                                                <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
+                                            </div>
+                                            <div class="col">
+                                                <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m" [disabled]="!selectedArticulos || !selectedArticulos.length"></button>
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-control " type="file" id="formFileDisabled"   #fileImportInput name="File Upload"  id="txtFileUpload" (change)="fileChangeListener($event)" accept=".csv"/>
+                                               
+                                                    <p-fileUpload mode="basic" ccept=".csv"  id="formFileDisabled"   #fileImportInput name="File Upload"  id="txtFileUpload"   label="Importar" chooseLabel="Import" class="mr-2 inline-block"  (change)="fileChangeListener($event)"></p-fileUpload> 
+                                            
+                                            </div>
+                                            <div class="col">
+                                                <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"(click)="Excel()" style="margin-left: 10px;"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col col-md-5">
+                                        <span class="p-input-icon-left" style="width: 100%;">
+                                      <i class="pi pi-search"></i>
+                                      <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar..." [style]="{'width': '100%'}"/>
+                                    </span>
+                                    </div>
+                                </div>-->
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+
+                                <!--<th style="width: 2rem">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>-->
+                                
+                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                    <div class="flex justify-content-center align-items-center">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </div>
+                                </th>
+
+
+                            </tr>
+
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr>
+                                <!--<td>
+                                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                </td>-->
+                                <!--<td>
+                                    <div style="display: inline-flex">
+                                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+                                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" style="margin-left: 3px;"></button>
+                                    </div>
+                                </td>-->
+                         
+
+                                    <!--<td *ngIf="rowData.imagen==''">
+                                        <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png"  width="40" height="40%" class="shadow-1" />
+                                      
+                                    </td>-->
+
+                    
+                                <!--<td>
+                                    {{rowData['idEmpleado']}}
+                                </td>-->
+                                <td>
+                                    {{rowData['idArticulo']}}
+                                </td>
+                                <td>
+                                    {{rowData['idTalla']}}
+                                </td>
+                                <!-- <td>
+                                {{rowData['fechaIngreso']}}
+                              </td>
+                              <td>
+                                {{rowData['categoria']}}
+                              </td>
+                              <td>
+                                {{rowData['unidad']}}
+                              </td>-->
+                                <td>
+                                    {{rowData['fecha']}}
+                                </td>
+                                <td>
+                                    {{rowData['fechaEntrega']}}
+                                </td>
+                                <td>
+                                    {{rowData['telefono']}}
+                                </td>
+                                <td>
+                                    {{rowData['direccion']}}
+                                </td>
+                                <td>
+                                    {{rowData['status']}}
+                                </td>
+                                <td>
+                                    <button pButton pRipple icon="pi pi-play" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" [pTooltip]="botonEntregar" (click)="entregarPedido(rowData)" [disabled]="rowData.status == 'Entregado'"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <!-- <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between">
+                            En total hay {{listUsuarios ? listUsuarios.length : 0 }} usuarios.
+                        </div>
+                    </ng-template> -->
+                    </p-table>
+                    </div>
                     <div *ngIf="crearApartado">
                     <p >
-                        Sin apartados
+                        Sin apartados {{selectedclienteNameAdvanced.nombre }} {{selectedclienteNameAdvanced.apellidoPaterno}} {{selectedclienteNameAdvanced.apellidoMaterno}}
                     </p>
                     <div class="row">
-                        <div class="col-4 md:col-3">
-                            <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-" (click)="nuevoApartado()"></button>
+                        <div class="col-1 md:col-3">
+                            <button pButton pRipple label="Apartar" icon="pi pi-book" type="button" class="p-button-success" (click)=" openAddApartado()"></button>
                         </div>
-                        <div class="col-4 md:col-3">
-                            <button pButton pRipple label="Aceptar" icon="pi pi-check" type="button" class="p-button-success" (click)="nuevoApartado()"></button>
-                        </div>
-                        <div class="col-4 md:col-3">
-                        </div>
+                        <div class="col-2 md:col-3">
+                            <button pButton pRipple label="Pedido Especial" icon="pi pi-external-link" type="button" class="p-button-help" (click)="consultaApartado()"></button>
+                      
                     </div>
                 </div>
                     <app-loading *ngIf="loading"></app-loading>
-
+                    <app-add-apartado [_accion]="accion" [(_editCliente)]="selectedclienteNameAdvanced"  *ngIf="accion != ''"></app-add-apartado>
                 </div>
             </div>
         </div>

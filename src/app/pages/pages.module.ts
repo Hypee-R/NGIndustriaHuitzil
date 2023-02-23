@@ -73,6 +73,7 @@ import { ClientesComponent } from './clientes/clientes.component';
 import { AddClienteComponent } from './clientes/add-cliente/add-cliente.component';
 import { NgxBarcode6Module } from 'ngx-barcode6';
 import { ApartadosComponent } from './apartados/apartados.component';
+import { AddApartadoComponent } from './apartados/add-apartado/add-apartado.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -150,7 +151,8 @@ import { ApartadosComponent } from './apartados/apartados.component';
         SelectInventarioComponent,
         RefreshTableDirective,
         ClientesComponent,
-        ApartadosComponent
+        ApartadosComponent,
+        AddApartadoComponent
     ]
 })
 export class PagesModule { }

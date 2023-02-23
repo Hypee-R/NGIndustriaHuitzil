@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { CatApartadoModel } from 'src/app/models/apartado.model';
 import { CatClienteModel } from 'src/app/models/clientes.model';
+import { ApartadosService } from 'src/app/services/apartados.service';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 
@@ -17,16 +19,34 @@ export class ApartadosComponent implements OnInit {
   clientes: CatClienteModel[]
   clienteName: string = ''
   crearApartado: boolean = false
-  crear : boolean = false
+  apartados : boolean = false
+  accion = '';
+  apartadoUsuario : CatApartadoModel
+  apartadoByUser = false
+  listApartados: CatApartadoModel[] = [];
+  cols: any[] = [];
+  rows = 0;
+  botonEntregar = "Entregar Pedido"
+  //crear : boolean = false
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
-    private clientesService : ClientesService
+    private clientesService : ClientesService,
+    private apartadoService : ApartadosService
  
   ) {
     this.selectedclienteNameAdvanced= new CatClienteModel() 
     this.statusPantalla = this.variablesGL.getStatusPantalla()
-  
+    this.cols = [
+      { field: 'idArticulo', header: 'Articulo' },
+      { field: 'idTalla', header: 'Talla' },
+      { field: 'fecha', header: 'Fecha' },
+      { field : 'fechaEntrega', header : 'Fecha Entrega'},
+      { field: 'telefono', header: 'Telefono' },
+      { field: 'direccion', header: 'Dirección' },
+      { field: 'status', header : 'Status'}
+    
+    ];
   }
 
   ngOnInit(): void {
@@ -58,16 +78,64 @@ export class ApartadosComponent implements OnInit {
     }
     this.filteredClients = filtered;
     this.clienteName=event.query;
-    this.crear = true
+    //this.crear = true
+  }
+  
+  cambie(){
+    this.listApartados.shift()
+    this.apartadoByUser = false
+    this.crearApartado = false
   }
 
-  nuevoApartado(){
-    //console.log(this.selectedclienteNameAdvanced)
-    //console.log(this.selectedclienteNameAdvanced.idCliente)
-    if(this.selectedclienteNameAdvanced.idCliente != null){
-      this.crearApartado = true
-    }
+  consultaApartado(){
+    this.listApartados.shift()
+    if(this.selectedclienteNameAdvanced.idCliente != null && !this.apartados){
+      
+      
+      this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente).subscribe(response =>{
+        if(response.exito){
+          console.log(response.respuesta)
+          this.apartadoUsuario = response.respuesta
+          this.listApartados.push(response.respuesta)
+          this.crearApartado = false
+          this.apartadoByUser = true
+        }
+        else{
+          this.crearApartado = true
+          this.apartadoByUser = false
+        }
+      })
     
+      
+    }
+    else{
+      this.toastr.error("Selecciona un cliente", 'Error!');
+    }
+  }
+
+  openAddApartado(){
+    this.accion = 'Apartar';
+    //this.selectedCliente = new CatClienteModel();
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
+
+  entregarPedido(apartado : CatApartadoModel){
+    let newApartado = apartado
+    //newApartado.fechaEntrega = "2023-02-15T00:00:00"
+    //newApartado.status = "Entregado"
+    this.apartadoService.actualizaApartado(newApartado).subscribe(request =>{
+      if(request.exito){
+        this.toastr.success("Apartado Entregado","Correcto")
+      }
+      else{
+        this.toastr.error(request.mensaje,"Error")
+      }
+    }, err => {
+      this.variablesGL.hideLoading();
+      this.toastr.error('Hubo un error al entregar el Apartado', 'Error!');
+    });
   }
 
 }

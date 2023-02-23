@@ -22,6 +22,7 @@ export class ClientesService {
   }
 
   agregaCliente(request: CatClienteModel): Observable<ResponseModel>{
+    console.log(request)
     return this.http.post<ResponseModel>(environment.apiService + 'Clientes/Agrega', request)
     .pipe(
       map (res => res)

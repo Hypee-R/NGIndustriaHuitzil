@@ -24,6 +24,15 @@ export class InventarioService {
 
   }
 
+  getInexistencias(): Observable<ResponseModel>{
+    let sucursal = this.variablesGL.getSucursal() ?? "all";
+    return this.http.get<ResponseModel>(environment.apiService + `Inventario/Inexistencias?sucursal=${sucursal}`)
+    .pipe(
+      map (res => res)
+    );
+
+  }
+
   agregaArticulo(request:productoModel): Observable<ResponseModel>{
 
     console.log(request)

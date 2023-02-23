@@ -23,12 +23,10 @@ export class AddClienteComponent implements OnInit {
   accion = '';
   cliente: CatClienteModel = new CatClienteModel();
   pattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
-
   dialogSubscription: Subscription = new Subscription();
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
-    private proveedoresService: ProveedoresService,
     private clientesService: ClientesService
   ) {
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
@@ -67,13 +65,14 @@ export class AddClienteComponent implements OnInit {
       if(this._accion == 'Agregar'){
         this.guardarCliente();
       }else{
-        this.actualizarCliente();
+        //this.actualizarCliente();
       }
 
     }
   }
 
   guardarCliente(){
+    console.log(this.cliente)
     this.clientesService.agregaCliente(this.cliente).subscribe(response => {
       if(response.exito){
           this.toastr.success(response.mensaje, 'Exito!!');
