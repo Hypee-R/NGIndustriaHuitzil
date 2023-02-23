@@ -72,6 +72,7 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
 import { ClientesComponent } from './clientes/clientes.component';
 import { AddClienteComponent } from './clientes/add-cliente/add-cliente.component';
 import { NgxBarcode6Module } from 'ngx-barcode6';
+import { ApartadosComponent } from './apartados/apartados.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -148,7 +149,8 @@ import { NgxBarcode6Module } from 'ngx-barcode6';
         OpenProductosComponent,
         SelectInventarioComponent,
         RefreshTableDirective,
-        ClientesComponent
+        ClientesComponent,
+        ApartadosComponent
     ]
 })
 export class PagesModule { }

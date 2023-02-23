@@ -15,6 +15,7 @@ import { RolesComponent } from '../pages/roles/roles.component';
 import { MaterialesComponent } from '../pages/materiales/materiales.component';
 import { CambiosYDevolucionesComponent } from '../pages/cambios-y-devoluciones/cambios-y-devoluciones.component';
 import { ClientesComponent } from '../pages/clientes/clientes.component';
+import { ApartadosComponent } from '../pages/apartados/apartados.component';
 
 export const contentRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
@@ -33,6 +34,7 @@ export const contentRoutes: Routes = [
     { path: 'users', component: UsuariosComponent },
     { path: 'roles', component:  RolesComponent},
     { path : 'clientes', component: ClientesComponent},
+    { path : 'reserve',component : ApartadosComponent},
     {
         path: '**',
         redirectTo: 'dashboard'

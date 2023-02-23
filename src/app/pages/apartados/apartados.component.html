@@ -1,0 +1,59 @@
+<div [ngClass]="{'container': statusPantalla <= 10}">
+
+    <div class="card shadow mb-5 bg-body rounded">
+        <div class="card-header text-uppercase">Apartados</div>
+        <span class="lstick"></span>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-4 md:col-3">
+                                    <p-autoComplete [(ngModel)]="selectedclienteNameAdvanced" [suggestions]="filteredClients"    placeholder="Ingrese el nombre del cliente" size="40"
+                                    (completeMethod)="getResultsClients($event)" field="nombre" [dropdown]="true"  >
+                                    <ng-template let-cliente pTemplate="item">
+                                      <div class="cliente-item ">
+                                        <div>{{cliente.nombre }} {{cliente.apellidoPaterno}} {{cliente.apellidoMaterno}}</div>  
+                                    </div>
+                                    </ng-template>
+                                  </p-autoComplete>
+                                </div>
+                                <div class="col-4 md:col-3" >
+                                    <button pButton pRipple label="Consultar" icon="pi pi-book" type="button" class="p-button-success" (click)="nuevoApartado()"></button>
+                                </div>
+                                <div class="col-4 md:col-3">
+                                    
+                                   
+
+                               
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <br>
+                    <div *ngIf="crearApartado">
+                    <p >
+                        Sin apartados
+                    </p>
+                    <div class="row">
+                        <div class="col-4 md:col-3">
+                            <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-" (click)="nuevoApartado()"></button>
+                        </div>
+                        <div class="col-4 md:col-3">
+                            <button pButton pRipple label="Aceptar" icon="pi pi-check" type="button" class="p-button-success" (click)="nuevoApartado()"></button>
+                        </div>
+                        <div class="col-4 md:col-3">
+                        </div>
+                    </div>
+                </div>
+                    <app-loading *ngIf="loading"></app-loading>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

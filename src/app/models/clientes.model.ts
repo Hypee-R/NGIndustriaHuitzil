@@ -7,7 +7,7 @@ export class CatClienteModel{
     telefono2: string;
     direccion: string;
     constructor(){
-      this.idCliente = 0;
+      this.idCliente = null;
       this.nombre = '';
       this.apellidoPaterno = '';
       this.apellidoMaterno = '';
