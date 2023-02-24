@@ -21,13 +21,15 @@ export class ApartadosComponent implements OnInit {
   crearApartado: boolean = false
   apartados : boolean = false
   accion = '';
+  accionPedido = ''
   apartadoUsuario : CatApartadoModel
   apartadoByUser = false
   listApartados: CatApartadoModel[] = [];
   cols: any[] = [];
   rows = 0;
   botonEntregar = "Entregar Pedido"
-  //crear : boolean = false
+  //Pedidos especiales
+  showPedidos = false
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -47,6 +49,16 @@ export class ApartadosComponent implements OnInit {
       { field: 'status', header : 'Status'}
     
     ];
+    let status = this.variablesGL.getPantalla();
+    if(status == 'celular'){
+      this.rows = 6;
+    }else if(status == 'tablet'){
+      this.rows = 7;
+    }else if(status == 'laptop'){
+      this.rows = 4;
+    }else{
+      this.rows = 11;
+    }
   }
 
   ngOnInit(): void {
@@ -88,16 +100,28 @@ export class ApartadosComponent implements OnInit {
   }
 
   consultaApartado(){
+    this.accion = ""
     this.listApartados.shift()
-    if(this.selectedclienteNameAdvanced.idCliente != null && !this.apartados){
-      
-      
+    
+    if(this.selectedclienteNameAdvanced.idCliente != 0 && !this.apartados){
+      this.showPedidos = false
+      this.crearApartado = true
       this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente).subscribe(response =>{
         if(response.exito){
           console.log(response.respuesta)
-          this.apartadoUsuario = response.respuesta
-          this.listApartados.push(response.respuesta)
-          this.crearApartado = false
+          //this.apartadoUsuario = response.respuesta
+          this.listApartados = response.respuesta
+
+          this.listApartados.forEach(apartado => {
+            if(apartado.status == "Espera"){
+              this.crearApartado = false
+              return
+            }
+            /*else{
+              this.crearApartado = true
+            }*/
+          });
+          console.log(this.crearApartado)
           this.apartadoByUser = true
         }
         else{
@@ -122,20 +146,46 @@ export class ApartadosComponent implements OnInit {
   }
 
   entregarPedido(apartado : CatApartadoModel){
+    let d = new Date()
     let newApartado = apartado
-    //newApartado.fechaEntrega = "2023-02-15T00:00:00"
-    //newApartado.status = "Entregado"
+    newApartado.fechaEntrega = d.toISOString().substring(0, 19);
+    newApartado.status = "Entregado"
     this.apartadoService.actualizaApartado(newApartado).subscribe(request =>{
       if(request.exito){
         this.toastr.success("Apartado Entregado","Correcto")
+
       }
       else{
         this.toastr.error(request.mensaje,"Error")
       }
+      setTimeout(() => {
+        this.consultaApartado()
+      }, 200);
     }, err => {
       this.variablesGL.hideLoading();
       this.toastr.error('Hubo un error al entregar el Apartado', 'Error!');
     });
+    
+    
+    
+  } 
+  consultarPedido(){
+    this.accion = ""
+    this.crearApartado = false
+    this.apartadoByUser = false
+    if(this.selectedclienteNameAdvanced.idCliente != 0 && !this.apartados){
+      this.showPedidos =  true
+    }
+    else{
+      this.toastr.error("Selecciona un cliente", 'Error!');
+    }
+    
   }
 
+  openAddPedido(){
+    this.accionPedido = 'Pedido';
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
 }

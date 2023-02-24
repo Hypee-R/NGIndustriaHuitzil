@@ -1,4 +1,4 @@
-import { Component,EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter,Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { CatApartadoModel } from 'src/app/models/apartado.model';
@@ -6,17 +6,17 @@ import { CatClienteModel } from 'src/app/models/clientes.model';
 import { productoModel } from 'src/app/models/productos.model';
 import { CatTallaModel } from 'src/app/models/tallas.model';
 import { ApartadosService } from 'src/app/services/apartados.service';
-import { ClientesService } from 'src/app/services/clientes.service';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { TallasService } from 'src/app/services/tallas.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 
 @Component({
-  selector: 'app-add-apartado',
-  templateUrl: './add-apartado.component.html',
-  styleUrls: ['./add-apartado.component.css']
+  selector: 'app-add-pedido-especial',
+  templateUrl: './add-pedido-especial.component.html',
+  styleUrls: ['./add-pedido-especial.component.css']
 })
-export class AddApartadoComponent implements OnInit {
+export class AddPedidoEspecialComponent implements OnInit {
+
 
   @Input() _accion: string;
   @Input() _editCliente : CatClienteModel;
@@ -25,7 +25,7 @@ export class AddApartadoComponent implements OnInit {
   submitted = false;
   visibleDialog: boolean;
   accion = '';
-  cliente: CatClienteModel = new CatClienteModel();
+  cliente: CatClienteModel= new CatClienteModel();
   dialogSubscription: Subscription = new Subscription();
   nombreCompleto = ""
   filteredArticulos: productoModel[] = []
@@ -43,7 +43,7 @@ export class AddApartadoComponent implements OnInit {
     private apartadosService: ApartadosService
     //private clientesService : ClientesService
   ) {
-    this.selectedArticuloAdvanced = new productoModel()
+    //this.selectedArticuloAdvanced = new productoModel()
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
       this.visibleDialog = estado;
       if(this._editCliente){
@@ -86,7 +86,7 @@ export class AddApartadoComponent implements OnInit {
 
   hideDialog() {
     this.submitted = false;
-    this.cliente = new CatClienteModel();
+    //this.cliente = new CatClienteModel();
     this.variablesGL.showDialog.next(false);
   }
 
@@ -133,4 +133,5 @@ export class AddApartadoComponent implements OnInit {
     /*console.log(this.selectedTalla)
     console.log(this.apartado)*/
   }
+
 }

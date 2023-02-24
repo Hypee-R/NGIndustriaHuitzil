@@ -65,7 +65,7 @@ export class AddClienteComponent implements OnInit {
       if(this._accion == 'Agregar'){
         this.guardarCliente();
       }else{
-        //this.actualizarCliente();
+        this.actualizarCliente();
       }
 
     }
