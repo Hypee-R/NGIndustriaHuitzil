@@ -21,6 +21,7 @@ export class ApartadosComponent implements OnInit {
   crearApartado: boolean = false
   apartados : boolean = false
   accion = '';
+  accionAdd = '';
   accionPedido = ''
   apartadoUsuario : CatApartadoModel
   apartadoByUser = false
@@ -63,6 +64,12 @@ export class ApartadosComponent implements OnInit {
 
   ngOnInit(): void {
 
+   this.getClientes()
+    
+  }
+
+  getClientes(){
+    this.clientes= []
     this.clientesService.getClientes().subscribe(response => {
       if (response.exito) {
         this.clientes = response.respuesta;
@@ -76,7 +83,6 @@ export class ApartadosComponent implements OnInit {
       this.variablesGL.hideLoading();
       this.toastr.error('Hubo un error al buscar cliente', 'Error!');
     });
-    
   }
 
   getResultsClients(event) {
@@ -139,6 +145,7 @@ export class ApartadosComponent implements OnInit {
 
   openAddApartado(){
     this.accion = 'Apartar';
+    this.accionAdd = ""
     //this.selectedCliente = new CatClienteModel();
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
@@ -183,7 +190,20 @@ export class ApartadosComponent implements OnInit {
   }
 
   openAddPedido(){
+    this.accionAdd = ""
     this.accionPedido = 'Pedido';
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
+
+  openModalAdd(){
+    this.accion = ''
+    this.accionAdd = "Agregar"
+    this.accionPedido  = ''
+    //this.accionAdd = 'Agregar';
+    
+    //his.selectedCliente = new CatClienteModel();
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);

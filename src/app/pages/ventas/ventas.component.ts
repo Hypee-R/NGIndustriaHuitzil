@@ -46,6 +46,7 @@ export class VentasComponent implements OnInit {
   cols: any[] = [];
   rows = 0;
   accion = '';
+  accionAdd = '';
   openProducts = '';
   articulos = 0
   total = 0
@@ -110,7 +111,12 @@ export class VentasComponent implements OnInit {
   async ngOnInit() {
     this.loading = false
     this.getCaja();
-   
+    this.getClientes()
+  }
+
+  getClientes(){
+    this.clientes = []
+     
     this.clientesService.getClientes().subscribe(response => {
       if (response.exito) {
       // this.toastr.success("Se consultaron los clientes ", 'Exito!!!');
@@ -127,7 +133,6 @@ export class VentasComponent implements OnInit {
       this.toastr.error('Hubo un error al buscar cliente', 'Error!');
     });
   }
-
 
 
  
@@ -181,6 +186,7 @@ export class VentasComponent implements OnInit {
   openProductsM() {
     this.variablesGL.showLoading();
     this.accion = ''
+    this.accionAdd = ''
     this.openProducts = "Productos"
     this.articlesSelected = []
     this.getArticulos()
@@ -188,6 +194,7 @@ export class VentasComponent implements OnInit {
 
   openCashRegister() {
     this.openProducts = ""
+    this.accionAdd = ''
     this.accion = 'Abrir';
     this.getCaja();
 
@@ -195,6 +202,7 @@ export class VentasComponent implements OnInit {
 
   closeCashRegister() {
     this.openProducts = ""
+    this.accionAdd = ''
     this.accion = 'Cerrar';
     this.getCaja();
   }
@@ -820,4 +828,14 @@ if(tipoPago=="MULTIPLE")
 // console.log( this.totalMultiple)
   }
 
+  openModalAdd(){
+    this.accion = ''
+    this.openProducts = ''
+    this.accionAdd = 'Agregar';
+    
+    //his.selectedCliente = new CatClienteModel();
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
 }

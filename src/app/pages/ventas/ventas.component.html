@@ -15,8 +15,7 @@
                         <div class="container">
                             <div class="row">
 
-                                <div class="col-6 md:col-4">
-                                    
+                                <div class="col-4 md:col-4">
                                     <p-autoComplete [(ngModel)]="selectedclienteNameAdvanced" [suggestions]="filteredClients"    placeholder="Ingrese el nombre del cliente" size="40"
                                     (completeMethod)="getResultsClients($event)" field="nombre" [dropdown]="true"  >
                                     <ng-template let-cliente pTemplate="item">
@@ -24,9 +23,13 @@
                                         <div>{{cliente.nombre}}</div>    </div>
                                     </ng-template>
                                   </p-autoComplete>
-
-                               
                                 </div>
+
+                                <div class="col-2 md:col-4">
+                                    <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
+                           
+                                </div>
+
                                 <div class="col-6 md:col-4">
                                     <div class="p-inputgroup">
                                         <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
@@ -227,6 +230,7 @@
     </div>
 
     <app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
+    <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>
     <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected" [_nArticles]="articulos"
         *ngIf="openProducts != ''" (_articulosS)="addProductVenta($event)"></app-open-productos>
 
@@ -310,6 +314,8 @@
         <ng-template pTemplate="footer">
             <!-- <p-button icon="pi pi-times" (click)="display=false" label="Cancelar" styleClass="p-button-text"></p-button> -->
         </ng-template>
+        
+              
     </p-dialog>
 
 

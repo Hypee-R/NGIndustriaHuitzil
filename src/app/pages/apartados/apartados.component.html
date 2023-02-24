@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="container">
                             <div class="row">
-                                <div class="col-4 md:col-3">
+                                <div class="col-3 md:col-3">
                                     <p-autoComplete [(ngModel)]="selectedclienteNameAdvanced"  (ngModelChange)="cambie()" [suggestions]="filteredClients"    placeholder="Ingrese el nombre del cliente" size="40"
                                     (completeMethod)="getResultsClients($event)" field="nombre" [dropdown]="true">
                                     <ng-template let-cliente pTemplate="item">
@@ -19,10 +19,13 @@
                                     </ng-template>
                                   </p-autoComplete>
                                 </div>
-                                <div class="col-4 md:col-3" >
+                                <div class = "col-1 md: col-2">
+                                    <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
+                                </div>
+                                <div class="col-3 md:col-2" >
                                     <button pButton pRipple label="Consultar Apartados" icon="pi pi-book" type="button" class="p-button-success" (click)="consultaApartado()"></button>
                                 </div>
-                                <div class="col-4 md:col-3">
+                                <div class="col-3 md:col-3">
                                     <button pButton pRipple label="Consultar Pedidos" icon="pi pi-book" type="button" class="p-button-help" (click)="consultarPedido()"></button>
                                 </div>
                             </div>
@@ -178,8 +181,10 @@
                         <app-loading *ngIf="loading"></app-loading>
                         <app-add-apartado [_accion]="accion" [(_editCliente)]="selectedclienteNameAdvanced" (saveApartado)="consultaApartado()"  *ngIf="accion != ''"></app-add-apartado>
                         <app-add-pedido-especial [_accion]="accionPedido"  [(_editCliente)]="selectedclienteNameAdvanced"  *ngIf="accionPedido != ''"></app-add-pedido-especial>
+                      
                     </div>
-                
+                    <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>
+    
             </div>
         </div>
     </div>
