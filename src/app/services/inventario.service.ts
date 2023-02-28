@@ -15,6 +15,13 @@ export class InventarioService {
     private http: HttpClient,
     private variablesGL: VariablesService) { }
 
+    getImprimirEtiquetas(): Observable<any>{
+      return this.http.get<any>('http://127.0.0.1:5000/imprime')
+      .pipe(
+        map (res => res)
+      );
+    }
+
   getArticulos(): Observable<ResponseModel>{
     let sucursal = this.variablesGL.getSucursal() ?? "all";
     return this.http.get<ResponseModel>(environment.apiService + `Inventario/Consulta?sucursal=${sucursal}`)
