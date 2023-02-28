@@ -49,7 +49,7 @@ import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {DividerModule} from 'primeng/divider';
-
+import {KnobModule} from 'primeng/knob';
 
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
@@ -69,6 +69,12 @@ import { SelectInventarioComponent } from './cambios-y-devoluciones/select-inven
 import { RefreshTableDirective } from './ventas/directiva/refresh-table.directive';
 import {ConfirmationService,MessageService} from 'primeng/api';
 import {ToggleButtonModule} from 'primeng/togglebutton';
+import { ClientesComponent } from './clientes/clientes.component';
+import { AddClienteComponent } from './clientes/add-cliente/add-cliente.component';
+//import { NgxBarcode6Module } from 'ngx-barcode6';
+import { ApartadosComponent } from './apartados/apartados.component';
+import { AddApartadoComponent } from './apartados/add-apartado/add-apartado.component';
+import { AddPedidoEspecialComponent } from './apartados/add-pedido-especial/add-pedido-especial.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -78,6 +84,7 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
         ContentRoutingModule,
         // StoreModule.forFeature('viewUsers', usersReducer),
         //PrimeNG
+        KnobModule,
         BadgeModule,
         ToastModule,
         CardModule,
@@ -110,6 +117,7 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
         AutoCompleteModule,
         DividerModule,
         ToggleButtonModule,
+        //NgxBarcode6Module
 ],  providers: [ConfirmationService,MessageService],
     declarations: [
         ContentComponent,
@@ -136,12 +144,17 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
         AddArticuloComponent,
         AddMaterialComponent,
         AddSolicitudComponent,
+        AddClienteComponent,
         OpenCashComponent,
         CambiosYDevolucionesComponent,
         AddCambioDevolucionComponent,
         OpenProductosComponent,
         SelectInventarioComponent,
-        RefreshTableDirective
+        RefreshTableDirective,
+        ClientesComponent,
+        ApartadosComponent,
+        AddApartadoComponent,
+        AddPedidoEspecialComponent
     ]
 })
 export class PagesModule { }
