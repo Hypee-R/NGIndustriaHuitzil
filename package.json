@@ -26,7 +26,6 @@
         "jsbarcode": "^3.11.5",
         "jspdf": "^2.5.1",
         "ng-apexcharts": "^1.7.4",
-        "ngx-barcode6": "^1.0.12",
         "ngx-toastr": "^14.3.0",
         "npm": "^9.5.0",
         "numero-a-letras": "^1.0.6",

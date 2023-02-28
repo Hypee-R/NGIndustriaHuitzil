@@ -97,7 +97,6 @@ export class InventarioComponent implements OnInit {
     this.inventarioService.getArticulos().subscribe(response => {
       if (response.exito) {
         this.listArticulos = response.respuesta;
-        console.log('articulos ', this.listArticulos);
         this.loading = false;
         for (let art of this.listArticulos) {
           this.imagenes.push({ id: art.idArticulo, imagen64c: art.imagen })
@@ -312,12 +311,11 @@ export class InventarioComponent implements OnInit {
   productoFile: productoModel = new productoModel();
   savedatafile(data) {
     console.log("save data field")
-    console.log(data)
     const recorreArray = (arr) => {
       for (let i = 0; i <= arr.length - 1; i++) {
-        console.log(arr[i]);
+       
 
-        this.productoFile.idArticulo= 0,
+        this.productoFile.idArticulo= arr[i].idArticulo,
         this.productoFile.unidad= arr[i].unidad,
         this.productoFile.existencia= arr[i].existencia,
         this.productoFile.descripcion=arr[i].descripcion,
@@ -334,10 +332,11 @@ export class InventarioComponent implements OnInit {
 
           
          
-      console.log(this.productoFile)
-
+       console.log(this.productoFile)
+       if(this.productoFile.sku!==""){
         this.articuloService.agregaArticulo( this.productoFile).subscribe(response => {
           if (response.exito) {
+            this.getArticulos();
            // this.toastr.success(response.mensaje, 'Exito!!');
            // this.hideDialog();
             //setTimeout(() => {
@@ -350,9 +349,8 @@ export class InventarioComponent implements OnInit {
           console.log('error add proveedor ', err);
           this.toastr.error('Hubo un problema al conectar con los servicios en linea', 'Ups!!');
         });
-
-
-
+       }
+     
 
   }
 }

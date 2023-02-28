@@ -71,7 +71,7 @@ import {ConfirmationService,MessageService} from 'primeng/api';
 import {ToggleButtonModule} from 'primeng/togglebutton';
 import { ClientesComponent } from './clientes/clientes.component';
 import { AddClienteComponent } from './clientes/add-cliente/add-cliente.component';
-import { NgxBarcode6Module } from 'ngx-barcode6';
+//import { NgxBarcode6Module } from 'ngx-barcode6';
 import { ApartadosComponent } from './apartados/apartados.component';
 import { AddApartadoComponent } from './apartados/add-apartado/add-apartado.component';
 import { AddPedidoEspecialComponent } from './apartados/add-pedido-especial/add-pedido-especial.component';
@@ -117,7 +117,7 @@ import { AddPedidoEspecialComponent } from './apartados/add-pedido-especial/add-
         AutoCompleteModule,
         DividerModule,
         ToggleButtonModule,
-        NgxBarcode6Module
+        //NgxBarcode6Module
 ],  providers: [ConfirmationService,MessageService],
     declarations: [
         ContentComponent,

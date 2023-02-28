@@ -17,7 +17,7 @@ import { SalesLocationRankingComponent } from './components/charts/sales-locatio
 import { EmployeeSalesRankingComponent } from './components/charts/employee-sales-ranking/employee-sales-ranking.component';
 import { RankingItemsSoldComponent } from './components/charts/ranking-items-sold/ranking-items-sold.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { NgxBarcode6Module } from 'ngx-barcode6';
+//import { NgxBarcode6Module } from 'ngx-barcode6';
 
 
 @NgModule({

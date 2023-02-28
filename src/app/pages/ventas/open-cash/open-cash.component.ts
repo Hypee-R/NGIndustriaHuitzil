@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
+import ConectorPluginV3 from 'src/app/ConectorPluginV3';
 import { CajaModel } from 'src/app/models/caja.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from '../../../services/ventas.service';
@@ -13,6 +14,7 @@ import { VentasService } from '../../../services/ventas.service';
   styleUrls: ['./open-cash.component.css']
 })
 export class OpenCashComponent implements OnInit {
+  impresoraSeleccionada: string = "TicketsZebraSistema";
   @Input() _accion: string;
   @Input() _caja: CajaModel;
   rows = 0;
@@ -102,12 +104,15 @@ export class OpenCashComponent implements OnInit {
     }else if(this.accion == 'Cerrar' && this.openCashModel.montoCierre > 0 && this.openCashModel.fechaCierre.length > 0){
       if(this.fechaCierre > this.fecha){
         console.log('Actualizar');
+        console.log(this.openCashModel)
         this.ventasService.closeCaja(this.openCashModel).subscribe(response => {
           console.log(response);
           if(response.exito){
               this.toastr.success(response.mensaje, 'Exito!');
               this.submitted = false;
               this.variablesGL.showDialog.next(false);
+              //Impresion del Status de la caja
+              this.impresionCierreCaja()
             }else{
               this.toastr.info(response.mensaje, 'Atención!')
           }
@@ -122,4 +127,49 @@ export class OpenCashComponent implements OnInit {
     }
   }
 
+  //Impresion del cierre del status de la caja
+
+  async impresionCierreCaja(){
+  //code Impresion
+  const conector = new ConectorPluginV3();
+  conector
+    .Iniciar()
+    .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+    .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+    .Feed(1)
+    .EscribirTexto("*Apertura y Cierre de caja*")
+    .Feed(1)
+    .EscribirTexto("Caja:"+this.openCashModel.idCaja)
+    .Feed(1)
+    .EscribirTexto("*Empleado:"+this.openCashModel.idEmpleado)
+    .Feed(1)
+    .EscribirTexto("Abrio Caja:"+this.openCashModel.fecha)
+    .EscribirTexto("con el monto de :"+this.openCashModel.monto)
+    .Feed(1)
+    .EscribirTexto("Cerro Caja:"+this.openCashModel.fechaCierre)
+    .EscribirTexto("con el monto de :"+this.openCashModel.montoCierre)
+    .Feed(1)
+    .EscribirTexto("*Recuerda conservar este ticket para tu respaldo al cierre de tu caja en buen estado *")
+    .Feed(1)
+    .Corte(1)
+    .Iniciar()
+    .Feed(1);
+    try{
+      const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+     // const respuesta = true;
+
+      if (respuesta == true) {
+        //Limpiar objetos al finalizar una compra correcta
+      
+        console.log("Impresión correcta");
+      
+      } else {
+        console.log("Error: " + respuesta);
+      }
+
+    }catch (error) {
+      this.toastr.warning("Se Realizo el cierre correctamente pero no se encontro la impresora:TicketsZebraSistema", 'Atencion!');
+      
+    }
+  }
 }
