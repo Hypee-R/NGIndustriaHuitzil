@@ -89,7 +89,7 @@ export class VariablesService {
   }
 
   setFormatoFecha(fecha: string | Date){
-    return this.datePipe.transform(fecha,'MM/dd/yyyy hh:mm:ss a');
+    return this.datePipe.transform(fecha,'dd/MM/yyyy hh:mm:ss a');
   }
 
   getFormatoFecha(fecha: string){
@@ -101,7 +101,7 @@ export class VariablesService {
     // console.log(timeComponents); // 👉️ "04:24:37"
     console.log(ap); // 👉️ "a. p."
     // console.log(mm); // 👉️ "m. m."
-    const [month, day, year] = dateComponents.split('/');
+    const [day, month, year] = dateComponents.split('/');
     const [hours, minutes, seconds] = timeComponents.split(':');
 
     let hora = 0;
