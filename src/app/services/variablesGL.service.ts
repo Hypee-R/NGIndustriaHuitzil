@@ -89,7 +89,7 @@ export class VariablesService {
   }
 
   setFormatoFecha(fecha: string | Date){
-    return this.datePipe.transform(fecha,'dd/MM/yyyy hh:mm:ss a');
+    return this.datePipe.transform(fecha,'MM/dd/yyyy hh:mm:ss a');
   }
 
   getFormatoFecha(fecha: string){
