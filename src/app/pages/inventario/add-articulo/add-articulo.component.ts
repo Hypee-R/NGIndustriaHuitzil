@@ -127,7 +127,7 @@ else{
   console.log("print etiquetas")
   this.submitted = false;
   this.variablesGL.showDialog.next(false);
- 
+
 }
 }
 
@@ -241,10 +241,20 @@ extraerBase64 = async ($event: any) => new Promise((resolve, reject) => {
 })
 
   printCodeBars(){
-
-    //let codeZtl = "^XA^FO40,40^BY3^BCN,150,Y,N,N^FD>;>600PGO14>^FS^XZ"
-    let codeZtlP = "^XA^FO40,40^BY3^BCN,150,Y,N,N^FD>;>6"+this._editproducto.sku+">^FS^XZ"
-    console.log(codeZtlP)
+    this.toastr.success("Impresion de etiquetas:"+this._editproducto.sku+"Cantidad:"+this.noEtiquetasPrint, 'Exito!!');
+    console.log("Imprimir")
+    this.articuloService.getImprimirEtiquetas(this._editproducto.sku,this._editproducto.descripcion,this.noEtiquetasPrint).subscribe(response => {
+    console.log(response);
+    this._editproducto.sku=""
+    this.noEtiquetasPrint=0
+    this.toastr.success("Impresion de etiquetas:"+this._editproducto.sku+"Cantidad:"+this.noEtiquetasPrint, 'Exito!!');
+    // alert("Impresion de etiquetas:"+this._editproducto.sku+"Cantidad:"+this.noEtiquetasPrint)
+    }, err => {
+      console.log("Error:"+JSON.stringify(err));
+      this.toastr.error('Hubo un problema al conectar con los servicios de Impresion','Ups!!');
+    });
+ 
   }
+
 
 }
