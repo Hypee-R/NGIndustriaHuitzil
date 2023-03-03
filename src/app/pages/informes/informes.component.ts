@@ -21,12 +21,15 @@ export class InformesComponent implements OnInit {
   ventas: VentaModel[] = [];
   selectedVentas : VentaModel
   cols: any[] = [];
+  fechaI;
+  fechaF;
   constructor(
     public variablesGL: VariablesService,
     private toastr: ToastrService,
     private ventasService : VentasService
   ) { 
-
+    //this.fechaI = new Date().toLocaleDateString();
+   // this.fechaF = new Date().toLocaleDateString();
     this.cols = [
       { fiel: 'idCaja', header: 'Caja' },
       { field: 'fecha', header: 'Fecha' },
@@ -71,6 +74,62 @@ export class InformesComponent implements OnInit {
   }
 
   Excel() {
+    //console.log(this.fechaI)
+    //console.log(this.fechaF)
+    if(this.fechaF != undefined && this.fechaI != undefined){
+        console.log(this.fechaI)
+        console.log(this.fechaF)
+        if(this.fechaI > this.fechaI){
+          this.toastr.error('La fecha inicial debe ser menor a la final!!', 'Fechas incorrectas');
+        }
+        else{
+        this.ventas = []
+        this.ventasService.getVentasByDates(this.fechaI,this.fechaF).subscribe(response =>{
+          if(response.exito){
+            //console.log(response.respuesta)
+            this.ventas = response.respuesta
+            if(this.ventas.length != 0){
+              this.GenerateExcel()
+            }
+            else{
+              this.toastr.warning('No hay ventas esas fechas',"Error");
+              this.getVentas()
+            }
+            //this.GenerateExcel()
+            //this.loading = false
+            this.fechaF = undefined
+            this.fechaI = undefined
+        }
+      })
+    }
+    }
+    
+   }
+
+   getArticulosVenta(ticket : string){
+      let articulos : productoModel []= []
+      let ventaConsulta :  VentaModel []
+      this.ventasService.searchVentaByNoTicket(ticket).subscribe(response => {
+        if(response.exito){
+          ventaConsulta = response.respuesta
+          if(ventaConsulta[0].ventaArticulo.length != 0){
+          ventaConsulta[0].ventaArticulo.forEach(ventas => {
+            articulos.push(ventas.articulo)
+          })
+        }
+        if(articulos.length !=0){
+          this.ExcelIndividual(articulos.sort((a,b) =>{return a.idArticulo - b.idArticulo}),ticket)
+        }
+          console.log(articulos)
+         
+        }
+      })
+
+    
+   }
+
+
+   GenerateExcel(){
     let total = 0
     let subtotal = 0
     let articulos = 0
@@ -99,27 +158,6 @@ export class InformesComponent implements OnInit {
     return this.toastr.success('Exportado con exito!!', 'Exito');
    }
 
-   getArticulosVenta(ticket : string){
-      let articulos : productoModel []= []
-      let ventaConsulta :  VentaModel []
-      this.ventasService.searchVentaByNoTicket(ticket).subscribe(response => {
-        if(response.exito){
-          ventaConsulta = response.respuesta
-          if(ventaConsulta[0].ventaArticulo.length != 0){
-          ventaConsulta[0].ventaArticulo.forEach(ventas => {
-            articulos.push(ventas.articulo)
-          })
-        }
-        if(articulos.length !=0){
-          this.ExcelIndividual(articulos.sort((a,b) =>{return a.idArticulo - b.idArticulo}),ticket)
-        }
-          console.log(articulos)
-         
-        }
-      })
-
-    
-   }
 
    ExcelIndividual(articulos: productoModel[],ticket: String){
 

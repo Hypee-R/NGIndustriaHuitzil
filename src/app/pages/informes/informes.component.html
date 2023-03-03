@@ -31,7 +31,7 @@
                             dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Ventas" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                             <ng-template pTemplate="caption">
                                 <div class="flex align-items-center justify-content-between">
-                                    <h5 class="m-0">Informe de ventas</h5>
+                                    <h6 class="m-0">Informe de ventas</h6>
                                     <br>
                                     <div class="row">
                                         <div class="col col-md-7">
@@ -40,10 +40,18 @@
                                                 <div class="col">
                                                     <button pButton pRipple label="Export Excel" icon="pi pi-upload" class="p-button-help" style="margin-left: 10px;" (click)="Excel()"></button>
                                                 </div>
-                                                <!-- Implementar pdf
+
+                                                <div class="col">  
+                                                    <label for="fecha">Fecha Inicial</label>
+                                                    <input type="date" pInputText [ngModel] ="fechaI | date:'dd-MM-yyyy'" (ngModelChange)="fechaI = $event">
+                                                </div>
+                                               
                                                 <div class="col">
-                                                    <button pButton pRipple label="Export PDF" icon="pi pi-upload" class="p-button-secondary" style="margin-left: 10px;" (click)="downloadPDF()"></button>
-                                                </div> -->
+                                                  
+                                                    <label for="fecha">Fecha Final</label>
+                                                    <input type="date" pInputText [ngModel] ="fechaF | date:'dd-MM-yyyy'" (ngModelChange)="fechaF = $event">
+                                                </div>
+                                                
                                             </div>
                                         </div>
                                         <div class="col col-md-5">
