@@ -15,8 +15,8 @@ export class InventarioService {
     private http: HttpClient,
     private variablesGL: VariablesService) { }
 
-    getImprimirEtiquetas(): Observable<any>{
-      return this.http.get<any>('http://127.0.0.1:5000/imprime')
+    getImprimirEtiquetas(product: productoModel): Observable<any>{
+      return this.http.get<any>(`http://127.0.0.1:5000/imprime?sku=${product.sku}&descripcion=${product.descripcion}%201&cantidad=1&pcname=PTI&printer=ZDesigner%20TLP%202844`)
       .pipe(
         map (res => res)
       );
