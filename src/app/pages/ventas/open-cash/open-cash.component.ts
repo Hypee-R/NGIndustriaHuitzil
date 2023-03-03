@@ -81,12 +81,9 @@ export class OpenCashComponent implements OnInit {
 
   saveCaja(){
     this.submitted = true;
-    this.openCashModel.fecha = this.fecha ? this.variablesGL.setFormatoFecha(this.fecha) : '';
-    this.openCashModel.fechaCierre = this.fechaCierre ? this.variablesGL.setFormatoFecha(this.fechaCierre) : '';
-    console.log('datos ', this.openCashModel);
-
-    if(this.accion == 'Abrir' && this.openCashModel.monto > 0 && this.openCashModel.fecha.length > 0){
-        console.log('Agregar');
+    if(this.accion == 'Abrir' && this.openCashModel.monto > 0){
+      console.log('Agregar');
+      this.openCashModel.fecha = this.fecha ? this.variablesGL.setFormatoFecha(this.fecha) : '';
         this.ventasService.openCaja(this.openCashModel).subscribe(response => {
             console.log(response);
             if(response.exito){
@@ -101,9 +98,10 @@ export class OpenCashComponent implements OnInit {
           console.log('error -> ', err);
           this.toastr.error('Ocurrió un error al hacer la operación','Error!');
         });
-    }else if(this.accion == 'Cerrar' && this.openCashModel.montoCierre > 0 && this.openCashModel.fechaCierre.length > 0){
+    }else if(this.accion == 'Cerrar' && this.openCashModel.montoCierre > 0){
       if(this.fechaCierre > this.fecha){
         console.log('Actualizar');
+        this.openCashModel.fechaCierre = this.fechaCierre ? this.variablesGL.setFormatoFecha(this.fechaCierre) : '';
         console.log(this.openCashModel)
         this.ventasService.closeCaja(this.openCashModel).subscribe(response => {
           console.log(response);
@@ -160,16 +158,16 @@ export class OpenCashComponent implements OnInit {
 
       if (respuesta == true) {
         //Limpiar objetos al finalizar una compra correcta
-      
+
         console.log("Impresión correcta");
-      
+
       } else {
         console.log("Error: " + respuesta);
       }
 
     }catch (error) {
       this.toastr.warning("Se Realizo el cierre correctamente pero no se encontro la impresora:TicketsZebraSistema", 'Atencion!');
-      
+
     }
   }
 }
