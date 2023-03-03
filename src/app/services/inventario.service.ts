@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { productoModel } from '../models/productos.model';
 import { VariablesService } from './variablesGL.service';
+import { ResponseModelImprime } from '../models/responseImprime.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +16,8 @@ export class InventarioService {
     private http: HttpClient,
     private variablesGL: VariablesService) { }
 
-    getImprimirEtiquetas(product: productoModel): Observable<any>{
-      return this.http.get<any>(`http://127.0.0.1:5000/imprime?sku=${product.sku}&descripcion=${product.descripcion}%201&cantidad=1&pcname=PTI&printer=ZDesigner%20TLP%202844`)
-      .pipe(
+    getImprimirEtiquetas(Descripcion: string,sku: string,cantidad: number): Observable<ResponseModelImprime>{
+      return this.http.get<ResponseModelImprime>(`http://127.0.0.1:5000/imprime?sku=${sku}&descripcion=${Descripcion}&cantidad=${cantidad}`).pipe(
         map (res => res)
       );
     }
