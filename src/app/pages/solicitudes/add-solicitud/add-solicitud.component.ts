@@ -20,7 +20,7 @@ export class AddSolicitudComponent implements OnInit {
   @Input() _accion: string;
   @Input() _editSolicitud: SolicitudesMaterialModel;
   @Output() saveSolicitud: EventEmitter<boolean> = new EventEmitter<boolean>();
-
+  lstEstatus: string[] = ['COMPLETADO',  'SOLICITADO'];
   submitted = false;
   activeProv = true;
   visibleDialog: boolean;

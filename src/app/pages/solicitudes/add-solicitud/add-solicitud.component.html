@@ -26,8 +26,10 @@
         <br>
         <div class="field">
             <label for="estatus">Estatus</label>
-            <input type="text" pInputText id="estatus" [(ngModel)]="solicitud.status" required/>
+            <!-- <input type="text" pInputText id="estatus" [(ngModel)]="solicitud.status" required/> -->
+            <p-dropdown [options]="lstEstatus" [(ngModel)]="solicitud.status" placeholder="Selecciona una opción" [style]="{'width': '100%'}" required="true"></p-dropdown>
             <small class="p-error" *ngIf="submitted && !solicitud.status">El status es requerido.</small>
+            
         </div>
         <br>
         <div class="field">
