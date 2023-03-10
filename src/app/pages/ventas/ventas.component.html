@@ -16,18 +16,22 @@
                             <div class="row">
 
                                 <div class="col-4 md:col-4">
-                                    <p-autoComplete [(ngModel)]="selectedclienteNameAdvanced" [suggestions]="filteredClients"    placeholder="Ingrese el nombre del cliente" size="40"
-                                    (completeMethod)="getResultsClients($event)" field="nombre" [dropdown]="true"  >
-                                    <ng-template let-cliente pTemplate="item">
-                                      <div class="cliente-item ">
-                                        <div>{{cliente.nombre}}</div>    </div>
-                                    </ng-template>
-                                  </p-autoComplete>
+                                    <p-autoComplete [(ngModel)]="selectedclienteNameAdvanced"
+                                        [suggestions]="filteredClients" placeholder="Ingrese el nombre del cliente"
+                                        size="40" (completeMethod)="getResultsClients($event)" field="nombre"
+                                        [dropdown]="true">
+                                        <ng-template let-cliente pTemplate="item">
+                                            <div class="cliente-item ">
+                                                <div>{{cliente.nombre}}</div>
+                                            </div>
+                                        </ng-template>
+                                    </p-autoComplete>
                                 </div>
 
                                 <div class="col-2 md:col-4">
-                                    <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
-                           
+                                    <button pButton pRipple label="Agregar" icon="pi pi-plus"
+                                        class="p-button-success mr-2" (click)="openModalAdd()"></button>
+
                                 </div>
 
                                 <div class="col-6 md:col-4">
@@ -135,9 +139,13 @@
                                 <p-divider>Datos de compra</p-divider>
                                 <div class="row">
                                     <div class="col-4" *ngIf="this.selectedclienteNameAdvanced">
-                                     
-                                     <label  *ngIf=" this.selectedclienteNameAdvanced.nombre!=undefined">Cliente: {{this.selectedclienteNameAdvanced.nombre+" "+this.selectedclienteNameAdvanced.apellidoPaterno +" "+this.selectedclienteNameAdvanced.apellidoMaterno}}</label> 
-                                     <label  *ngIf=" this.selectedclienteNameAdvanced.nombre==undefined" >Cliente: {{this.clienteName}}</label> 
+
+                                        <label *ngIf=" this.selectedclienteNameAdvanced.nombre!=undefined">Cliente:
+                                            {{this.selectedclienteNameAdvanced.nombre+"
+                                            "+this.selectedclienteNameAdvanced.apellidoPaterno +"
+                                            "+this.selectedclienteNameAdvanced.apellidoMaterno}}</label>
+                                        <label *ngIf=" this.selectedclienteNameAdvanced.nombre==undefined">Cliente:
+                                            {{this.clienteName}}</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -230,22 +238,134 @@
     </div>
 
     <app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
-    <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>
-    <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected" [_nArticles]="articulos"
-        *ngIf="openProducts != ''" (_articulosS)="addProductVenta($event)"></app-open-productos>
+    <app-add-cliente [_accion]="accionAdd" *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>
+    <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected"
+        [_nArticles]="articulos" *ngIf="openProducts != ''"
+        (_articulosS)="addProductVenta($event)"></app-open-productos>
 
 
 
 
-    <p-dialog header="Seleccionar Tipo de pago!!" [(visible)]="display" [style]="{width: '50vw'}">
+    <p-dialog header="Finalizar Venta" [(visible)]="display" [style]="{width: '50vw'}">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <h5>Vendedor:Jose Daniel</h5>
+                </div>
+                <div class="col-sm" align="center">
+                    <img class="logo" src="../../../assets/img/caja.jpeg" alt="Login" height="100" width="100">
+                </div>
+                <div class="col-sm">
+                    <h5>Cliente:{{this.selectedclienteNameAdvanced.nombre+" "+this.selectedclienteNameAdvanced.apellidoPaterno}}</h5>
+                </div>
+            </div>
+            <div class="row" >
+                <div class="col-sm">
+                    <button pButton type="button" label="Tarjeta" icon="pi pi-credit-card"
+                        class="p-button-rounded p-button-warning p-button-lg" badge="8" badgeClass="p-badge-info"
+                        (click)="PostVentaRegistro('TARJETA')"></button>
+                </div>
+                <div class="col-sm">
+                    <h5>Datos de la venta</h5>
+                    <h5>Total de articulos: {{articulos}}</h5>
+                 
+                </div>
+
+            </div>
+
+            <br>
+            <div class="row">
+                <div class="col-sm">
+                    <button pButton type="button" label="Efectivo" icon="pi pi-money-bill"
+                        class="p-button-rounded p-button-secondary p-button-lg" badge="8" badgeClass="p-badge-info"
+                        (click)="PostVentaRegistro('EFECTIVO')"></button>
+                </div>
+                <div class="col-sm">
+                    <h5>Descuento cliente:-$0.0</h5>
+                    <h5>Descuento total:-$0.0</h5>
+     
+                </div>
+
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-sm">
+ 
+                    <button pButton type="button" label="Multiple" icon="pi pi-money-bill"
+                        class="p-button-rounded p-button-success  p-button-lg" badge="8" badgeClass="p-badge-info"
+                      
+                        
+                        
+                        [icon]="activeState[0] ? 'pi pi-minus' : 'pi pi-plus'" (click)="toggle(0)" styleClass="p-button-text"></button> 
+
+        
+                        
+
+                </div>
+                <div class="col-sm">
+                    <h5>Subtotal: <p-tag styleClass="mr-2" severity="warning" value=" {{this.total}}" [rounded]="true" icon="pi pi-dollar"></p-tag> </h5> 
+                    <h3>TOTAL:  <p-tag severity="danger" value="{{this.total}}" [rounded]="true" icon="pi pi-dollar"></p-tag></h3>
+                </div>
+
+            </div>
+            <p-accordion>
+                <p-accordionTab header="Datos de Pago Multiple" [(selected)]="activeState[0]">
+                  
+                    <div class="row">
+            
+                        <div class="col-sm-4" >
+            
+                            <p-inputNumber  [(ngModel)]="totalMultipleT"    placeholder="Tarjeta" title="Tarjeta"     (change)="changePage()"></p-inputNumber>
+                          
+                        </div>
+            
+                        <div class="col-sm-4">
+                            <p-inputNumber placeholder="Efectivo"  [(ngModel)]="totalMultipleF"     title="Efectivo"   (change)="changePage()" ></p-inputNumber>
+                          
+                        </div>
+            
+                        <div class="col-sm-4">
+                         
+                            <button pButton pRipple type="button" icon="pi pi-money-bill" class="p-button-rounded p-button-success" (click)="PostVentaRegistro('MULTIPLE')"></button>
+                           <!-- <button pButton type="button" label="Multiple" icon="pi pi-money-bill" class="p-button-success  p-button-lg"
+                           badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro('MULTIPLE')"></button> -->
+                      
+                        </div>
+                    </div>
+                </p-accordionTab>
+              
+            </p-accordion>
+            <br>
+        
+            <div class="row">
+                <div class="col-sm">
+                    <h5>SU PAGO : </h5>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon">$</span>
+                        <input type="number" pInputText placeholder="Ingresar monto"   [(ngModel)]="this.totalVenta"    (change)="changePage()" >
+                     
+                        <span class="p-inputgroup-addon">.00</span>      
+                    </div>
+                </div>
+                <div class="col-sm">
+                    
+                    <h5>SU CAMBIO: </h5>
+                    <p-tag styleClass="mr-2" icon="pi pi-sync" severity="success"    value=" {{this.cambioVenta}}"    ></p-tag>
+                </div>
+
+            </div>
+        </div>
+
+
+
         <div class="row">
             <div class="col-sm-4">
 
-              
+
 
             </div>
             <div class="col-sm-4" align="center">
-                <span class="p-tag">  Total:$ {{this.total}}</span>
+                <!-- <span class="p-tag"> Total:$ {{this.total}}</span> -->
                 <!-- <label for="impresora">Impresora:&nbsp;</label>
                 <select id="impresora" [(ngModel)]="impresoraSeleccionada">
                   <option *ngFor="let impresora of impresoras" [ngValue]="impresora">{{impresora}}</option>
@@ -254,17 +374,17 @@
             </div>
             <div class="col-sm-4">
 
-              
+
 
             </div>
-         
+
         </div>
-   
+
 
 
         <div class="row">
-            
-<!-- 
+
+            <!-- 
             <div class="col-sm-6" align="center">
 
                 <button pButton type="button" label="Tarjeta" icon="pi pi-credit-card" class="p-button-warning p-button-lg"
@@ -308,10 +428,10 @@
             </div> -->
         </div>
         <ng-template pTemplate="footer">
-        
+
         </ng-template>
-        
-              
+
+
     </p-dialog>
 
 
@@ -333,12 +453,16 @@
             <div class="row">
 
                 <div class="col-sm-6">
-                    <p  *ngIf=" this.selectedclienteNameAdvanced.nombre!=undefined">Cliente: {{this.selectedclienteNameAdvanced.nombre+" "+this.selectedclienteNameAdvanced.apellidoPaterno}}</p> 
-                    <p  *ngIf=" this.selectedclienteNameAdvanced.nombre==undefined" >Cliente: {{this.clienteName}}</p> 
-                    <p  *ngIf=" this.selectedclienteNameAdvanced.direccion!=undefined">Calle: {{this.selectedclienteNameAdvanced.direccion}}</p> 
-                    <p  *ngIf=" this.selectedclienteNameAdvanced.direccion==undefined" >Calle: "N/A"</p>
-                    <p  *ngIf=" this.selectedclienteNameAdvanced.telefono1!=undefined">Teléfono: {{this.selectedclienteNameAdvanced.telefono1}}</p> 
-                    <p  *ngIf=" this.selectedclienteNameAdvanced.telefono2==undefined" >Teléfono: "N/A"</p>
+                    <p *ngIf=" this.selectedclienteNameAdvanced.nombre!=undefined">Cliente:
+                        {{this.selectedclienteNameAdvanced.nombre+" "+this.selectedclienteNameAdvanced.apellidoPaterno}}
+                    </p>
+                    <p *ngIf=" this.selectedclienteNameAdvanced.nombre==undefined">Cliente: {{this.clienteName}}</p>
+                    <p *ngIf=" this.selectedclienteNameAdvanced.direccion!=undefined">Calle:
+                        {{this.selectedclienteNameAdvanced.direccion}}</p>
+                    <p *ngIf=" this.selectedclienteNameAdvanced.direccion==undefined">Calle: "N/A"</p>
+                    <p *ngIf=" this.selectedclienteNameAdvanced.telefono1!=undefined">Teléfono:
+                        {{this.selectedclienteNameAdvanced.telefono1}}</p>
+                    <p *ngIf=" this.selectedclienteNameAdvanced.telefono2==undefined">Teléfono: "N/A"</p>
                 </div>
                 <div class="col-sm-6">
                     <p>Vendedor</p>
@@ -411,4 +535,3 @@
     </p-dialog>
 
 </div>
-
