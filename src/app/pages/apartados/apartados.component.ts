@@ -41,6 +41,7 @@ export class ApartadosComponent implements OnInit {
     this.selectedclienteNameAdvanced= new CatClienteModel() 
     this.statusPantalla = this.variablesGL.getStatusPantalla()
     this.cols = [
+     // {field:' ',header:''},
       { field: 'idArticulo', header: 'Articulo' },
       { field: 'talla', header: 'Talla' },
       { field: 'fecha', header: 'Fecha' },
