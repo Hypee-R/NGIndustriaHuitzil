@@ -84,7 +84,17 @@ export class InventarioComponent implements OnInit {
     this.getArticulos();
 
   }
- 
+  //Impresion 
+  imprimir(articulo : productoModel){
+    console.log(articulo)
+    /*this.inventarioService.getImprimirEtiquetas(articulo).subscribe(response => {
+    console.log(response);
+    }, err => {
+      console.log("Error:"+err);
+    });*/
+    alert("Impresion de etiquetas")
+  }
+
 
   openNew() {
     this.product = {};

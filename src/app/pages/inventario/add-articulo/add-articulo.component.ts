@@ -77,7 +77,7 @@ export class AddArticuloComponent implements OnInit {
         if(this._accion == "Codigo de Barras"){
             this.noEtiquetas = []
             this.sku = this._editproducto.sku
-            this.noEtiquetasPrint = Number(this._editproducto.existencia)
+            this.noEtiquetasPrint = 1
             for (let i = 0 ; i< Number(this._editproducto.existencia); i++){
                 this.noEtiquetas.push(1)
             }
@@ -243,7 +243,7 @@ extraerBase64 = async ($event: any) => new Promise((resolve, reject) => {
   printCodeBars(){
     this.toastr.success("Impresion de etiquetas:"+this._editproducto.sku+"Cantidad:"+this.noEtiquetasPrint, 'Exito!!');
     console.log("Imprimir")
-    this.articuloService.getImprimirEtiquetas(this._editproducto.sku,this._editproducto.descripcion,this.noEtiquetasPrint).subscribe(response => {
+    this.articuloService.getImprimirEtiquetas(this._editproducto.descripcion,this._editproducto.sku,this.noEtiquetasPrint).subscribe(response => {
     console.log(response);
     this._editproducto.sku=""
     this.noEtiquetasPrint=0
