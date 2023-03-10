@@ -14,15 +14,19 @@ import { formatDate } from '@angular/common';
 import ConectorPluginV3 from "src/app/ConectorPluginV3";
 import { ClientesService } from 'src/app/services/clientes.service';
 import { CatClienteModel } from 'src/app/models/clientes.model';
+import { ConfirmationService, PrimeNGConfig } from 'primeng/api';
+import { trigger,state,style,transition,animate } from '@angular/animations';
 
 @Component({
   selector: 'app-ventas',
   templateUrl: './ventas.component.html',
-  styleUrls: ['./ventas.component.css']
+  styleUrls: ['./ventas.component.css'],
+
 })
 
 
 export class VentasComponent implements OnInit {
+  activeState: boolean[] = [false];
   cadenaProductos: string = "\n";
   impresoras = [];
   impresoraSeleccionada: string = "TicketsZebraSistema";
@@ -51,7 +55,8 @@ export class VentasComponent implements OnInit {
   articulos = 0
   total = 0
   totalLetra = "";
-  totalMultiple: number;
+  totalVenta  =0;
+  cambioVenta: number;
   totalMultipleF: number;
   totalMultipleT: number;
   //Busqueda CLIENTES
@@ -74,7 +79,8 @@ export class VentasComponent implements OnInit {
     private ventasService: VentasService,
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
-    private clientesService: ClientesService
+    private clientesService: ClientesService,
+    private confirmationService: ConfirmationService
   ) {
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
@@ -106,6 +112,7 @@ export class VentasComponent implements OnInit {
     this.loading = false
     this.getCaja();
     this.getClientes()
+
   }
 
   getClientes() {
@@ -391,30 +398,42 @@ export class VentasComponent implements OnInit {
 
   async PostVentaRegistro(tipoPago: string) {
     if (tipoPago == "MULTIPLE") {
-      this.totalMultiple = this.totalMultipleT + this.totalMultipleF
-      if (this.totalMultiple === this.total) {
-
+      this.totalVenta = this.totalMultipleT + this.totalMultipleF
+      if (this.totalVenta>=this.total) {
+        this.changePage();
         this.RegistraVentaValid(tipoPago);
 
       } else {
-        this.toastr.error("Error el importe no esta completo", 'Error!');
+        this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
       }
 
-    } else {
-      this.RegistraVentaValid(tipoPago);
+    }
+    if (tipoPago == "EFECTIVO") {
+      if (this.totalVenta>=this.total) {
+        this.changePage();
+        this.RegistraVentaValid(tipoPago);
+
+      } else {
+        this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+
+      }
+
+
+    }
+    if (tipoPago == "TARJETA") {
+     
+      this.toastr.warning("Recuerda Validar el cobro en terminal la venta se registrara ", 'Atencion!');
+        this.RegistraVentaValid(tipoPago);
+
+     
+
 
     }
   }
 
 
-  onchangeTotal(event) {
-
-    console.log(event)
-
-    this.totalMultiple = this.totalMultipleT + this.totalMultipleF
-    // console.log( this.totalMultiple)
-  }
+ 
 
   openModalAdd() {
     this.accion = ''
@@ -465,6 +484,17 @@ export class VentasComponent implements OnInit {
       console.log('data=> ', resp);
 
       if (resp.exito) {
+             //Limpiar objetos al finalizar una compra correcta
+             this.cadenaProductos = ""
+             this.RegistraVenta = new VentaModel();
+             this.ventaArticulo = [];
+             this.articulos = 0
+             this.total = 0
+             this.articlesShell = []
+             this.totalVenta= 0
+             this.totalMultipleF=0;
+             this.totalMultipleT=0;
+             this.activeState=[false];
         this.toastr.success(resp.mensaje, 'Exito!');
 
         //code Impresion
@@ -503,11 +533,20 @@ export class VentasComponent implements OnInit {
           .Iniciar()
           .Feed(1);
 
-try{
-        const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
-       // const respuesta = true;
+        try {
+          const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+          // const respuesta = true;
 
-        if (respuesta == true) {
+          if (respuesta == true) {
+       
+            console.log("Impresión correcta");
+            this.display = false;
+          } else {
+            console.log("Error: " + respuesta);
+          }
+
+        } catch (error) {
+          this.toastr.warning("Se Realizo la venta correctamente pero no se encontro la impresora:TicketsZebraSistema", 'Atencion!');
           //Limpiar objetos al finalizar una compra correcta
           this.cadenaProductos = ""
           this.RegistraVenta = new VentaModel();
@@ -516,25 +555,9 @@ try{
           this.total = 0
           this.articlesShell = []
 
-          console.log("Impresión correcta");
           this.display = false;
-        } else {
-          console.log("Error: " + respuesta);
         }
 
-      }catch (error) {
-        this.toastr.warning("Se Realizo la venta correctamente pero no se encontro la impresora:TicketsZebraSistema", 'Atencion!');
-           //Limpiar objetos al finalizar una compra correcta
-           this.cadenaProductos = ""
-           this.RegistraVenta = new VentaModel();
-           this.ventaArticulo = [];
-           this.articulos = 0
-           this.total = 0
-           this.articlesShell = []
-
-           this.display = false;
-      }
-      
 
 
       }
@@ -550,162 +573,189 @@ try{
 
 
 
-//Funcion Para Generar el Numero en letras del total de la compra
-Unidades(num) {
-  switch (num) {
-    case 1: return 'UN';
-    case 2: return 'DOS';
-    case 3: return 'TRES';
-    case 4: return 'CUATRO';
-    case 5: return 'CINCO';
-    case 6: return 'SEIS';
-    case 7: return 'SIETE';
-    case 8: return 'OCHO';
-    case 9: return 'NUEVE';
-  }
+  //Funcion Para Generar el Numero en letras del total de la compra
+  Unidades(num) {
+    switch (num) {
+      case 1: return 'UN';
+      case 2: return 'DOS';
+      case 3: return 'TRES';
+      case 4: return 'CUATRO';
+      case 5: return 'CINCO';
+      case 6: return 'SEIS';
+      case 7: return 'SIETE';
+      case 8: return 'OCHO';
+      case 9: return 'NUEVE';
+    }
 
-  return '';
-}//Unidades()
+    return '';
+  }//Unidades()
 
-Decenas(num) {
+  Decenas(num) {
 
-  let decena = Math.floor(num / 10);
-  let unidad = num - (decena * 10);
+    let decena = Math.floor(num / 10);
+    let unidad = num - (decena * 10);
 
-  switch (decena) {
-    case 1:
-      switch (unidad) {
-        case 0: return 'DIEZ';
-        case 1: return 'ONCE';
-        case 2: return 'DOCE';
-        case 3: return 'TRECE';
-        case 4: return 'CATORCE';
-        case 5: return 'QUINCE';
-        default: return 'DIECI' + this.Unidades(unidad);
-      }
-    case 2:
-      switch (unidad) {
-        case 0: return 'VEINTE';
-        default: return 'VEINTI' + this.Unidades(unidad);
-      }
-    case 3: return this.DecenasY('TREINTA', unidad);
-    case 4: return this.DecenasY('CUARENTA', unidad);
-    case 5: return this.DecenasY('CINCUENTA', unidad);
-    case 6: return this.DecenasY('SESENTA', unidad);
-    case 7: return this.DecenasY('SETENTA', unidad);
-    case 8: return this.DecenasY('OCHENTA', unidad);
-    case 9: return this.DecenasY('NOVENTA', unidad);
-    case 0: return this.Unidades(unidad);
-  }
-}//Unidades()
+    switch (decena) {
+      case 1:
+        switch (unidad) {
+          case 0: return 'DIEZ';
+          case 1: return 'ONCE';
+          case 2: return 'DOCE';
+          case 3: return 'TRECE';
+          case 4: return 'CATORCE';
+          case 5: return 'QUINCE';
+          default: return 'DIECI' + this.Unidades(unidad);
+        }
+      case 2:
+        switch (unidad) {
+          case 0: return 'VEINTE';
+          default: return 'VEINTI' + this.Unidades(unidad);
+        }
+      case 3: return this.DecenasY('TREINTA', unidad);
+      case 4: return this.DecenasY('CUARENTA', unidad);
+      case 5: return this.DecenasY('CINCUENTA', unidad);
+      case 6: return this.DecenasY('SESENTA', unidad);
+      case 7: return this.DecenasY('SETENTA', unidad);
+      case 8: return this.DecenasY('OCHENTA', unidad);
+      case 9: return this.DecenasY('NOVENTA', unidad);
+      case 0: return this.Unidades(unidad);
+    }
+  }//Unidades()
 
-DecenasY(strSin, numUnidades) {
-  if (numUnidades > 0)
-    return strSin + ' Y ' + this.Unidades(numUnidades)
+  DecenasY(strSin, numUnidades) {
+    if (numUnidades > 0)
+      return strSin + ' Y ' + this.Unidades(numUnidades)
 
-  return strSin;
-}//DecenasY()
+    return strSin;
+  }//DecenasY()
 
-Centenas(num) {
-  let centenas = Math.floor(num / 100);
-  let decenas = num - (centenas * 100);
+  Centenas(num) {
+    let centenas = Math.floor(num / 100);
+    let decenas = num - (centenas * 100);
 
-  switch (centenas) {
-    case 1:
-      if (decenas > 0)
-        return 'CIENTO ' + this.Decenas(decenas);
-      return 'CIEN';
-    case 2: return 'DOSCIENTOS ' + this.Decenas(decenas);
-    case 3: return 'TRESCIENTOS ' + this.Decenas(decenas);
-    case 4: return 'CUATROCIENTOS ' + this.Decenas(decenas);
-    case 5: return 'QUINIENTOS ' + this.Decenas(decenas);
-    case 6: return 'SEISCIENTOS ' + this.Decenas(decenas);
-    case 7: return 'SETECIENTOS ' + this.Decenas(decenas);
-    case 8: return 'OCHOCIENTOS ' + this.Decenas(decenas);
-    case 9: return 'NOVECIENTOS ' + this.Decenas(decenas);
-  }
+    switch (centenas) {
+      case 1:
+        if (decenas > 0)
+          return 'CIENTO ' + this.Decenas(decenas);
+        return 'CIEN';
+      case 2: return 'DOSCIENTOS ' + this.Decenas(decenas);
+      case 3: return 'TRESCIENTOS ' + this.Decenas(decenas);
+      case 4: return 'CUATROCIENTOS ' + this.Decenas(decenas);
+      case 5: return 'QUINIENTOS ' + this.Decenas(decenas);
+      case 6: return 'SEISCIENTOS ' + this.Decenas(decenas);
+      case 7: return 'SETECIENTOS ' + this.Decenas(decenas);
+      case 8: return 'OCHOCIENTOS ' + this.Decenas(decenas);
+      case 9: return 'NOVECIENTOS ' + this.Decenas(decenas);
+    }
 
-  return this.Decenas(decenas);
-}//Centenas()
+    return this.Decenas(decenas);
+  }//Centenas()
 
-Seccion(num, divisor, strSingular, strPlural) {
-  let cientos = Math.floor(num / divisor)
-  let resto = num - (cientos * divisor)
+  Seccion(num, divisor, strSingular, strPlural) {
+    let cientos = Math.floor(num / divisor)
+    let resto = num - (cientos * divisor)
 
-  let letras = '';
+    let letras = '';
 
-  if (cientos > 0)
-    if (cientos > 1)
-      letras = this.Centenas(cientos) + ' ' + strPlural;
+    if (cientos > 0)
+      if (cientos > 1)
+        letras = this.Centenas(cientos) + ' ' + strPlural;
+      else
+        letras = strSingular;
+
+    if (resto > 0)
+      letras += '';
+
+    return letras;
+  }//Seccion()
+
+  Miles(num) {
+    let divisor = 1000;
+    let cientos = Math.floor(num / divisor)
+    let resto = num - (cientos * divisor)
+
+    let strMiles = this.Seccion(num, divisor, 'UN MIL', 'MIL');
+    let strCentenas = this.Centenas(resto);
+
+    if (strMiles == '')
+      return strCentenas;
+
+    return strMiles + ' ' + strCentenas;
+  }//Miles()
+
+  Millones(num) {
+    let divisor = 1000000;
+    let cientos = Math.floor(num / divisor)
+    let resto = num - (cientos * divisor)
+
+    let strMillones = this.Seccion(num, divisor, 'UN MILLON DE', 'MILLONES DE');
+    let strMiles = this.Miles(resto);
+
+    if (strMillones == '')
+      return strMiles;
+
+    return strMillones + ' ' + strMiles;
+  }//Millones()
+
+  numeroALetras(num, currency) {
+    currency = currency || {};
+    let data = {
+      numero: num,
+      enteros: Math.floor(num),
+      centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
+      letrasCentavos: '',
+      letrasMonedaPlural: currency.plural || 'PESOS MEXICANOS',//'PESOS', 'Dólares', 'Bolívares', 'etcs'
+      letrasMonedaSingular: currency.singular || 'PESO MEXICANO', //'PESO', 'Dólar', 'Bolivar', 'etc'
+      letrasMonedaCentavoPlural: currency.centPlural || 'CENTAVO PESOS MEXICANOS',
+      letrasMonedaCentavoSingular: currency.centSingular || 'CENTAVO PESO MEXICANO'
+    };
+
+    if (data.centavos > 0) {
+      let centavos = ''
+      if (data.centavos == 1)
+        centavos = this.Millones(data.centavos) + ' ' + data.letrasMonedaCentavoSingular;
+      else
+        centavos = this.Millones(data.centavos) + ' ' + data.letrasMonedaCentavoPlural;
+      data.letrasCentavos = 'CON ' + centavos
+    };
+
+    if (data.enteros == 0)
+      return 'CERO ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
+    if (data.enteros == 1)
+      return this.Millones(data.enteros) + ' ' + data.letrasMonedaSingular + ' ' + data.letrasCentavos;
     else
-      letras = strSingular;
-
-  if (resto > 0)
-    letras += '';
-
-  return letras;
-}//Seccion()
-
-Miles(num) {
-  let divisor = 1000;
-  let cientos = Math.floor(num / divisor)
-  let resto = num - (cientos * divisor)
-
-  let strMiles = this.Seccion(num, divisor, 'UN MIL', 'MIL');
-  let strCentenas = this.Centenas(resto);
-
-  if (strMiles == '')
-    return strCentenas;
-
-  return strMiles + ' ' + strCentenas;
-}//Miles()
-
-Millones(num) {
-  let divisor = 1000000;
-  let cientos = Math.floor(num / divisor)
-  let resto = num - (cientos * divisor)
-
-  let strMillones = this.Seccion(num, divisor, 'UN MILLON DE', 'MILLONES DE');
-  let strMiles = this.Miles(resto);
-
-  if (strMillones == '')
-    return strMiles;
-
-  return strMillones + ' ' + strMiles;
-}//Millones()
-
-numeroALetras(num, currency) {
-  currency = currency || {};
-  let data = {
-    numero: num,
-    enteros: Math.floor(num),
-    centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
-    letrasCentavos: '',
-    letrasMonedaPlural: currency.plural || 'PESOS MEXICANOS',//'PESOS', 'Dólares', 'Bolívares', 'etcs'
-    letrasMonedaSingular: currency.singular || 'PESO MEXICANO', //'PESO', 'Dólar', 'Bolivar', 'etc'
-    letrasMonedaCentavoPlural: currency.centPlural || 'CENTAVO PESOS MEXICANOS',
-    letrasMonedaCentavoSingular: currency.centSingular || 'CENTAVO PESO MEXICANO'
+      return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
   };
 
-  if (data.centavos > 0) {
-    let centavos = ''
-    if (data.centavos == 1)
-      centavos = this.Millones(data.centavos) + ' ' + data.letrasMonedaCentavoSingular;
-    else
-      centavos = this.Millones(data.centavos) + ' ' + data.letrasMonedaCentavoPlural;
-    data.letrasCentavos = 'CON ' + centavos
-  };
+  changePage() {
+    console.log(this.totalVenta+":"+this.total)
+    if(this.totalVenta>this.total){
+      this.cambioVenta = Math.abs(this.total - this.totalVenta);
+      
+     
+      this.toastr.success("Su cambio es :"+     this.cambioVenta , 'Cambio!');
+    }else{
+      console.log("no es igual");
+      this.cambioVenta = 0
+     // this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
-  if (data.enteros == 0)
-    return 'CERO ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
-  if (data.enteros == 1)
-    return this.Millones(data.enteros) + ' ' + data.letrasMonedaSingular + ' ' + data.letrasCentavos;
-  else
-    return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
-};
+    }
+  
+    
+  }
 
+  toggle(index: number) {
+    this.activeState[index] = !this.activeState[index];
+}
 
+onTabClose(event) {
+  alert({severity:'info', summary:'Tab Closed', detail: 'Index: ' + event.index})
+}
 
+onTabOpen(event) {
+
+  alert({severity:'info', summary:'Tab Expanded', detail: 'Index: ' + event.index})
+}
 
 
 }

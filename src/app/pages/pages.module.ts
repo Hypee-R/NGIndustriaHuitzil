@@ -75,6 +75,9 @@ import { AddClienteComponent } from './clientes/add-cliente/add-cliente.componen
 import { ApartadosComponent } from './apartados/apartados.component';
 import { AddApartadoComponent } from './apartados/add-apartado/add-apartado.component';
 import { AddPedidoEspecialComponent } from './apartados/add-pedido-especial/add-pedido-especial.component';
+import { TagModule } from 'primeng/tag';
+import {ConfirmPopupModule} from 'primeng/confirmpopup';
+import {AccordionModule} from 'primeng/accordion';
 @NgModule({
     imports: [
         CommonModule,
@@ -117,6 +120,9 @@ import { AddPedidoEspecialComponent } from './apartados/add-pedido-especial/add-
         AutoCompleteModule,
         DividerModule,
         ToggleButtonModule,
+        TagModule,
+        ConfirmPopupModule,
+        AccordionModule
         //NgxBarcode6Module
 ],  providers: [ConfirmationService,MessageService],
     declarations: [
