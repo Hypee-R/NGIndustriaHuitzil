@@ -22,6 +22,13 @@ export class VentasService {
       map (res => res)
     );
   }
+
+  getVentasByDates(dateI:String,dateF : String): Observable<ResponseModel>{
+    return this.http.get<ResponseModel>(environment.apiService + `Ventas/SalesByDates?dateI=${dateI}&&dateF=${dateF}`)
+    .pipe(
+      map (res => res)
+    );
+  }
   getCaja(): Observable<ResponseModel>{
     return this.http.get<ResponseModel>(environment.apiService + `Ventas/Cash/Consulta?param=${this.user.id}`)
     .pipe(

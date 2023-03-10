@@ -42,7 +42,7 @@ export class ApartadosComponent implements OnInit {
     this.statusPantalla = this.variablesGL.getStatusPantalla()
     this.cols = [
       { field: 'idArticulo', header: 'Articulo' },
-      { field: 'idTalla', header: 'Talla' },
+      { field: 'talla', header: 'Talla' },
       { field: 'fecha', header: 'Fecha' },
       { field : 'fechaEntrega', header : 'Fecha Entrega'},
       { field: 'telefono', header: 'Telefono' },
@@ -127,7 +127,7 @@ export class ApartadosComponent implements OnInit {
               this.crearApartado = true
             }*/
           });
-          console.log(this.crearApartado)
+          //console.log(this.crearApartado)
           this.apartadoByUser = true
         }
         else{

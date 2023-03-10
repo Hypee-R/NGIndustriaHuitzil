@@ -8,6 +8,8 @@ export class CatApartadoModel{
     telefono : string;
     direccion : string;
     status : string;
+    articulo: string;
+    talla :string;
     constructor(){
         this.idApartado = 0
         this.idEmpleado = 0
@@ -17,6 +19,8 @@ export class CatApartadoModel{
         this.telefono = ""
         this.direccion = ""
         this.status = ""
+        this.articulo = ""
+        this.talla = ""
     }
   }
   
