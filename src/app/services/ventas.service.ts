@@ -82,6 +82,7 @@ export class VentasService {
 
 
   postRegistroVenta(request: VentaModel): Observable<ResponseModel>{
+    console.log(request);
     return this.http.post<ResponseModel>(environment.apiService + 'Ventas/Sales/Agrega', request)
     .pipe(
       map (res => res)
