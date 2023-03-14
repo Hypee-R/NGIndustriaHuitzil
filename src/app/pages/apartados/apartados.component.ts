@@ -22,6 +22,7 @@ export class ApartadosComponent implements OnInit {
   apartados : boolean = false
   accion = '';
   accionAdd = '';
+  accionPago = ""
   accionPedido = ''
   apartadoUsuario : CatApartadoModel
   apartadoByUser = false
@@ -29,6 +30,7 @@ export class ApartadosComponent implements OnInit {
   cols: any[] = [];
   rows = 0;
   botonEntregar = "Entregar Pedido"
+  botonHacerAbono  = "Hacer un abono"
   //Pedidos especiales
   showPedidos = false
   constructor(
@@ -44,6 +46,7 @@ export class ApartadosComponent implements OnInit {
      // {field:' ',header:''},
       { field: 'idArticulo', header: 'Articulo' },
       { field: 'talla', header: 'Talla' },
+      { field : 'precio', header :'Precio'},
       { field: 'fecha', header: 'Fecha' },
       { field : 'fechaEntrega', header : 'Fecha Entrega'},
       { field: 'telefono', header: 'Telefono' },
@@ -147,6 +150,7 @@ export class ApartadosComponent implements OnInit {
   openAddApartado(){
     this.accion = 'Apartar';
     this.accionAdd = ""
+    this.accionPedido = ''
     //this.selectedCliente = new CatClienteModel();
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
@@ -191,8 +195,10 @@ export class ApartadosComponent implements OnInit {
   }
 
   openAddPedido(){
+    this.accionPago = ''
     this.accionAdd = ""
     this.accionPedido = 'Pedido';
+  
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
@@ -202,9 +208,21 @@ export class ApartadosComponent implements OnInit {
     this.accion = ''
     this.accionAdd = "Agregar"
     this.accionPedido  = ''
+    this.accionPago = ""
     //this.accionAdd = 'Agregar';
     
     //his.selectedCliente = new CatClienteModel();
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
+
+  makePay(apartado : CatApartadoModel){
+    this.accion = ""
+    this.accionAdd = ''
+    this.accionPedido = ''
+    this.accionPago = "Add"
+    console.log(apartado.idApartado)
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);

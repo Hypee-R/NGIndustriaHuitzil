@@ -100,6 +100,9 @@
                                     {{rowData['talla']}}
                                 </td>
                                 <td>
+                                    {{rowData['precio']}}
+                                </td>
+                                <td>
                                     {{rowData['fecha']}}
                                 </td>
                                 <td>
@@ -113,9 +116,11 @@
                                 </td>
                                 <td>
                                     {{rowData['status']}}
+
                                 </td>
                                 <td>
                                     <button pButton pRipple icon="pi pi-play" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" [pTooltip]="botonEntregar" (click)="entregarPedido(rowData)" [disabled]="rowData.status == 'Entregado'"></button>
+                                    <button pButton pRipple icon="pi pi-money-bill" class="p-button-rounded p-button-success"  style="margin-left: 3px;" [pTooltip]="botonHacerAbono" (click)="makePay(rowData)" [disabled]="rowData.status == 'Entregado'"></button>
                                 </td>
                             </tr>
                         </ng-template>
@@ -254,7 +259,8 @@
                       
                     </div>
                     <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>
-    
+                    <app-add-pago-apartado [_accion]="accionPago" [(_editCliente)]="selectedclienteNameAdvanced" (saveApartado)="consultaApartado()"  *ngIf="accionPago == 'Add'"></app-add-pago-apartado>
+                   <!-- <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>-->
             </div>
         </div>
     </div>
