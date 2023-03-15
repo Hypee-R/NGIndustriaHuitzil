@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CatApartadoModel } from '../models/apartado.model';
+import { PagoApartado} from '../models/pagoApartado';
 import { ResponseModel } from '../models/response.model';
 
 @Injectable({
@@ -44,10 +45,18 @@ export class ApartadosService {
     );
   }
 
-  /*eliminaCliente(request: CatClienteModel): Observable<ResponseModel>{
-    return this.http.delete<ResponseModel>(environment.apiService + 'Clientes/Elimina', { body: request })
-    .pipe(
-      map (res => res)
-    );
-  }*/
+  getPagoByApartado(idApartado : number): Observable<ResponseModel>{
+    // let sucursal = this.variablesGL.getSucursal() ?? "all";
+     return this.http.get<ResponseModel>(environment.apiService + `PagosApartados/Consulta/Apartado?idApartado=${idApartado}`)
+     .pipe(
+       map (res => res)
+     );
+   }
+ 
+   agregaPago(request: PagoApartado): Observable<ResponseModel>{
+     return this.http.post<ResponseModel>(environment.apiService + 'PagosApartados/Agrega', request)
+     .pipe(
+       map (res => res)
+     );
+   }
 }

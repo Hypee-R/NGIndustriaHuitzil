@@ -303,8 +303,9 @@
 
                 </div>
                 <div class="col-sm">
-                    <h5>Subtotal: <p-tag styleClass="mr-2" severity="warning" value=" {{this.total}}" [rounded]="true" icon="pi pi-dollar"></p-tag> </h5> 
-                    <h3>TOTAL:  <p-tag severity="danger" value="{{this.total}}" [rounded]="true" icon="pi pi-dollar"></p-tag></h3>
+                    <h5>Subtotal:<button pButton pRipple icon="pi pi-dollar"   type="button" class="p-button-rounded p-button-warning"  label="{{this.total}}" ></button>  </h5> 
+                    <h3>TOTAL:    <button pButton pRipple icon="pi pi-dollar"   type="button" class="p-button-rounded p-button-danger"  label="{{this.total}}" ></button> </h3>
+
                 </div>
 
             </div>
@@ -350,7 +351,8 @@
                 <div class="col-sm">
                     
                     <h5>SU CAMBIO: </h5>
-                    <p-tag styleClass="mr-2" icon="pi pi-sync" severity="success"    value=" {{this.cambioVenta}}"    ></p-tag>
+                    <button pButton pRipple icon="pi pi-sync"   type="button" label="Success" class="p-button-rounded p-button-success"  label=" {{this.cambioVenta}}" ></button>
+                 
                 </div>
 
             </div>
@@ -358,75 +360,6 @@
 
 
 
-        <div class="row">
-            <div class="col-sm-4">
-
-
-
-            </div>
-            <div class="col-sm-4" align="center">
-                <!-- <span class="p-tag"> Total:$ {{this.total}}</span> -->
-                <!-- <label for="impresora">Impresora:&nbsp;</label>
-                <select id="impresora" [(ngModel)]="impresoraSeleccionada">
-                  <option *ngFor="let impresora of impresoras" [ngValue]="impresora">{{impresora}}</option>
-                </select> -->
-
-            </div>
-            <div class="col-sm-4">
-
-
-
-            </div>
-
-        </div>
-
-
-
-        <div class="row">
-
-            <!-- 
-            <div class="col-sm-6" align="center">
-
-                <button pButton type="button" label="Tarjeta" icon="pi pi-credit-card" class="p-button-warning p-button-lg"
-                    badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro('TARJETA')"></button>
-
-            </div>
-        
-            <div class="col-sm-6" align="center">
-                <button pButton type="button" label="Efectivo" icon="pi pi-money-bill" class="p-button-secondary p-button-lg"
-                    badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro('EFECTIVO')"></button>
-
-            </div>
-
-          
-
-          
-
-        </div>
-        <p-divider align="center">
-            <span class="p-tag">Pago Multiple</span>
-        </p-divider>
-        <div class="row">
-            
-            <div class="col-sm-4" >
-
-                <p-inputNumber  [(ngModel)]="totalMultipleT"    placeholder="Tarjeta" title="Tarjeta"   (onFocus)="onchangeTotal($event)" ></p-inputNumber>
-              
-            </div>
-
-            <div class="col-sm-4">
-                <p-inputNumber placeholder="Efectivo"  [(ngModel)]="totalMultipleF"     title="Efectivo"   (onFocus)="onchangeTotal($event)"></p-inputNumber>
-              
-            </div>
-
-            <div class="col-sm-4">
-             
-
-               <button pButton type="button" label="Multiple" icon="pi pi-money-bill" class="p-button-success  p-button-lg"
-               badge="8" badgeClass="p-badge-info" (click)="PostVentaRegistro('MULTIPLE')"></button>
-          
-            </div> -->
-        </div>
         <ng-template pTemplate="footer">
 
         </ng-template>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CatApartadoModel } from 'src/app/models/apartado.model';
 import { CatClienteModel } from 'src/app/models/clientes.model';
+import { PagoApartado } from 'src/app/models/pagoApartado';
 import { ApartadosService } from 'src/app/services/apartados.service';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
@@ -14,6 +15,7 @@ import { VariablesService } from 'src/app/services/variablesGL.service';
 export class ApartadosComponent implements OnInit {
   statusPantalla: number
   selectedclienteNameAdvanced: CatClienteModel
+  selectedApartado : CatApartadoModel
   loading: boolean = false
   filteredClients: CatClienteModel[]
   clientes: CatClienteModel[]
@@ -22,13 +24,16 @@ export class ApartadosComponent implements OnInit {
   apartados : boolean = false
   accion = '';
   accionAdd = '';
+  accionPago = ""
   accionPedido = ''
   apartadoUsuario : CatApartadoModel
   apartadoByUser = false
   listApartados: CatApartadoModel[] = [];
+  listPagos : PagoApartado[] = []
   cols: any[] = [];
   rows = 0;
   botonEntregar = "Entregar Pedido"
+  botonHacerAbono  = "Hacer un abono"
   //Pedidos especiales
   showPedidos = false
   constructor(
@@ -36,6 +41,7 @@ export class ApartadosComponent implements OnInit {
     private variablesGL: VariablesService,
     private clientesService : ClientesService,
     private apartadoService : ApartadosService
+    
  
   ) {
     this.selectedclienteNameAdvanced= new CatClienteModel() 
@@ -44,6 +50,7 @@ export class ApartadosComponent implements OnInit {
      // {field:' ',header:''},
       { field: 'idArticulo', header: 'Articulo' },
       { field: 'talla', header: 'Talla' },
+      { field : 'precio', header :'Precio'},
       { field: 'fecha', header: 'Fecha' },
       { field : 'fechaEntrega', header : 'Fecha Entrega'},
       { field: 'telefono', header: 'Telefono' },
@@ -147,6 +154,7 @@ export class ApartadosComponent implements OnInit {
   openAddApartado(){
     this.accion = 'Apartar';
     this.accionAdd = ""
+    this.accionPedido = ''
     //this.selectedCliente = new CatClienteModel();
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
@@ -191,8 +199,10 @@ export class ApartadosComponent implements OnInit {
   }
 
   openAddPedido(){
+    this.accionPago = ''
     this.accionAdd = ""
     this.accionPedido = 'Pedido';
+  
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
@@ -202,11 +212,47 @@ export class ApartadosComponent implements OnInit {
     this.accion = ''
     this.accionAdd = "Agregar"
     this.accionPedido  = ''
+    this.accionPago = ""
     //this.accionAdd = 'Agregar';
     
     //his.selectedCliente = new CatClienteModel();
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
+  }
+
+  makePay(apartado : CatApartadoModel){
+    
+    this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response => {
+    if (response.exito) {
+      this.listPagos =  response.respuesta
+      //console.log(response.respuesta)
+      this.accion = ""
+      this.accionAdd = ''
+      this.accionPedido = ''
+      this.accionPago = "Add"
+      this.selectedApartado = apartado
+      console.log(this.listPagos)
+      setTimeout(() => {
+        this.variablesGL.showDialog.next(true);
+      }, 300);
+    } else {
+      this.variablesGL.hideLoading();
+     
+      this.toastr.error(response.mensaje, 'Error!');
+    }
+  }, err => {
+    this.variablesGL.hideLoading();
+    this.toastr.error('Hubo al obtener los pagos', 'Error!');
+  });
+    /*this.accion = ""
+    this.accionAdd = ''
+    this.accionPedido = ''
+    this.accionPago = "Add"
+    this.selectedApartado = apartado
+    //console.log(apartado.idApartado)
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);*/
   }
 }

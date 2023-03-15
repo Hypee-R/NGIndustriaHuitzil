@@ -1,0 +1,95 @@
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '480px'}" header="Historial de Pagos" [modal]="true" styleClass="p-fluid" (onHide)="close()">
+
+    <ng-template pTemplate="content">
+        
+        
+        <div class="field">
+            <label for="fecha">Fecha</label>
+            <input type="date" pInputText id="fecha"  [(ngModel)]="pagoApartado.fecha" [disabled]="false" />
+           
+        </div>
+        <div class="field">
+            <label for="cantidad">Monto</label>
+            <input type="number" pInputText id="cantidad" [(ngModel)]="pagoApartado.cantidad"[disabled]="false" min="0" max = {{_apartado.precio}}>
+            <small class="p-error" *ngIf="submitted && pagoApartado.cantidad > _apartado.precio" >La cantidad debe ser menor al costo del articulo</small>
+        </div>
+        <button pButton pRipple label="Hacer pago" icon="pi pi-check" class="p-button-text" (click)="addPago()"></button>
+        <div>
+            <p-table #dt [value]="listPagos" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
+                                dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Pagos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                                <ng-template pTemplate="caption">
+                                   
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                            <div class="flex justify-content-center align-items-center">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </div>
+                                        </th>
+    
+    
+                                    </tr>
+    
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                    <tr>
+                                       <!-- <td>
+                                            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                        </td>
+                                       <td>
+                                            <div style="display: inline-flex">
+                                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" ></button>
+                                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" style="margin-left: 3px;"></button>
+                                            </div>
+                                        </td>
+                                 
+    
+                                            <td *ngIf="rowData.imagen==''">
+                                                <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png"  width="40" height="40%" class="shadow-1" />
+                                              
+                                            </td>
+    
+                                        <td *ngIf="rowData.imagen!=''">
+                                     
+                                            <img [src]=rowData.imagen width="40" height="40%" class="shadow-1" />
+                                        </td>-->
+    
+                                        <td>
+                                            {{rowData['idPagoApartado']}}
+                                        </td>
+                                        <td>
+                                            {{rowData['fecha']}}
+                                        </td>
+                                        <td>
+                                            {{rowData['cantidad']}}
+                                        </td>
+                                        <!--
+                                        <td>
+                                            {{rowData['talla']}}
+                                        </td>
+                                        <td>
+                                            {{rowData['ubicacion']}}
+                                        </td>
+                                        <td>
+                                            {{rowData['precio']}}
+                                        </td>
+                                        <td>
+                                            <button pButton pRipple icon="pi pi-tags" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" ></button>
+                                        </td>-->
+                                    </tr>
+                                </ng-template>
+                              
+            </p-table>
+        </div>
+        
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+        <!--<button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="addPago()"></button>-->
+    </ng-template>
+
+</p-dialog>

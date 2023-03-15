@@ -10,6 +10,7 @@ export class CatApartadoModel{
     status : string;
     articulo: string;
     talla :string;
+    precio : number;
     constructor(){
         this.idApartado = 0
         this.idEmpleado = 0
@@ -21,6 +22,7 @@ export class CatApartadoModel{
         this.status = ""
         this.articulo = ""
         this.talla = ""
+        this.precio  = 0
     }
   }
   

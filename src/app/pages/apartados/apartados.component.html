@@ -41,34 +41,7 @@
                             <div class="flex align-items-center justify-content-between">
                                 <h5 class="m-0">HIstorial de Articulos Apartados de {{selectedclienteNameAdvanced.nombre }} {{selectedclienteNameAdvanced.apellidoPaterno}} {{selectedclienteNameAdvanced.apellidoMaterno}}</h5>
                                 <br>
-                                <!--<div class="row">
-                                    <div class="col col-md-7">
-                                        <div class="row">
-                                            <div class="col">
-                                                <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
-                                            </div>
-                                            <div class="col">
-                                                <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m" [disabled]="!selectedArticulos || !selectedArticulos.length"></button>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-control " type="file" id="formFileDisabled"   #fileImportInput name="File Upload"  id="txtFileUpload" (change)="fileChangeListener($event)" accept=".csv"/>
-                                               
-                                                    <p-fileUpload mode="basic" ccept=".csv"  id="formFileDisabled"   #fileImportInput name="File Upload"  id="txtFileUpload"   label="Importar" chooseLabel="Import" class="mr-2 inline-block"  (change)="fileChangeListener($event)"></p-fileUpload> 
-                                            
-                                            </div>
-                                            <div class="col">
-                                                <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"(click)="Excel()" style="margin-left: 10px;"></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col col-md-5">
-                                        <span class="p-input-icon-left" style="width: 100%;">
-                                      <i class="pi pi-search"></i>
-                                      <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar..." [style]="{'width': '100%'}"/>
-                                    </span>
-                                    </div>
-                                </div>-->
+                              
                             </div>
                         </ng-template>
                         <ng-template pTemplate="header" let-columns >
@@ -93,11 +66,14 @@
                             <tr>
                                 
                                 <td>
-                                    <button type="button" pButton pRipple  [pRowToggler]="pagos" pTooltip="Mostrar Pagos" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                                   <!-- <button type="button" pButton pRipple  [pRowToggler]="pagos" pTooltip="Mostrar Pagos" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>-->
                                     {{rowData['articulo']}}
                                 </td>
                                 <td>
                                     {{rowData['talla']}}
+                                </td>
+                                <td>
+                                    {{rowData['precio']}}
                                 </td>
                                 <td>
                                     {{rowData['fecha']}}
@@ -113,114 +89,15 @@
                                 </td>
                                 <td>
                                     {{rowData['status']}}
+
                                 </td>
                                 <td>
                                     <button pButton pRipple icon="pi pi-play" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" [pTooltip]="botonEntregar" (click)="entregarPedido(rowData)" [disabled]="rowData.status == 'Entregado'"></button>
+                                    <button pButton pRipple icon="pi pi-money-bill" class="p-button-rounded p-button-success"  style="margin-left: 3px;" [pTooltip]="botonHacerAbono" (click)="makePay(rowData)" ></button>
                                 </td>
                             </tr>
                         </ng-template>
-                        <ng-template pTemplate="rowexpansion" let-pagos>
-                            <tr>
-                                <td colspan="10">
-                                    <div class="p-3">
-                                        <p-table [value]="pagos.ventaArticulo" dataKey="idVentaArticulo" >
-                                            <ng-template pTemplate="header" >
-                                                <tr class="row-accessories">
-                                                    <th style="width: 2em;"></th>
-                                                    
-                                                        
-                                                        <th>Folio</th>
-                                                        <th>Fecha del pago</th>
-                                                        <th>Cantidad</th>
-                                                      
-                                                    
-                                                    <!--<th>Fecha del pago</th>
-                                                    <th pSortableColumn="articulo.sku">Folio
-                                                        <p-sortIcon field="articulo.sku"></p-sortIcon>
-                                                    </th>
-                                                    <th pSortableColumn="articulo.descripcion">Fecha del pago
-                                                        <p-sortIcon field="articulo.descripcion"></p-sortIcon>
-                                                    </th>
-                                                    <th pSortableColumn="cantidad">Cantidad
-                                                        <p-sortIcon field="cantidad"></p-sortIcon>
-                                                    </th>
-                                                    <th pSortableColumn="precioUnitario">Precio Unitario
-                                                        <p-sortIcon field="precioUnitario"></p-sortIcon>
-                                                    </th>
-                                                    <th pSortableColumn="subtotal">Subtotal
-                                                        <p-sortIcon field="subtotal"></p-sortIcon>
-                                                    </th>-->
-                                                    <th style="width: 4rem"></th>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="body" let-article let-expanded="expandedArticulos">
-                                                <tr>
-                                                    <td>
-                                                        <button type="button" pButton pRipple [pRowToggler]="article" pTooltip="Cambios Realizados" class="p-button-text p-button-rounded p-button-plain" [icon]="article.expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" (click)="article.expanded = !article.expanded"></button>
-                                                    </td>
-                                                    <td> <img [src]="article.articulo.imagen" width="40" height="40%" class="shadow-1" /> </td>
-                                                    <td [ngClass]="{'text-decoration-line-through': article.cantidad == 0}">{{article.articulo.sku}}</td>
-                                                    <td [ngClass]="{'text-decoration-line-through': article.cantidad == 0}">{{article.articulo.descripcion}}</td>
-                                                    <td>
-                                                        <p-badge [value]="article.cantidad" [severity]="article.cantidad == 0 ? 'danger' : 'warning'" styleClass="mr-2" size="large"></p-badge>
-                                                    </td>
-                                                    <td>{{article.precioUnitario | currency:'MXN' }}</td>
-                                                    <td>{{article.subtotal | currency:'MXN' }}</td>
-                                                    <td>
-                                                        <p-button type="button" icon="pi pi-sort-alt" pTooltip="Cambiar Articulo" ></p-button>
-                                                    </td>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="rowexpansion" let-article>
-                                                <tr>
-                                                    <td colspan="10">
-                                                        <div class="p-3">
-                                                            <p-table [value]="article.cambiosArticulo" dataKey="idCambioDevolucion">
-                                                                <ng-template pTemplate="header">
-                                                                    <tr>
-                                                                        <th>Cantidad</th>
-                                                                        <th colspan="5">Detalle del cambio y/o devolución del producto</th>
-                                                                        <!-- <th>Imagen</th>
-                                                                        <th>SKU</th>
-                                                                        <th>Descripción</th>
-                                                                        <th>Cantidad</th>
-                                                                        <th>Precio</th>
-                                                                        <th>Talla</th> -->
-                                                                        <th style="width: 4rem"></th>
-                                                                    </tr>
-                                                                </ng-template>
-                                                                <ng-template pTemplate="body" let-cambio>
-                                                                    <tr style="background-color: rgba(0, 0, 0, .15) !important;">
-                                                                        <td>
-                                                                            <p-badge [value]="cambio.cantidad" severity="success" styleClass="mr-2" size="large"></p-badge>
-                                                                        </td>
-                                                                        <td>
-                                                                            <img [src]="cambio?.articulo?.imagen" width="40" height="40%" class="shadow-1" />
-                                                                        </td>
-                                                                        <td>{{cambio?.articulo?.sku}}</td>
-                                                                        <td>{{cambio?.articulo?.descripcion}}</td>
-                                                                        <td>{{cambio?.articulo?.talla}}</td>
-                                                                        <td>{{cambio?.articulo?.precio | currency:'MXN' }}</td>
-                                                                        <td>
-                                                                            <button pButton class="p-button-danger" type="button" icon="pi pi-trash" pTooltip="Quitar Articulo" ></button>
-                                                                        </td>
-                                                                    </tr>
-                                                                </ng-template>
-                                                                <ng-template pTemplate="emptymessage">
-                                                                    <tr>
-                                                                        <td colspan="6">No hay cambios realizados en éste articulo.</td>
-                                                                    </tr>
-                                                                </ng-template>
-                                                            </p-table>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </ng-template>
-                                        </p-table>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-template>
+                        
                     </p-table>
                     </div>
                     <div *ngIf="crearApartado">
@@ -254,7 +131,8 @@
                       
                     </div>
                     <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>
-    
+                    <app-add-pago-apartado [_listPagos]="listPagos" [(_apartado)]="selectedApartado" (saveApartado)="consultaApartado()"  *ngIf="accionPago == 'Add'"></app-add-pago-apartado>
+                   <!-- <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>-->
             </div>
         </div>
     </div>
