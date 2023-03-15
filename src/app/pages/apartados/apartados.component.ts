@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CatApartadoModel } from 'src/app/models/apartado.model';
 import { CatClienteModel } from 'src/app/models/clientes.model';
+import { PagoApartado } from 'src/app/models/pagoApartado';
 import { ApartadosService } from 'src/app/services/apartados.service';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
@@ -14,6 +15,7 @@ import { VariablesService } from 'src/app/services/variablesGL.service';
 export class ApartadosComponent implements OnInit {
   statusPantalla: number
   selectedclienteNameAdvanced: CatClienteModel
+  selectedApartado : CatApartadoModel
   loading: boolean = false
   filteredClients: CatClienteModel[]
   clientes: CatClienteModel[]
@@ -222,7 +224,8 @@ export class ApartadosComponent implements OnInit {
     this.accionAdd = ''
     this.accionPedido = ''
     this.accionPago = "Add"
-    console.log(apartado.idApartado)
+    this.selectedApartado = apartado
+    //console.log(apartado.idApartado)
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);

@@ -1,55 +1,95 @@
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="Hacer pago" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '480px'}" header="Historial de Pagos" [modal]="true" styleClass="p-fluid">
 
     <ng-template pTemplate="content">
         
-        <div class="field">
-            <label for="articulo">Seleciona Articulo (Articulos sin existencia)</label>
-            <p-autoComplete [(ngModel)]="selectedArticuloAdvanced" [suggestions]="filteredArticulos"    placeholder="Ingrese el nombre del articulo" size="40"
-            (completeMethod)="getResultsArticulos($event)" field="descripcion" [dropdown]="true"  >
-            <ng-template let-articulo pTemplate="item">
-              <div class="articulo-item ">
-                <div>{{articulo.sku }} {{articulo.descripcion}}</div>  
-            </div>
-            </ng-template>
-          </p-autoComplete>
-          <p *ngIf="filteredArticulos.length == 0 "> Este producto no existe o tiene inventario</p>
-        </div>
-        <div class="field">
-            <label for="idTalla">Talla</label>
-            <p-dropdown [options]="listTallas"  optionValue="idTalla"  [(ngModel)]="selectedTalla" placeholder="Selecciona una talla" optionLabel="nombre" [style]="{'width': '100%'}"></p-dropdown>
-        </div>
-        <br>
-        <div class="field">
-            <label for="nombre">Nombre Completo</label>
-            <input type="text" pInputText id="nombre" [(ngModel)]="nombreCompleto" required autofocus [disabled]="true" />
-            <small class="p-error" *ngIf="submitted && !cliente.nombre">El nombre es requerido.</small>
-            <small class="p-error" *ngIf="submitted && cliente.nombre?.length > 0 && cliente.nombre?.length <= 2">El nombre debe contener minimo 3 caracteres</small>
-            </div>
-        <br>
-        <div class="field">
-            <label for="direccion">Dirección</label>
-            <input type="text" pInputText id="direccion" [(ngModel)]="cliente.direccion" [disabled]="true">
-        </div>
-
-        <div class="field">
-            <label for="telefono1">Telefono</label>
-            <input type="text" pInputText id="telefono1" [(ngModel)]="cliente.telefono1" [disabled]="true" />
-           
-        </div>
-
-
-        <br>
+        
         <div class="field">
             <label for="fecha">Fecha</label>
-            <input type="date" pInputText id="fecha"  [(ngModel)]="apartado.fecha"[disabled]="false" />
+            <input type="date" pInputText id="fecha"  [(ngModel)]="pagoApartado.fecha" [disabled]="false" />
            
         </div>
-       
+        <div class="field">
+            <label for="telefono1">Monto</label>
+            <input type="number" pInputText id="telefono1" [(ngModel)]="pagoApartado.cantidad"[disabled]="false" min="0" max = {{_apartado.precio}}>
+            <small class="p-error" *ngIf="submitted && pagoApartado.cantidad > _apartado.precio" >La cantidad debe ser menor al costo del articulo</small>
+        </div>
+        <button pButton pRipple label="Hacer pago" icon="pi pi-check" class="p-button-text" (click)="addPago()"></button>
+        <div>
+            <p-table #dt [value]="listPagos" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
+                                dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Pagos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                                <ng-template pTemplate="caption">
+                                   
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                            <div class="flex justify-content-center align-items-center">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </div>
+                                        </th>
+    
+    
+                                    </tr>
+    
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                    <tr>
+                                       <!-- <td>
+                                            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                        </td>
+                                       <td>
+                                            <div style="display: inline-flex">
+                                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" ></button>
+                                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" style="margin-left: 3px;"></button>
+                                            </div>
+                                        </td>
+                                 
+    
+                                            <td *ngIf="rowData.imagen==''">
+                                                <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png"  width="40" height="40%" class="shadow-1" />
+                                              
+                                            </td>
+    
+                                        <td *ngIf="rowData.imagen!=''">
+                                     
+                                            <img [src]=rowData.imagen width="40" height="40%" class="shadow-1" />
+                                        </td>-->
+    
+                                        <td>
+                                            {{rowData['idApartado']}}
+                                        </td>
+                                        <td>
+                                            {{rowData['fecha']}}
+                                        </td>
+                                        <td>
+                                            {{rowData['cantidad']}}
+                                        </td>
+                                        <!--
+                                        <td>
+                                            {{rowData['talla']}}
+                                        </td>
+                                        <td>
+                                            {{rowData['ubicacion']}}
+                                        </td>
+                                        <td>
+                                            {{rowData['precio']}}
+                                        </td>
+                                        <td>
+                                            <button pButton pRipple icon="pi pi-tags" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" ></button>
+                                        </td>-->
+                                    </tr>
+                                </ng-template>
+                              
+            </p-table>
+        </div>
+        
     </ng-template>
     
     <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" ></button>
-        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" ></button>
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="addPago()"></button>
     </ng-template>
 
 </p-dialog>

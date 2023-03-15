@@ -1,14 +1,12 @@
 import { Component, OnInit, Input, Output ,EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CatClienteModel } from '../../../models/clientes.model';
-import { productoModel } from '../../../models/productos.model';
-import { CatTallaModel } from '../../../models/tallas.model';
 import { CatApartadoModel } from '../../../models/apartado.model';
 import { ToastrService } from 'ngx-toastr';
 import { VariablesService } from '../../../services/variablesGL.service';
 import { InventarioService } from '../../../services/inventario.service';
 import { TallasService } from '../../../services/tallas.service';
 import { ApartadosService } from '../../../services/apartados.service';
+import { PagoApartado } from 'src/app/models/pagoApartado';
 
 @Component({
   selector: 'app-add-pago-apartado',
@@ -18,21 +16,17 @@ import { ApartadosService } from '../../../services/apartados.service';
 export class AddPagoApartadoComponent implements OnInit {
 
   @Input() _accion: string;
-  @Input() _editCliente : CatClienteModel;
+  @Input() _apartado : CatApartadoModel;
   @Output() saveApartado: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   submitted = false;
   visibleDialog: boolean;
   accion = '';
-  cliente: CatClienteModel= new CatClienteModel();
   dialogSubscription: Subscription = new Subscription();
-  nombreCompleto = ""
-  filteredArticulos: productoModel[] = []
-  listArticulos: productoModel[] = [];
-  listTallas: CatTallaModel[] = [];
-  clienteName: string = ''
-  selectedArticuloAdvanced: productoModel
-  apartado : CatApartadoModel = new CatApartadoModel()
+  rows = 10;
+  listPagos: PagoApartado[] = [];
+  cols: any[] = [];
+  pagoApartado : PagoApartado = new PagoApartado()
   selectedTalla : number 
 
   constructor(
@@ -41,15 +35,18 @@ export class AddPagoApartadoComponent implements OnInit {
     private inventarioService: InventarioService,
     private tallasService:TallasService,
     private apartadosService: ApartadosService
-    //private clientesService : ClientesService
+
   ) {
-    //this.selectedArticuloAdvanced = new productoModel()
+
+
+    this.cols = [
+      { field: 'idApartado', header: 'ID PAGO' },
+      { field: 'sku', header: 'FECHA' },
+      { field: 'descripcion', header: 'MONTO' },
+    ];
+    this.pagoApartado = new PagoApartado()
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
       this.visibleDialog = estado;
-      if(this._editCliente){
-        this.cliente = this._editCliente;
-        this.nombreCompleto = this.cliente.nombre + " " + this.cliente.apellidoPaterno + " " + this.cliente.apellidoMaterno
-      }
       if(this._accion){
         this.accion = this._accion;
       }
@@ -57,11 +54,10 @@ export class AddPagoApartadoComponent implements OnInit {
 }
 
 ngOnInit(): void {
-  this.inventarioService.getInexistencias().subscribe(response => {
+  this.apartadosService.getPagoByApartado(this._apartado.idApartado).subscribe(response => {
     if (response.exito) {
-      this.listArticulos = response.respuesta;
-     // this.clientes = response.respuesta;
-    
+      this.listPagos =  response.respuesta
+
     } else {
       this.variablesGL.hideLoading();
      
@@ -72,30 +68,38 @@ ngOnInit(): void {
     this.toastr.error('Hubo al obtener los articulos', 'Error!');
   });
 
-  this.tallasService.getTallas().subscribe(response => {
-    if(response.exito){
-      for(let talla of response.respuesta){
-        this.listTallas.push(talla)
-      }
-    }
-  }, err => {
-
-  });
+ 
   
 }
   
-  getResultsArticulos(event) {
-    let filtered: any[] = [];
-    let query = event.query;
-    for (let i = 0; i < this.listArticulos.length; i++) {
-      let articulo = this.listArticulos[i];
-      if (articulo.descripcion.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-        filtered.push(articulo);
-      }
-    }
-    this.filteredArticulos = filtered;
-    this.clienteName=event.query;
-    //this.crear = true
-  }
+ngOnDestroy() : void {
+  this.pagoApartado = new PagoApartado()
+}
 
+  hideDialog() {
+    this.submitted = false;
+    this.variablesGL.showDialog.next(false);
+    this.pagoApartado = new PagoApartado()
+  }
+  
+  addPago(){
+    this.submitted = true
+    console.log(this.pagoApartado.fecha)
+    if(this.pagoApartado.cantidad < this._apartado.precio && this.pagoApartado.fecha != "")
+    {
+    this.pagoApartado.idApartado = this._apartado.idApartado
+    this.apartadosService.agregaPago(this.pagoApartado).subscribe(response =>{
+      if(response.exito){
+        this.hideDialog()
+        this.pagoApartado = new PagoApartado()
+        this.toastr.success('Abono realizado', 'Sucess');
+        setTimeout(() => {
+          
+        }, 100);
+      }
+      else{
+        this.toastr.success(response.mensaje, 'Error!');
+      }
+  })
+  }}
 }
