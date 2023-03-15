@@ -1,8 +1,9 @@
 export class PagoApartado{
     //idApartado: number;
     //idEmpleado: number;
-    idApartado : number;
-    idArticulo : number;
+    IdPagoApartado : number
+    idApartado : number
+    idArticulo : number
     fecha: string;
     fechaEntrega: string;
     status : string;

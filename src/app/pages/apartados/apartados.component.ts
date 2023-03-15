@@ -29,6 +29,7 @@ export class ApartadosComponent implements OnInit {
   apartadoUsuario : CatApartadoModel
   apartadoByUser = false
   listApartados: CatApartadoModel[] = [];
+  listPagos : PagoApartado[] = []
   cols: any[] = [];
   rows = 0;
   botonEntregar = "Entregar Pedido"
@@ -40,6 +41,7 @@ export class ApartadosComponent implements OnInit {
     private variablesGL: VariablesService,
     private clientesService : ClientesService,
     private apartadoService : ApartadosService
+    
  
   ) {
     this.selectedclienteNameAdvanced= new CatClienteModel() 
@@ -220,7 +222,30 @@ export class ApartadosComponent implements OnInit {
   }
 
   makePay(apartado : CatApartadoModel){
-    this.accion = ""
+    
+    this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response => {
+    if (response.exito) {
+      this.listPagos =  response.respuesta
+      //console.log(response.respuesta)
+      this.accion = ""
+      this.accionAdd = ''
+      this.accionPedido = ''
+      this.accionPago = "Add"
+      this.selectedApartado = apartado
+      console.log(this.listPagos)
+      setTimeout(() => {
+        this.variablesGL.showDialog.next(true);
+      }, 300);
+    } else {
+      this.variablesGL.hideLoading();
+     
+      this.toastr.error(response.mensaje, 'Error!');
+    }
+  }, err => {
+    this.variablesGL.hideLoading();
+    this.toastr.error('Hubo al obtener los pagos', 'Error!');
+  });
+    /*this.accion = ""
     this.accionAdd = ''
     this.accionPedido = ''
     this.accionPago = "Add"
@@ -228,6 +253,6 @@ export class ApartadosComponent implements OnInit {
     //console.log(apartado.idApartado)
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
-    }, 100);
+    }, 100);*/
   }
 }

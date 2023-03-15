@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output ,EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CatApartadoModel } from '../../../models/apartado.model';
 import { ToastrService } from 'ngx-toastr';
@@ -15,7 +15,8 @@ import { PagoApartado } from 'src/app/models/pagoApartado';
 })
 export class AddPagoApartadoComponent implements OnInit {
 
-  @Input() _accion: string;
+  //@Input() _accion: string;
+  @Input() _listPagos : PagoApartado[]
   @Input() _apartado : CatApartadoModel;
   @Output() saveApartado: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -38,7 +39,7 @@ export class AddPagoApartadoComponent implements OnInit {
 
   ) {
 
-
+    this.listPagos = this._listPagos
     this.cols = [
       { field: 'idApartado', header: 'ID PAGO' },
       { field: 'sku', header: 'FECHA' },
@@ -47,17 +48,15 @@ export class AddPagoApartadoComponent implements OnInit {
     this.pagoApartado = new PagoApartado()
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
       this.visibleDialog = estado;
-      if(this._accion){
+      /*if(this._accion){
         this.accion = this._accion;
-      }
+      }*/
   });
-}
-
-ngOnInit(): void {
-  this.apartadosService.getPagoByApartado(this._apartado.idApartado).subscribe(response => {
+   // console.log(this._apartado)
+  /*this.apartadosService.getPagoByApartado(this._apartado.idApartado).subscribe(response => {
     if (response.exito) {
       this.listPagos =  response.respuesta
-
+      console.log(this.listPagos)
     } else {
       this.variablesGL.hideLoading();
      
@@ -66,36 +65,47 @@ ngOnInit(): void {
   }, err => {
     this.variablesGL.hideLoading();
     this.toastr.error('Hubo al obtener los articulos', 'Error!');
-  });
+  });*/
+}
+
+ngOnInit(): void {
+  this.listPagos = this._listPagos
+  //console.log(this._apartado)
 
  
   
 }
-  
+close(){
+  this.ngOnDestroy()
+  this.listPagos = []
+}
 ngOnDestroy() : void {
+  
   this.pagoApartado = new PagoApartado()
 }
 
   hideDialog() {
+    this.listPagos = []
     this.submitted = false;
-    this.variablesGL.showDialog.next(false);
+    //this.variablesGL.showDialog.next(false);
     this.pagoApartado = new PagoApartado()
+    this.ngOnDestroy
   }
   
   addPago(){
     this.submitted = true
-    console.log(this.pagoApartado.fecha)
+    //console.log(this.pagoApartado.fecha)
     if(this.pagoApartado.cantidad < this._apartado.precio && this.pagoApartado.fecha != "")
     {
     this.pagoApartado.idApartado = this._apartado.idApartado
     this.apartadosService.agregaPago(this.pagoApartado).subscribe(response =>{
       if(response.exito){
-        this.hideDialog()
-        this.pagoApartado = new PagoApartado()
+        //this.hideDialog()
+        //this.pagoApartado = new PagoApartado()
         this.toastr.success('Abono realizado', 'Sucess');
         setTimeout(() => {
           
-        }, 100);
+        }, 200);
       }
       else{
         this.toastr.success(response.mensaje, 'Error!');

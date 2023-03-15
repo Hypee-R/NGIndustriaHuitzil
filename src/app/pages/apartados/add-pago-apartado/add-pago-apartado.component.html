@@ -1,4 +1,4 @@
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '480px'}" header="Historial de Pagos" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '480px'}" header="Historial de Pagos" [modal]="true" styleClass="p-fluid" (onHide)="close()">
 
     <ng-template pTemplate="content">
         
@@ -9,8 +9,8 @@
            
         </div>
         <div class="field">
-            <label for="telefono1">Monto</label>
-            <input type="number" pInputText id="telefono1" [(ngModel)]="pagoApartado.cantidad"[disabled]="false" min="0" max = {{_apartado.precio}}>
+            <label for="cantidad">Monto</label>
+            <input type="number" pInputText id="cantidad" [(ngModel)]="pagoApartado.cantidad"[disabled]="false" min="0" max = {{_apartado.precio}}>
             <small class="p-error" *ngIf="submitted && pagoApartado.cantidad > _apartado.precio" >La cantidad debe ser menor al costo del articulo</small>
         </div>
         <button pButton pRipple label="Hacer pago" icon="pi pi-check" class="p-button-text" (click)="addPago()"></button>
@@ -58,7 +58,7 @@
                                         </td>-->
     
                                         <td>
-                                            {{rowData['idApartado']}}
+                                            {{rowData['idPagoApartado']}}
                                         </td>
                                         <td>
                                             {{rowData['fecha']}}
@@ -89,7 +89,7 @@
     
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="addPago()"></button>
+        <!--<button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="addPago()"></button>-->
     </ng-template>
 
 </p-dialog>
