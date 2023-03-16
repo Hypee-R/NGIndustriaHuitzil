@@ -2,19 +2,23 @@
 
     <ng-template pTemplate="content">
         
-        
-        <div class="field">
+        <div *ngIf="hacerPago">
+             <div class="field">
             <label for="fecha">Fecha</label>
             <input type="date" pInputText id="fecha"  [(ngModel)]="pagoApartado.fecha" [disabled]="false" />
-           
-        </div>
-        <div class="field">
+            <small class="p-error" *ngIf="submitted && pagoApartado.fecha == ''" >  Debe seleccionar una fecha</small>
+            </div>
+             <div class="field">
             <label for="cantidad">Monto</label>
             <input type="number" pInputText id="cantidad" [(ngModel)]="pagoApartado.cantidad"[disabled]="false" min="0" max = {{_apartado.precio}}>
             <small class="p-error" *ngIf="submitted && pagoApartado.cantidad > _apartado.precio" >La cantidad debe ser menor al costo del articulo</small>
+             </div>
+        <br>
+        <button pButton type="button" label="Hacer pago"  class="p-button-info" (click)="addPago()" [disabled]="!hacerPago"></button>
         </div>
-        <button pButton pRipple label="Hacer pago" icon="pi pi-check" class="p-button-text" (click)="addPago()"></button>
-        <div>
+        <div *ngIf="!hacerPago">
+            Se ha terminado de pagar el articulo
+        </div>
             <p-table #dt [value]="listPagos" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
                                 dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Pagos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                                 <ng-template pTemplate="caption">
@@ -83,7 +87,7 @@
                                 </ng-template>
                               
             </p-table>
-        </div>
+       
         
     </ng-template>
     
