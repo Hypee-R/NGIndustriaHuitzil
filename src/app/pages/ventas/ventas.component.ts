@@ -16,6 +16,7 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { CatClienteModel } from 'src/app/models/clientes.model';
 import { ConfirmationService, PrimeNGConfig } from 'primeng/api';
 import { trigger,state,style,transition,animate } from '@angular/animations';
+import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 
 @Component({
   selector: 'app-ventas',
@@ -31,7 +32,6 @@ export class VentasComponent implements OnInit {
   impresoras = [];
   impresoraSeleccionada: string = "TicketsZebraSistema";
   mensaje: string = "";
-
   display: boolean = false;
   displayCotizacion: boolean = false;
   @Output() _articulosS = new EventEmitter<productoModel>();
@@ -60,27 +60,24 @@ export class VentasComponent implements OnInit {
   totalMultipleF: number;
   totalMultipleT: number;
   //Busqueda CLIENTES
-  clienteName: string = '';
+   clienteName = 'MOSTRADOR';
   //resultsClientes:  CatProveedorModel[];
   selectedclienteNameAdvanced: CatClienteModel;
   filteredClients: CatClienteModel[];
   clientes: CatClienteModel[];
   //Busqueda CLIENTES
 
-
-
-
   cantidades: number[] = []
   RegistraVenta: VentaModel = new VentaModel();
   cashModel: CajaModel;
   CurrentDate = new Date();
+  user: UsuarioAuthModel;
   constructor(
     private toastr: ToastrService,
     private ventasService: VentasService,
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
     private clientesService: ClientesService,
-    private confirmationService: ConfirmationService
   ) {
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
@@ -112,7 +109,7 @@ export class VentasComponent implements OnInit {
     this.loading = false
     this.getCaja();
     this.getClientes()
-
+    this.user = JSON.parse(localStorage.getItem('usuario'));
   }
 
   getClientes() {
@@ -215,7 +212,7 @@ export class VentasComponent implements OnInit {
     this.articulos = 0
     this.total = 0
     this.articlesShell = []
-
+ 
   }
   getArticulos() {
     this.inventarioService.getArticulos().subscribe(response => {
@@ -370,6 +367,9 @@ export class VentasComponent implements OnInit {
 
   }
 
+  downloadTicket() {
+ 
+  }
 
   downloadPDF() {
     // Extraemos el
@@ -422,10 +422,17 @@ export class VentasComponent implements OnInit {
 
     }
     if (tipoPago == "TARJETA") {
-     
       this.toastr.warning("Recuerda Validar el cobro en terminal la venta se registrara ", 'Atencion!');
+      if (this.totalVenta==this.total) {
+        this.changePage();
         this.RegistraVentaValid(tipoPago);
 
+      } else {
+        this.toastr.error("Error el importe debe ser exacto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+
+      }
+  
+     
      
 
 
@@ -497,6 +504,13 @@ export class VentasComponent implements OnInit {
              this.activeState=[false];
         this.toastr.success(resp.mensaje, 'Exito!');
 
+        if(this.selectedclienteNameAdvanced.nombre!=undefined && this.selectedclienteNameAdvanced.nombre!=""){
+
+         this.clienteName=this.selectedclienteNameAdvanced.nombre+this.selectedclienteNameAdvanced.apellidoPaterno+this.selectedclienteNameAdvanced.apellidoMaterno
+        }
+       
+       console.log(this.selectedclienteNameAdvanced)
+       console.log(this.clienteName)
         //code Impresion
         const conector = new ConectorPluginV3();
         conector
@@ -507,6 +521,10 @@ export class VentasComponent implements OnInit {
           .EscribirTexto("***UniformesHuitzil***")
           .Feed(1)
           .EscribirTexto("Caja:" + this.cashModel.idCaja)
+          .Feed(1)
+          .EscribirTexto("Cajero:" + this.user.nombre+" "+ this.user.apellidoPaterno+" "+  this.user.apellidoMaterno )
+          .Feed(1)
+          .EscribirTexto("Cliente:" +this.clienteName)
           .Feed(1)
           .EscribirTexto("Ticket:" + this.RegistraVenta.noTicket)
           .Feed(1)
@@ -554,7 +572,6 @@ export class VentasComponent implements OnInit {
           this.articulos = 0
           this.total = 0
           this.articlesShell = []
-
           this.display = false;
         }
 
