@@ -29,7 +29,8 @@ export class AddPagoApartadoComponent implements OnInit {
   cols: any[] = [];
   pagoApartado : PagoApartado = new PagoApartado()
   selectedTalla : number 
-
+  totalAbonos : number
+  hacerPago : boolean = true
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -38,7 +39,7 @@ export class AddPagoApartadoComponent implements OnInit {
     private apartadosService: ApartadosService
 
   ) {
-
+    this.totalAbonos = 0
     this.listPagos = this._listPagos
     this.cols = [
       { field: 'idApartado', header: 'ID PAGO' },
@@ -48,32 +49,24 @@ export class AddPagoApartadoComponent implements OnInit {
     this.pagoApartado = new PagoApartado()
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
       this.visibleDialog = estado;
-      /*if(this._accion){
-        this.accion = this._accion;
-      }*/
   });
-   // console.log(this._apartado)
-  /*this.apartadosService.getPagoByApartado(this._apartado.idApartado).subscribe(response => {
-    if (response.exito) {
-      this.listPagos =  response.respuesta
-      console.log(this.listPagos)
-    } else {
-      this.variablesGL.hideLoading();
-     
-      this.toastr.error(response.mensaje, 'Error!');
-    }
-  }, err => {
-    this.variablesGL.hideLoading();
-    this.toastr.error('Hubo al obtener los articulos', 'Error!');
-  });*/
+
+  
 }
 
 ngOnInit(): void {
   this.listPagos = this._listPagos
-  //console.log(this._apartado)
-
- 
+  this._listPagos.forEach(pagos => {
+    this.totalAbonos += pagos.cantidad
+    
+  });
   
+  if(this.totalAbonos > this._apartado.precio){
+    this.hacerPago = false
+  }
+  console.log(this.totalAbonos)
+  console.log(this._apartado.precio)
+ 
 }
 close(){
   this.ngOnDestroy()
@@ -94,7 +87,7 @@ ngOnDestroy() : void {
   
   addPago(){
     this.submitted = true
-    //console.log(this.pagoApartado.fecha)
+    console.log(this.pagoApartado.fecha)
     if(this.pagoApartado.cantidad < this._apartado.precio && this.pagoApartado.fecha != "")
     {
     this.pagoApartado.idApartado = this._apartado.idApartado
