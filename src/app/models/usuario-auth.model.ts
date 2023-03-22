@@ -14,4 +14,5 @@ export class UsuarioAuthModel{
   rol: string;
   vistas: VistaModel[];
   expiredTime: any;
+  pc: string;
 }

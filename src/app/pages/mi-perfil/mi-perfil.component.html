@@ -18,6 +18,7 @@
                         <p class="center">Telefono: {{user.telefono}}</p>
                         <p class="center">Correo: {{user.correo}}</p>
                         <p class="center">Rol: {{user.rol}}</p>
+                        <p class="center">Pc: {{user.pc}}</p>
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -64,6 +65,26 @@
                         </div>
                         <div class="d-grid gap-2 col-6 mx-auto">
                             <button class="btn btn-primary" type="submit" [disabled]="formContrasena.status == 'INVALID'">Actualizar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-4">
+                    <h4 class="text-center mt-5">Agregar PC</h4>
+                    <hr>
+                    <form  (ngSubmit)="actualizarUsuario(this.user.pc)">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="form-label">PC de usuario</label>
+                                    <input type="text" class="form-control"  id="this.user.pc" name="this.user.pc"   [(ngModel)]="this.user.pc"   value="{{this.user.pc}}">
+                                </div>
+                            </div>
+                        </div>
+                       
+                        
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <button class="btn btn-primary" type="submit" >Actualizar PC</button>
                         </div>
                     </form>
                 </div>
