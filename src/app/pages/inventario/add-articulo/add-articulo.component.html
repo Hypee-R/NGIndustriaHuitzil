@@ -9,7 +9,6 @@
             <img  [src]="previsualizacion" alt="" width="250">
         </div>
         <div class="preview-img" *ngIf="!previsualizacion" >
-            <!--<img  [src]="'assets/img/default-image.jpg'" alt="" width="250">-->
             <img [src]="imageSource" alt="Image Source" width="250">
         </div>
         
@@ -100,11 +99,6 @@
                         </div>
                     </div>
                   </div>                       
-            <!-- <ngx-barcode6 *ngFor="let etiqueta of noEtiquetas"
-                [bc-format]="'CODE128'"
-                [bc-value]= "sku"
-                [bc-display-value]="true">
-            </ngx-barcode6>-->
             </div>
             <div *ngIf = 'noEtiquetas.length == 0'>
                 <p>Sin existencias en almacén</p>

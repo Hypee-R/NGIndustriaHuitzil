@@ -12,6 +12,7 @@ import { TallasService } from 'src/app/services/tallas.service';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { DomSanitizer } from '@angular/platform-browser';
+import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 
 
 
@@ -42,10 +43,11 @@ export class AddArticuloComponent implements OnInit {
   selectedCategoria: CategoriaModel;
   selectedTalla: CatTallaModel;
   selectedUbicacion: UbicacionModel;
-
+  
 
   dialogSubscription: Subscription = new Subscription();
 
+  user: UsuarioAuthModel;
   archivos=[]
   previsualizacion;
   sku = ""
@@ -89,6 +91,7 @@ export class AddArticuloComponent implements OnInit {
 
   ngOnInit(): void {
     this.producto = this._editproducto;
+    this.user = JSON.parse(localStorage.getItem('usuario'));
     this.getCampos();
 
 
@@ -112,9 +115,6 @@ saveArticulo(){
   this.submitted = true;  
   if(this._accion != 'Codigo de Barras'){
     if(this.producto.existencia?.length > 0){
-    //console.log('datos validos!!');
-    //console.log('data proveedor ', this.proveedor);
-
     if(this._accion == 'Agregar'){
       this.guardarArticulo();
     }else{
@@ -211,11 +211,7 @@ capturarFile(event){
   this.extraerBase64(fotografiaCaptura).then((imagen: any) => {
     this.previsualizacion = imagen.base;
     this.producto.imagen=imagen.base
-    //console.log(imagen['base']);
   })
-  //this.archivos.push(fotografiaCaptura)
-
-
 }
 
 extraerBase64 = async ($event: any) => new Promise((resolve, reject) => {
@@ -242,13 +238,11 @@ extraerBase64 = async ($event: any) => new Promise((resolve, reject) => {
 
   printCodeBars(){
     this.toastr.success("Impresion de etiquetas:"+this._editproducto.sku+"Cantidad:"+this.noEtiquetasPrint, 'Exito!!');
-    console.log("Imprimir")
-    this.articuloService.getImprimirEtiquetas(this._editproducto.descripcion,this._editproducto.sku,this.noEtiquetasPrint).subscribe(response => {
-    console.log(response);
+    this.articuloService.getImprimirEtiquetas(this._editproducto.descripcion,this._editproducto.sku,this.noEtiquetasPrint,this.user.pc).subscribe(response => {
     this._editproducto.sku=""
     this.noEtiquetasPrint=0
     this.toastr.success("Impresion de etiquetas:"+this._editproducto.sku+"Cantidad:"+this.noEtiquetasPrint, 'Exito!!');
-    // alert("Impresion de etiquetas:"+this._editproducto.sku+"Cantidad:"+this.noEtiquetasPrint)
+   
     }, err => {
       console.log("Error:"+JSON.stringify(err));
       this.toastr.error('Hubo un problema al conectar con los servicios de Impresion','Ups!!');
