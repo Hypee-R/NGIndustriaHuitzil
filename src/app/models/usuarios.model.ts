@@ -9,4 +9,5 @@ export class UsuarioModel{
     apellidoMaterno: string;
     telefono: string;
     correo: string;
+    pc: string;
 }

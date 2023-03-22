@@ -5,6 +5,7 @@ import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { UsuariosService } from '../../services/usuarios.service';
 import { ToastrService } from 'ngx-toastr';
+import { UsuarioModel } from 'src/app/models/usuarios.model';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -12,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./mi-perfil.component.css']
 })
 export class MiPerfilComponent implements OnInit {
-
+  usuario: UsuarioModel = new UsuarioModel();
   user: UsuarioAuthModel;
   submitted: boolean;
   validPswAct: boolean;
@@ -91,4 +92,32 @@ export class MiPerfilComponent implements OnInit {
     }
   }
 
+
+  actualizarUsuario(event: string){
+
+    this.usuario.idUser= this.user.id
+    this.usuario.usuario=this.user.usuario
+    this.usuario.nombre=this.user.nombre
+    this.usuario.apellidoPaterno=this.user.apellidoPaterno
+    this.usuario.apellidoMaterno=this.user.apellidoMaterno
+    this.usuario.telefono=this.user.telefono
+    this.usuario.correo=this.user.correo
+    this.usuario.idRol=this.user.idRol
+    this.usuario.pc=this.user.pc
+    this.usuario.password=this.user.password
+    this.usuario.rol=this.user.rol
+    console.log(this.usuario)
+    this.usuariosService.actualizaUsuario(this.usuario).subscribe(response => {
+      if(response.exito){
+          this.toastr.success(response.mensaje, 'Exito!!');
+      
+      }else{
+          this.toastr.error(response.mensaje, 'Ups!!');
+      }
+    }, err => {
+      console.log('error actualiza usuario ', err);
+      this.toastr.error('Hubo un problema al conectar con los servicios en linea','Ups!!');
+    });
+  }
+  
 }
