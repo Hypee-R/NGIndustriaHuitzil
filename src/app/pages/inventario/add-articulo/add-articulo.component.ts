@@ -239,10 +239,9 @@ extraerBase64 = async ($event: any) => new Promise((resolve, reject) => {
   printCodeBars(){
     this.toastr.success("Impresion de etiquetas:"+this._editproducto.sku+"Cantidad:"+this.noEtiquetasPrint, 'Exito!!');
     this.articuloService.getImprimirEtiquetas(this._editproducto.descripcion,this._editproducto.sku,this.noEtiquetasPrint,this.user.pc).subscribe(response => {
-    this._editproducto.sku=""
-    this.noEtiquetasPrint=0
+    // this._editproducto.sku=""
+    // this.noEtiquetasPrint=0
     this.toastr.success("Impresion de etiquetas:"+this._editproducto.sku+"Cantidad:"+this.noEtiquetasPrint, 'Exito!!');
-   
     }, err => {
       console.log("Error:"+JSON.stringify(err));
       this.toastr.error('Hubo un problema al conectar con los servicios de Impresion','Ups!!');
