@@ -155,7 +155,6 @@ export class ApartadosComponent implements OnInit {
     this.accion = 'Apartar';
     this.accionAdd = ""
     this.accionPedido = ''
-    //this.selectedCliente = new CatClienteModel();
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
@@ -213,9 +212,6 @@ export class ApartadosComponent implements OnInit {
     this.accionAdd = "Agregar"
     this.accionPedido  = ''
     this.accionPago = ""
-    //this.accionAdd = 'Agregar';
-    
-    //his.selectedCliente = new CatClienteModel();
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
@@ -226,13 +222,11 @@ export class ApartadosComponent implements OnInit {
     this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response => {
     if (response.exito) {
       this.listPagos =  response.respuesta
-      //console.log(response.respuesta)
       this.accion = ""
       this.accionAdd = ''
       this.accionPedido = ''
       this.accionPago = "Add"
       this.selectedApartado = apartado
-      console.log(this.listPagos)
       setTimeout(() => {
         this.variablesGL.showDialog.next(true);
       }, 300);
@@ -245,14 +239,6 @@ export class ApartadosComponent implements OnInit {
     this.variablesGL.hideLoading();
     this.toastr.error('Hubo al obtener los pagos', 'Error!');
   });
-    /*this.accion = ""
-    this.accionAdd = ''
-    this.accionPedido = ''
-    this.accionPago = "Add"
-    this.selectedApartado = apartado
-    //console.log(apartado.idApartado)
-    setTimeout(() => {
-      this.variablesGL.showDialog.next(true);
-    }, 100);*/
+  
   }
 }
