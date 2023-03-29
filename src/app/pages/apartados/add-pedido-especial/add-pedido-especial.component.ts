@@ -41,9 +41,9 @@ export class AddPedidoEspecialComponent implements OnInit {
     private inventarioService: InventarioService,
     private tallasService:TallasService,
     private apartadosService: ApartadosService
-    //private clientesService : ClientesService
+
   ) {
-    //this.selectedArticuloAdvanced = new productoModel()
+ 
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
       this.visibleDialog = estado;
       if(this._editCliente){
@@ -57,10 +57,10 @@ export class AddPedidoEspecialComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.inventarioService.getInexistencias().subscribe(response => {
+    this.inventarioService.getArticulos().subscribe(response => {
       if (response.exito) {
         this.listArticulos = response.respuesta;
-       // this.clientes = response.respuesta;
+    
       
       } else {
         this.variablesGL.hideLoading();
@@ -86,7 +86,6 @@ export class AddPedidoEspecialComponent implements OnInit {
 
   hideDialog() {
     this.submitted = false;
-    //this.cliente = new CatClienteModel();
     this.variablesGL.showDialog.next(false);
   }
 
@@ -101,7 +100,6 @@ export class AddPedidoEspecialComponent implements OnInit {
     }
     this.filteredArticulos = filtered;
     this.clienteName=event.query;
-    //this.crear = true
   }
 
   addApartado(){
@@ -110,7 +108,7 @@ export class AddPedidoEspecialComponent implements OnInit {
     this.apartado.direccion = this.cliente.direccion
     this.apartado.telefono = this.cliente.telefono1
     this.apartado.idTalla = this.selectedTalla
-
+    this.apartado.type = "E"
     if(this.apartado.idArticulo == undefined || this.apartado.idTalla == undefined || this.apartado.fecha == "" || this.apartado.idArticulo == 0){
       this.toastr.error('Faltan datos', 'Error!');
     }

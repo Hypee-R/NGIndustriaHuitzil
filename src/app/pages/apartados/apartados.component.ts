@@ -21,6 +21,7 @@ export class ApartadosComponent implements OnInit {
   clientes: CatClienteModel[]
   clienteName: string = ''
   crearApartado: boolean = false
+  crearPedido : boolean  = false
   apartados : boolean = false
   accion = '';
   accionAdd = '';
@@ -29,8 +30,10 @@ export class ApartadosComponent implements OnInit {
   apartadoUsuario : CatApartadoModel
   apartadoByUser = false
   listApartados: CatApartadoModel[] = [];
+  listPedidos: CatApartadoModel[] = [];
   listPagos : PagoApartado[] = []
   cols: any[] = [];
+  colsPedidos  = [];
   rows = 0;
   botonEntregar = "Entregar Pedido"
   botonHacerAbono  = "Hacer un abono"
@@ -47,7 +50,6 @@ export class ApartadosComponent implements OnInit {
     this.selectedclienteNameAdvanced= new CatClienteModel() 
     this.statusPantalla = this.variablesGL.getStatusPantalla()
     this.cols = [
-     // {field:' ',header:''},
       { field: 'idArticulo', header: 'Articulo' },
       { field: 'talla', header: 'Talla' },
       { field : 'precio', header :'Precio'},
@@ -58,6 +60,17 @@ export class ApartadosComponent implements OnInit {
       { field: 'status', header : 'Status'}
     
     ];
+
+    this.colsPedidos = [
+      { field: 'idPedido', header: 'ID PEDIDO' },
+      { field: 'fecha', header: 'Fecha' },
+      { field : 'fechaEntrega', header : 'Fecha Entrega'},
+      { field: 'telefono', header: 'Telefono' },
+      { field: 'direccion', header: 'Dirección' },
+      { field: 'status', header : 'Status'}
+    
+    ];
+
     let status = this.variablesGL.getPantalla();
     if(status == 'celular'){
       this.rows = 6;
@@ -104,13 +117,14 @@ export class ApartadosComponent implements OnInit {
     }
     this.filteredClients = filtered;
     this.clienteName=event.query;
-    //this.crear = true
   }
   
   cambie(){
     this.listApartados.shift()
+    this.listPedidos.shift()
     this.apartadoByUser = false
     this.crearApartado = false
+    this.showPedidos = false
   }
 
   consultaApartado(){
@@ -120,22 +134,17 @@ export class ApartadosComponent implements OnInit {
     if(this.selectedclienteNameAdvanced.idCliente != 0 && !this.apartados){
       this.showPedidos = false
       this.crearApartado = true
-      this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente).subscribe(response =>{
+      this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"A").subscribe(response =>{
         if(response.exito){
           console.log(response.respuesta)
-          //this.apartadoUsuario = response.respuesta
           this.listApartados = response.respuesta
-
+          console.log(this.listApartados)
           this.listApartados.forEach(apartado => {
             if(apartado.status == "Espera"){
               this.crearApartado = false
               return
             }
-            /*else{
-              this.crearApartado = true
-            }*/
           });
-          //console.log(this.crearApartado)
           this.apartadoByUser = true
         }
         else{
@@ -160,7 +169,7 @@ export class ApartadosComponent implements OnInit {
     }, 100);
   }
 
-  entregarPedido(apartado : CatApartadoModel){
+  entregarPedido(apartado : CatApartadoModel,type : String){
     let d = new Date()
     let newApartado = apartado
     newApartado.fechaEntrega = d.toISOString().substring(0, 19);
@@ -174,7 +183,11 @@ export class ApartadosComponent implements OnInit {
         this.toastr.error(request.mensaje,"Error")
       }
       setTimeout(() => {
-        this.consultaApartado()
+        if(type == "A"){
+        this.consultaApartado()}
+        else{
+          this.consultarPedidoEspecial()
+        }
       }, 200);
     }, err => {
       this.variablesGL.hideLoading();
@@ -184,12 +197,33 @@ export class ApartadosComponent implements OnInit {
     
     
   } 
-  consultarPedido(){
+  consultarPedidoEspecial(){
     this.accion = ""
     this.crearApartado = false
     this.apartadoByUser = false
     if(this.selectedclienteNameAdvanced.idCliente != 0 && !this.apartados){
       this.showPedidos =  true
+      this.crearPedido = true
+      this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"E").subscribe(response =>{
+        if(response.exito){
+          console.log(response.respuesta)
+          this.listPedidos = response.respuesta
+   
+          this.listPedidos.forEach(apartado => {
+            if(apartado.status == "Espera"){
+              this.crearPedido = false
+              return
+            }
+          });
+         
+         // this.apartadoByUser = true
+        }
+      else{
+        this.crearPedido = true
+         /* this.crearApartado = true
+          this.apartadoByUser = false*/
+        }
+      })
     }
     else{
       this.toastr.error("Selecciona un cliente", 'Error!');

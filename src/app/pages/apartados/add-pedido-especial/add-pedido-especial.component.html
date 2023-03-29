@@ -3,7 +3,7 @@
     <ng-template pTemplate="content">
         
         <div class="field">
-            <label for="articulo">Seleciona Articulo (Articulos sin existencia)</label>
+            <label for="articulo">Seleciona Articulos </label>
             <p-autoComplete [(ngModel)]="selectedArticuloAdvanced" [suggestions]="filteredArticulos"    placeholder="Ingrese el nombre del articulo" size="40"
             (completeMethod)="getResultsArticulos($event)" field="descripcion" [dropdown]="true"  >
             <ng-template let-articulo pTemplate="item">
@@ -12,7 +12,7 @@
             </div>
             </ng-template>
           </p-autoComplete>
-          <p *ngIf="filteredArticulos.length == 0 "> Este producto no existe o tiene inventario</p>
+         <!-- <p *ngIf="filteredArticulos.length == 0 "> Este producto no existe o tiene inventario</p>-->
         </div>
         <div class="field">
             <label for="idTalla">Talla</label>

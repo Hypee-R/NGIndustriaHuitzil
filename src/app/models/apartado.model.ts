@@ -1,3 +1,5 @@
+import { type } from "os";
+
 export class CatApartadoModel{
     idApartado: number;
     idEmpleado: number;
@@ -11,6 +13,7 @@ export class CatApartadoModel{
     articulo: string;
     talla :string;
     precio : number;
+    type : string;
     constructor(){
         this.idApartado = 0
         this.idEmpleado = 0
@@ -23,6 +26,7 @@ export class CatApartadoModel{
         this.articulo = ""
         this.talla = ""
         this.precio  = 0
+        this.type = ""
     }
   }
   
