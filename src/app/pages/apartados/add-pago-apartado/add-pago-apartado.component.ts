@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CatApartadoModel } from '../../../models/apartado.model';
 import { ToastrService } from 'ngx-toastr';
@@ -13,7 +13,7 @@ import { PagoApartado } from 'src/app/models/pagoApartado';
   templateUrl: './add-pago-apartado.component.html',
   styleUrls: ['./add-pago-apartado.component.css']
 })
-export class AddPagoApartadoComponent implements OnInit {
+export class AddPagoApartadoComponent implements OnInit,OnChanges {
 
   //@Input() _accion: string;
   @Input() _listPagos : PagoApartado[]
@@ -31,6 +31,7 @@ export class AddPagoApartadoComponent implements OnInit {
   selectedTalla : number 
   totalAbonos : number
   hacerPago : boolean = true
+  faltante : number = 0
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -54,48 +55,48 @@ export class AddPagoApartadoComponent implements OnInit {
   
 }
 
-ngOnInit(): void {
+consultarAbonos(){
+  this.totalAbonos = 0
+  this.faltante = 0
   this.listPagos = this._listPagos
   this._listPagos.forEach(pagos => {
     this.totalAbonos += pagos.cantidad
-    
   });
   
-  if(this.totalAbonos > this._apartado.precio){
+  if(this.totalAbonos >= this._apartado.precio){
     this.hacerPago = false
   }
-  console.log(this.totalAbonos)
-  console.log(this._apartado.precio)
- 
-}
-close(){
-  this.ngOnDestroy()
-  this.listPagos = []
-}
-ngOnDestroy() : void {
-  
-  this.pagoApartado = new PagoApartado()
+  else{
+    this.hacerPago = true
+  }
+  this.faltante = this._apartado.precio - this.totalAbonos
 }
 
-  hideDialog() {
-    this.listPagos = []
+ngOnChanges(changes: SimpleChanges): void {
+  this.consultarAbonos()
+ 
+}
+ngOnInit(): void {
+ this.consultarAbonos()
+}
+
+
+hideDialog() {
+    /*this.listPagos = []
     this.submitted = false;
-    //this.variablesGL.showDialog.next(false);
     this.pagoApartado = new PagoApartado()
-    this.ngOnDestroy
+    this.ngOnDestroy*/
   }
   
-  addPago(){
+addPago(){
     this.submitted = true
-    console.log(this.pagoApartado.fecha)
     if(this.pagoApartado.cantidad < this._apartado.precio && this.pagoApartado.fecha != "")
     {
     this.pagoApartado.idApartado = this._apartado.idApartado
     this.apartadosService.agregaPago(this.pagoApartado).subscribe(response =>{
       if(response.exito){
-        //this.hideDialog()
-        //this.pagoApartado = new PagoApartado()
         this.toastr.success('Abono realizado', 'Sucess');
+        this.getPagos()
         setTimeout(() => {
           
         }, 200);
@@ -105,4 +106,29 @@ ngOnDestroy() : void {
       }
   })
   }}
+
+getPagos(){
+    this.listPagos = []
+    console.log(this._apartado.idApartado)
+    this.apartadosService.getPagoByApartado(this._apartado.idApartado).subscribe(response =>{
+        if(response.exito){
+          this.listPagos = response.respuesta
+          this.faltante = 0 
+          this.totalAbonos = 0
+          this.listPagos.forEach(pagos => {
+            this.totalAbonos += pagos.cantidad
+          });
+          
+          if(this.totalAbonos >= this._apartado.precio){
+            this.hacerPago = false
+          }
+          else{
+            this.hacerPago = true
+          }
+          this.faltante = this._apartado.precio - this.totalAbonos
+        }
+    }
+    )
+  }
 }
+

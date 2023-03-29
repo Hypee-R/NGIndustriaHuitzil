@@ -1,8 +1,11 @@
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '480px'}" header="Historial de Pagos" [modal]="true" styleClass="p-fluid" (onHide)="close()">
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '480px'}" header="Historial de Pagos" [modal]="true" styleClass="p-fluid" >
 
     <ng-template pTemplate="content">
         
         <div *ngIf="hacerPago">
+            <h5>
+                Monto por pagar {{this.faltante}}
+            </h5>
              <div class="field">
             <label for="fecha">Fecha</label>
             <input type="date" pInputText id="fecha"  [(ngModel)]="pagoApartado.fecha" [disabled]="false" />
@@ -40,27 +43,6 @@
                                 </ng-template>
                                 <ng-template pTemplate="body" let-rowData let-columns="columns">
                                     <tr>
-                                       <!-- <td>
-                                            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-                                        </td>
-                                       <td>
-                                            <div style="display: inline-flex">
-                                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" ></button>
-                                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" style="margin-left: 3px;"></button>
-                                            </div>
-                                        </td>
-                                 
-    
-                                            <td *ngIf="rowData.imagen==''">
-                                                <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png"  width="40" height="40%" class="shadow-1" />
-                                              
-                                            </td>
-    
-                                        <td *ngIf="rowData.imagen!=''">
-                                     
-                                            <img [src]=rowData.imagen width="40" height="40%" class="shadow-1" />
-                                        </td>-->
-    
                                         <td>
                                             {{rowData['idPagoApartado']}}
                                         </td>
@@ -70,19 +52,6 @@
                                         <td>
                                             {{rowData['cantidad']}}
                                         </td>
-                                        <!--
-                                        <td>
-                                            {{rowData['talla']}}
-                                        </td>
-                                        <td>
-                                            {{rowData['ubicacion']}}
-                                        </td>
-                                        <td>
-                                            {{rowData['precio']}}
-                                        </td>
-                                        <td>
-                                            <button pButton pRipple icon="pi pi-tags" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" ></button>
-                                        </td>-->
                                     </tr>
                                 </ng-template>
                               
