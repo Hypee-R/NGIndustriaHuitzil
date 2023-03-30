@@ -79,6 +79,7 @@ import { TagModule } from 'primeng/tag';
 import {ConfirmPopupModule} from 'primeng/confirmpopup';
 import {AccordionModule} from 'primeng/accordion';
 import { AddPagoApartadoComponent } from './apartados/add-pago-apartado/add-pago-apartado.component';
+import { AddPagoPedidoComponent } from './apartados/add-pago-pedido/add-pago-pedido.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -162,7 +163,8 @@ import { AddPagoApartadoComponent } from './apartados/add-pago-apartado/add-pago
         ApartadosComponent,
         AddApartadoComponent,
         AddPedidoEspecialComponent,
-        AddPagoApartadoComponent
+        AddPagoApartadoComponent,
+        AddPagoPedidoComponent
     ]
 })
 export class PagesModule { }

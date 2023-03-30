@@ -27,6 +27,7 @@ export class ApartadosComponent implements OnInit {
   accionAdd = '';
   accionPago = ""
   accionPedido = ''
+  accionPagoPedido = ''
   apartadoUsuario : CatApartadoModel
   apartadoByUser = false
   listApartados: CatApartadoModel[] = [];
@@ -274,5 +275,37 @@ export class ApartadosComponent implements OnInit {
     this.toastr.error('Hubo al obtener los pagos', 'Error!');
   });
   
+  }
+
+  makePayPedido(apartado:CatApartadoModel){
+    this.accionPago = "Pedidos"
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+    this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"I").subscribe(responce =>{
+      if(responce.exito){
+        console.log(responce.respuesta)
+      }
+    })
+    /*this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response => {
+      if (response.exito) {
+        this.listPagos =  response.respuesta
+        this.accion = ""
+        this.accionAdd = ''
+        this.accionPedido = ''
+        this.accionPago = "Add"
+        this.selectedApartado = apartado
+        setTimeout(() => {
+          this.variablesGL.showDialog.next(true);
+        }, 300);
+      } else {
+        this.variablesGL.hideLoading();
+       
+        this.toastr.error(response.mensaje, 'Error!');
+      }
+    }, err => {
+      this.variablesGL.hideLoading();
+      this.toastr.error('Hubo al obtener los pagos', 'Error!');
+    });*/
   }
 }

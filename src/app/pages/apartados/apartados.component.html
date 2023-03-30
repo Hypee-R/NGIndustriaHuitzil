@@ -160,7 +160,7 @@
                                 </td>
                                 <td>
                                     <button *ngIf="rowData['status'] == 'Espera'" pButton pRipple icon="pi pi-play" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" [pTooltip]="botonEntregar" (click)="entregarPedido(rowData,'E')" [disabled]="rowData.status == 'Entregado'"></button>
-                                    <button pButton pRipple icon="pi pi-money-bill" class="p-button-rounded p-button-success"  style="margin-left: 3px;" [pTooltip]="botonHacerAbono" (click)="makePay(rowData)" ></button>
+                                    <button pButton pRipple icon="pi pi-money-bill" class="p-button-rounded p-button-success"  style="margin-left: 3px;" [pTooltip]="botonHacerAbono" (click)="makePayPedido(rowData)" ></button>
                                 </td>
                             </tr>
                         </ng-template>
@@ -186,7 +186,7 @@
                     </div>
                     <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>
                     <app-add-pago-apartado [_listPagos]="listPagos" [(_apartado)]="selectedApartado" (saveApartado)="consultaApartado()"  *ngIf="accionPago == 'Add'"></app-add-pago-apartado>
-                   <!-- <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>-->
+                    <app-add-pago-pedido [_listPagos]="listPagos" [(_apartado)]="selectedApartado" (saveApartado)="consultaApartado()"  *ngIf="accionPago == 'Pedidos'"></app-add-pago-pedido>
             </div>
         </div>
     </div>
