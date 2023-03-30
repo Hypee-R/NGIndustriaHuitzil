@@ -7,6 +7,7 @@ import { InventarioService } from '../../../services/inventario.service';
 import { TallasService } from '../../../services/tallas.service';
 import { ApartadosService } from '../../../services/apartados.service';
 import { PagoApartado } from 'src/app/models/pagoApartado';
+import { productoModel } from '../../../models/productos.model';
 
 @Component({
   selector: 'app-add-pago-pedido',
@@ -17,7 +18,8 @@ export class AddPagoPedidoComponent implements OnInit,OnChanges {
 
     //@Input() _accion: string;
     @Input() _listPagos : PagoApartado[]
-    @Input() _apartado : CatApartadoModel;
+    @Input() _apartado : CatApartadoModel
+    @Input() _listArticulos: CatApartadoModel[]
     @Output() saveApartado: EventEmitter<boolean> = new EventEmitter<boolean>();
   
     submitted = false;
@@ -27,7 +29,9 @@ export class AddPagoPedidoComponent implements OnInit,OnChanges {
     rows = 10;
     listPagos: PagoApartado[] = [];
     cols: any[] = [];
+    colsArticulos : any[]= []
     pagoApartado : PagoApartado = new PagoApartado()
+    listArticulos:CatApartadoModel[] = []
     selectedTalla : number 
     totalAbonos : number
     hacerPago : boolean = true
@@ -40,6 +44,7 @@ export class AddPagoPedidoComponent implements OnInit,OnChanges {
       private apartadosService: ApartadosService
   
     ) {
+      
       this.totalAbonos = 0
       this.listPagos = this._listPagos
       this.cols = [
@@ -47,12 +52,19 @@ export class AddPagoPedidoComponent implements OnInit,OnChanges {
         { field: 'sku', header: 'FECHA' },
         { field: 'descripcion', header: 'MONTO' },
       ];
+
+      this.colsArticulos = [
+        { field: 'descripcion', header: 'Articulo' },
+        { field: 'talla', header: 'Talla' },
+        { field : 'precio', header :'Precio'},
+      ];
+
       this.pagoApartado = new PagoApartado()
       this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
         this.visibleDialog = estado;
     });
   
-    
+    console.log(this.listArticulos)
   }
   
   consultarAbonos(){
@@ -63,13 +75,13 @@ export class AddPagoPedidoComponent implements OnInit,OnChanges {
       this.totalAbonos += pagos.cantidad
     });
     
-    if(this.totalAbonos >= this._apartado.precio){
+    /*if(this.totalAbonos >= this._apartado.precio){
       this.hacerPago = false
     }
     else{
       this.hacerPago = true
-    }
-    this.faltante = this._apartado.precio - this.totalAbonos
+    }*/
+   // this.faltante = this._apartado.precio - this.totalAbonos
   }
   
   ngOnChanges(changes: SimpleChanges): void {
@@ -77,6 +89,7 @@ export class AddPagoPedidoComponent implements OnInit,OnChanges {
    
   }
   ngOnInit(): void {
+    this.listArticulos = this._listArticulos
    this.consultarAbonos()
   }
   

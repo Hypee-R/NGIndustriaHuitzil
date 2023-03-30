@@ -33,6 +33,7 @@ export class ApartadosComponent implements OnInit {
   listApartados: CatApartadoModel[] = [];
   listPedidos: CatApartadoModel[] = [];
   listPagos : PagoApartado[] = []
+  listArticulosApartados :  CatApartadoModel [] = []
   cols: any[] = [];
   colsPedidos  = [];
   rows = 0;
@@ -279,12 +280,14 @@ export class ApartadosComponent implements OnInit {
 
   makePayPedido(apartado:CatApartadoModel){
     this.accionPago = "Pedidos"
-    setTimeout(() => {
-      this.variablesGL.showDialog.next(true);
-    }, 100);
+    
     this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"I").subscribe(responce =>{
       if(responce.exito){
-        console.log(responce.respuesta)
+        //console.log(responce.respuesta)
+        this.listArticulosApartados = responce.respuesta
+        setTimeout(() => {
+          this.variablesGL.showDialog.next(true);
+        }, 100);
       }
     })
     /*this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response => {

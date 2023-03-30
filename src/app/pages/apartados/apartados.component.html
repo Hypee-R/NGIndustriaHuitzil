@@ -186,7 +186,7 @@
                     </div>
                     <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>
                     <app-add-pago-apartado [_listPagos]="listPagos" [(_apartado)]="selectedApartado" (saveApartado)="consultaApartado()"  *ngIf="accionPago == 'Add'"></app-add-pago-apartado>
-                    <app-add-pago-pedido [_listPagos]="listPagos" [(_apartado)]="selectedApartado" (saveApartado)="consultaApartado()"  *ngIf="accionPago == 'Pedidos'"></app-add-pago-pedido>
+                    <app-add-pago-pedido [_listPagos]="listPagos" [(_apartado)]="selectedApartado" (saveApartado)="consultaApartado()" [(_listArticulos)]="listArticulosApartados" *ngIf="accionPago == 'Pedidos'"></app-add-pago-pedido>
             </div>
         </div>
     </div>
