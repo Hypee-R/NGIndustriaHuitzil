@@ -79,7 +79,7 @@ export class ApartadosComponent implements OnInit {
     }else if(status == 'laptop'){
       this.rows = 4;
     }else{
-      this.rows = 11;
+      this.rows = 8;
     }
   }
 

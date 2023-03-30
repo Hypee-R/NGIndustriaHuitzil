@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, EventEmitter,Output } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter,Output, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { CatApartadoModel } from 'src/app/models/apartado.model';
@@ -15,7 +15,7 @@ import { VariablesService } from 'src/app/services/variablesGL.service';
   templateUrl: './add-pedido-especial.component.html',
   styleUrls: ['./add-pedido-especial.component.css']
 })
-export class AddPedidoEspecialComponent implements OnInit {
+export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
 
 
   @Input() _accion: string;
@@ -34,7 +34,10 @@ export class AddPedidoEspecialComponent implements OnInit {
   clienteName: string = ''
   selectedArticuloAdvanced: productoModel
   apartado : CatApartadoModel = new CatApartadoModel()
-  selectedTalla : number 
+  selectedTalla : CatTallaModel
+  listArticulosSelected: productoModel[] = []
+  cols: any[] = [];
+  rows = 5;
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -43,7 +46,12 @@ export class AddPedidoEspecialComponent implements OnInit {
     private apartadosService: ApartadosService
 
   ) {
- 
+    this.listArticulosSelected = []
+    this.cols = [
+      { field: 'descripcion', header: 'Articulo' },
+      { field: 'talla', header: 'Talla' },
+      { field : 'precio', header :'Precio'},
+    ];
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
       this.visibleDialog = estado;
       if(this._editCliente){
@@ -55,8 +63,14 @@ export class AddPedidoEspecialComponent implements OnInit {
       }
   });
    }
-
+  ngOnDestroy(): void {
+      this.listArticulosSelected = []
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+      this.listArticulosSelected = []
+  }
   ngOnInit(): void {
+    this.listArticulosSelected = []
     this.inventarioService.getArticulos().subscribe(response => {
       if (response.exito) {
         this.listArticulos = response.respuesta;
@@ -103,33 +117,76 @@ export class AddPedidoEspecialComponent implements OnInit {
   }
 
   addApartado(){
-    this.apartado.idEmpleado = this.cliente.idCliente
-    this.apartado.idArticulo = this.selectedArticuloAdvanced.idArticulo
-    this.apartado.direccion = this.cliente.direccion
-    this.apartado.telefono = this.cliente.telefono1
-    this.apartado.idTalla = this.selectedTalla
-    this.apartado.type = "E"
-    if(this.apartado.idArticulo == undefined || this.apartado.idTalla == undefined || this.apartado.fecha == "" || this.apartado.idArticulo == 0){
-      this.toastr.error('Faltan datos', 'Error!');
-    }
-    else{
+    let apartadoCorrecto = true
+    if(this.listArticulosSelected.length != 0)
+    {
+      if(this.apartado.fecha == ""){
+        this.toastr.error('Faltan datos', 'Error!');
+      }
+      this.apartado.idEmpleado = this.cliente.idCliente
+      this.apartado.idArticulo = this.listArticulosSelected[0].idArticulo
+      this.apartado.direccion = this.cliente.direccion
+      this.apartado.telefono = this.cliente.telefono1
+      this.apartado.type = "E"
+      this.apartado.idTalla = this.listArticulosSelected[0].idTalla
 
       this.apartadosService.agregaApartado(this.apartado).subscribe(response =>{
-          if(response.exito){
-            this.hideDialog()
-            this.toastr.success('Articulo Apartado', 'Sucess');
-            setTimeout(() => {
-              this.saveApartado.emit(true);
-            }, 100);
-          }
-          else{
-            this.toastr.success(response.mensaje, 'Error!');
-          }
-      })
-      
+            if(response.exito){
+
+              this.listArticulosSelected.forEach(articulo => {
+                
+                let newApartado = new CatApartadoModel
+                newApartado.idEmpleado = this.cliente.idCliente
+                newApartado.idArticulo = articulo.idArticulo
+                newApartado.direccion = this.cliente.direccion
+                newApartado.telefono = this.cliente.telefono1
+                newApartado.type = "I"
+                newApartado.fecha = this.apartado.fecha
+                newApartado.idTalla = articulo.idTalla
+                console.log(newApartado)
+                this.apartadosService.agregaApartado(newApartado).subscribe(response =>{
+                  if(!response.exito){
+                    apartadoCorrecto  = false
+                    //return
+                  }
+                  else{
+                    console.log(response.exito)
+                  }
+                })
+                
+              });
+              if(apartadoCorrecto){
+              this.hideDialog()
+              this.toastr.success('Apartado Correcto', 'Sucess');
+              setTimeout(() => {
+                this.saveApartado.emit(true);
+              }, 100);
+              }
+            }
+            else{
+              this.toastr.error(response.mensaje, 'Error!');
+            }
+        })
     }
-    /*console.log(this.selectedTalla)
-    console.log(this.apartado)*/
+      else{
+        this.toastr.error("Seleeciona un articulo", 'Error!');
+      }
+    
   }
 
+  addArticles(){
+    
+    if(this.selectedArticuloAdvanced == undefined){
+      this.toastr.error("Selecciona un articulo","Error!")
+    }
+    else{
+    this.listArticulosSelected.push(this.selectedArticuloAdvanced)
+    console.log(this.listArticulosSelected)
+    console.log(this.selectedArticuloAdvanced)}
+  }
+
+  deleteArticle(articulo :productoModel){
+      let index = this.listArticulosSelected.indexOf(articulo)
+      this.listArticulosSelected.splice(index,1)
+  }
 }
