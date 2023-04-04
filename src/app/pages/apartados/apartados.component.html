@@ -69,8 +69,9 @@
                                 </td>
                                 <td>
                                     <div style="display: inline-flex">
-                                        <button pButton pRipple icon="pi pi-window-maximize" class="p-button-rounded p-button-success mr-2" (click)="showDetail(rowData)" ></button>
-                                        <button pButton pRipple icon="pi pi-window-maximize" class="p-button-rounded p-button-help mr-2" (click)="showDetailPedido(rowData)" ></button>
+
+                                        <button *ngIf="rowData['type'] == 'A'" pButton pRipple icon="pi pi-window-maximize" class="p-button-rounded p-button-success mr-2" (click)="showDetail(rowData)" ></button>
+                                        <button *ngIf="rowData['type'] == 'E' || rowData['type'] == 'I'" pButton pRipple icon="pi pi-window-maximize" class="p-button-rounded p-button-help mr-2" (click)="showDetailPedido(rowData)" ></button>
                                     </div>
                                 </td>
                             </tr>
