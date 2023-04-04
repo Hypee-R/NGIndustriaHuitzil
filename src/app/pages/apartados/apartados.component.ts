@@ -84,7 +84,7 @@ export class ApartadosComponent implements OnInit {
     [
       { field: 'idApartado', header: 'ID PEDIDO' },
       { field: 'idEmpleado', header: 'CLIENTE' },
-      { field : 'idArticulo', header: 'ARTICULO'},
+      { field : 'articulo', header: 'ARTICULO'},
       { field : 'fechaEntrega', header : 'Fecha Entrega'},
       { field: 'telefono', header: 'Telefono' },
       { field: 'direccion', header: 'Dirección' },
