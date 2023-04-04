@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { error } from 'console';
 import { ToastrService } from 'ngx-toastr';
 import { CatApartadoModel } from 'src/app/models/apartado.model';
 import { CatClienteModel } from 'src/app/models/clientes.model';
@@ -36,9 +37,14 @@ export class ApartadosComponent implements OnInit {
   listArticulosApartados :  CatApartadoModel [] = []
   cols: any[] = [];
   colsPedidos  = [];
+  colsApartados = [];
   rows = 0;
+  rowsApartados = 0
   botonEntregar = "Entregar Pedido"
   botonHacerAbono  = "Hacer un abono"
+  allApartados = []
+  selectedClientes = []
+  showTable = true
   //Pedidos especiales
   showPedidos = false
   constructor(
@@ -73,22 +79,55 @@ export class ApartadosComponent implements OnInit {
     
     ];
 
+    this.colsApartados = 
+
+    [
+      { field: 'idApartado', header: 'ID PEDIDO' },
+      { field: 'idEmpleado', header: 'CLIENTE' },
+      { field : 'idArticulo', header: 'ARTICULO'},
+      { field : 'fechaEntrega', header : 'Fecha Entrega'},
+      { field: 'telefono', header: 'Telefono' },
+      { field: 'direccion', header: 'Dirección' },
+      { field: 'status', header : 'Status'}
+    
+    ];
+
     let status = this.variablesGL.getPantalla();
     if(status == 'celular'){
       this.rows = 6;
+      this.rowsApartados = 6;
     }else if(status == 'tablet'){
       this.rows = 7;
+      this.rowsApartados = 6;
     }else if(status == 'laptop'){
       this.rows = 4;
+      this.rowsApartados = 6;
     }else{
       this.rows = 8;
+      this.rowsApartados = 12;
     }
   }
 
   ngOnInit(): void {
 
    this.getClientes()
-    
+    this.getApartados()
+  }
+
+
+
+  getApartados(){
+    this.apartadoService.getApartados().subscribe(response => {
+      if(response.exito){
+        console.log(response.respuesta)
+        this.allApartados = response.respuesta
+      }
+      else{
+        this.toastr.error(response.mensaje, 'Error!');
+      }
+    },error =>{
+      this.toastr.error('Hubo un error al buscar cliente', 'Error!');
+    })
   }
 
   getClientes(){
@@ -130,10 +169,12 @@ export class ApartadosComponent implements OnInit {
   }
 
   consultaApartado(){
+  
     this.accion = ""
     this.listApartados.shift()
     
     if(this.selectedclienteNameAdvanced.idCliente != 0 && !this.apartados){
+      this.showTable = false
       this.showPedidos = false
       this.crearApartado = true
       this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"A").subscribe(response =>{
@@ -200,10 +241,12 @@ export class ApartadosComponent implements OnInit {
     
   } 
   consultarPedidoEspecial(){
+   
     this.accion = ""
     this.crearApartado = false
     this.apartadoByUser = false
     if(this.selectedclienteNameAdvanced.idCliente != 0 && !this.apartados){
+      this.showTable = false
       this.showPedidos =  true
       this.crearPedido = true
       this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"E").subscribe(response =>{

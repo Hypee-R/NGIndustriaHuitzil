@@ -32,6 +32,48 @@
                         </div>
                     </div>
                 </div>
+                <div *ngIf="!loading  && showTable ">
+                    <p-table #dt [value]="allApartados" [columns]="colsApartados" [rows]="rowsApartados" [paginator]="true" [globalFilterFields]="['nombre','apellidoPaterno','apellidoMaterno','telefono1','telefono2','direccion','correo','encargadoNombre']" [responsive]="true" responsiveLayout="scroll"
+                        [(selection)]="selectedClientes" [rowHover]="true" dataKey="idCliente" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Apartados" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                        <ng-template pTemplate="caption">
+                            <div class="flex align-items-center justify-content-between">
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th style="width: 2rem">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                                <th></th>
+                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                    <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field == 'direccion' || col.field == 'encargadoNombre' ? '16em' : '11em'}">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </div>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr>
+                                <td>
+                                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                </td>
+                                <td>
+                                    <div style="display: inline-flex">
+                                        
+                                    </div>
+                                </td>
+                                <td *ngFor="let col of columns">
+                                    {{rowData[col.field]}}
+                                </td>
+                            </tr>
+                        </ng-template>
+                       
+                    </p-table>
+                </div>
+
+
+
                 <div class="col-12">
                     <br>
                     <div *ngIf="apartadoByUser">
@@ -187,7 +229,7 @@
                     <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>
                     <app-add-pago-apartado [_listPagos]="listPagos" [(_apartado)]="selectedApartado" (saveApartado)="consultaApartado()"  *ngIf="accionPago == 'Add'"></app-add-pago-apartado>
                     <app-add-pago-pedido [_listPagos]="listPagos" [(_apartado)]="selectedApartado" (saveApartado)="consultaApartado()" [(_listArticulos)]="listArticulosApartados" *ngIf="accionPago == 'Pedidos'"></app-add-pago-pedido>
-            </div>
+                </div>
         </div>
     </div>
 
