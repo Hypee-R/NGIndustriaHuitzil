@@ -83,7 +83,7 @@ export class ApartadosComponent implements OnInit {
 
     [
       { field: 'idApartado', header: 'ID PEDIDO' },
-      { field: 'idEmpleado', header: 'CLIENTE' },
+      { field: 'cliente', header: 'CLIENTE' },
       { field : 'articulo', header: 'ARTICULO'},
       { field : 'fechaEntrega', header : 'Fecha Entrega'},
       { field: 'telefono', header: 'Telefono' },
@@ -168,6 +168,17 @@ export class ApartadosComponent implements OnInit {
     this.showPedidos = false
   }
 
+
+  showDetail(apartado: CatApartadoModel){
+    this.selectedclienteNameAdvanced.idCliente = apartado.idEmpleado
+    this.consultaApartado()
+  }
+
+  showDetailPedido(apartado:CatApartadoModel){
+    this.selectedclienteNameAdvanced.idCliente = apartado.idEmpleado
+    this.consultarPedidoEspecial()
+
+  }
   consultaApartado(){
   
     this.accion = ""

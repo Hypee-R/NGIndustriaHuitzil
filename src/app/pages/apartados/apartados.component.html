@@ -63,8 +63,15 @@
                                         
                                     </div>
                                 </td>
+                               
                                 <td *ngFor="let col of columns">
                                     {{rowData[col.field]}}
+                                </td>
+                                <td>
+                                    <div style="display: inline-flex">
+                                        <button pButton pRipple icon="pi pi-window-maximize" class="p-button-rounded p-button-success mr-2" (click)="showDetail(rowData)" ></button>
+                                        <button pButton pRipple icon="pi pi-window-maximize" class="p-button-rounded p-button-help mr-2" (click)="showDetailPedido(rowData)" ></button>
+                                    </div>
                                 </td>
                             </tr>
                         </ng-template>
