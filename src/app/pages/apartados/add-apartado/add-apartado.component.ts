@@ -110,7 +110,7 @@ export class AddApartadoComponent implements OnInit {
     this.apartado.direccion = this.cliente.direccion
     this.apartado.telefono = this.cliente.telefono1
     this.apartado.idTalla = this.selectedTalla
-
+    this.apartado.type = "A"
     if(this.apartado.idArticulo == undefined || this.apartado.idTalla == undefined || this.apartado.fecha == "" || this.apartado.idArticulo == 0){
       this.toastr.error('Faltan datos', 'Error!');
     }

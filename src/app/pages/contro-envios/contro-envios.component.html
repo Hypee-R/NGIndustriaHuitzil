@@ -1,0 +1,29 @@
+<div [ngClass]="{'container': statusPantalla <= 10}">
+ 
+    <div class="card shadow mb-5 bg-body rounded">
+        <div class="card-header text-uppercase">Control de envios de Mercancia e Impresion de codigo de barras</div>
+        <span class="lstick"></span>
+        <div class="card-body">
+            <p-pickList [source]="listArticulos" [target]="list2" sourceHeader="Disponibles"
+                targetHeader="Seleccionados" dragdrop="true" [responsive]="true" [sourceStyle]="{'height':'300px'}"
+                [targetStyle]="{'height':'300px'}" filterBy="sku" sourceFilterPlaceholder="Buscar por SKU"
+                targetFilterPlaceholder="Buscar por SKU">
+                <app-loading *ngIf="loading"></app-loading>
+                <ng-template let-car pTemplate="item">
+    
+                    <div>
+                        <td *ngIf="car.imagen==''">
+                            <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png" width="40"
+                                height="40%" class="shadow-1" />
+
+                        </td>
+                        <img src="{{car.imagen}}" style="display:inline-block;margin:2px 0 2px 2px" width="48">
+                        <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{car.sku}}</div>
+                    </div>
+                </ng-template>
+            </p-pickList>
+
+        </div>
+    </div>
+
+</div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { error } from 'console';
 import { ToastrService } from 'ngx-toastr';
 import { CatApartadoModel } from 'src/app/models/apartado.model';
 import { CatClienteModel } from 'src/app/models/clientes.model';
@@ -21,19 +22,29 @@ export class ApartadosComponent implements OnInit {
   clientes: CatClienteModel[]
   clienteName: string = ''
   crearApartado: boolean = false
+  crearPedido : boolean  = false
   apartados : boolean = false
   accion = '';
   accionAdd = '';
   accionPago = ""
   accionPedido = ''
+  accionPagoPedido = ''
   apartadoUsuario : CatApartadoModel
   apartadoByUser = false
   listApartados: CatApartadoModel[] = [];
+  listPedidos: CatApartadoModel[] = [];
   listPagos : PagoApartado[] = []
+  listArticulosApartados :  CatApartadoModel [] = []
   cols: any[] = [];
+  colsPedidos  = [];
+  colsApartados = [];
   rows = 0;
+  rowsApartados = 0
   botonEntregar = "Entregar Pedido"
   botonHacerAbono  = "Hacer un abono"
+  allApartados = []
+  selectedClientes = []
+  showTable = true
   //Pedidos especiales
   showPedidos = false
   constructor(
@@ -47,7 +58,6 @@ export class ApartadosComponent implements OnInit {
     this.selectedclienteNameAdvanced= new CatClienteModel() 
     this.statusPantalla = this.variablesGL.getStatusPantalla()
     this.cols = [
-     // {field:' ',header:''},
       { field: 'idArticulo', header: 'Articulo' },
       { field: 'talla', header: 'Talla' },
       { field : 'precio', header :'Precio'},
@@ -58,22 +68,66 @@ export class ApartadosComponent implements OnInit {
       { field: 'status', header : 'Status'}
     
     ];
+
+    this.colsPedidos = [
+      { field: 'idPedido', header: 'ID PEDIDO' },
+      { field: 'fecha', header: 'Fecha' },
+      { field : 'fechaEntrega', header : 'Fecha Entrega'},
+      { field: 'telefono', header: 'Telefono' },
+      { field: 'direccion', header: 'Dirección' },
+      { field: 'status', header : 'Status'}
+    
+    ];
+
+    this.colsApartados = 
+
+    [
+      { field: 'idApartado', header: 'ID PEDIDO' },
+      { field: 'cliente', header: 'CLIENTE' },
+      { field : 'articulo', header: 'ARTICULO'},
+      { field : 'fechaEntrega', header : 'Fecha Entrega'},
+      { field: 'telefono', header: 'Telefono' },
+      { field: 'direccion', header: 'Dirección' },
+      { field: 'status', header : 'Status'}
+    
+    ];
+
     let status = this.variablesGL.getPantalla();
     if(status == 'celular'){
       this.rows = 6;
+      this.rowsApartados = 6;
     }else if(status == 'tablet'){
       this.rows = 7;
+      this.rowsApartados = 6;
     }else if(status == 'laptop'){
       this.rows = 4;
+      this.rowsApartados = 6;
     }else{
-      this.rows = 11;
+      this.rows = 8;
+      this.rowsApartados = 12;
     }
   }
 
   ngOnInit(): void {
 
    this.getClientes()
-    
+    this.getApartados()
+  }
+
+
+
+  getApartados(){
+    this.apartadoService.getApartados().subscribe(response => {
+      if(response.exito){
+        console.log(response.respuesta)
+        this.allApartados = response.respuesta
+      }
+      else{
+        this.toastr.error(response.mensaje, 'Error!');
+      }
+    },error =>{
+      this.toastr.error('Hubo un error al buscar cliente', 'Error!');
+    })
   }
 
   getClientes(){
@@ -104,38 +158,47 @@ export class ApartadosComponent implements OnInit {
     }
     this.filteredClients = filtered;
     this.clienteName=event.query;
-    //this.crear = true
   }
   
   cambie(){
     this.listApartados.shift()
+    this.listPedidos.shift()
     this.apartadoByUser = false
     this.crearApartado = false
+    this.showPedidos = false
   }
 
+
+  showDetail(apartado: CatApartadoModel){
+    this.selectedclienteNameAdvanced.idCliente = apartado.idEmpleado
+    this.consultaApartado()
+  }
+
+  showDetailPedido(apartado:CatApartadoModel){
+    this.selectedclienteNameAdvanced.idCliente = apartado.idEmpleado
+    this.consultarPedidoEspecial()
+
+  }
   consultaApartado(){
+  
     this.accion = ""
     this.listApartados.shift()
     
     if(this.selectedclienteNameAdvanced.idCliente != 0 && !this.apartados){
+      this.showTable = false
       this.showPedidos = false
       this.crearApartado = true
-      this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente).subscribe(response =>{
+      this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"A").subscribe(response =>{
         if(response.exito){
           console.log(response.respuesta)
-          //this.apartadoUsuario = response.respuesta
           this.listApartados = response.respuesta
-
+          console.log(this.listApartados)
           this.listApartados.forEach(apartado => {
             if(apartado.status == "Espera"){
               this.crearApartado = false
               return
             }
-            /*else{
-              this.crearApartado = true
-            }*/
           });
-          //console.log(this.crearApartado)
           this.apartadoByUser = true
         }
         else{
@@ -155,13 +218,12 @@ export class ApartadosComponent implements OnInit {
     this.accion = 'Apartar';
     this.accionAdd = ""
     this.accionPedido = ''
-    //this.selectedCliente = new CatClienteModel();
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
   }
 
-  entregarPedido(apartado : CatApartadoModel){
+  entregarPedido(apartado : CatApartadoModel,type : String){
     let d = new Date()
     let newApartado = apartado
     newApartado.fechaEntrega = d.toISOString().substring(0, 19);
@@ -175,7 +237,11 @@ export class ApartadosComponent implements OnInit {
         this.toastr.error(request.mensaje,"Error")
       }
       setTimeout(() => {
-        this.consultaApartado()
+        if(type == "A"){
+        this.consultaApartado()}
+        else{
+          this.consultarPedidoEspecial()
+        }
       }, 200);
     }, err => {
       this.variablesGL.hideLoading();
@@ -185,12 +251,35 @@ export class ApartadosComponent implements OnInit {
     
     
   } 
-  consultarPedido(){
+  consultarPedidoEspecial(){
+   
     this.accion = ""
     this.crearApartado = false
     this.apartadoByUser = false
     if(this.selectedclienteNameAdvanced.idCliente != 0 && !this.apartados){
+      this.showTable = false
       this.showPedidos =  true
+      this.crearPedido = true
+      this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"E").subscribe(response =>{
+        if(response.exito){
+          console.log(response.respuesta)
+          this.listPedidos = response.respuesta
+   
+          this.listPedidos.forEach(apartado => {
+            if(apartado.status == "Espera"){
+              this.crearPedido = false
+              return
+            }
+          });
+         
+         // this.apartadoByUser = true
+        }
+      else{
+        this.crearPedido = true
+         /* this.crearApartado = true
+          this.apartadoByUser = false*/
+        }
+      })
     }
     else{
       this.toastr.error("Selecciona un cliente", 'Error!');
@@ -213,9 +302,6 @@ export class ApartadosComponent implements OnInit {
     this.accionAdd = "Agregar"
     this.accionPedido  = ''
     this.accionPago = ""
-    //this.accionAdd = 'Agregar';
-    
-    //his.selectedCliente = new CatClienteModel();
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
@@ -226,13 +312,11 @@ export class ApartadosComponent implements OnInit {
     this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response => {
     if (response.exito) {
       this.listPagos =  response.respuesta
-      //console.log(response.respuesta)
       this.accion = ""
       this.accionAdd = ''
       this.accionPedido = ''
       this.accionPago = "Add"
       this.selectedApartado = apartado
-      console.log(this.listPagos)
       setTimeout(() => {
         this.variablesGL.showDialog.next(true);
       }, 300);
@@ -245,14 +329,40 @@ export class ApartadosComponent implements OnInit {
     this.variablesGL.hideLoading();
     this.toastr.error('Hubo al obtener los pagos', 'Error!');
   });
-    /*this.accion = ""
-    this.accionAdd = ''
-    this.accionPedido = ''
-    this.accionPago = "Add"
-    this.selectedApartado = apartado
-    //console.log(apartado.idApartado)
-    setTimeout(() => {
-      this.variablesGL.showDialog.next(true);
-    }, 100);*/
+  
+  }
+
+  makePayPedido(apartado:CatApartadoModel){
+    this.accionPago = "Pedidos"
+    
+    this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"I").subscribe(responce =>{
+      if(responce.exito){
+        //console.log(responce.respuesta)
+        this.listArticulosApartados = responce.respuesta
+        setTimeout(() => {
+          this.variablesGL.showDialog.next(true);
+        }, 100);
+      }
+    })
+    /*this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response => {
+      if (response.exito) {
+        this.listPagos =  response.respuesta
+        this.accion = ""
+        this.accionAdd = ''
+        this.accionPedido = ''
+        this.accionPago = "Add"
+        this.selectedApartado = apartado
+        setTimeout(() => {
+          this.variablesGL.showDialog.next(true);
+        }, 300);
+      } else {
+        this.variablesGL.hideLoading();
+       
+        this.toastr.error(response.mensaje, 'Error!');
+      }
+    }, err => {
+      this.variablesGL.hideLoading();
+      this.toastr.error('Hubo al obtener los pagos', 'Error!');
+    });*/
   }
 }

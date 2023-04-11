@@ -50,6 +50,8 @@ import { ButtonModule } from 'primeng/button';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {DividerModule} from 'primeng/divider';
 import {KnobModule} from 'primeng/knob';
+import {PickListModule} from 'primeng/picklist';
+
 
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
@@ -79,6 +81,9 @@ import { TagModule } from 'primeng/tag';
 import {ConfirmPopupModule} from 'primeng/confirmpopup';
 import {AccordionModule} from 'primeng/accordion';
 import { AddPagoApartadoComponent } from './apartados/add-pago-apartado/add-pago-apartado.component';
+import { AddPagoPedidoComponent } from './apartados/add-pago-pedido/add-pago-pedido.component';
+import { ControEnviosComponent } from './contro-envios/contro-envios.component';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -123,9 +128,10 @@ import { AddPagoApartadoComponent } from './apartados/add-pago-apartado/add-pago
         ToggleButtonModule,
         TagModule,
         ConfirmPopupModule,
-        AccordionModule
+        AccordionModule,
         //NgxBarcode6Module
-],  providers: [ConfirmationService,MessageService],
+        PickListModule
+],  providers: [ConfirmationService,MessageService,PickListModule],
     declarations: [
         ContentComponent,
         DashboardComponent,
@@ -162,7 +168,9 @@ import { AddPagoApartadoComponent } from './apartados/add-pago-apartado/add-pago
         ApartadosComponent,
         AddApartadoComponent,
         AddPedidoEspecialComponent,
-        AddPagoApartadoComponent
+        AddPagoApartadoComponent,
+        AddPagoPedidoComponent,
+        ControEnviosComponent
     ]
 })
 export class PagesModule { }
