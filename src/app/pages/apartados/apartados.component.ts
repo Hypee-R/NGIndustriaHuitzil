@@ -103,8 +103,8 @@ export class ApartadosComponent implements OnInit {
       this.rows = 4;
       this.rowsApartados = 6;
     }else{
-      this.rows = 8;
-      this.rowsApartados = 12;
+      this.rows = 10;
+      this.rowsApartados = 10;
     }
   }
 
@@ -337,32 +337,13 @@ export class ApartadosComponent implements OnInit {
     
     this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"I").subscribe(responce =>{
       if(responce.exito){
-        //console.log(responce.respuesta)
+        console.log(responce.respuesta)
         this.listArticulosApartados = responce.respuesta
         setTimeout(() => {
           this.variablesGL.showDialog.next(true);
         }, 100);
       }
     })
-    /*this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response => {
-      if (response.exito) {
-        this.listPagos =  response.respuesta
-        this.accion = ""
-        this.accionAdd = ''
-        this.accionPedido = ''
-        this.accionPago = "Add"
-        this.selectedApartado = apartado
-        setTimeout(() => {
-          this.variablesGL.showDialog.next(true);
-        }, 300);
-      } else {
-        this.variablesGL.hideLoading();
-       
-        this.toastr.error(response.mensaje, 'Error!');
-      }
-    }, err => {
-      this.variablesGL.hideLoading();
-      this.toastr.error('Hubo al obtener los pagos', 'Error!');
-    });*/
+    
   }
 }
