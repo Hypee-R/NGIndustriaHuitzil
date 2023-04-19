@@ -1,50 +1,174 @@
 <div [ngClass]="{'container': statusPantalla <= 10}">
- 
+
     <div class="card shadow mb-5 bg-body rounded">
         <div class="card-header text-uppercase">Control de envios de Mercancia e Impresion de codigo de barras</div>
         <span class="lstick"></span>
-        <div class="card-body">
-            <p-pickList [source]="listArticulos" [target]="list2" sourceHeader="Disponibles"
-                targetHeader="Envio" dragdrop="true" [responsive]="true" [sourceStyle]="{'height':'300px'}"
-                [targetStyle]="{'height':'300px'}" filterBy="sku" sourceFilterPlaceholder="Buscar por SKU"
-                targetFilterPlaceholder="Buscar por SKU">
-                <app-loading *ngIf="loading"></app-loading>
-                <ng-template let-car pTemplate="item">
-                    <div class="product-item">
-                        <div class="product-list-detail">
-                            <td *ngIf="car.imagen==''">
-                               
-                                    <h5 class="mb-2">  <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png" width="40"
-                                        height="40%" class="shadow-1" />{{car.descripcion}}-{{car.sku}}</h5>
-                           
-                            </td>
-                            <td *ngIf="car.imagen!=''">
-                            <h5 class="mb-2"> <img src="{{car.imagen}}" style="display:inline-block;margin:2px 0 2px 2px" width="48">{{car.descripcion}}-{{car.sku}}</h5>
-                        </td>
-                            <i class="pi pi-box product-category-icon"></i>
-                            <span class="product-category"> Stock:{{car.existencia}}</span>
-                        </div>
-                        <div class="product-list-action">
-                            <h6 class="mb-2">Talla:{{car.talla}}</h6>
-                            <span [class]="'product-badge status-' + car.ubicacion.toLowerCase()">{{car.ubicacion}}</span>
-                        </div>
+        <div class="card-body overflow-auto">
+            <div class="row ">
+                <div class="col-12">
+                    <app-loading *ngIf="loading"></app-loading>
+
+                    <div *ngIf="!loading && listArticulos.length == 0">
+
+
+
+                        <app-item-empty></app-item-empty>
                     </div>
+                    <div *ngIf="!loading && listArticulos.length > 0">
+                        <p-toolbar styleClass="mb-4">
+                            <ng-template pTemplate="left">
+                                
+                            </ng-template>
 
-                    <!-- <div>
-                     <h5 class="mb-2">{{car.descripcion}}</h5>
-                     <i class="pi pi-tag product-category-icon"></i>
-                     <span class="product-category">{{car.existencia}}</span>
-                        <td *ngIf="car.imagen==''">
-                            <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png" width="40"
-                                height="40%" class="shadow-1" />
+                            <ng-template pTemplate="right">
+                                <button pButton pRipple label="Enviar Mercancia" icon="pi pi-send" class="p-button-help" style="margin-left: 10px;"></button>
+                               
+                            </ng-template>
 
-                        </td>
-                        <img src="{{car.imagen}}" style="display:inline-block;margin:2px 0 2px 2px" width="48">
-                        <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{car.sku}}</div>
-                    </div> -->
-                </ng-template>
-            </p-pickList>
+                            
+                        </p-toolbar>
+                        <p-pickList [source]="listArticulos" [target]="list2" sourceHeader="Disponibles"
+                            targetHeader="Envio" dragdrop="true" [responsive]="true" [sourceStyle]="{'height':'300px'}"
+                            [targetStyle]="{'height':'300px'}" filterBy="sku" sourceFilterPlaceholder="Buscar por SKU"
+                            targetFilterPlaceholder="Buscar por SKU">
 
+                            <ng-template let-car pTemplate="item">
+                                <div class="product-item">
+                                    <div class="product-list-detail">
+                                        <td *ngIf="car.imagen==''">
+
+                                            <h5 class="mb-2"> <img
+                                                    src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png"
+                                                    width="40" height="40%"
+                                                    class="shadow-1" />{{car.descripcion}}-{{car.sku}}</h5>
+
+                                        </td>
+                                        <td *ngIf="car.imagen!=''">
+                                            <h5 class="mb-2"> <img src="{{car.imagen}}"
+                                                    style="display:inline-block;margin:2px 0 2px 2px"
+                                                    width="48">{{car.descripcion}}-{{car.sku}}</h5>
+                                        </td>
+                                        <i class="pi pi-box product-category-icon"></i>
+                                        <span class="product-category"> Stock:{{car.existencia}}</span>
+                                    </div>
+                                    <div class="product-list-action">
+                                        <h6 class="mb-2">Talla:{{car.talla}}</h6>
+                                        <span
+                                            [class]="'product-badge status-' + car.ubicacion.toLowerCase()">{{car.ubicacion}}</span>
+                                    </div>
+                                </div>
+
+                            
+                            </ng-template>
+                        </p-pickList>
+                        <p-divider align="left">
+                            <div class="inline-flex align-items-center">
+                                <i class="pi pi-map mr-2"></i>
+                                <b> Registro de envios</b>
+                            </div>
+                        </p-divider>
+                        <p-table #dt [value]="lstCambiosDevoluciones" [rows]="rows" [paginator]="true" dataKey="idCambioDevolucion" [globalFilterFields]="['venta.noTicket']" [responsive]="true" responsiveLayout="scroll" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} cambios y/o devoluciones"
+                        [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                        <ng-template pTemplate="caption">
+                            <div class="flex align-items-center justify-content-between">
+
+                                <div class="row">
+                                    <div class="col col-md-7">
+                                        <div class="row">
+                                            <div class="col col-md-3">
+                                                <!-- <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" ></button> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-5">
+                                        <span class="p-input-icon-left" style="width: 100%;">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar por fecha..." [style]="{'width': '100%'}"/>
+                              </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3rem"></th>
+                                <th>Id Movimiento</th>
+                                <th>Fecha</th>
+                                <th>Ubicacion</th>
+                                <th>Recibe</th>
+                                <th>Status</th>
+                          
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-cambio let-expanded="expanded">
+                            <tr>
+                                <td>
+
+                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" pTooltip="Ver Detalles." ></button>
+                                </td>
+                                <td>
+                                    <p-badge [value]="cambio.venta.noTicket" severity="danger" size="large" styleClass="mr-2"></p-badge>
+                                </td>
+                                <td>{{cambio.fecha | date: 'dd/MM/yyyy, hh:mm a'}}</td>
+                                <td>
+                                    San martin texmelucan
+                                </td>
+                                <td>
+                                    Jose Daniel
+                                </td>
+                     
+                                <td>
+                                    En transito
+                                </td>
+                     
+                     
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="rowexpansion" let-cambio>
+                            <tr>
+                                <td colspan="10">
+                                    <div class="p-3">
+                                        <!-- <p-table [value]="cambio.cambiosDevolucionesArticulos" dataKey="idCambioDevolucion">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th colspan="3">Información Articulo Anterior</th>
+                                                    <th colspan="1">Cantidad</th>
+                                                    <th colspan="5">Información Articulo Nuevo</th>
+                                                    <th colspan="1"></th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-cambio>
+                                                <tr>
+                                                    <td>
+                                                        <img src="assets/img/only_logo_huitzil.png" width="40" height="40%" class="shadow-1" /> </td>
+                                                    <td class="text-decoration-line-through">{{cambio.ventaArticulo.articulo.sku}}</td>
+                                                    <td class="text-decoration-line-through">{{cambio.ventaArticulo.articulo.descripcion}}</td>
+                                                    <td>
+                                                        <p-badge [value]="cambio.cantidad" severity="warning" styleClass="mr-2" size="large"></p-badge>
+                                                    </td>
+                                                    <td>
+                                                        <img [src]="cambio.articulo.imagen" width="40" height="40%" class="shadow-1" />
+                                                    </td>
+                                                    <td>{{cambio.articulo.sku}}</td>
+                                                    <td>{{cambio.articulo.descripcion}}</td>
+                                                    <td>{{cambio.articulo.talla}}</td>
+                                                    <td>{{cambio.articulo.precio | currency:'MXN' }}</td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="6">There are no order for this product yet.</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table> -->
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

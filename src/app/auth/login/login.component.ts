@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit {
           if(respuesta.exito){
               const dataLogin: UsuarioAuthModel = respuesta.respuesta;
               localStorage.setItem('usuario', JSON.stringify(dataLogin));
+              this.variablesGL.setSucursal(dataLogin.ubicacion);
               localStorage.d = respuesta.respuesta.token;
 
               console.log([dataLogin?.vistas[0]?.routerLink ?? '/dashboard'] )
