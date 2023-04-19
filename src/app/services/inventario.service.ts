@@ -23,7 +23,14 @@ export class InventarioService {
     }
 
   getArticulos(): Observable<ResponseModel>{
-    let sucursal = this.variablesGL.getSucursal() ?? "all";
+    
+    let sucursal ;
+    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
+      sucursal="all"
+    }else{
+      sucursal=this.variablesGL.getSucursal()
+    }
+
     return this.http.get<ResponseModel>(environment.apiService + `Inventario/Consulta?sucursal=${sucursal}`)
     .pipe(
       map (res => res)
@@ -32,7 +39,15 @@ export class InventarioService {
   }
 
   getInexistencias(): Observable<ResponseModel>{
-    let sucursal = this.variablesGL.getSucursal() ?? "all";
+    //Update 
+    //let sucursal = this.variablesGL.getSucursal() ?? "all";
+   
+    let sucursal ;
+    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
+      sucursal="all"
+    }else{
+      sucursal=this.variablesGL.getSucursal()
+    }
     return this.http.get<ResponseModel>(environment.apiService + `Inventario/Inexistencias?sucursal=${sucursal}`)
     .pipe(
       map (res => res)

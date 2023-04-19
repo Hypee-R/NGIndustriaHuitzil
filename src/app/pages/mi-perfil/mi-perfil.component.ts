@@ -110,6 +110,8 @@ export class MiPerfilComponent implements OnInit {
     this.usuariosService.actualizaUsuario(this.usuario).subscribe(response => {
       if(response.exito){
           this.toastr.success(response.mensaje, 'Exito!!');
+          localStorage.removeItem('pc');
+          localStorage.setItem('pc', this.usuario.pc);
       
       }else{
           this.toastr.error(response.mensaje, 'Ups!!');

@@ -38,7 +38,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     private ubicacionesService: UbicacionesService,
   ) {
     this.userAuth = JSON.parse(localStorage.getItem('usuario'));
-
+     console.log(this.userAuth);
     //Selecciona sucursal perfil vendedor
     if(this.userAuth.rol == 'Vendedor'){
         let sucursal = variablesGL.getSucursal();

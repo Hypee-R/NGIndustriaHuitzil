@@ -15,4 +15,6 @@ export class UsuarioAuthModel{
   vistas: VistaModel[];
   expiredTime: any;
   pc: string;
+  ubicacion: string;
+  impresora: string;
 }
