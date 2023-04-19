@@ -94,7 +94,8 @@ export class UsuariosComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         console.log(usuario);
-
+        usuario.impresora="impresora"
+        usuario.pc="pc"
         this.usuariosService.eliminaUsuario(usuario).subscribe(response => {
           if(response.exito){
               this.toastr.success(response.mensaje, 'Exito!!');

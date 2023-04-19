@@ -10,4 +10,6 @@ export class UsuarioModel{
     telefono: string;
     correo: string;
     pc: string;
+    impresora: string;
+    direccion:string;
 }

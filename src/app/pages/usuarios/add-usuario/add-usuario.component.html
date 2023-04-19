@@ -28,6 +28,13 @@
             <small class="p-error" *ngIf="submitted && !usuario.idRol">El rol es requerido.</small>
         </div>
         <br>
+        <br>
+        <div class="field">
+            <label for="usuario">Sucursal</label>
+            <p-dropdown class="p-background" [options]="listSucursales" [(ngModel)]="usuario.direccion" optionLabel="direccion" optionValue="direccion" [style]="{'width': '100%'}" placeholder="Selecciona una ubicacion"></p-dropdown>
+            <small class="p-error" *ngIf="submitted && !usuario.direccion">La Ubicacion es requerida.</small>
+        </div>
+        <br>
         <div class="field">
             <label for="usuario">Usuario</label>
             <input type="text" pInputText id="usuario" [(ngModel)]="usuario.usuario" required/>

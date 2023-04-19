@@ -5,7 +5,9 @@ import { VariablesService } from '../../../services/variablesGL.service';
 import { Subscription } from 'rxjs';
 import { RolModel } from '../../../models/rol.model';
 import { RolesService } from 'src/app/services/roles.service';
+import { UbicacionesService } from 'src/app/services/ubicaciones.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
+import { UbicacionModel } from 'src/app/models/ubicacion.model';
 
 @Component({
   selector: 'app-add-usuario',
@@ -23,11 +25,12 @@ export class AddUsuarioComponent implements OnInit, OnDestroy {
   listRoles: RolModel = new RolModel();
   usuario: UsuarioModel = new UsuarioModel();
   pattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
-
+  listSucursales: UbicacionModel = new UbicacionModel();
   dialogSubscription: Subscription = new Subscription();
   constructor(
     private toastr: ToastrService,
     private rolesService: RolesService,
+    private ubicacionesService:UbicacionesService,
     private variablesGL: VariablesService,
     private usuariosService: UsuariosService,
   ) {
@@ -45,6 +48,7 @@ export class AddUsuarioComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.usuario = this._editUsuario;
     this.getRoles();
+    this.getSucursales();
   }
 
   ngOnDestroy(): void {
@@ -57,9 +61,20 @@ export class AddUsuarioComponent implements OnInit, OnDestroy {
       this.rolesService.getRoles().subscribe(response => {
         if(response.exito){
           this.listRoles = response.respuesta;
+          console.log( this.listRoles)
         }
       });
   }
+
+
+getSucursales(){
+  this.ubicacionesService.getUbicaciones().subscribe(response => {
+    if(response.exito){
+      this.listSucursales = response.respuesta;
+      console.log( this.listSucursales)
+    }
+  });
+}
 
   hideDialog() {
     this.submitted = false;
@@ -68,12 +83,15 @@ export class AddUsuarioComponent implements OnInit, OnDestroy {
   }
 
   saveUsuario(){
+    console.log(this.usuario.idRol+":"+this.usuario.direccion)
     this.submitted = true;
     if(this.usuario.nombre?.length > 2 && this.usuario.apellidoPaterno?.length > 2 && this.usuario.apellidoMaterno?.length > 2
-      && this.usuario.usuario?.length > 3 && this.usuario.telefono?.length == 10 && this.usuario.correo.match(this.pattern) && this.usuario.idRol){
+      && this.usuario.usuario?.length > 3 && this.usuario.telefono?.length == 10 && this.usuario.correo.match(this.pattern) && this.usuario.idRol &&this.usuario.direccion?.length > 2){
       console.log('datos validos!!');
 
       this.usuario.rol = "asasdasd";
+      this.usuario.impresora = "asasdasd";
+      this.usuario.pc = "asasdasd";
       this.usuario.password = this.variablesGL.getSHA1('123456789');
       console.log('data usuario ', this.usuario);
 
