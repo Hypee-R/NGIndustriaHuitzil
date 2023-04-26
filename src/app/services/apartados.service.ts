@@ -24,10 +24,6 @@ export class ApartadosService {
   }
 
   getApartadoByUsuario(idUsuario : number,type : string,idApartado:number): Observable<ResponseModel>{
-   // let sucursal = this.variablesGL.getSucursal() ?? "all";
-   console.log(type)
-    console.log(idApartado)
-    console.log(idUsuario)
     return this.http.get<ResponseModel>(environment.apiService + `Apartados/Consulta/Usuario?idUsuario=${idUsuario}&type=${type}&idApartado=${idApartado}`)
     .pipe(
       map (res => res)

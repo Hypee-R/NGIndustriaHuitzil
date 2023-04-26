@@ -110,7 +110,7 @@ export class ApartadosComponent implements OnInit {
 
   ngOnInit(): void {
 
-   this.getClientes()
+    this.getClientes()
     this.getApartados()
   }
 
@@ -119,7 +119,7 @@ export class ApartadosComponent implements OnInit {
   getApartados(){
     this.apartadoService.getApartados().subscribe(response => {
       if(response.exito){
-        console.log(response.respuesta)
+        //console.log(response.respuesta)
         this.allApartados = response.respuesta
       }
       else{
@@ -171,14 +171,24 @@ export class ApartadosComponent implements OnInit {
 
   showDetail(apartado: CatApartadoModel){
     this.selectedclienteNameAdvanced.idCliente = apartado.idEmpleado
+    this.clientes.forEach(cliente => {
+      if(cliente.idCliente == apartado.idEmpleado){
+        this.selectedclienteNameAdvanced = cliente
+      } 
+    });
     this.consultaApartado()
   }
 
   showDetailPedido(apartado:CatApartadoModel){
     this.selectedclienteNameAdvanced.idCliente = apartado.idEmpleado
+    this.clientes.forEach(cliente => {
+      if(cliente.idCliente == apartado.idEmpleado){
+        this.selectedclienteNameAdvanced = cliente
+      } 
+    });
     this.consultarPedidoEspecial()
-
   }
+
   consultaApartado(){
   
     this.accion = ""
@@ -190,9 +200,7 @@ export class ApartadosComponent implements OnInit {
       this.crearApartado = true
       this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"A",0).subscribe(response =>{
         if(response.exito){
-          console.log(response.respuesta)
           this.listApartados = response.respuesta
-          console.log(this.listApartados)
           this.listApartados.forEach(apartado => {
             if(apartado.status == "Espera"){
               this.crearApartado = false
@@ -264,22 +272,16 @@ export class ApartadosComponent implements OnInit {
       this.crearPedido = true
       this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"E",0).subscribe(response =>{
         if(response.exito){
-          console.log(response.respuesta)
           this.listPedidos = response.respuesta
-   
           this.listPedidos.forEach(apartado => {
             if(apartado.status == "Espera"){
               this.crearPedido = false
               return
             }
           });
-         
-         // this.apartadoByUser = true
         }
       else{
-        this.crearPedido = true
-         /* this.crearApartado = true
-          this.apartadoByUser = false*/
+          this.crearPedido = true
         }
       })
     }
