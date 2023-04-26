@@ -104,7 +104,7 @@ export class ApartadosComponent implements OnInit {
       this.rowsApartados = 6;
     }else{
       this.rows = 10;
-      this.rowsApartados = 10;
+      this.rowsApartados = 9;
     }
   }
 
@@ -218,6 +218,7 @@ export class ApartadosComponent implements OnInit {
     this.accion = 'Apartar';
     this.accionAdd = ""
     this.accionPedido = ''
+    this.accionPago = ''
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
@@ -254,6 +255,7 @@ export class ApartadosComponent implements OnInit {
   consultarPedidoEspecial(){
    
     this.accion = ""
+    this.accionPedido = ""
     this.crearApartado = false
     this.apartadoByUser = false
     if(this.selectedclienteNameAdvanced.idCliente != 0 && !this.apartados){
@@ -290,7 +292,7 @@ export class ApartadosComponent implements OnInit {
   openAddPedido(){
     this.accionPago = ''
     this.accionAdd = ""
-    this.accionPedido = 'Pedido';
+    this.accionPedido = 'new';
   
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
@@ -334,6 +336,7 @@ export class ApartadosComponent implements OnInit {
 
   makePayPedido(apartado:CatApartadoModel){
     this.accionPago = "Pedidos"
+    this.accionPedido = ''
     this.selectedApartado = apartado
     console.log(this.selectedApartado.idApartado)
     setTimeout(() => {

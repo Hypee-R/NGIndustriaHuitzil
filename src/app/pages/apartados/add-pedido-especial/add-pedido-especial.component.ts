@@ -58,9 +58,9 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
         this.cliente = this._editCliente;
         this.nombreCompleto = this.cliente.nombre + " " + this.cliente.apellidoPaterno + " " + this.cliente.apellidoMaterno
       }
-      if(this._accion){
+      /*if(this._accion){
         this.accion = this._accion;
-      }
+      }*/
   });
    }
   ngOnDestroy(): void {

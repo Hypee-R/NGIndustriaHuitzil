@@ -77,7 +77,12 @@ export class AddPagoPedidoComponent implements OnInit,OnChanges {
     });
     
     this.faltante -=this.totalAbonos
- 
+    if(this.totalAbonos >= this.faltante){
+      this.hacerPago = false
+    }
+    else{
+      this.hacerPago = true
+    }
   }
   
   ngOnChanges(changes: SimpleChanges): void {
