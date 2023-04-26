@@ -118,6 +118,9 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
 
   addApartado(){
     let apartadoCorrecto = true
+    //let idParent = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
+
+    
     if(this.listArticulosSelected.length != 0)
     {
       if(this.apartado.fecha == ""){
@@ -132,7 +135,6 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
 
       this.apartadosService.agregaApartado(this.apartado).subscribe(response =>{
             if(response.exito){
-
               this.listArticulosSelected.forEach(articulo => {
                 
                 let newApartado = new CatApartadoModel
@@ -142,6 +144,7 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
                 newApartado.telefono = this.cliente.telefono1
                 newApartado.type = "I"
                 newApartado.fecha = this.apartado.fecha
+                newApartado.idParent = response.respuesta["idApartado"] 
                 newApartado.idTalla = articulo.idTalla
                 console.log(newApartado)
                 this.apartadosService.agregaApartado(newApartado).subscribe(response =>{

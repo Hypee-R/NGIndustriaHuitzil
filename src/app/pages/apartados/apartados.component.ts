@@ -188,7 +188,7 @@ export class ApartadosComponent implements OnInit {
       this.showTable = false
       this.showPedidos = false
       this.crearApartado = true
-      this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"A").subscribe(response =>{
+      this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"A",0).subscribe(response =>{
         if(response.exito){
           console.log(response.respuesta)
           this.listApartados = response.respuesta
@@ -260,7 +260,7 @@ export class ApartadosComponent implements OnInit {
       this.showTable = false
       this.showPedidos =  true
       this.crearPedido = true
-      this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"E").subscribe(response =>{
+      this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"E",0).subscribe(response =>{
         if(response.exito){
           console.log(response.respuesta)
           this.listPedidos = response.respuesta
@@ -334,14 +334,25 @@ export class ApartadosComponent implements OnInit {
 
   makePayPedido(apartado:CatApartadoModel){
     this.accionPago = "Pedidos"
-    
-    this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"I").subscribe(responce =>{
+    this.selectedApartado = apartado
+    console.log(this.selectedApartado.idApartado)
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 300);
+    this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"I",this.selectedApartado.idApartado).subscribe(responce =>{
       if(responce.exito){
         console.log(responce.respuesta)
         this.listArticulosApartados = responce.respuesta
-        setTimeout(() => {
-          this.variablesGL.showDialog.next(true);
-        }, 100);
+
+        this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response =>{
+          if(responce.exito){
+            this.listPagos = response.respuesta
+                  setTimeout(() => {
+            this.variablesGL.showDialog.next(true);
+          }, 300);
+          }
+        })
+  
       }
     })
     

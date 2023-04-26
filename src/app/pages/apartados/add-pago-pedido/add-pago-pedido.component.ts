@@ -45,8 +45,6 @@ export class AddPagoPedidoComponent implements OnInit,OnChanges {
   
     ) {
       
-      this.totalAbonos = 0
-      this.listPagos = this._listPagos
       this.cols = [
         { field: 'idApartado', header: 'ID PAGO' },
         { field: 'sku', header: 'FECHA' },
@@ -60,65 +58,64 @@ export class AddPagoPedidoComponent implements OnInit,OnChanges {
       ];
 
       this.pagoApartado = new PagoApartado()
-      this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
+    this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
         this.visibleDialog = estado;
     });
   
-    console.log(this.listArticulos)
   }
   
   consultarAbonos(){
     this.totalAbonos = 0
     this.faltante = 0
     this.listPagos = this._listPagos
+
+    this.listArticulos.forEach(articulo =>{
+      this.faltante += articulo.precio
+    })
     this._listPagos.forEach(pagos => {
       this.totalAbonos += pagos.cantidad
     });
     
-    /*if(this.totalAbonos >= this._apartado.precio){
-      this.hacerPago = false
-    }
-    else{
-      this.hacerPago = true
-    }*/
-   // this.faltante = this._apartado.precio - this.totalAbonos
+    this.faltante -=this.totalAbonos
+ 
   }
   
   ngOnChanges(changes: SimpleChanges): void {
+    this.listArticulos = this._listArticulos
     this.consultarAbonos()
    
   }
   ngOnInit(): void {
     this.listArticulos = this._listArticulos
+    
+    //console.log(this._apartado)
    this.consultarAbonos()
   }
   
   
   hideDialog() {
-      /*this.listPagos = []
-      this.submitted = false;
-      this.pagoApartado = new PagoApartado()
-      this.ngOnDestroy*/
+ 
     }
     
   addPago(){
       this.submitted = true
-      if(this.pagoApartado.cantidad < this._apartado.precio && this.pagoApartado.fecha != "")
+      if(this.pagoApartado.cantidad <= this.faltante && this.pagoApartado.fecha != "")
       {
-      this.pagoApartado.idApartado = this._apartado.idApartado
-      this.apartadosService.agregaPago(this.pagoApartado).subscribe(response =>{
-        if(response.exito){
-          this.toastr.success('Abono realizado', 'Sucess');
-          this.getPagos()
-          setTimeout(() => {
-            
-          }, 200);
-        }
-        else{
-          this.toastr.success(response.mensaje, 'Error!');
-        }
-    })
-    }}
+        this.pagoApartado.idApartado = this._apartado.idApartado
+        this.apartadosService.agregaPago(this.pagoApartado).subscribe(response =>{
+          if(response.exito){
+            this.toastr.success('Abono realizado', 'Sucess');
+            this.getPagos()
+            setTimeout(() => {
+              
+            }, 200);
+          }
+          else{
+            this.toastr.success(response.mensaje, 'Error!');
+          }
+      })
+      }
+    }
   
   getPagos(){
       this.listPagos = []
@@ -126,19 +123,22 @@ export class AddPagoPedidoComponent implements OnInit,OnChanges {
       this.apartadosService.getPagoByApartado(this._apartado.idApartado).subscribe(response =>{
           if(response.exito){
             this.listPagos = response.respuesta
+            //this.consultarAbonos()
             this.faltante = 0 
             this.totalAbonos = 0
             this.listPagos.forEach(pagos => {
               this.totalAbonos += pagos.cantidad
             });
-            
-            if(this.totalAbonos >= this._apartado.precio){
+            this.listArticulos.forEach(articulo =>{
+              this.faltante += articulo.precio
+            })
+            if(this.totalAbonos >= this.faltante){
               this.hacerPago = false
             }
             else{
               this.hacerPago = true
             }
-            this.faltante = this._apartado.precio - this.totalAbonos
+            this.faltante  -= this.totalAbonos
           }
       }
       )
