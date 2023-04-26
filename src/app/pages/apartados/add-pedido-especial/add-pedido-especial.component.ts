@@ -37,7 +37,7 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
   selectedTalla : CatTallaModel
   listArticulosSelected: productoModel[] = []
   cols: any[] = [];
-  rows = 5;
+  rows = 100;
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -48,6 +48,7 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
   ) {
     this.listArticulosSelected = []
     this.cols = [
+      { field: 'cantidad',header:"Cantidad"},
       { field: 'descripcion', header: 'Articulo' },
       { field: 'talla', header: 'Talla' },
       { field : 'precio', header :'Precio'},

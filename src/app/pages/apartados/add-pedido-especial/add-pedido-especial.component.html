@@ -1,10 +1,27 @@
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="Pedido Especial" [modal]="true" styleClass="p-fluid">
-
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '650px'}" header="Pedido Especial" [modal]="true" styleClass="p-fluid">
+    <div class="field">
+        <label for="articulo">Seleciona Articulos </label>
+        <p-autoComplete [(ngModel)]="selectedArticuloAdvanced" [suggestions]="filteredArticulos"    placeholder="Ingrese el nombre del articulo" size="40"
+        (completeMethod)="getResultsArticulos($event)" field="descripcion" [dropdown]="true"  >
+        <ng-template let-articulo pTemplate="item">
+          <div class="articulo-item ">
+            <div>{{articulo.sku }} {{articulo.descripcion}}</div>  
+        </div>
+        </ng-template>
+      </p-autoComplete>
+    
+    </div>
+    <br>
+        
+    <div class = "col-1 md: col-4"> 
+        <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="addArticles()"></button>
+    </div>
+    <br>
     <ng-template pTemplate="content">
         
-
-        <p-table #dt [value]="listArticulosSelected" [columns]="cols" [rows]="rows" [paginator]="true"  [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll"  
-        dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Articulos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+        
+        <p-table #dt [value]="listArticulosSelected" [columns]="cols" [rows]="rows" [paginator]="false"  [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll"  
+        dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Articulos" [showCurrentPageReport]="false" styleClass="p-datatable-sm">
         <ng-template pTemplate="caption">
            
         </ng-template>
@@ -14,7 +31,8 @@
                 <!--<th style="width: 2rem">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>-->
-                
+                <th style="width: 1rem">
+                </th>
                 <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                     <div class="flex justify-content-center align-items-center">
                         {{col.header}}
@@ -28,6 +46,19 @@
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-columns="columns" >
             <tr>
+                <td>
+                    <div style="display: inline-flex">
+                        <button pButton pRipple icon="pi pi-minus"
+                            class="p-button-rounded p-button-danger"
+                            ></button>
+                        <button pButton pRipple icon="pi pi-plus"
+                            class="p-button-rounded p-button" 
+                            style="margin-left: 3px;"></button>
+                    </div>
+                </td>
+                <td>
+                    1
+                </td>
                 <td>
                     {{rowData['descripcion']}}
                 </td>
@@ -45,28 +76,12 @@
         </ng-template>
         
         </p-table>
-        <div class="field">
-            <label for="articulo">Seleciona Articulos </label>
-            <p-autoComplete [(ngModel)]="selectedArticuloAdvanced" [suggestions]="filteredArticulos"    placeholder="Ingrese el nombre del articulo" size="40"
-            (completeMethod)="getResultsArticulos($event)" field="descripcion" [dropdown]="true"  >
-            <ng-template let-articulo pTemplate="item">
-              <div class="articulo-item ">
-                <div>{{articulo.sku }} {{articulo.descripcion}}</div>  
-            </div>
-            </ng-template>
-          </p-autoComplete>
         
-        </div>
         <!--<div class="field">
             <label for="idTalla">Talla</label>
             <p-dropdown [options]="listTallas"  optionValue="idTalla"  [(ngModel)]="selectedTalla" placeholder="Selecciona una talla" optionLabel="nombre" [style]="{'width': '100%'}"></p-dropdown>
         </div>-->
-        <br>
-        
-        <div class = "col-1 md: col-4"> 
-            <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="addArticles()"></button>
-        </div>
-        <br>
+       
         <div class="field">
             <label for="fecha">Fecha</label>
             <input type="date" pInputText id="fecha"  [(ngModel)]="apartado.fecha"[disabled]="false" />
