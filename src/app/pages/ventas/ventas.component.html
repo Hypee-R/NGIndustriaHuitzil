@@ -173,19 +173,23 @@
                     <div class="row justify">
 
                         <div class="col-8">
-                            <button pButton type="button" class="p-button-raised p-button-rounded " label="Busqueda de Productos" 
-                                icon="pi pi-shopping-cart" (click)="openProductsM()"></button>
+                            <button pButton type="button" class="p-button-raised p-button-rounded "
+                                label="Busqueda de Productos" icon="pi pi-shopping-cart"
+                                (click)="openProductsM()"></button>
                         </div>
 
                     </div>
                     <p-divider>Caja</p-divider>
                     <div class="row justify">
                         <span class="p-buttonset">
-                            <button pButton type="button"  class="p-button-raised p-button-rounded" icon="pi pi-inbox" label="Abrir caja"  (click)="openCashRegister()"></button>
-                            <button pButton type="button" class="p-button-raised p-button-rounded" icon="pi pi-box" label="Cerrar Caja" (click)="closeCashRegister()"></button>
-                            <button pButton type="button" class="p-button-raised p-button-rounded" icon="pi pi-book" label="Status de la caja"  (click)="statusCashRegister()"></button>
+                            <button pButton type="button" class="p-button-raised p-button-rounded" icon="pi pi-inbox"
+                                label="Abrir caja" (click)="openCashRegister()"></button>
+                            <button pButton type="button" class="p-button-raised p-button-rounded" icon="pi pi-box"
+                                label="Cerrar Caja" (click)="closeCashRegister()"></button>
+                            <button pButton type="button" class="p-button-raised p-button-rounded" icon="pi pi-book"
+                                label="Status de la caja" (click)="statusCashRegister()"></button>
                         </span>
-                        
+
                         <!-- <div class="col-sm-2">
                             <button pButton type="button" class="p-button-raised p-button-rounded" icon="pi pi-inbox" label="Abrir caja"  (click)="openCashRegister()"></button>
                           
@@ -202,18 +206,19 @@
                     <p-divider>Acciones</p-divider>
                     <div class="row justify">
                         <div class="col-sm-2">
-                          
-                            <button pButton type="button"  class="p-button-raised p-button-rounded" icon="pi pi-file-o" label="Cotización"   (click)="showDialogCotizacion()"></button>
+
+                            <button pButton type="button" class="p-button-raised p-button-rounded" icon="pi pi-file-o"
+                                label="Cotización" (click)="showDialogCotizacion()"></button>
                         </div>
                         <div class="col-sm-2">
-                      
+
 
                         </div>
                         <div class="col-sm-2">
                         </div>
 
                     </div>
-                 
+
 
 
                 </div>
@@ -240,14 +245,14 @@
                 <div class="col-sm" align="center">
                     <img class="logo" src="../../../assets/img/caja.jpeg" alt="Login" height="100" width="100">
                 </div>
-             
-                <div class="col-sm" >
+
+                <div class="col-sm">
                     <h5>Cliente:{{this.clienteName}}</h5>
-                  
+
                 </div>
-                
+
             </div>
-            <div class="row" >
+            <div class="row">
                 <div class="col-sm">
                     <button pButton type="button" label="Tarjeta" icon="pi pi-credit-card"
                         class="p-button-rounded p-button-warning p-button-lg" badge="8" badgeClass="p-badge-info"
@@ -256,7 +261,7 @@
                 <div class="col-sm">
                     <h5>Datos de la venta</h5>
                     <h5>Total de articulos: {{articulos}}</h5>
-                 
+
                 </div>
 
             </div>
@@ -271,68 +276,93 @@
                 <div class="col-sm">
                     <h5>Descuento cliente:-$0.0</h5>
                     <h5>Descuento total:-$0.0</h5>
-     
+
                 </div>
 
             </div>
             <br>
             <div class="row">
                 <div class="col-sm">
- 
-                    <button pButton type="button" label="Multiple" icon="pi pi-money-bill"   class="p-button-rounded p-button-success  p-button-lg" badge="8" badgeClass="p-badge-info"  [icon]="activeState[0] ? 'pi pi-minus' : 'pi pi-plus'" (click)="toggle(0)" styleClass="p-button-text"></button> 
 
-        
+                    <button pButton type="button" label="Multiple" icon="pi pi-money-bill"
+                        class="p-button-rounded p-button-success  p-button-lg" badge="8" badgeClass="p-badge-info"
+                        [icon]="activeState[0] ? 'pi pi-minus' : 'pi pi-plus'" (click)="toggle(0)"
+                        styleClass="p-button-text"></button>
+
+
                 </div>
                 <div class="col-sm">
-                    <h5>Subtotal:<button pButton pRipple icon="pi pi-dollar"   type="button" class="p-button-rounded p-button-warning"  label="{{this.total}}" ></button>  </h5> 
-                    <h3>TOTAL:    <button pButton pRipple icon="pi pi-dollar"   type="button" class="p-button-rounded p-button-danger"  label="{{this.total}}" ></button> </h3>
+                    <h5>Subtotal:<button pButton pRipple icon="pi pi-dollar" type="button"
+                            class="p-button-rounded p-button-warning" label="{{this.total}}"></button> </h5>
+                    <h3>TOTAL: <button pButton pRipple icon="pi pi-dollar" type="button"
+                            class="p-button-rounded p-button-danger" label="{{this.total}}"></button> </h3>
 
                 </div>
 
             </div>
             <p-accordion>
                 <p-accordionTab header="Datos de Pago Multiple" [(selected)]="activeState[0]">
-                  
+
                     <div class="row">
-            
-                        <div class="col-sm-4" >
-            
-                            <p-inputNumber  [(ngModel)]="totalMultipleT"    placeholder="Tarjeta" title="Tarjeta"     (change)="changePage()"></p-inputNumber>
-                          
-                        </div>
-            
+
                         <div class="col-sm-4">
-                            <p-inputNumber placeholder="Efectivo"  [(ngModel)]="totalMultipleF"     title="Efectivo"   (change)="changePage()" ></p-inputNumber>
-                          
+                            <br>
+                            <span class="p-float-label">
+
+                                <p-inputNumber [(ngModel)]="totalMultipleT" id="float-input1"
+                                    (change)="changePage()"></p-inputNumber>
+                                <label for="float-input1">Tarjeta</label>
+                            </span>
+
+
                         </div>
-            
+
                         <div class="col-sm-4">
-                         
-                            <button pButton pRipple type="button" icon="pi pi-money-bill" class="p-button-rounded p-button-success" (click)="PostVentaRegistro('MULTIPLE')"></button>
-                       
-                      
+
+                            <br>
+                            <span class="p-float-label">
+
+                                <p-inputNumber [(ngModel)]="totalMultipleF" id="float-input2"
+                                    (change)="changePage()"></p-inputNumber>
+                                <label for="float-input2">Efectivo</label>
+                            </span>
+
+                            <!-- <p-inputNumber placeholder="Efectivo" [(ngModel)]="totalMultipleF" title="Efectivo"
+                                (change)="changePage()"></p-inputNumber> -->
+
+                        </div>
+
+                        <div class="col-sm-4">
+                            <br>
+                            <button pButton pRipple type="button" icon="pi pi-money-bill" label="Pagar Multiple"
+                                class="p-button-rounded p-button-success"
+                                (click)="PostVentaRegistro('MULTIPLE')"></button>
+
+
                         </div>
                     </div>
                 </p-accordionTab>
-              
+
             </p-accordion>
             <br>
-        
+
             <div class="row">
                 <div class="col-sm">
                     <h5>SU PAGO : </h5>
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon">$</span>
-                        <input type="number" pInputText placeholder="Ingresar monto"   [(ngModel)]="this.totalVenta"    (change)="changePage()" >
-                     
-                        <span class="p-inputgroup-addon">.00</span>      
+                        <input type="number" pInputText placeholder="Ingresar monto" [(ngModel)]="this.totalVenta"
+                            (change)="changePage()">
+
+                        <span class="p-inputgroup-addon">.00</span>
                     </div>
                 </div>
                 <div class="col-sm">
-                    
+
                     <h5>SU CAMBIO: </h5>
-                    <button pButton pRipple icon="pi pi-sync"   type="button" label="Success" class="p-button-rounded p-button-success"  label=" {{this.cambioVenta}}" ></button>
-                 
+                    <button pButton pRipple icon="pi pi-sync" type="button" label="Success"
+                        class="p-button-rounded p-button-success p-button-lg" label=" {{this.cambioVenta}}"></button>
+                    
                 </div>
 
             </div>
@@ -349,20 +379,20 @@
 
 
     <p-dialog header="Cotización " [(visible)]="displayCotizacion" [style]="{width: '50vw'}">
-           
+
         <div class="row" id="htmlData">
             <div class="row">
                 <div class="col-sm-6">
-                    <img src="assets/img/logo_huitzil.png" alt="" height="100" width="200" >
+                    <img src="assets/img/logo_huitzil.png" alt="" height="100" width="200">
                 </div>
                 <div class="col-sm-6">
                 </div>
             </div>
 
-        
+
             <div class="row">
                 <div class="col-sm-6">
-                   
+
                     <p>Documento de Cotización sin valor</p>
                 </div>
                 <div class="col-sm-6">
@@ -387,7 +417,7 @@
                 </div>
                 <div class="col-sm-6">
                     <p>Vendedor</p>{{user.nombre}} {{ user.apellidoPaterno}} {{ user.apellidoMaterno }}
-              
+
                 </div>
             </div>
             <hr>
@@ -442,24 +472,25 @@
 
         </div>
         <ng-template pTemplate="footer">
-             <br>
-             <div class="row">
+            <br>
+            <div class="row">
                 <div class="container">
                     <div class="row">
                         <div class="col-4" align="center">
-                            <button pButton pRipple label="Ticket" icon="pi pi-print" (click)="downloadTicket()" ></button>
+                            <button pButton pRipple label="Ticket" icon="pi pi-print"
+                                (click)="downloadTicket()"></button>
                         </div>
                         <div class="col-4">
-                           
+
                         </div>
                         <div class="col-4" align="center">
-                            <button pButton pRipple label="PDF" icon="pi pi-print" (click)="downloadPDF()" ></button>
+                            <button pButton pRipple label="PDF" icon="pi pi-print" (click)="downloadPDF()"></button>
                         </div>
 
                     </div>
                 </div>
             </div>
-         
+
         </ng-template>
     </p-dialog>
 
