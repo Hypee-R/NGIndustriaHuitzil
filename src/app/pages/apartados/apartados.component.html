@@ -230,8 +230,8 @@
                         </div>
                             <br>
                         <app-loading *ngIf="loading"></app-loading>
-                        <app-add-apartado [_accion]="accion" [(_editCliente)]="selectedclienteNameAdvanced" (saveApartado)="consultaApartado()"  *ngIf="accion != ''"></app-add-apartado>
-                        <app-add-pedido-especial [_accion]="accionPedido"  [(_editCliente)]="selectedclienteNameAdvanced"  (saveApartado)="consultarPedidoEspecial()" *ngIf="accionPedido != ''"></app-add-pedido-especial>
+                        <app-add-apartado [_accion]="accion" [(_editCliente)]="selectedclienteNameAdvanced" (saveApartado)="consultaApartado()"  *ngIf="accion == 'Apartar'"></app-add-apartado>
+                        <app-add-pedido-especial [_accion]="accionPedido"  [(_editCliente)]="selectedclienteNameAdvanced"  (saveApartado)="consultarPedidoEspecial()" *ngIf="accionPedido == 'new'"></app-add-pedido-especial>
                       
                     </div>
                     <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>

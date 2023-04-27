@@ -37,7 +37,7 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
   selectedTalla : CatTallaModel
   listArticulosSelected: productoModel[] = []
   cols: any[] = [];
-  rows = 5;
+  rows = 100;
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -48,6 +48,7 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
   ) {
     this.listArticulosSelected = []
     this.cols = [
+      { field: 'cantidad',header:"Cantidad"},
       { field: 'descripcion', header: 'Articulo' },
       { field: 'talla', header: 'Talla' },
       { field : 'precio', header :'Precio'},
@@ -58,9 +59,9 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
         this.cliente = this._editCliente;
         this.nombreCompleto = this.cliente.nombre + " " + this.cliente.apellidoPaterno + " " + this.cliente.apellidoMaterno
       }
-      if(this._accion){
+      /*if(this._accion){
         this.accion = this._accion;
-      }
+      }*/
   });
    }
   ngOnDestroy(): void {
@@ -118,6 +119,9 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
 
   addApartado(){
     let apartadoCorrecto = true
+    //let idParent = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
+
+    
     if(this.listArticulosSelected.length != 0)
     {
       if(this.apartado.fecha == ""){
@@ -132,7 +136,6 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
 
       this.apartadosService.agregaApartado(this.apartado).subscribe(response =>{
             if(response.exito){
-
               this.listArticulosSelected.forEach(articulo => {
                 
                 let newApartado = new CatApartadoModel
@@ -142,6 +145,7 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
                 newApartado.telefono = this.cliente.telefono1
                 newApartado.type = "I"
                 newApartado.fecha = this.apartado.fecha
+                newApartado.idParent = response.respuesta["idApartado"] 
                 newApartado.idTalla = articulo.idTalla
                 console.log(newApartado)
                 this.apartadosService.agregaApartado(newApartado).subscribe(response =>{

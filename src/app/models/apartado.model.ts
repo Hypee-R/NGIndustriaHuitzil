@@ -5,6 +5,7 @@ export class CatApartadoModel{
     idEmpleado: number;
     idArticulo : number;
     idTalla : number;
+    idParent: number;
     fecha: string;
     fechaEntrega: string;
     telefono : string;
@@ -19,6 +20,7 @@ export class CatApartadoModel{
         this.idEmpleado = 0
         this.idArticulo = 0
         this.idTalla = 0
+        this.idParent = 0
         this.fecha = ''
         this.telefono = ""
         this.direccion = ""
