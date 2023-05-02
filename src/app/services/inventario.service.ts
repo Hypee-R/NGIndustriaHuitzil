@@ -79,7 +79,14 @@ export class InventarioService {
   }
 
   searchProduct(queryString: string): Observable<ResponseModel> {
-    let sucursal = this.variablesGL.getSucursal() ?? "all";
+    console.log(queryString);
+   
+    let sucursal ;
+    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
+      sucursal="all"
+    }else{
+      sucursal=this.variablesGL.getSucursal()
+    }
     return this.http.get<ResponseModel>(environment.apiService + `Inventario/SearchProduct?queryString=${queryString}&sucursal=${sucursal}`);
   }
 
