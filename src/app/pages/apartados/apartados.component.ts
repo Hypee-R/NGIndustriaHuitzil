@@ -71,7 +71,7 @@ export class ApartadosComponent implements OnInit {
 
     this.colsPedidos = [
       { field: 'idPedido', header: 'ID PEDIDO' },
-      { field: 'fecha', header: 'Fecha' },
+      { field: 'fecha', header: 'Fecha Apartado' },
       { field : 'fechaEntrega', header : 'Fecha Entrega'},
       { field: 'telefono', header: 'Telefono' },
       { field: 'direccion', header: 'Dirección' },
@@ -82,10 +82,11 @@ export class ApartadosComponent implements OnInit {
     this.colsApartados = 
 
     [
-      { field: 'idApartado', header: 'ID PEDIDO' },
+     // { field: 'idApartado', header: 'ID PEDIDO' },
       { field: 'cliente', header: 'CLIENTE' },
       { field : 'articulo', header: 'ARTICULO'},
-      { field : 'fechaEntrega', header : 'Fecha Entrega'},
+      { field: 'fecha',header:'FECHA APARTADO'},
+      { field : 'fechaEntrega', header : 'FECHA ENTREGA'},
       { field: 'telefono', header: 'Telefono' },
       { field: 'direccion', header: 'Dirección' },
       { field: 'status', header : 'Status'}
@@ -103,8 +104,8 @@ export class ApartadosComponent implements OnInit {
       this.rows = 4;
       this.rowsApartados = 6;
     }else{
-      this.rows = 10;
-      this.rowsApartados = 9;
+      this.rows = 7;
+      this.rowsApartados = 7;
     }
   }
 

@@ -12,6 +12,8 @@ export class VentaModel {
     noArticulos: number;
     subtotal: number;
     total?: number;
+    tarjeta?: number;
+    efectivo?: number;
     caja?: CajaModel;
     ventaArticulo: VentaArticuloModel[];
     constructor(){
@@ -24,6 +26,8 @@ export class VentaModel {
       this.noArticulos = 0;
       this.subtotal = 0;
       this.total = 0;
+      this.tarjeta = 0;
+      this.efectivo = 0;
       
     }
 }
