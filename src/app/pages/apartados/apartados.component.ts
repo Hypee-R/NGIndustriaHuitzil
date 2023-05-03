@@ -104,8 +104,8 @@ export class ApartadosComponent implements OnInit {
       this.rows = 4;
       this.rowsApartados = 6;
     }else{
-      this.rows = 10;
-      this.rowsApartados = 9;
+      this.rows = 7;
+      this.rowsApartados = 7;
     }
   }
 
