@@ -83,6 +83,7 @@ import {AccordionModule} from 'primeng/accordion';
 import { AddPagoApartadoComponent } from './apartados/add-pago-apartado/add-pago-apartado.component';
 import { AddPagoPedidoComponent } from './apartados/add-pago-pedido/add-pago-pedido.component';
 import { ControEnviosComponent } from './contro-envios/contro-envios.component';
+import { TabViewModule } from 'primeng/tabview';
 
 @NgModule({
     imports: [
@@ -129,7 +130,8 @@ import { ControEnviosComponent } from './contro-envios/contro-envios.component';
         TagModule,
         ConfirmPopupModule,
         AccordionModule,
-        //NgxBarcode6Module
+        //NgxBarcode6Module,
+        TabViewModule,
         PickListModule
 ],  providers: [ConfirmationService,MessageService,PickListModule],
     declarations: [

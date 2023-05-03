@@ -1,7 +1,7 @@
 <div [ngClass]="{'container': statusPantalla <= 10}">
 
     <div class="card shadow mb-5 bg-body rounded">
-        <div class="card-header text-uppercase">Venta Mayoreo y Apartados</div>
+        <div class="card-header text-uppercase"> Apartados</div>
         <span class="lstick"></span>
         <div class="card-body">
             <div class="row">
@@ -26,7 +26,7 @@
                                     <button pButton pRipple label="Consultar Apartados" icon="pi pi-book" type="button" class="p-button-success" (click)="consultaApartado()"></button>
                                 </div>-->
                                 <div class="col-3 md:col-3">
-                                    <button pButton pRipple label="Consultar Pedidos" icon="pi pi-book" type="button" class="p-button-help" (click)="consultarPedidoEspecial()"></button>
+                                    <button pButton pRipple label="Consultar Apartados" icon="pi pi-book" type="button" class="p-button-help" (click)="consultarPedidoEspecial()"></button>
                                 </div>
                             </div>
                         </div>
@@ -189,7 +189,7 @@
                         dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Apartados" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                         <ng-template pTemplate="caption">
                             <div class="flex align-items-center justify-content-between">
-                                <h5 class="m-0">Apartados especiales de {{selectedclienteNameAdvanced.nombre }} {{selectedclienteNameAdvanced.apellidoPaterno}} {{selectedclienteNameAdvanced.apellidoMaterno}}</h5>
+                                <h5 class="m-0">Apartados de {{selectedclienteNameAdvanced.nombre }} {{selectedclienteNameAdvanced.apellidoPaterno}} {{selectedclienteNameAdvanced.apellidoMaterno}}</h5>
                                 <br>
                               
                             </div>
@@ -241,11 +241,11 @@
                         <br>
                         <div *ngIf="crearPedido">
                         <p >
-                            Sin Pedidos Especiales de {{selectedclienteNameAdvanced.nombre }} {{selectedclienteNameAdvanced.apellidoPaterno}} {{selectedclienteNameAdvanced.apellidoMaterno}}
+                            Sin Apartados al cliente: {{selectedclienteNameAdvanced.nombre }} {{selectedclienteNameAdvanced.apellidoPaterno}} {{selectedclienteNameAdvanced.apellidoMaterno}}
                         </p>
                         <div class="row">
                             <div class="col-2 md:col-3" >
-                                <button pButton pRipple label="Pedido Especial" icon="pi pi-book" type="button" class="p-button-help" (click)=" openAddPedido()"></button>
+                                <button pButton pRipple label="Nuevo Apartado" icon="pi pi-book" type="button" class="p-button-help" (click)=" openAddPedido()"></button>
                             </div>
                         </div>
                         </div>
