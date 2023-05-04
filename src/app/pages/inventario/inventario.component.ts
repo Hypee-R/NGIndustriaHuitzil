@@ -205,7 +205,7 @@ export class InventarioComponent implements OnInit {
    
    let ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.listArticulos.map(row => ({
     id_articulo: row.idArticulo ,
-    unidad: row.unidad,
+    status: row.status,
     existencia: row.existencia,
     descripcion: row.descripcion,
     fecha_ingreso: row.fechaIngreso,
@@ -215,7 +215,7 @@ export class InventarioComponent implements OnInit {
     imagen: "",
     sku: row.sku,
     precio: row.precio,
-  })), { header: ['id_articulo','unidad','existencia','descripcion','fecha_ingreso','id_ubicacion','id_categoria','id_talla','imagen','sku','precio'] })
+  })), { header: ['id_articulo','status','existencia','descripcion','fecha_ingreso','id_ubicacion','id_categoria','id_talla','imagen','sku','precio'] })
    const wb: XLSX.WorkBook = XLSX.utils.book_new();
    XLSX.utils.book_append_sheet(wb, ws, 'InventarioProductos');
    XLSX.writeFile(wb, 'Inventario'+new Date().toISOString()+'.csv')
@@ -298,7 +298,7 @@ export class InventarioComponent implements OnInit {
         let csvRecord: CSVRecord = new CSVRecord();
 
         csvRecord.idArticulo = data[0].trim();
-        csvRecord.unidad = data[1].trim();
+        csvRecord.status = data[1].trim();
         csvRecord.existencia = data[2].trim();
         csvRecord.descripcion = data[3].trim();
         csvRecord.fechaIngreso = data[4].trim();
@@ -327,7 +327,7 @@ export class InventarioComponent implements OnInit {
        
 
         this.productoFile.idArticulo= arr[i].idArticulo,
-        this.productoFile.unidad= arr[i].unidad,
+        this.productoFile.status= arr[i].status,
         this.productoFile.existencia= arr[i].existencia,
         this.productoFile.descripcion=arr[i].descripcion,
         this.productoFile.fechaIngreso=arr[i].fechaIngreso,
@@ -381,7 +381,7 @@ this.getArticulos()
 export class CSVRecord {
 
   public idArticulo: any;
-  public unidad: string;
+  public status: string;
   public existencia: string;
   public descripcion: string;
   public fechaIngreso: string;

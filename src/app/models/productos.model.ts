@@ -3,7 +3,7 @@ import {formatDate} from '@angular/common';
 
 export class productoModel{
   idArticulo: number;
-  unidad: string;
+  status: string;
   existencia: string;
   descripcion: string;
   fechaIngreso: string;
@@ -18,7 +18,7 @@ export class productoModel{
   sku: string;
     constructor(){
     this.idArticulo = 0;
-    this.unidad = '';
+    this.status = '';
     this.descripcion = '';
     this.existencia = '';
     this.fechaIngreso= '';

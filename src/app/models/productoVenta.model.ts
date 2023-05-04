@@ -1,6 +1,6 @@
 export class productoVentaModel{
     idArticulo: number;
-    unidad: string;
+    status: string;
     existencia: string;
     descripcion: string;
     fechaIngreso: string;
@@ -16,7 +16,7 @@ export class productoVentaModel{
     cantidad : number
       constructor(){
       this.idArticulo = 0;
-      this.unidad = '';
+      this.status = '';
       this.descripcion = '';
       this.existencia = '';
       this.fechaIngreso= '2022-10-19';
