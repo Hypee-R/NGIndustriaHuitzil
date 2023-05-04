@@ -25,6 +25,7 @@ export class InformesComponent implements OnInit {
   cols: any[] = [];
   fechaI;
   fechaF;
+  openModal = ''
   constructor(
     public variablesGL: VariablesService,
     private toastr: ToastrService,
@@ -153,6 +154,7 @@ export class InformesComponent implements OnInit {
    }
 
    getVentasBycaja(idCaja : number){
+    this.openModal = 'ventas'
     this.ventasService.getVentasByCaja(idCaja).subscribe(response => {
         if(response.exito){
           console.log(response.respuesta)
