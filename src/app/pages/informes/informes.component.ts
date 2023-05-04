@@ -8,6 +8,7 @@ import { jsPDF } from "jspdf";
 import html2canvas from 'html2canvas';
 import { VentaArticuloModel } from 'src/app/models/VentaArticulo.Model';
 import { productoModel } from 'src/app/models/productos.model';
+import { CajaModel } from 'src/app/models/caja.model';
 
 @Component({
   selector: 'app-informes',
@@ -19,6 +20,7 @@ export class InformesComponent implements OnInit {
   rows = 0;
   loading: boolean = false;
   ventas: VentaModel[] = [];
+  cajas : CajaModel[] = []
   selectedVentas : VentaModel
   cols: any[] = [];
   fechaI;
@@ -32,13 +34,18 @@ export class InformesComponent implements OnInit {
    // this.fechaF = new Date().toLocaleDateString();
     this.cols = [
       { fiel: 'idCaja', header: 'Caja' },
+      { field: 'x', header: 'Usuario'},
+      {field:'x',header:'Ubicación'},
       { field: 'fecha', header: 'Fecha' },
-      { field: 'noTicket', header: 'N.Ticket' },
-      { field: 'tipoPago', header: 'Tipo de pago' },
+      {field: 'x',header:'Fecha Cierre'},
+      {field: 'x',header:'Monto'},
+      {field: 'x',header: 'Monto Cierre'}
+      //{ field: 'noTicket', header: 'N.Ticket' },
+      /*{ field: 'tipoPago', header: 'Tipo de pago' },
       { field: 'tipoVenta', header: 'Tipo de venta' },
       { field: 'noArticulos', header: 'N. Articulos' },
       { field: 'subtotal', header: 'Subtotal' },
-      { field: 'total', header: 'Total' },
+      { field: 'total', header: 'Total' },*/
 
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
@@ -56,15 +63,32 @@ export class InformesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getVentas();
+    //this.getVentas();
+    this.getCajas()
   }
 
   getVentas() {
     this.loading = true;
     this.ventasService.getVentas().subscribe(response => {
       if(response.exito){
-        console.log(response.respuesta)
+       // console.log(response.respuesta)
         this.ventas = response.respuesta
+        this.loading = false
+      }
+    }, err =>{
+      this.loading = false
+    })
+  
+  }
+
+  
+  getCajas() {
+    this.loading = true;
+    this.ventasService.getallCajas().subscribe(response => {
+      if(response.exito){
+        ///console.log(response.respuesta)
+        this.cajas = response.respuesta
+        //this.ventas = response.respuesta
         this.loading = false
       }
     }, err =>{
@@ -126,6 +150,15 @@ export class InformesComponent implements OnInit {
       })
 
     
+   }
+
+   getVentasBycaja(idCaja : number){
+    this.ventasService.getVentasByCaja(idCaja).subscribe(response => {
+        if(response.exito){
+          console.log(response.respuesta)
+        }
+      }
+    )
    }
 
 

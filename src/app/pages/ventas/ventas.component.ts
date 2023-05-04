@@ -480,8 +480,10 @@ export class VentasComponent implements OnInit {
     this.RegistraVenta.noTicket = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
     this.RegistraVenta.subtotal = this.total;
     this.RegistraVenta.tipoPago = tipoPago;
-    this.RegistraVenta.tipoVenta = tipoPago;
+    this.RegistraVenta.tipoVenta = "CONTADO";
     this.RegistraVenta.total = this.total;
+    this.RegistraVenta.tarjeta = this.totalMultipleT;
+    this.RegistraVenta.efectivo = this.totalMultipleF;
     this.RegistraVenta.ventaArticulo = this.ventaArticulo;
 
 

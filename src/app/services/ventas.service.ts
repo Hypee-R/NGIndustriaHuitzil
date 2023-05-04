@@ -15,9 +15,23 @@ export class VentasService {
   constructor(
     private http: HttpClient
   ){}
-
+  
+  getallCajas():Observable<ResponseModel>{
+ 
+    return this.http.get<ResponseModel>(environment.apiService + 'Ventas/Cash/Cajas')
+    .pipe(
+      map (res => res)
+    );
+  }
   getVentas(): Observable<ResponseModel>{
     return this.http.get<ResponseModel>(environment.apiService + 'Ventas/Sales')
+    .pipe(
+      map (res => res)
+    );
+  }
+
+  getVentasByCaja(idCaja : number): Observable<ResponseModel>{
+    return this.http.get<ResponseModel>(environment.apiService + `Ventas/SalesByCajas?idCaja=${idCaja}`)
     .pipe(
       map (res => res)
     );
