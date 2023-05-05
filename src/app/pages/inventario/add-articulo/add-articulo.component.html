@@ -20,11 +20,14 @@
         </div>
         <br>
         <div class="field">
-            <label for="descripcion">Unidad</label>
-            <input type="text" pInputText id="unidad" [(ngModel)]="producto.unidad" required/>
-            <small class="p-error" *ngIf="submitted && !producto.descripcion">La descripción es requerida.</small>
-            <small class="p-error" *ngIf="submitted && producto.descripcion?.length > 0 && producto.descripcion?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
+            <label for="descripcion">Estatus</label>
+            <!-- <input type="text" pInputText id="status" [(ngModel)]="producto.status" required/> -->
+            <p-dropdown [options]="lstEstatus" [(ngModel)]="producto.status" placeholder="Selecciona una opción" [style]="{'width': '100%'}" required="true"></p-dropdown>
+           
+            <small class="p-error" *ngIf="submitted && !producto.status">La descripción es requerida.</small>
+            <!-- <small class="p-error" *ngIf="submitted && producto.status?.length > 0 && producto.status?.length <= 2">Esl estatus debe contener minimo 3 caracteres</small> -->
         </div>
+      
         <br>
         <div class="field">
             <label for="descripcion">Descripción</label>

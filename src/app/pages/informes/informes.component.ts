@@ -206,7 +206,7 @@ export class InformesComponent implements OnInit {
       SKU : row.sku,
       Precio : row.precio,
       Talla : row.talla,
-      Unidad : row.unidad,
+      Status : row.status,
       Ubicacion : row.ubicacion,
       FechaIngreso : row.fechaIngreso
 
