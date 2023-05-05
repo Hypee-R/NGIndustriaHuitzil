@@ -35,12 +35,12 @@ export class InformesComponent implements OnInit {
    // this.fechaF = new Date().toLocaleDateString();
     this.cols = [
       { fiel: 'idCaja', header: 'Caja' },
-      { field: 'x', header: 'Usuario'},
+      { field: 'usuario', header: 'Usuario'},
       {field:'x',header:'Ubicación'},
       { field: 'fecha', header: 'Fecha' },
-      {field: 'x',header:'Fecha Cierre'},
-      {field: 'x',header:'Monto'},
-      {field: 'x',header: 'Monto Cierre'}
+      {field: 'fechaCierre',header:'Fecha Cierre'},
+      {field: 'monto',header:'Monto'},
+      {field: 'montoCierre',header: 'Monto Cierre'}
       //{ field: 'noTicket', header: 'N.Ticket' },
       /*{ field: 'tipoPago', header: 'Tipo de pago' },
       { field: 'tipoVenta', header: 'Tipo de venta' },
@@ -157,8 +157,12 @@ export class InformesComponent implements OnInit {
     this.openModal = 'ventas'
     this.ventasService.getVentasByCaja(idCaja).subscribe(response => {
         if(response.exito){
+          this.ventas = response.respuesta
           console.log(response.respuesta)
         }
+        setTimeout(() => {
+          this.variablesGL.showDialog.next(true);
+        }, 100);
       }
     )
    }

@@ -1,1 +1,73 @@
-<p>ventas-caja works!</p>
+
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '1000px'}" header="Ventas" [modal]="true" styleClass="p-fluid">
+    <p-table #dt [value]="ventas" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['fecha','monto','montoCierre','fechaCierre','idCaja']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
+    dataKey="idCaja" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Ventas" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+   
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+
+            <!--<th style="width: 2rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>-->
+            <th></th>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                <div class="flex justify-content-center align-items-center">
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </div>
+            </th>
+
+
+        </tr>
+
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr>
+            <td>
+                <div style="display: inline-flex">
+                   
+                </div>
+            </td>
+     
+
+                <td *ngIf="rowData.imagen==''">
+                    <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png"  width="40" height="40%" class="shadow-1" />
+                  
+                </td>
+                
+         
+
+            <td>
+                <p-badge  [value]="rowData.noTicket" severity="warning" size="large" styleClass="mr-2"></p-badge>
+            </td>
+            <td>
+                {{rowData['tipoPago']}}
+                
+            </td>
+            <td>
+                {{rowData['tipoVenta']}}
+            </td>
+            <td>
+                {{rowData['fecha'] }}
+            </td>
+            <td>
+                {{rowData['noArticulos']}}
+            </td>
+            <td>
+                {{rowData['subtotal']}}
+            </td>
+            <td>
+                {{rowData['total']}}
+            </td>
+
+            <td>
+               <!-- <button pButton pRipple icon="pi pi-book" class="p-button-rounded p-button-help mr-2" (click)="getArticulosVenta(rowData.noTicket)"></button>-->
+
+                <!--<button pButton pRipple icon="pi pi-book" class="p-button-rounded p-button-help mr-2" (click)="getVentasBycaja(rowData.idCaja)"></button> -->
+              
+           </td>
+        </tr>
+    </ng-template>
+    
+</p-table>
+</p-dialog>
