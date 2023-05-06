@@ -31,22 +31,16 @@ export class InformesComponent implements OnInit {
     private toastr: ToastrService,
     private ventasService : VentasService
   ) { 
-    //this.fechaI = new Date().toLocaleDateString();
-   // this.fechaF = new Date().toLocaleDateString();
+
     this.cols = [
-      { fiel: 'idCaja', header: 'Caja' },
+ 
       { field: 'usuario', header: 'Usuario'},
       {field:'x',header:'Ubicación'},
       { field: 'fecha', header: 'Fecha' },
       {field: 'fechaCierre',header:'Fecha Cierre'},
       {field: 'monto',header:'Monto'},
       {field: 'montoCierre',header: 'Monto Cierre'}
-      //{ field: 'noTicket', header: 'N.Ticket' },
-      /*{ field: 'tipoPago', header: 'Tipo de pago' },
-      { field: 'tipoVenta', header: 'Tipo de venta' },
-      { field: 'noArticulos', header: 'N. Articulos' },
-      { field: 'subtotal', header: 'Subtotal' },
-      { field: 'total', header: 'Total' },*/
+   
 
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
@@ -72,7 +66,6 @@ export class InformesComponent implements OnInit {
     this.loading = true;
     this.ventasService.getVentas().subscribe(response => {
       if(response.exito){
-       // console.log(response.respuesta)
         this.ventas = response.respuesta
         this.loading = false
       }
@@ -87,9 +80,7 @@ export class InformesComponent implements OnInit {
     this.loading = true;
     this.ventasService.getallCajas().subscribe(response => {
       if(response.exito){
-        ///console.log(response.respuesta)
         this.cajas = response.respuesta
-        //this.ventas = response.respuesta
         this.loading = false
       }
     }, err =>{
@@ -99,8 +90,7 @@ export class InformesComponent implements OnInit {
   }
 
   Excel() {
-    //console.log(this.fechaI)
-    //console.log(this.fechaF)
+    
     if(this.fechaF != undefined && this.fechaI != undefined){
         console.log(this.fechaI)
         console.log(this.fechaF)
@@ -111,7 +101,6 @@ export class InformesComponent implements OnInit {
         this.ventas = []
         this.ventasService.getVentasByDates(this.fechaI,this.fechaF).subscribe(response =>{
           if(response.exito){
-            //console.log(response.respuesta)
             this.ventas = response.respuesta
             if(this.ventas.length != 0){
               this.GenerateExcel()
@@ -120,8 +109,6 @@ export class InformesComponent implements OnInit {
               this.toastr.warning('No hay ventas esas fechas',"Error");
               this.getVentas()
             }
-            //this.GenerateExcel()
-            //this.loading = false
             this.fechaF = undefined
             this.fechaI = undefined
         }
