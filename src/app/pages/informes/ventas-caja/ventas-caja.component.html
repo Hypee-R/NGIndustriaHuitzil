@@ -44,6 +44,20 @@
             <td>
                 {{venta['noArticulos']}}
             </td>
+            
+            <td>
+                <!--<p-badge *ngIf="venta['tipoPago'] == 'Entregado'"  [value]="rowData.status" severity="warning" size="large" styleClass="mr-2"></p-badge>-->
+                <div *ngIf="venta['tipoPago'] =='TARJETA'"> - </div>
+                <div *ngIf="venta['tipoPago'] =='EFECTIVO'"> {{venta['total']}} </div>
+                <div *ngIf="venta['tipoPago'] =='MULTIPLE'"> {{venta['efectivo']}}</div>
+                
+            </td>
+            <td>
+                <div *ngIf="venta['tipoPago'] =='TARJETA'"> {{venta['total']}} </div>
+                <div *ngIf="venta['tipoPago'] =='EFECTIVO'"> - </div>
+                <div *ngIf="venta['tipoPago'] =='MULTIPLE'"> {{venta['tarjeta']}}</div>
+               
+            </td>
             <td>
                 {{venta['subtotal']}}
             </td>

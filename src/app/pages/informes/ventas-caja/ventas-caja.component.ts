@@ -23,6 +23,9 @@ export class VentasCajaComponent implements OnInit {
       { field: 'tipoVenta', header: 'TIPO DE V.' },
       {field: 'fecha',header:'FECHA'},
       {field: 'noArticulos',header:'NoArticulos'},
+     
+      {field: 'efectivo',header:'EFECTIVO'},
+      {field: 'efectivo',header:'TARJETA'},
       {field: 'subtotal',header:'SUBTOTAL'},
       {field: 'total',header: 'TOTAL'}
 
