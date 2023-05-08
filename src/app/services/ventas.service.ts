@@ -23,6 +23,15 @@ export class VentasService {
       map (res => res)
     );
   }
+
+  getallVentasCajasDate(dateI:String,dateF : String):Observable<ResponseModel>{
+ 
+    return this.http.get<ResponseModel>(environment.apiService + `Ventas/Cash/CajasDate?dateI=${dateI}&dateF=${dateF}`)
+    .pipe(
+      map (res => res)
+    );
+  }
+
   getVentas(): Observable<ResponseModel>{
     return this.http.get<ResponseModel>(environment.apiService + 'Ventas/Sales')
     .pipe(

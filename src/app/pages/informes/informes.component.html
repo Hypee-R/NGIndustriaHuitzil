@@ -48,16 +48,17 @@
                                                   
                                                     <label for="fecha">Fecha Final</label>
                                                     <input type="date" pInputText [ngModel] ="fechaF | date:'dd-MM-yyyy'" (ngModelChange)="fechaF = $event">
+                                                    <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-primary mr-2" (click)="SearchByDates()"></button>
                                                 </div>
                                                 
                                             </div>
                                         </div>
-                                        <div class="col col-md-5">
+                                      <!--  <div class="col col-md-5">
                                             <span class="p-input-icon-left" style="width: 100%;">
                                           <i class="pi pi-search"></i>
                                           <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar..." [style]="{'width': '100%'}"/>
                                         </span>
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </div>
                             </ng-template>
@@ -93,6 +94,7 @@
                                     </td>
                                     
                                     <td>
+                                        <div *ngIf="rowData['fechaCierre'] == null"> Caja abierta </div>
                                         {{rowData['fechaCierre']}}
                                     </td>
                                     
