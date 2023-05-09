@@ -12,4 +12,5 @@ export class UsuarioModel{
     pc: string;
     impresora: string;
     direccion:string;
+    ubicacion:string;
 }

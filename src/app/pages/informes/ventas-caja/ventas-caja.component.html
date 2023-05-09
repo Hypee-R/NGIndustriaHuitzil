@@ -1,5 +1,23 @@
 
 <p-dialog [(visible)]="visibleDialog" [style]="{width: '1200px'}" header="Ventas" [modal]="true" styleClass="p-fluid">
+    <div class="col col-md-7">
+        <div class="row">
+          
+            <div class="col">
+                <button pButton pRipple label="Exporta Excel Individual" icon="pi pi-upload" class="p-button-help" style="margin-left: 10px;" (click)="ExcelIndividual()" ></button>
+            </div>
+
+            <div class="col">  
+              
+            </div>
+           
+            <div class="col">
+              
+              
+            </div>
+            
+        </div>
+    </div>
     <p-table #dt [value]="ventas" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['fecha','monto','montoCierre','fechaCierre','idCaja']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
     dataKey="idVenta" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Ventas" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
    
@@ -43,6 +61,20 @@
             </td>
             <td>
                 {{venta['noArticulos']}}
+            </td>
+            
+            <td>
+                <!--<p-badge *ngIf="venta['tipoPago'] == 'Entregado'"  [value]="rowData.status" severity="warning" size="large" styleClass="mr-2"></p-badge>-->
+                <div *ngIf="venta['tipoPago'] =='TARJETA'"> - </div>
+                <div *ngIf="venta['tipoPago'] =='EFECTIVO'"> {{venta['total']}} </div>
+                <div *ngIf="venta['tipoPago'] =='MULTIPLE'"> {{venta['efectivo']}}</div>
+                
+            </td>
+            <td>
+                <div *ngIf="venta['tipoPago'] =='TARJETA'"> {{venta['total']}} </div>
+                <div *ngIf="venta['tipoPago'] =='EFECTIVO'"> - </div>
+                <div *ngIf="venta['tipoPago'] =='MULTIPLE'"> {{venta['tarjeta']}}</div>
+               
             </td>
             <td>
                 {{venta['subtotal']}}
