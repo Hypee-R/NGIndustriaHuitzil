@@ -78,7 +78,9 @@
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
                                 <tr>
-                                   
+                                    <td>
+                                        {{rowData['idCaja']}}
+                                    </td>
                                     <td>
                                         {{rowData['idEmpleadoNavigation']['nombre']}}
                                         {{rowData['idEmpleadoNavigation']['apellidoPaterno']}} 

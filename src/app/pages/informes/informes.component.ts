@@ -33,7 +33,7 @@ export class InformesComponent implements OnInit {
   ) { 
 
     this.cols = [
- 
+      { field : 'N de caja', header:'N de caja'},
       { field: 'usuario', header: 'Usuario'},
       {field:'x',header:'Ubicación'},
       { field: 'fecha', header: 'Fecha' },
@@ -104,6 +104,7 @@ export class InformesComponent implements OnInit {
            // console.log(response.respuesta)
             if(response.respuesta.length != 0){
               this.cajas = response.respuesta
+              this.toastr.warning('Ventas Consultadas...', '!!!');
               //this.GenerateExcel()
             }
             else{
@@ -203,7 +204,7 @@ export class InformesComponent implements OnInit {
       articulos += venta.noArticulos*/
     });
     let ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.cajas.map(row => ({
-    idCaja:row.idCaja,
+    Caja:row.idCaja,
     Usuario:row.idEmpleadoNavigation.nombre,
     Ubicacion:row.idEmpleadoNavigation.ubicacion,
     Fecha:row.fecha,
@@ -217,7 +218,7 @@ export class InformesComponent implements OnInit {
     Subtotal : row.subtotal,
     Total: row.total,*/
     
-   })), { header: ['idCaja','Usuario','Ubicacion','Fecha','FechaCierre','MontoApertura','MontoCierre'] })
+   })), { header: ['Caja','Usuario','Ubicacion','Fecha','FechaCierre','MontoApertura','MontoCierre'] })
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Informe de ventas');
    /* XLSX.utils.sheet_add_json(ws, [
