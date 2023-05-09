@@ -1,16 +1,19 @@
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Caja" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Caja" [modal]="true"
+    styleClass="p-fluid">
 
     <ng-template pTemplate="content">
 
         <ng-container *ngIf="accion == 'Abrir'; else cerrarTemplate">
             <div class="field">
-                <label for="descripcion">Monto</label>
-                <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.monto" required/>
-                <small class="p-error" *ngIf="submitted && !openCashModel.monto || openCashModel?.monto == 0">El monto es requerido.</small>
+                <label for="descripcion">Monto en caja</label>
+                <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.monto" required />
+                <small class="p-error" *ngIf="submitted && !openCashModel.monto || openCashModel?.monto == 0">El monto
+                    es requerido.</small>
             </div>
             <div class="field">
                 <label for="descripcion">Fecha y Hora</label>
-                <p-calendar [(ngModel)]="fecha" [showTime]="true" [showSeconds]="true" inputId="time" required="true" dateFormat="dd/mm/yy"></p-calendar>
+                <p-calendar [(ngModel)]="fecha" [showTime]="true" [showSeconds]="true" inputId="time" required="true"
+                    dateFormat="dd/mm/yy"></p-calendar>
                 <small class="p-error" *ngIf="submitted && !fecha">La fecha y hora es requerida.</small>
             </div>
         </ng-container>
@@ -18,44 +21,127 @@
         <!-- EN CERRAR MOSTRAR SOLO CAMPOS CERRAR -->
         <ng-template #cerrarTemplate>
             <ng-container *ngIf="accion == 'Cerrar'; else statusTemplate">
+
+                <h5>Fondo en caja:<button pButton pRipple icon="pi pi-dollar" type="button"
+                    class="p-button-rounded p-button-help" label="{{openCashModel.monto}}"></button> </h5>
+
                 <div class="field">
                     <label for="descripcion">Monto Cierre</label>
-                    <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.montoCierre" required/>
-                    <small class="p-error" *ngIf="submitted && !openCashModel.montoCierre || openCashModel?.montoCierre == 0">La monto cierre es requerido.</small>
+                    <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.montoCierre" required />
+                    <small class="p-error"
+                        *ngIf="submitted && !openCashModel.montoCierre || openCashModel?.montoCierre == 0">La monto
+                        cierre es requerido.</small>
                 </div>
                 <div class="field">
                     <label for="descripcion">Fecha y Hora Cierre</label>
-                    <p-calendar [(ngModel)]="fechaCierre" [showTime]="true" [showSeconds]="true" inputId="time" required="true" dateFormat="dd/mm/yy"></p-calendar>
-                    <small class="p-error" *ngIf="submitted && !fechaCierre">La fecha y hora de cierre es requerida.</small>
+                    <p-calendar [(ngModel)]="fechaCierre" [showTime]="true" [showSeconds]="true" inputId="time"
+                        required="true" dateFormat="dd/mm/yy"></p-calendar>
+                    <small class="p-error" *ngIf="submitted && !fechaCierre">La fecha y hora de cierre es
+                        requerida.</small>
+                </div>
+
+                <p-divider align="center">
+                    <span class="p-tag">Información de caja</span>
+                </p-divider>
+                <div class="row">
+                
+    
+                    <h5>Total efectivo:<button pButton pRipple icon="pi pi-dollar" type="button"
+                            class="p-button-rounded p-button-help" label="{{totalEfectivodata}}"></button> </h5>
+                    <h5>Total con tarjeta: <button pButton pRipple icon="pi pi-dollar" type="button"
+                            class="p-button-rounded p-button-help" label="{{totalTarjetadata}}"></button> </h5>
+    
+                    <h5>Total Multiple: <button pButton pRipple icon="pi pi-dollar" type="button"
+                            class="p-button-rounded p-button-help" label="{{totalMultipledata}}"></button> </h5>
+    
+                    <h5>Total Ventas: <button pButton pRipple icon="pi pi-dollar" type="button"
+                            class="p-button-rounded p-button-warning" label="{{totalVentas}}"></button> </h5>
+    
+                   
+    
+                    <h5>Total en caja: <button pButton pRipple icon="pi pi-dollar" type="button"
+                            class="p-button-rounded p-button-success" label="{{openCashModel.monto+totalVentas}}"></button>
+                    </h5>
+    
                 </div>
             </ng-container>
         </ng-template>
 
         <!-- EN STATUS MOSTRAR TODOS LOS DATOS -->
-        <ng-template #statusTemplate>
+        <ng-template #statusTemplate pTemplate="rowexpansion">
             <div class="field">
-                <label for="descripcion">Monto</label>
-                <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.monto" required readonly/>
+                <label for="descripcion">Fondo en caja</label>
+                <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.monto" required readonly />
             </div>
             <div class="field">
                 <label for="descripcion">Fecha y Hora</label>
-                <p-calendar [(ngModel)]="fecha" [showTime]="true" [showSeconds]="true" inputId="time" required="true" dateFormat="dd/mm/yy" readonlyInput="true" disabled="true"></p-calendar>
+                <p-calendar [(ngModel)]="fecha" [showTime]="true" [showSeconds]="true" inputId="time" required="true"
+                    dateFormat="dd/mm/yy" readonlyInput="true" disabled="true"></p-calendar>
             </div>
             <div class="field">
                 <label for="descripcion">Monto Cierre</label>
-                <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.montoCierre" required readonly/>
+                <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.montoCierre" required
+                    readonly />
             </div>
             <div class="field">
                 <label for="descripcion">Fecha y Hora Cierre</label>
-                <p-calendar [(ngModel)]="fechaCierre" [showTime]="true" [showSeconds]="true" inputId="time" required="true" dateFormat="dd/mm/yy" readonlyInput="true" disabled="true"></p-calendar>
+                <p-calendar [(ngModel)]="fechaCierre" [showTime]="true" [showSeconds]="true" inputId="time"
+                    required="true" dateFormat="dd/mm/yy" readonlyInput="true" disabled="true"></p-calendar>
             </div>
+
+            <!-- <p-table [value]="ventas" responsiveLayout="stack" [scrollable]="true" scrollHeight="400px" >
+                <ng-template pTemplate="Ventas Total">
+                    <tr>
+                        <th>noTicket</th>
+                        <th>Tipo de Pago</th>
+                        <th>Total</th>
+                        
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-venta>
+                    <tr>
+                        <td>{{ venta.noTicket }}</td>
+                        <td>{{ venta.tipoPago }}</td>
+                        <td>{{ venta.total }}</td>
+                    
+                    </tr>
+                </ng-template>
+            </p-table> -->
+            <p-divider align="center">
+                <span class="p-tag">Información de caja</span>
+            </p-divider>
+            <div class="row">
+            
+
+                <h5>Total efectivo:<button pButton pRipple icon="pi pi-dollar" type="button"
+                        class="p-button-rounded p-button-help" label="{{totalEfectivodata}}"></button> </h5>
+                <h5>Total con tarjeta: <button pButton pRipple icon="pi pi-dollar" type="button"
+                        class="p-button-rounded p-button-help" label="{{totalTarjetadata}}"></button> </h5>
+
+                <h5>Total Multiple: <button pButton pRipple icon="pi pi-dollar" type="button"
+                        class="p-button-rounded p-button-help" label="{{totalMultipledata}}"></button> </h5>
+
+                <h5>Total Ventas: <button pButton pRipple icon="pi pi-dollar" type="button"
+                        class="p-button-rounded p-button-warning" label="{{totalVentas}}"></button> </h5>
+
+               
+
+                <h5>Total en caja: <button pButton pRipple icon="pi pi-dollar" type="button"
+                        class="p-button-rounded p-button-success" label="{{openCashModel.monto+totalVentas}}"></button>
+                </h5>
+
+            </div>
+
+
         </ng-template>
 
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cerrar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" [disabled]="accion == 'Status'" (click)="saveCaja()"></button>
+        <button pButton pRipple label="Cerrar" icon="pi pi-times" type="button" class="p-button-text"
+            (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" [disabled]="accion == 'Status'"
+            (click)="saveCaja()"></button>
     </ng-template>
 
 </p-dialog>

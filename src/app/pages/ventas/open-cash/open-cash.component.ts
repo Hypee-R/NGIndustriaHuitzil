@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import ConectorPluginV3 from 'src/app/ConectorPluginV3';
 import { CajaModel } from 'src/app/models/caja.model';
+import { VentaModel } from 'src/app/models/venta.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from '../../../services/ventas.service';
 
@@ -26,6 +27,11 @@ export class OpenCashComponent implements OnInit {
   openCashModel: CajaModel = new CajaModel();
   dialogSubscription: Subscription = new Subscription();
   datePipe = new DatePipe("en-US");
+  totalVentas;
+  totalEfectivodata;
+  totalTarjetadata;
+  totalMultipledata;
+  ventas: VentaModel[] = [];
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -44,10 +50,98 @@ export class OpenCashComponent implements OnInit {
           this.fecha = this.openCashModel.fecha != '' ? this.variablesGL.getFormatoFecha(this.openCashModel.fecha) : new Date();
           if(this.accion == 'Cerrar'){
             this.fechaCierre = null;
+
+            this.ventasService.getVentasByCaja(this.openCashModel.idCaja).subscribe(response => {
+              if(response.exito){
+                console.log(response.respuesta)
+                this.ventas = response.respuesta
+               
+                let total=0
+                let totalEfectivo=0
+                let totalTarjeta=0
+                let totalMultiple=0
+                response.respuesta.forEach(function(a){
+                  
+                  total += a.total;
+                  if(a.tipoPago=="TARJETA"){
+                    totalTarjeta +=a.total
+
+                  }
+
+                  if(a.tipoPago=="EFECTIVO"){
+                    totalEfectivo +=a.total
+
+                  }
+
+                  if(a.tipoPago=="MULTIPLE"){
+                    totalMultiple +=a.total
+
+                  }
+
+                
+                });
+                console.log(total);
+
+                this.totalVentas=total;
+                this.totalEfectivodata=totalEfectivo
+               this. totalTarjetadata=totalTarjeta
+               this. totalMultipledata=totalMultiple
+              }
+
+           
+        
+            })
           }
-          if(this.openCashModel.montoCierre != null && this.accion == 'Status'){
+
+        //  if(this.openCashModel.montoCierre != null && this.accion == 'Status'){
+          if( this.accion == 'Status'){
+            console.log("STATUS")
+            console.log(this.openCashModel.idCaja)
             this.fechaCierre = this.openCashModel.fechaCierre != null ? this.variablesGL.getFormatoFecha(this.openCashModel.fechaCierre) : new Date();
+
+            this.ventasService.getVentasByCaja(this.openCashModel.idCaja).subscribe(response => {
+              if(response.exito){
+                console.log(response.respuesta)
+                this.ventas = response.respuesta
+               
+                let total=0
+                let totalEfectivo=0
+                let totalTarjeta=0
+                let totalMultiple=0
+                response.respuesta.forEach(function(a){
+                  
+                  total += a.total;
+                  if(a.tipoPago=="TARJETA"){
+                    totalTarjeta +=a.total
+
+                  }
+
+                  if(a.tipoPago=="EFECTIVO"){
+                    totalEfectivo +=a.total
+
+                  }
+
+                  if(a.tipoPago=="MULTIPLE"){
+                    totalMultiple +=a.total
+
+                  }
+
+                
+                });
+                console.log(total);
+
+                this.totalVentas=total;
+                this.totalEfectivodata=totalEfectivo
+               this. totalTarjetadata=totalTarjeta
+               this. totalMultipledata=totalMultiple
+              }
+
+           
+        
+            })
           }
+
+          
         }
       }
     });
@@ -65,6 +159,8 @@ export class OpenCashComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    
   }
 
   ngOnDestroy(): void {
@@ -99,34 +195,46 @@ export class OpenCashComponent implements OnInit {
           this.toastr.error('Ocurrió un error al hacer la operación','Error!');
         });
     }else if(this.accion == 'Cerrar' && this.openCashModel.montoCierre > 0){
-      if(this.fechaCierre > this.fecha){
-        console.log('Actualizar');
-        this.openCashModel.fechaCierre = this.fechaCierre ? this.variablesGL.setFormatoFecha(this.fechaCierre) : '';
-        console.log(this.openCashModel)
-        this.ventasService.closeCaja(this.openCashModel).subscribe(response => {
-          console.log(response);
-          if(response.exito){
-              this.toastr.success(response.mensaje, 'Exito!');
-              this.submitted = false;
-              this.variablesGL.showDialog.next(false);
-              //Impresion del Status de la caja
-              this.impresionCierreCaja()
-            }else{
-              this.toastr.info(response.mensaje, 'Atención!')
-          }
-        },
-        err => {
-          console.log('error -> ', err);
-          this.toastr.error('Ocurrió un error al hacer la operación','Error!');
-        });
+      if(this.openCashModel.monto+this.totalVentas!=this.openCashModel.montoCierre){
+
+        this.toastr.warning("Hay una Diferencia en el cierre escribe el motivo", 'Diferencia!');
       }else{
-        this.toastr.error('La fecha de cierre debe ser posterior a la fecha que se abrió la caja', 'Error');
+        if(this.fechaCierre > this.fecha){
+
+
+
+          console.log('Actualizar');
+          this.openCashModel.fechaCierre = this.fechaCierre ? this.variablesGL.setFormatoFecha(this.fechaCierre) : '';
+          console.log(this.openCashModel)
+  
+  
+          this.ventasService.closeCaja(this.openCashModel).subscribe(response => {
+            console.log(response);
+            if(response.exito){
+                this.toastr.success(response.mensaje, 'Exito!');
+                this.submitted = false;
+                this.variablesGL.showDialog.next(false);
+                //Impresion del Status de la caja
+             
+                this.impresionCierreCaja()
+              }else{
+                this.toastr.info(response.mensaje, 'Atención!')
+            }
+          },
+          err => {
+            console.log('error -> ', err);
+            this.toastr.error('Ocurrió un error al hacer la operación','Error!');
+          });
+        }else{
+          this.toastr.error('La fecha de cierre debe ser posterior a la fecha que se abrió la caja', 'Error');
+        }
       }
+
+     
     }
   }
 
   //Impresion del cierre del status de la caja
-
   async impresionCierreCaja(){
   //code Impresion
   const conector = new ConectorPluginV3();
