@@ -66,7 +66,6 @@ export class VentasComponent implements OnInit {
   filteredClients: CatClienteModel[];
   clientes: CatClienteModel[];
   //Busqueda CLIENTES
-
   cantidades: number[] = []
   RegistraVenta: VentaModel = new VentaModel();
   cashModel: CajaModel;
@@ -84,7 +83,6 @@ export class VentasComponent implements OnInit {
       { field: 'cantidad', header: 'Cantidad' },
       { field: 'descripcion', header: 'Producto' },
       { field: 'precio', header: 'Precio' },
-      // { field: 'talla', header: 'Talla' },
       { field: 'sku', header: 'SKU' }
 
     ];
@@ -130,7 +128,6 @@ export class VentasComponent implements OnInit {
   }
 
   getResultsClients(event) {
-    //console.log(event.query)
     let filtered: any[] = [];
     let query = event.query;
     for (let i = 0; i < this.clientes.length; i++) {
@@ -178,7 +175,6 @@ export class VentasComponent implements OnInit {
   deleteProduct(product: productoVentaModel, index: number) {
     if (this.articlesShell[index].cantidad > 1) {
       this.articlesShell[index].cantidad -= 1
-
     }
     else {
       this.articlesShell.splice(this.articlesShell.indexOf(product), 1)
@@ -235,8 +231,6 @@ export class VentasComponent implements OnInit {
       console.log('data vcaja ', resp);
       if (resp.exito) {
         this.cashModel = resp.respuesta;
-
-
         if (this.cashModel.fecha != null && this.cashModel.fechaCierre == null) {
           if (this.accion == 'Abrir') {
             console.log('No se puede abrir caja, hay una abierta...');

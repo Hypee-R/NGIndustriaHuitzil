@@ -8,6 +8,7 @@ import { jsPDF } from "jspdf";
 import html2canvas from 'html2canvas';
 import { VentaArticuloModel } from 'src/app/models/VentaArticulo.Model';
 import { productoModel } from 'src/app/models/productos.model';
+import { CajaModel } from 'src/app/models/caja.model';
 
 @Component({
   selector: 'app-informes',
@@ -19,26 +20,27 @@ export class InformesComponent implements OnInit {
   rows = 0;
   loading: boolean = false;
   ventas: VentaModel[] = [];
+  cajas : CajaModel[] = []
   selectedVentas : VentaModel
   cols: any[] = [];
   fechaI;
   fechaF;
+  openModal = ''
   constructor(
     public variablesGL: VariablesService,
     private toastr: ToastrService,
     private ventasService : VentasService
   ) { 
-    //this.fechaI = new Date().toLocaleDateString();
-   // this.fechaF = new Date().toLocaleDateString();
+
     this.cols = [
-      { fiel: 'idCaja', header: 'Caja' },
+      { field : 'N de caja', header:'N de caja'},
+      { field: 'usuario', header: 'Usuario'},
+      {field:'x',header:'Ubicación'},
       { field: 'fecha', header: 'Fecha' },
-      { field: 'noTicket', header: 'N.Ticket' },
-      { field: 'tipoPago', header: 'Tipo de pago' },
-      { field: 'tipoVenta', header: 'Tipo de venta' },
-      { field: 'noArticulos', header: 'N. Articulos' },
-      { field: 'subtotal', header: 'Subtotal' },
-      { field: 'total', header: 'Total' },
+      {field: 'fechaCierre',header:'Fecha Cierre'},
+      {field: 'monto',header:'Monto'},
+      {field: 'montoCierre',header: 'Monto Cierre'}
+   
 
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
@@ -56,14 +58,14 @@ export class InformesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getVentas();
+    //this.getVentas();
+    this.getCajas()
   }
 
   getVentas() {
     this.loading = true;
     this.ventasService.getVentas().subscribe(response => {
       if(response.exito){
-        console.log(response.respuesta)
         this.ventas = response.respuesta
         this.loading = false
       }
@@ -73,36 +75,85 @@ export class InformesComponent implements OnInit {
   
   }
 
-  Excel() {
-    //console.log(this.fechaI)
-    //console.log(this.fechaF)
+  
+  getCajas() {
+    this.loading = true;
+    this.ventasService.getallCajas().subscribe(response => {
+      if(response.exito){
+        console.log(response.respuesta)
+        this.cajas = response.respuesta
+        this.loading = false
+      }
+    }, err =>{
+      this.loading = false
+    })
+  
+  }
+
+  SearchByDates(){
     if(this.fechaF != undefined && this.fechaI != undefined){
+      if(this.fechaI > this.fechaF){
+        this.toastr.error('La fecha inicial debe ser menor a la final!!', 'Fechas incorrectas');
+      }
+      else{
+       /// this.cajas = []
+        
+        this.ventasService.getallVentasCajasDate(this.fechaI,this.fechaF).subscribe(response =>{
+          if(response.exito){
+            
+           // console.log(response.respuesta)
+            if(response.respuesta.length != 0){
+              this.cajas = response.respuesta
+              this.toastr.warning('Ventas Consultadas...', '!!!');
+              //this.GenerateExcel()
+            }
+            else{
+              this.toastr.warning('No hay ventas esas fechas',"Error");
+              this.getVentas()
+            }
+          
+        }
+      })
+      }
+    }
+    else{ 
+      this.toastr.warning('Selecciona una fecha correcta',"Error");
+    }
+    
+  }
+
+  Excel() {
+    
+    /*if(this.fechaF != undefined && this.fechaI != undefined){
         console.log(this.fechaI)
         console.log(this.fechaF)
-        if(this.fechaI > this.fechaI){
+        if(this.fechaI > this.fechaF){
           this.toastr.error('La fecha inicial debe ser menor a la final!!', 'Fechas incorrectas');
         }
         else{
-        this.ventas = []
-        this.ventasService.getVentasByDates(this.fechaI,this.fechaF).subscribe(response =>{
+        this.cajas = []
+        
+        this.ventasService.getallVentasCajasDate(this.fechaI,this.fechaF).subscribe(response =>{
           if(response.exito){
-            //console.log(response.respuesta)
-            this.ventas = response.respuesta
-            if(this.ventas.length != 0){
+            this.cajas = response.respuesta
+            console.log(response.respuesta)
+            if(this.cajas.length != 0){
               this.GenerateExcel()
             }
             else{
               this.toastr.warning('No hay ventas esas fechas',"Error");
               this.getVentas()
             }
-            //this.GenerateExcel()
-            //this.loading = false
-            this.fechaF = undefined
-            this.fechaI = undefined
+          
         }
       })
     }
-    }
+    }*/
+    //else{
+      this.toastr.warning('Descargando reporte de  ventas...', '!!!');
+      this.GenerateExcel()
+      //console.log(this.cajas)
+    //}
     
    }
 
@@ -128,32 +179,51 @@ export class InformesComponent implements OnInit {
     
    }
 
+   getVentasBycaja(idCaja : number){
+    this.openModal = 'ventas'
+    this.ventasService.getVentasByCaja(idCaja).subscribe(response => {
+        if(response.exito){
+          this.ventas = response.respuesta
+          console.log(response.respuesta)
+        }
+        setTimeout(() => {
+          this.variablesGL.showDialog.next(true);
+        }, 100);
+      }
+    )
+   }
+
 
    GenerateExcel(){
     let total = 0
     let subtotal = 0
     let articulos = 0
-    this.ventas.forEach(venta => {
-      total += venta.total
+    this.cajas.forEach(venta => {
+      /*total += venta.total
       subtotal += venta.subtotal
-      articulos += venta.noArticulos
+      articulos += venta.noArticulos*/
     });
-    let ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.ventas.map(row => ({
-    idCaja:row.idCaja,
+    let ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.cajas.map(row => ({
+    Caja:row.idCaja,
+    Usuario:row.idEmpleadoNavigation.nombre,
+    Ubicacion:row.idEmpleadoNavigation.ubicacion,
     Fecha:row.fecha,
-    Nticket:row.noTicket,
-    TipoPago : row.tipoPago,
-    TipoVenta : row.tipoVenta,
+    FechaCierre : row.fechaCierre,
+    MontoApertura : row.monto,
+    MontoCierre : row.montoCierre
+    //Nticket:row.noTicket,
+    //Ubicacion : row.u,
+    /*TipoVenta : row.tipoVenta,
     NoArticulos : row.noArticulos,
     Subtotal : row.subtotal,
-    Total: row.total,
+    Total: row.total,*/
     
-   })), { header: ['idCaja','Fecha','Nticket','TipoPago','TipoVenta','NoArticulos','Subtotal','Total'] })
+   })), { header: ['Caja','Usuario','Ubicacion','Fecha','FechaCierre','MontoApertura','MontoCierre'] })
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Informe de ventas');
-    XLSX.utils.sheet_add_json(ws, [
+   /* XLSX.utils.sheet_add_json(ws, [
       { Tola:"Totales " ,articulos : articulos,sub:subtotal,total: total}
-    ], {header: ["Total"], skipHeader: true, origin:  { r: this.ventas.length+1, c: 3 }});
+    ], {header: ["Total"], skipHeader: true, origin:  { r: this.cajas.length+1, c: 3 }});*/
     XLSX.writeFile(wb, 'Informe_General_Ventas_'+new Date().toISOString()+'.csv',{compression : true})
     return this.toastr.success('Exportado con exito!!', 'Exito');
    }
@@ -167,7 +237,7 @@ export class InformesComponent implements OnInit {
       SKU : row.sku,
       Precio : row.precio,
       Talla : row.talla,
-      Unidad : row.unidad,
+      Status : row.status,
       Ubicacion : row.ubicacion,
       FechaIngreso : row.fechaIngreso
 

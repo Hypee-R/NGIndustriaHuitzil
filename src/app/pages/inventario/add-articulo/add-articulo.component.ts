@@ -34,7 +34,7 @@ export class AddArticuloComponent implements OnInit {
   producto: productoModel = new productoModel();
   pattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
 
-
+  lstEstatus: string[] = ['TRANSITO', 'UBICACION'];
   listCategorias: CategoriaModel[] = [];
   listTallas: CatTallaModel[] = [];
   listUbicaciones: UbicacionModel[] = [];

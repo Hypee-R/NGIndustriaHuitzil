@@ -6,6 +6,8 @@ import { VariablesService } from 'src/app/services/variablesGL.service';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { CambiosDevolucionesModel } from '../../models/cambios-devoluciones.model';
 import { VentasService } from '../../services/ventas.service';
+import { UbicacionModel } from 'src/app/models/ubicacion.model';
+import { UbicacionesService } from 'src/app/services/ubicaciones.service';
 export interface imagen64 {
   id: number,
   imagen64c: string
@@ -22,11 +24,33 @@ export class ControEnviosComponent implements OnInit {
   imagenes: imagen64[] = []
   list2: productoModel[];
   rows = 0;
-
+  listUbicaciones: UbicacionModel[] = [];
   lstCambiosDevoluciones: CambiosDevolucionesModel[]=[];
-  
+  selectedArticulos: productoModel[];
+  accion = '';
+  selectedArticulo: productoModel = new productoModel();
+  cols: any[] = [];
+  CurrentDate = new Date();
+  idUbicacionpara:string;
+  idUbicacionde:string;
+
   constructor( private primengConfig: PrimeNGConfig,   public variablesGL: VariablesService,    private cambiosDevolucionesService: VentasService,
-    private inventarioService: InventarioService) {
+    private inventarioService: InventarioService,    private ubicacionesService:UbicacionesService) {
+      this.cols = [
+        // { field: 'idArticulo', header: 'ID' },
+        { field: '', header: 'Imagen' },
+        { field: 'sku', header: 'SKU' },
+        { field: 'descripcion', header: 'Descripcion' },
+        { field: 'existencia', header: 'Existencia' },
+        // { field: 'fechaIngreso', header: 'Fecha Ingreso' },
+        // { field:'categoria',header:'Categoria'},
+        // { field: 'unidad', header: 'Unidad' },
+        { field: 'talla', header: 'Talla' },
+        { field: 'ubicacion', header: 'Ubicacion' },
+        { field: 'precio', header: 'precio' },
+        { field: '', header: 'Etiqueta'},
+        { field: '', header: 'Cantidad Envio'}
+      ];
       this.statusPantalla = this.variablesGL.getStatusPantalla();
       let status = this.variablesGL.getPantalla();
       if(status == 'celular'){
@@ -41,15 +65,37 @@ export class ControEnviosComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    this.getArticulos();
+   // getArticulos(filtro:string)
     // this.list1 = //initialize list 1
        this.list2 = [];//initialize list 2
        this.getCambiosyDevoluciones();
-  }
+       this.ubicacionesService.getUbicaciones().subscribe(response => {
+        if(response.exito){
+          for(let ubicacion of response.respuesta){
+            this.listUbicaciones.push(ubicacion)
+          }
+          if(this.variablesGL.getSucursal()){
+            let ubiPreselected = this.listUbicaciones.find(x => x.direccion == this.variablesGL.getSucursal());
 
-  getArticulos() {
+            //this.idUbicacionpara= ubiPreselected.idUbicacion.toString();
+            console.log("data")
+          }
+        }
+      }, err => {
+    
+      });
+  }
+  onChangeInventario(event) {
+    console.log('event :' + event);
+    console.log(event.value);
+    this.idUbicacionpara=event.value
+
+    this.getArticulos(this.idUbicacionpara);
+    console.log("data")
+}
+  getArticulos(filtro:string) {
     this.loading = true;
-    this.inventarioService.getArticulos().subscribe(response => {
+    this.inventarioService.SearchProductFilterUbicacion(filtro).subscribe(response => {
       if (response.exito) {
         this.listArticulos = response.respuesta;
         this.loading = false;
@@ -62,7 +108,13 @@ export class ControEnviosComponent implements OnInit {
     });
   }
 
-
+  viewCodebar(producto : productoModel){
+    this.accion = 'Codigo de Barras'
+    this.selectedArticulo = { ...producto };
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
  
   getCambiosyDevoluciones(){
     this.loading = true;
@@ -84,4 +136,6 @@ export class ControEnviosComponent implements OnInit {
     });
   }
 
+
+  
 }

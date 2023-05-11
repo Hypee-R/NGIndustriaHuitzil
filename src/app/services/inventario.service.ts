@@ -91,6 +91,11 @@ export class InventarioService {
   }
 
 
+
+  SearchProductFilterUbicacion(sucursal: string): Observable<ResponseModel> {
+  
+    return this.http.get<ResponseModel>(environment.apiService + `Inventario/SearchProductFilterUbicacion?sucursal=${sucursal}`);
+  }
 }
 
 

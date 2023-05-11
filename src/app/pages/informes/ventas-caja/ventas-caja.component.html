@@ -1,0 +1,137 @@
+
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '1200px'}" header="Ventas" [modal]="true" styleClass="p-fluid">
+    <div class="col col-md-7">
+        <div class="row">
+          
+            <div class="col">
+                <button pButton pRipple label="Exporta Excel Individual" icon="pi pi-upload" class="p-button-help" style="margin-left: 10px;" (click)="ExcelIndividual()" ></button>
+            </div>
+
+            <div class="col">  
+              
+            </div>
+           
+            <div class="col">
+              
+              
+            </div>
+            
+        </div>
+    </div>
+    <p-table #dt [value]="ventas" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['fecha','monto','montoCierre','fechaCierre','idCaja']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
+    dataKey="idVenta" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Ventas" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+   
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th style="width: 1rem"></th>
+            <th></th>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                <div class="flex justify-content-center align-items-center">
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </div>
+            </th>
+
+
+        </tr>
+
+    </ng-template>
+    <ng-template pTemplate="body" let-venta  let-expanded="expanded">
+        <tr>
+            <td>
+                <div style="display: inline-flex">
+                   
+                </div>
+            </td>  
+            <td>
+                <button type="button" pButton pRipple  [pRowToggler]="venta" pTooltip="Articulos Vendidos" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" ></button>
+            </td>
+            <td>
+                <p-badge  [value]="venta.noTicket" severity="warning" size="large" styleClass="mr-2"></p-badge>
+            </td>
+            <td>
+                {{venta['tipoPago']}}
+                
+            </td>
+            <td>
+                {{venta['tipoVenta']}}
+            </td>
+            <td>
+                {{venta['fecha'] }}
+            </td>
+            <td>
+                {{venta['noArticulos']}}
+            </td>
+            
+            <td>
+                <!--<p-badge *ngIf="venta['tipoPago'] == 'Entregado'"  [value]="rowData.status" severity="warning" size="large" styleClass="mr-2"></p-badge>-->
+                <div *ngIf="venta['tipoPago'] =='TARJETA'"> - </div>
+                <div *ngIf="venta['tipoPago'] =='EFECTIVO'"> {{venta['total']}} </div>
+                <div *ngIf="venta['tipoPago'] =='MULTIPLE'"> {{venta['efectivo']}}</div>
+                
+            </td>
+            <td>
+                <div *ngIf="venta['tipoPago'] =='TARJETA'"> {{venta['total']}} </div>
+                <div *ngIf="venta['tipoPago'] =='EFECTIVO'"> - </div>
+                <div *ngIf="venta['tipoPago'] =='MULTIPLE'"> {{venta['tarjeta']}}</div>
+               
+            </td>
+            <td>
+                {{venta['subtotal']}}
+            </td>
+            <td>
+                {{venta['total']}}
+            </td>
+
+            <td>
+               
+           </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-venta>
+        <tr>
+            <td colspan="10">
+                <div class="p-3">
+                    <p-table [value]="venta.ventaArticulo" dataKey="idVentaArticulo">
+                        <ng-template pTemplate="header">
+                            <tr class="row-accessories">
+                                
+                                <th pSortableColumn="articulo.sku">SKU
+                                    <p-sortIcon field="articulo.sku"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="articulo.descripcion">Descripción
+                                    <p-sortIcon field="articulo.descripcion"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="cantidad">Cantidad
+                                    <p-sortIcon field="cantidad"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="precioUnitario">Precio Unitario
+                                    <p-sortIcon field="precioUnitario"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="subtotal">Subtotal
+                                    <p-sortIcon field="subtotal"></p-sortIcon>
+                                </th>
+                                <th style="width: 4rem"></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-article>
+                            <tr>
+                                <!--<td> <img [src]="article.articulo.imagen" width="40" height="40%" class="shadow-1" /> </td>-->
+                                <td [ngClass]="{'text-decoration-line-through': article.cantidad == 0}">{{article.articulo.sku}}</td>
+                                <td [ngClass]="{'text-decoration-line-through': article.cantidad == 0}">{{article.articulo.descripcion}}</td>
+                                <td>
+                                    <p-badge [value]="article.cantidad" [severity]="article.cantidad == 0 ? 'danger' : 'warning'" styleClass="mr-2" size="large"></p-badge>
+                                </td>
+                                <td>{{article.precioUnitario | currency:'MXN' }}</td>
+                                <td>{{article.subtotal | currency:'MXN' }}</td>
+                               
+                            </tr>
+                        </ng-template>
+                     
+                    </p-table>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+</p-dialog>
