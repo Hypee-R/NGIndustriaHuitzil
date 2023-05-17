@@ -7,6 +7,7 @@ import { CajaModel } from 'src/app/models/caja.model';
 import { VentaModel } from 'src/app/models/venta.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from '../../../services/ventas.service';
+import Swal from 'sweetalert2'
 
 
 @Component({
@@ -24,6 +25,7 @@ export class OpenCashComponent implements OnInit {
   visibleDialog = true;
   fecha: Date;
   fechaCierre: Date;
+  motivo;
   openCashModel: CajaModel = new CajaModel();
   dialogSubscription: Subscription = new Subscription();
   datePipe = new DatePipe("en-US");
@@ -195,10 +197,13 @@ export class OpenCashComponent implements OnInit {
           this.toastr.error('Ocurrió un error al hacer la operación','Error!');
         });
     }else if(this.accion == 'Cerrar' && this.openCashModel.montoCierre > 0){
-      if(this.openCashModel.monto+this.totalVentas!=this.openCashModel.montoCierre){
+      // if(this.openCashModel.monto+this.totalVentas!=this.openCashModel.montoCierre){
 
-        this.toastr.warning("Hay una Diferencia en el cierre escribe el motivo", 'Diferencia!');
-      }else{
+      //   this.toastr.warning("Hay una Diferencia en el cierre escribe el motivo", 'Diferencia!');
+       
+
+
+      // }else{
         if(this.fechaCierre > this.fecha){
 
 
@@ -228,7 +233,7 @@ export class OpenCashComponent implements OnInit {
         }else{
           this.toastr.error('La fecha de cierre debe ser posterior a la fecha que se abrió la caja', 'Error');
         }
-      }
+     // }
 
      
     }
@@ -252,8 +257,13 @@ export class OpenCashComponent implements OnInit {
     .EscribirTexto("Abrio Caja:"+this.openCashModel.fecha)
     .EscribirTexto("con el monto de :"+this.openCashModel.monto)
     .Feed(1)
+    .EscribirTexto("Total con Tarjeta:"+this.totalTarjetadata)
+    .EscribirTexto("Total Efectivo:"+this.totalEfectivodata)
+    .EscribirTexto("Total Multiple:"+this.totalEfectivodata)
+    .EscribirTexto("Total Ventas:"+this.totalVentas)
+    .Feed(1)
     .EscribirTexto("Cerro Caja:"+this.openCashModel.fechaCierre)
-    .EscribirTexto("con el monto de :"+this.openCashModel.montoCierre)
+    .EscribirTexto("con el monto de :"+this.openCashModel.monto+this.totalVentas)
     .Feed(1)
     .EscribirTexto("*Recuerda conservar este ticket para tu respaldo al cierre de tu caja en buen estado *")
     .Feed(1)

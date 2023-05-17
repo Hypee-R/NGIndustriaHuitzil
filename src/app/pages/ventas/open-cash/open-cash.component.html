@@ -40,6 +40,13 @@
                         requerida.</small>
                 </div>
 
+                <div class="field">
+                    <label for="motivo">Motivo Direrencia</label>
+                    <input  pInputText id="motivo" [(ngModel)]="motivo" />
+                    <small class="p-error" *ngIf="submitted && openCashModel.monto+this.totalVentas!=openCashModel.montoCierre">Hay diferencia, Agregar motivo.</small>
+                </div>
+
+
                 <p-divider align="center">
                     <span class="p-tag">Información de caja</span>
                 </p-divider>
