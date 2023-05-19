@@ -12,7 +12,7 @@
             <i class="pi pi-send"></i>
             <span>Envios</span>
         </ng-template>
-        <p-table #dt [value]="lstCambiosDevoluciones" [rows]="rows" [paginator]="true" dataKey="idCambioDevolucion" [globalFilterFields]="['venta.noTicket']" [responsive]="true" responsiveLayout="scroll" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} cambios y/o devoluciones"
+        <p-table #dt [value]="lstMovimientos" [rows]="rows" [paginator]="true" dataKey="idCambioDevolucion" [globalFilterFields]="['venta.noTicket']" [responsive]="true" responsiveLayout="scroll" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} cambios y/o devoluciones"
                         [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                         <ng-template pTemplate="caption">
                             <div class="flex align-items-center justify-content-between">
@@ -39,7 +39,8 @@
                                 <th style="width: 3rem"></th>
                                 <th>Id Movimiento</th>
                                 <th>Fecha</th>
-                                <th>Ubicacion</th>
+                                <th>Envia</th>
+                                <th>Ubicacion salida</th>
                                 <th>Recibe</th>
                                 <th>Status</th>
                           
@@ -52,64 +53,28 @@
                                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" pTooltip="Ver Detalles." ></button>
                                 </td>
                                 <td>
-                                    <p-badge [value]="cambio.venta.noTicket" severity="danger" size="large" styleClass="mr-2"></p-badge>
+                                    <p-badge [value]="cambio.idMovimiento" severity="danger" size="large" styleClass="mr-2"></p-badge>
                                 </td>
                                 <td>{{cambio.fecha | date: 'dd/MM/yyyy, hh:mm a'}}</td>
+                                
                                 <td>
-                                    San martin texmelucan
+                                    {{cambio.usuarioEnvia}}
                                 </td>
                                 <td>
-                                    Jose Daniel
+                                   {{cambio.direccion}}
+                                </td>
+                                <td>
+                                    {{cambio.usuarioRecibe}}
                                 </td>
                      
                                 <td>
-                                    En transito
+                                    {{cambio.status}}
                                 </td>
                      
                      
                             </tr>
                         </ng-template>
-                        <ng-template pTemplate="rowexpansion" let-cambio>
-                            <tr>
-                                <td colspan="10">
-                                    <div class="p-3">
-                                        <!-- <p-table [value]="cambio.cambiosDevolucionesArticulos" dataKey="idCambioDevolucion">
-                                            <ng-template pTemplate="header">
-                                                <tr>
-                                                    <th colspan="3">Información Articulo Anterior</th>
-                                                    <th colspan="1">Cantidad</th>
-                                                    <th colspan="5">Información Articulo Nuevo</th>
-                                                    <th colspan="1"></th>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="body" let-cambio>
-                                                <tr>
-                                                    <td>
-                                                        <img src="assets/img/only_logo_huitzil.png" width="40" height="40%" class="shadow-1" /> </td>
-                                                    <td class="text-decoration-line-through">{{cambio.ventaArticulo.articulo.sku}}</td>
-                                                    <td class="text-decoration-line-through">{{cambio.ventaArticulo.articulo.descripcion}}</td>
-                                                    <td>
-                                                        <p-badge [value]="cambio.cantidad" severity="warning" styleClass="mr-2" size="large"></p-badge>
-                                                    </td>
-                                                    <td>
-                                                        <img [src]="cambio.articulo.imagen" width="40" height="40%" class="shadow-1" />
-                                                    </td>
-                                                    <td>{{cambio.articulo.sku}}</td>
-                                                    <td>{{cambio.articulo.descripcion}}</td>
-                                                    <td>{{cambio.articulo.talla}}</td>
-                                                    <td>{{cambio.articulo.precio | currency:'MXN' }}</td>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="emptymessage">
-                                                <tr>
-                                                    <td colspan="6">There are no order for this product yet.</td>
-                                                </tr>
-                                            </ng-template>
-                                        </p-table> -->
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-template>
+                       
                     </p-table>
     </p-tabPanel>
     <p-tabPanel header="Header II">

@@ -8,6 +8,8 @@ import { CambiosDevolucionesModel } from '../../models/cambios-devoluciones.mode
 import { VentasService } from '../../services/ventas.service';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
+
+import { MovimientosService } from 'src/app/services/movimientos.service';
 export interface imagen64 {
   id: number,
   imagen64c: string
@@ -25,7 +27,7 @@ export class ControEnviosComponent implements OnInit {
   list2: productoModel[];
   rows = 0;
   listUbicaciones: UbicacionModel[] = [];
-  lstCambiosDevoluciones: CambiosDevolucionesModel[]=[];
+  lstMovimientos: CambiosDevolucionesModel[]=[];
   selectedArticulos: productoModel[];
   accion = '';
   selectedArticulo: productoModel = new productoModel();
@@ -35,7 +37,7 @@ export class ControEnviosComponent implements OnInit {
   idUbicacionde:string;
 
   constructor( private primengConfig: PrimeNGConfig,   public variablesGL: VariablesService,    private cambiosDevolucionesService: VentasService,
-    private inventarioService: InventarioService,    private ubicacionesService:UbicacionesService) {
+    private inventarioService: InventarioService,    private ubicacionesService:UbicacionesService,private movimientosService:MovimientosService) {
       this.cols = [
         // { field: 'idArticulo', header: 'ID' },
         { field: '', header: 'Imagen' },
@@ -118,17 +120,19 @@ export class ControEnviosComponent implements OnInit {
  
   getCambiosyDevoluciones(){
     this.loading = true;
-    this.cambiosDevolucionesService.getCambiosDevoluciones().subscribe(response => {
+    this.movimientosService.getallMovimientos().subscribe(response => {
       if(response.exito){
-        this.lstCambiosDevoluciones = response.respuesta
-        this.lstCambiosDevoluciones.forEach(cambio => {
-          cambio.fecha = this.variablesGL.getFormatoFecha(cambio.fecha).toString();
-        });
+
+        console.log(response)
+         this.lstMovimientos = response.respuesta
+        // this.lstCambiosDevoluciones.forEach(cambio => {
+        //   cambio.fecha = this.variablesGL.getFormatoFecha(cambio.fecha).toString();
+        // });
         this.loading = false;
         // console.log('cambios devoluciones --> ', this.lstCambiosDevoluciones);
 
       }else{
-        this.lstCambiosDevoluciones = [];
+        this.lstMovimientos = [];
         this.loading = false;
       }
     }, err => {
