@@ -96,10 +96,14 @@ export class ControEnviosComponent implements OnInit {
     console.log("data")
 }
   getArticulos(filtro:string) {
+    console.log("Articulos")
     this.loading = true;
     this.inventarioService.SearchProductFilterUbicacion(filtro).subscribe(response => {
+      console.log(response)
       if (response.exito) {
+        console.log(response.exito)
         this.listArticulos = response.respuesta;
+        console.log(this.listArticulos)
         this.loading = false;
         for (let art of this.listArticulos) {
           this.imagenes.push({ id: art.idArticulo, imagen64c: art.imagen })
