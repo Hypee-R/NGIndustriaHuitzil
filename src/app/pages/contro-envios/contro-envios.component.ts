@@ -144,6 +144,8 @@ export class ControEnviosComponent implements OnInit {
     });
   }
 
-
+  showDetail(){
+    console.log("click")
+  }
   
 }
