@@ -35,6 +35,8 @@ export class ControEnviosComponent implements OnInit {
   CurrentDate = new Date();
   idUbicacionpara:string;
   idUbicacionde:string;
+  openModal = ''
+  selectedMovimiento : CambiosDevolucionesModel;
 
   constructor( private primengConfig: PrimeNGConfig,   public variablesGL: VariablesService,    private cambiosDevolucionesService: VentasService,
     private inventarioService: InventarioService,    private ubicacionesService:UbicacionesService,private movimientosService:MovimientosService) {
@@ -127,7 +129,7 @@ export class ControEnviosComponent implements OnInit {
     this.movimientosService.getallMovimientos().subscribe(response => {
       if(response.exito){
 
-        console.log(response)
+       // console.log(response)
          this.lstMovimientos = response.respuesta
         // this.lstCambiosDevoluciones.forEach(cambio => {
         //   cambio.fecha = this.variablesGL.getFormatoFecha(cambio.fecha).toString();
@@ -144,8 +146,12 @@ export class ControEnviosComponent implements OnInit {
     });
   }
 
-  showDetail(){
-    console.log("click")
-  }
-  
+  showDetail(movimiento :CambiosDevolucionesModel){
+    this.selectedMovimiento = movimiento
+    this.openModal = 'detalle'
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 300);
+ 
+  } 
 }

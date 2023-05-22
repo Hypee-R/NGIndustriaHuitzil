@@ -50,8 +50,7 @@
                         <ng-template pTemplate="body" let-cambio let-expanded="expanded">
                             <tr>
                                 <td>
-
-                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" pTooltip="Ver Detalles." (click)="showDetail()" ></button>
+                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" pTooltip="Ver Detalles." (click)="showDetail(cambio)" ></button>
                                 </td>
                                 <td>
                                     <p-badge [value]="cambio.idMovimiento" severity="danger" size="large" styleClass="mr-2"></p-badge>
@@ -265,7 +264,7 @@
     </p-tabPanel> -->
 </p-tabView>
             </div>
-            <app-envio></app-envio>
+            <app-envio [(_movimiento)]="selectedMovimiento" *ngIf="openModal == 'detalle'"></app-envio>
         </div>
     </div>
 

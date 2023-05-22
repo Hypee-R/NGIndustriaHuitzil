@@ -1,1 +1,34 @@
-<p>envio works!</p>
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '650px'}" header="Pedido Especial" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="field">
+            <label for="fecha">Fecha</label>
+            <input type="text" pInputText id="fecha"  [(ngModel)]="movimiento.fecha" required autofocus [disabled]="true" />
+           
+        </div>
+        <div class="field">
+            <label for="nombre">Status</label>
+            <input type="text" pInputText id="status"  [(ngModel)]="movimiento.status" required autofocus [disabled]="true" />
+            </div>
+        <div class="field">
+            <label for="direccion">Dirección</label>
+            <input type="text" pInputText id="direccion" [(ngModel)]="movimiento.direccion"  [disabled]="true">
+        </div>
+
+        <div class="field">
+            <label for="telefono1">Envia</label>
+            <input type="text" pInputText id="envia"  [(ngModel)]="movimiento.usuarioEnvia" [disabled]="true" />
+           
+        </div>
+        <div class="field">
+            <label for="telefono1">Recibe</label>
+            <input type="text" pInputText id="recibe" [(ngModel)]="movimiento.usuarioRecibe"  [disabled]="true" />
+           
+        </div>
+    
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        
+        <button pButton pRipple label="Aceptar" icon="pi pi-check" class="p-button-text" (click)="hideDialog()"></button>
+    </ng-template>
+</p-dialog>
