@@ -10,6 +10,7 @@ import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
 
 import { MovimientosService } from 'src/app/services/movimientos.service';
+import { MovimientosInventarioModel } from 'src/app/models/movimientos-inventario.model';
 export interface imagen64 {
   id: number,
   imagen64c: string
@@ -26,17 +27,14 @@ export class ControEnviosComponent implements OnInit {
   imagenes: imagen64[] = []
   list2: productoModel[];
   rows = 0;
-  listUbicaciones: UbicacionModel[] = [];
-  lstMovimientos: CambiosDevolucionesModel[]=[];
+  lstMovimientos: MovimientosInventarioModel[]=[];
   selectedArticulos: productoModel[];
   accion = '';
   selectedArticulo: productoModel = new productoModel();
   cols: any[] = [];
-  CurrentDate = new Date();
-  idUbicacionpara:string;
-  idUbicacionde:string;
+
   openModal = ''
-  selectedMovimiento : CambiosDevolucionesModel;
+  selectedMovimiento : MovimientosInventarioModel;
 
   constructor( private primengConfig: PrimeNGConfig,   public variablesGL: VariablesService,    private cambiosDevolucionesService: VentasService,
     private inventarioService: InventarioService,    private ubicacionesService:UbicacionesService,private movimientosService:MovimientosService) {
@@ -73,48 +71,10 @@ export class ControEnviosComponent implements OnInit {
     // this.list1 = //initialize list 1
        this.list2 = [];//initialize list 2
        this.getCambiosyDevoluciones();
-       this.ubicacionesService.getUbicaciones().subscribe(response => {
-        if(response.exito){
-          for(let ubicacion of response.respuesta){
-            this.listUbicaciones.push(ubicacion)
-          }
-          if(this.variablesGL.getSucursal()){
-            let ubiPreselected = this.listUbicaciones.find(x => x.direccion == this.variablesGL.getSucursal());
-
-            //this.idUbicacionpara= ubiPreselected.idUbicacion.toString();
-            console.log("data")
-          }
-        }
-      }, err => {
-    
-      });
+   
   }
-  onChangeInventario(event) {
-    console.log('event :' + event);
-    console.log(event.value);
-    this.idUbicacionpara=event.value
+ 
 
-    this.getArticulos(this.idUbicacionpara);
-    console.log("data")
-}
-  getArticulos(filtro:string) {
-    console.log("Articulos")
-    this.loading = true;
-    this.inventarioService.SearchProductFilterUbicacion(filtro).subscribe(response => {
-      console.log(response)
-      if (response.exito) {
-        console.log(response.exito)
-        this.listArticulos = response.respuesta;
-        console.log(this.listArticulos)
-        this.loading = false;
-        for (let art of this.listArticulos) {
-          this.imagenes.push({ id: art.idArticulo, imagen64c: art.imagen })
-        }
-      }
-    }, err => {
-      this.loading = false;
-    });
-  }
 
   viewCodebar(producto : productoModel){
     this.accion = 'Codigo de Barras'
@@ -146,9 +106,20 @@ export class ControEnviosComponent implements OnInit {
     });
   }
 
-  showDetail(movimiento :CambiosDevolucionesModel){
+  showDetail(movimiento :MovimientosInventarioModel){
     this.selectedMovimiento = movimiento
-    this.openModal = 'detalle'
+    this.accion = 'Actualizar';
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  
+  } 
+
+
+  
+  showDetailAdd(){
+    this.accion = 'Registrar';
+    this.openModal = 'Registrar'
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 300);
