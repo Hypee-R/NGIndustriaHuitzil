@@ -8,6 +8,7 @@ import { UbicacionesService } from 'src/app/services/ubicaciones.service';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { productoModel } from 'src/app/models/productos.model';
 import { imagen64 } from '../../inventario/inventario.component';
+import { MovimientosInventarioModel } from 'src/app/models/movimientos-inventario.model';
 @Component({
   selector: 'app-envio',
   templateUrl: './envio.component.html',
@@ -15,7 +16,7 @@ import { imagen64 } from '../../inventario/inventario.component';
 })
 export class EnvioComponent implements OnInit {
   @Input() _accion: string;
-  @Input() _movimiento : CambiosDevolucionesModel;
+  @Input() _movimiento : MovimientosInventarioModel;
   statusPantalla: number
   rows = 0;
   selectedArticulos: productoModel[];
@@ -24,7 +25,7 @@ export class EnvioComponent implements OnInit {
   submitted = false;
   CurrentDate = new Date();
   listUbicaciones: UbicacionModel[] = [];
-  movimiento: CambiosDevolucionesModel = new CambiosDevolucionesModel();
+  movimiento: MovimientosInventarioModel = new MovimientosInventarioModel();
   loading: boolean = false;
   idUbicacionpara:string;
   idUbicacionde:string;
@@ -61,7 +62,7 @@ export class EnvioComponent implements OnInit {
       this.rows = 7;
     }
    
-
+    //this.accion = this._accion
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
       this.visibleDialog = estado;
   });
@@ -74,7 +75,15 @@ export class EnvioComponent implements OnInit {
   //}
    }
    ngOnChanges(changes: SimpleChange): void {
-    this.movimiento = this._movimiento
+ 
+    this.accion = this._accion
+    console.log(this.accion)
+    if(this.accion == "Registrar"){
+      this.movimiento = new MovimientosInventarioModel();
+      console.log(this.movimiento)
+    }
+    if(this.movimiento){
+    this.movimiento = this._movimiento}
     ///this.consultarAbonos()
    
   }
