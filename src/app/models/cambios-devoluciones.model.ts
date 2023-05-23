@@ -9,10 +9,6 @@ export class CambiosDevolucionesModel {
     subtotal: number;
     total?: number;
     venta?: VentaModel;
-    status? : String;
-    direccion? : String;
-    usuarioEnvia? : String;
-    usuarioRecibe? :String;
     cambiosDevolucionesArticulos?: CambiosDevolucionesArticuloModel[];
 }
 

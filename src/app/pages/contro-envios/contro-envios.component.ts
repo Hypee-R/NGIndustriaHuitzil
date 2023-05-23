@@ -39,14 +39,10 @@ export class ControEnviosComponent implements OnInit {
   constructor( private primengConfig: PrimeNGConfig,   public variablesGL: VariablesService,    private cambiosDevolucionesService: VentasService,
     private inventarioService: InventarioService,    private ubicacionesService:UbicacionesService,private movimientosService:MovimientosService) {
       this.cols = [
-        // { field: 'idArticulo', header: 'ID' },
         { field: '', header: 'Imagen' },
         { field: 'sku', header: 'SKU' },
         { field: 'descripcion', header: 'Descripcion' },
         { field: 'existencia', header: 'Existencia' },
-        // { field: 'fechaIngreso', header: 'Fecha Ingreso' },
-        // { field:'categoria',header:'Categoria'},
-        // { field: 'unidad', header: 'Unidad' },
         { field: 'talla', header: 'Talla' },
         { field: 'ubicacion', header: 'Ubicacion' },
         { field: 'precio', header: 'precio' },
@@ -70,7 +66,7 @@ export class ControEnviosComponent implements OnInit {
    // getArticulos(filtro:string)
     // this.list1 = //initialize list 1
        this.list2 = [];//initialize list 2
-       this.getCambiosyDevoluciones();
+       this.getMovimientos();
    
   }
  
@@ -84,19 +80,13 @@ export class ControEnviosComponent implements OnInit {
     }, 100);
   }
  
-  getCambiosyDevoluciones(){
+  getMovimientos(){
     this.loading = true;
     this.movimientosService.getallMovimientos().subscribe(response => {
       if(response.exito){
-
-       // console.log(response)
          this.lstMovimientos = response.respuesta
-        // this.lstCambiosDevoluciones.forEach(cambio => {
-        //   cambio.fecha = this.variablesGL.getFormatoFecha(cambio.fecha).toString();
-        // });
         this.loading = false;
-        // console.log('cambios devoluciones --> ', this.lstCambiosDevoluciones);
-
+        
       }else{
         this.lstMovimientos = [];
         this.loading = false;

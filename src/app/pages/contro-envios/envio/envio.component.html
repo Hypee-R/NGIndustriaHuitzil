@@ -10,7 +10,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm">
-                    <h5>Folio:<p-badge [value]="1" severity="danger" size="large" styleClass="mr-2"></p-badge></h5>
+                    
+                    <h5 *ngIf="accion!= 'Registrar'">Folio:<p-badge [value]="1" severity="danger" size="large" styleClass="mr-2"></p-badge></h5>
+                    <h5 >Folio:  <p-badge *ngIf="accion == 'Registrar'"[value]= "etiqueta" severity="info" size="large" styleClass="mr-2"></p-badge> </h5>
                    </div>
                    <div class="col-sm" *ngIf="movimiento != undefined ">
                     <p-badge value="{{movimiento.status}}" size="large" severity="warning"></p-badge>
@@ -37,13 +39,13 @@
             </p-divider>
             <div class="row">
                 <div class="col-sm">
-                 <h5>Envio de:</h5>  <p-dropdown [options]="listUbicaciones" (onChange)="onChangeInventario($event)"  optionValue="direccion" [(ngModel)]="idUbicacionde"  placeholder="Selecciona una ubicacion" optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
+                 <h5>Envio de:</h5>  <p-dropdown [options]="listUbicaciones" (onChange)="onChangeInventario($event)"  optionLabel="direccion" [(ngModel)]="idUbicacionde"  placeholder="Selecciona una ubicacion" optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
                
                 </div>
                
                 <div class="col-sm">
                <h5>Para:</h5>
-               <p-dropdown [options]="listUbicaciones"   [(ngModel)]="idUbicacionpara"  optionValue="idUbicacion" placeholder="Selecciona una ubicacion" optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
+               <p-dropdown [options]="listUbicaciones"  (onChange)="onChangeDestino($event)"  [(ngModel)]="idUbicacionpara"  optionLabel="idUbicacion" placeholder="Selecciona una ubicacion" optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
                
                 </div>
               </div>
@@ -216,13 +218,13 @@
 
         <div class="row">
             <div class="col-sm">
-                <p-button icon="pi pi-send" label="Registrar Envio" styleClass="p-button-text"></p-button>
+                <p-button icon="pi pi-send" label="Registrar Envio" styleClass="p-button-text" (onClick)="registraEnvio()"></p-button>
                </div>
                <div class="col-sm">
                
                </div>
           <div class="col-sm">
-            <p-button icon="pi pi-check" label="Validar envio" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" label="Validar envio" styleClass="p-button-text" (onClick)="validaEnvio()"></p-button>
           </div>
           
         </div>

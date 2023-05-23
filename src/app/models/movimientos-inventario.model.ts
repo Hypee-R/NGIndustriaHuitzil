@@ -2,11 +2,12 @@ import { productoModel } from "./productos.model";
 import { VentaArticuloModel, VentaModel } from "./venta.model";
 
 export class MovimientosInventarioModel {
-    idMovimiento: number;
-    fecha: string;
-    ubicacion: number;
-    usuario: number;
-    status: string;
+    idMovimiento?: number;
+    fecha?: string;
+    ubicacion?: number;
+    ubicacionDestino?:number;
+    usuario?: number;
+    status?: string;
     receptor?: number;
     direccion?: string;
     usuarioRecibe?: string;
