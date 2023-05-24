@@ -84,7 +84,7 @@ export class ControEnviosComponent implements OnInit {
     this.loading = true;
     this.movimientosService.getallMovimientos().subscribe(response => {
       if(response.exito){
-        console.log(response.respuesta)
+        //console.log(response.respuesta)
         this.lstMovimientos = response.respuesta
         this.loading = false;
         
