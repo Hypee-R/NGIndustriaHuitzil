@@ -82,10 +82,9 @@
   
 </p-tabView>
             </div>
-            <app-envio (saveEnvio)="getMovimientos()" [(_movimiento)]="selectedMovimiento" [(_accion)]= "accion" *ngIf="accion != ''"></app-envio>
-        </div>
+           </div>
     </div>
-
+    <app-envio (saveEnvio)="getMovimientos()" [(_movimiento)]="selectedMovimiento" [(_accion)]= "accion" *ngIf="accion != ''"></app-envio>   
 </div>
 
 

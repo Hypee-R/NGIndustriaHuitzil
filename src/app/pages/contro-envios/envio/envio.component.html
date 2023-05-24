@@ -12,17 +12,19 @@
             <div class="row">
                 <div class="col-sm">
 
-                    <h5 *ngIf="accion!= 'Registrar'">Folio:<p-badge [value]="1" severity="danger" size="large"
+                    <h5 *ngIf="accion!= 'Registrar'">Folio:     <p-badge [value]="movimiento.idMovimiento" severity="danger" size="large"
                             styleClass="mr-2"></p-badge></h5>
                     <h5>Folio: <p-badge *ngIf="accion == 'Registrar'" [value]="etiqueta" severity="info" size="large"
                             styleClass="mr-2"></p-badge> </h5>
                 </div>
-                <div class="col-sm" *ngIf="movimiento != undefined ">
-                    <p-badge value="{{movimiento.status}}" size="large" severity="warning"></p-badge>
+                <div class="col-sm" *ngIf="accion!= 'Registrar'">
+                    <p-badge *ngIf="movimiento.status == 'Entregado'" value="{{movimiento.status}}" size="large" severity="warning"></p-badge>
+                    <p-badge *ngIf="movimiento.status == 'Envio'"value="{{movimiento.status}}" size="large" severity="info"></p-badge>
                 </div>
 
                 <div class="col-sm">
-                    <h5>Fecha: {{CurrentDate | date:'dd/MM/yyyy, hh:mm a'}}</h5>
+                    <h5 *ngIf="accion!= 'Registrar'">Fecha: {{movimiento.fecha | date:'dd/MM/yyyy, hh:mm a'}}</h5>
+                    <h5 *ngIf="accion == 'Registrar'">Fecha: {{CurrentDate | date:'dd/MM/yyyy, hh:mm a'}}</h5>
                 </div>
 
             </div>

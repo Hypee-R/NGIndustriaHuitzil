@@ -75,32 +75,59 @@ export class EnvioComponent implements OnInit {
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
       this.visibleDialog = estado;
   });
-
+    this.accion = this._accion
     this.movimiento = this._movimiento
+   
    }
 
-   ngOnChanges(changes: SimpleChange): void { 
+ngOnChanges(changes: SimpleChange): void {
     this.accion = this._accion
     console.log(this.accion)
-    if(this.accion == "Registrar"){
-      this.movimiento = new MovimientosInventarioModel();
+    if(this.accion == "Registrar") this.movimiento = new MovimientosInventarioModel();
+    if(this._movimiento) this.movimiento = this._movimiento
+
+    if(this.accion == "Actualizar"){
+      this.getArticulosMovimientos()
     }
-    if(this.movimiento){
-    this.movimiento = this._movimiento}
-    //this.getUbicaciones()
+    else{
+      this.listArticulos = []
+      this.getUbicaciones()
+    }
   }
   ngOnInit(): void {
-   this.getUbicaciones()
+  
+   if(this.accion == "Actualizar"){
+      this.getArticulosMovimientos()
+   }
+   else{
+    this.listArticulos = []
+    this.getUbicaciones()
+   }
   }
+
+  getArticulosMovimientos(){
+    this.listArticulos = []
+    this.movimiento.movimientoArticulos.forEach(articulo =>{
+      let ar = new productoModel
+      ar.sku = articulo.sku
+      ar.descripcion = articulo.descripcion
+      ar.existencia = articulo.existencia.toString()
+      ar.ubicacion = articulo.ubicacion
+      this.listArticulos.push(ar)
+    })
+  }
+
+
 
   getUbicaciones(){
     this.listUbicaciones.shift()
     console.log(this.movimiento)
     this.ubicacionesService.getUbicaciones().subscribe(response => {
       if(response.exito){
-        for(let ubicacion of response.respuesta){
+        this.listUbicaciones = response.respuesta
+        /*for(let ubicacion of response.respuesta){
           this.listUbicaciones.push(ubicacion)
-        }
+        }*/
         if(this.variablesGL.getSucursal()){
           let ubiPreselected = this.listUbicaciones.find(x => x.direccion == this.variablesGL.getSucursal());
           console.log("data")
@@ -112,7 +139,7 @@ export class EnvioComponent implements OnInit {
   }
 
 
-  onChangeInventario(event) {
+onChangeInventario(event) {
     this.ubicacionDeSeleccionada = event.value
     this.getArticulos(this.ubicacionDeSeleccionada.direccion);
 }
@@ -188,13 +215,13 @@ getArticulos(filtro:string) {
   }
 
   addMovimiento(){
-    let date = formatDate(new Date(), 'yyyy/MM/dd', 'en').toString()
+   let date = formatDate(new Date(), 'yyyy/MM/dd', 'en').toString()
     let newMovimiento = new MovimientosInventarioModel();
     let movimientosArticulos : MovimientoArticuloModel []= []
    
     console.log(this.selectedArticulos)
 
-    newMovimiento.fecha = date
+    newMovimiento.fecha = this.CurrentDate.toString()
     newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion
     newMovimiento.status = "Envio"
     newMovimiento.receptor = 1
