@@ -156,14 +156,22 @@ getArticulos(filtro:string) {
   }
 
   registraEnvio(){
-
+    if(this.ubicacionDeSeleccionada == undefined || this.ubicacionDestinoSeleccionada == undefined){
+      this.toastr.error("Error","Selecciona una dirección de envio y una  dirección de destino")
+      return
+    }
+    if(this.selectedArticulos.length == 0){
+      this.toastr.error("Error","Debe selecionar al menos un articulo")
+      return
+    }
     this.confirmationService.confirm({
       message: 'Esta seguro de realizar el movimiento de inventario?',
       header: 'Confirmacion de Envio',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
           this.messageService.add({ severity: 'success', summary: 'Confirmado', detail: 'has aceptado el envio ' });
-      },
+          this.addMovimiento()
+        },
       reject: (type) => {
           switch (type) {
               case ConfirmEventType.REJECT:
@@ -176,34 +184,55 @@ getArticulos(filtro:string) {
       }
   });
 
-    // let date = formatDate(new Date(), 'dd/MM/yyyy', 'en').toString()
-    // let newMovimiento = new MovimientosInventarioModel();
-    // newMovimiento.fecha = date
-    // newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion
-    // newMovimiento.status = "Envio"
-    // newMovimiento.receptor = 1
-    // newMovimiento.usuario = 4
-    // newMovimiento.direccion = this.ubicacionDeSeleccionada.direccion
-    // newMovimiento.ubicacionDestino = this.ubicacionDestinoSeleccionada.idUbicacion
-    // newMovimiento.usuarioEnvia = this.ubicacionDeSeleccionada.nombreEncargado
-    // newMovimiento.usuarioRecibe = this.ubicacionDestinoSeleccionada.nombreEncargado
-    // newMovimiento.movimientoArticulos = []
-    // console.log(newMovimiento)
-    // this.movientosService.addMovimiento(newMovimiento).subscribe(response => {
-    //   console.log(response)
-    //   if (response.exito) {
-    //     this.hideDialog()
-    //     this.toastr.success("Envio Registrado Correctamente",'Correcto');
-    //     setTimeout(() => {
-    //       this.saveEnvio.emit(true);
-    //     }, 100);
-    //   }
-    // }, err => {
-    //   this.toastr.error("Error",'Error en los servicios');
-    //   ///this.loading = false;
-    // });
     
   }
 
+  addMovimiento(){
+    let date = formatDate(new Date(), 'yyyy/MM/dd', 'en').toString()
+    let newMovimiento = new MovimientosInventarioModel();
+    let movimientosArticulos : MovimientoArticuloModel []= []
+   
+    console.log(this.selectedArticulos)
 
+    newMovimiento.fecha = date
+    newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion
+    newMovimiento.status = "Envio"
+    newMovimiento.receptor = 1
+    newMovimiento.usuario = 4
+    newMovimiento.direccion = this.ubicacionDeSeleccionada.direccion
+    newMovimiento.ubicacionDestino = this.ubicacionDestinoSeleccionada.idUbicacion
+    newMovimiento.usuarioEnvia = this.ubicacionDeSeleccionada.nombreEncargado
+    newMovimiento.usuarioRecibe = this.ubicacionDestinoSeleccionada.nombreEncargado
+   
+    
+    /// cambiar por articulos seleccionados
+    this.selectedArticulos.forEach(articulo =>
+    {
+      let newMovimientoArticulo =  new MovimientoArticuloModel()
+      newMovimientoArticulo.idArticulo = articulo.idArticulo
+      newMovimientoArticulo.sku = articulo.sku
+      newMovimientoArticulo.idUbicacion =  this.ubicacionDeSeleccionada.idUbicacion
+      newMovimientoArticulo.existencia = Number(articulo.existencia)
+      newMovimientoArticulo.idTalla = articulo.idTalla
+      newMovimientoArticulo.descripcion = articulo.descripcion
+      newMovimientoArticulo.fechaIngreso  = articulo.fechaIngreso
+      newMovimientoArticulo.ubicacion = articulo.ubicacion
+      movimientosArticulos.push(newMovimientoArticulo)
+    }
+    )
+    newMovimiento.movimientoArticulos = movimientosArticulos
+    console.log(newMovimiento)
+    this.movientosService.addMovimiento(newMovimiento).subscribe(response => {
+      console.log(response)
+      if (response.exito) {
+        this.hideDialog()
+        this.toastr.success("Envio Registrado Correctamente",'Correcto');
+        setTimeout(() => {
+          this.saveEnvio.emit(true);
+        }, 100);
+      }
+    }, err => {
+      this.toastr.error("Error",'Error en los servicios');
+    });
+  }
 }
