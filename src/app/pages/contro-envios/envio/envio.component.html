@@ -31,7 +31,8 @@
                     <h5>Tipo Paquete:</h5><input type="text" pInputText />
                 </div>
                 <div class="col-sm">
-                    <h5>Responsable:</h5><input type="text" pInputText />
+                    <h5>Responsable Destino:</h5><p-chip label="{{this.idUbicacionde}}" ></p-chip>
+
                 </div>
             </div>
             <p-divider align="center">
@@ -40,7 +41,7 @@
             <div class="row">
                 <div class="col-sm">
                     <h5>Envio de:</h5> <p-dropdown [options]="listUbicaciones" (onChange)="onChangeInventario($event)"
-                        optionLabel="direccion" [(ngModel)]="idUbicacionde" placeholder="Selecciona una ubicacion"
+                        optionLabel="direccion"  placeholder="Selecciona una ubicacion"
                         optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
 
                 </div>
