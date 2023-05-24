@@ -31,9 +31,9 @@ export class ControEnviosComponent implements OnInit {
   openModal = ''
   selectedMovimiento : MovimientosInventarioModel;
 
-  constructor( private primengConfig: PrimeNGConfig,   public variablesGL: VariablesService,
-     private movimientosService:MovimientosService) {
-  
+  constructor( private primengConfig: PrimeNGConfig,   public variablesGL: VariablesService
+    ,private movimientosService:MovimientosService) {
+   
       this.statusPantalla = this.variablesGL.getStatusPantalla();
       let status = this.variablesGL.getPantalla();
       if(status == 'celular'){
@@ -48,7 +48,7 @@ export class ControEnviosComponent implements OnInit {
      }
 
   ngOnInit(): void {
-
+ 
        this.getMovimientos();
    
   }
@@ -59,10 +59,10 @@ export class ControEnviosComponent implements OnInit {
     this.loading = true;
     this.movimientosService.getallMovimientos().subscribe(response => {
       if(response.exito){
-         this.lstMovimientos = response.respuesta
+        //console.log(response.respuesta)
+        this.lstMovimientos = response.respuesta
         this.loading = false;
-    
-
+        
       }else{
         this.lstMovimientos = [];
         this.loading = false;
@@ -75,6 +75,7 @@ export class ControEnviosComponent implements OnInit {
   showDetail(movimiento :MovimientosInventarioModel){
     this.selectedMovimiento = movimiento
     this.accion = 'Actualizar';
+    this.openModal = 'Actualizar'
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);

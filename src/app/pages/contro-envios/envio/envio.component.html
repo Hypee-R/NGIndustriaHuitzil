@@ -1,4 +1,5 @@
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '950px'}"  header="{{accion}} Mercancia"  [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '950px'}" header="{{accion}} Mercancia" [modal]="true"
+    styleClass="p-fluid">
     <ng-template pTemplate="content">
         <ng-template pTemplate="header">
             <i class="pi pi-box"></i>
@@ -10,61 +11,73 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm">
-                    <h5>Folio:<p-badge [value]="1" severity="danger" size="large" styleClass="mr-2"></p-badge></h5>
-                   </div>
-                   <div class="col-sm" *ngIf="movimiento != undefined ">
-                    <p-badge value="{{movimiento.status}}" size="large" severity="warning"></p-badge>
-                   </div>
-             
-              <div class="col-sm">
-               <h5>Fecha:  {{CurrentDate | date:'dd/MM/yyyy, hh:mm a'}}</h5>
-              </div>
-              
+
+                    <h5 *ngIf="accion!= 'Registrar'">Folio:     <p-badge [value]="movimiento.idMovimiento" severity="danger" size="large"
+                            styleClass="mr-2"></p-badge></h5>
+                    <h5>Folio: <p-badge *ngIf="accion == 'Registrar'" [value]="etiqueta" severity="info" size="large"
+                            styleClass="mr-2"></p-badge> </h5>
+                </div>
+                <div class="col-sm" *ngIf="accion!= 'Registrar'">
+                    <p-badge *ngIf="movimiento.status == 'Entregado'" value="{{movimiento.status}}" size="large" severity="warning"></p-badge>
+                    <p-badge *ngIf="movimiento.status == 'Envio'"value="{{movimiento.status}}" size="large" severity="info"></p-badge>
+                </div>
+
+                <div class="col-sm">
+                    <h5 *ngIf="accion!= 'Registrar'">Fecha: {{movimiento.fecha | date:'dd/MM/yyyy, hh:mm a'}}</h5>
+                    <h5 *ngIf="accion == 'Registrar'">Fecha: {{CurrentDate | date:'dd/MM/yyyy, hh:mm a'}}</h5>
+                </div>
+
             </div>
             <div class="row">
-               
-           
-                 <div class="col-sm">
-                 <h5>Tipo Paquete:</h5><input type="text" pInputText  />
+                <div class="col-sm">
+                    <h5>Tipo Paquete:</h5><input type="text" pInputText />
                 </div>
-                 <div class="col-sm">
-                 <h5>Responsable:</h5><input type="text" pInputText />
+                <div class="col-sm">
+                    <h5>Responsable Destino:</h5><p-chip label="{{this.idUbicacionde}}" ></p-chip>
+
                 </div>
-            
-              </div>
+            </div>
             <p-divider align="center">
                 <span class="p-tag">Movimiento</span>
             </p-divider>
             <div class="row">
                 <div class="col-sm">
-                 <h5>Envio de:</h5>  <p-dropdown [options]="listUbicaciones" (onChange)="onChangeInventario($event)"  optionValue="direccion" [(ngModel)]="idUbicacionde"  placeholder="Selecciona una ubicacion" optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
-               
+                    <h5>Envio de:</h5> <p-dropdown [options]="listUbicaciones" (onChange)="onChangeInventario($event)"
+                        optionLabel="direccion"  placeholder="Selecciona una ubicacion"
+                        optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
+
                 </div>
-               
+
                 <div class="col-sm">
-               <h5>Para:</h5>
-               <p-dropdown [options]="listUbicaciones"   [(ngModel)]="idUbicacionpara"  optionValue="idUbicacion" placeholder="Selecciona una ubicacion" optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
-               
+                    <h5>Para:</h5>
+                    <p-dropdown [options]="listUbicaciones" (onChange)="onChangeDestino($event)"
+                        [(ngModel)]="idUbicacionpara" optionLabel="idUbicacion" placeholder="Selecciona una ubicacion"
+                        optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
+
                 </div>
-              </div>
-              <p-divider align="center">
+            </div>
+            <p-divider align="center">
                 <span class="p-tag">Inventario</span>
             </p-divider>
-              <div class="row">
-             <div *ngIf="!loading && listArticulos != undefined ">
+            <div class="row">
+                <div *ngIf="!loading && listArticulos != undefined ">
 
-        
-                <div *ngIf="!loading && listArticulos.length > 0">
-                    <p-table #dt [value]="listArticulos" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedArticulos" [rowHover]="true"
-                        dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Articulos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
-                        <ng-template pTemplate="caption">
-                            <div class="flex align-items-center justify-content-between">
-                                <h5 class="m-0">Inventario de Articulos</h5>
-                                <br>
-                                <div class="row">
-                                    <div class="col col-md-7">
-                                        <div class="row">
-                                            <!-- <div class="col">
+
+                    <div *ngIf="!loading && listArticulos.length > 0">
+                        <p-table #dt [value]="listArticulos" [columns]="cols" [rows]="rows" [paginator]="true"
+                            [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']"
+                            [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedArticulos"
+                            [rowHover]="true" dataKey="idArticulo"
+                            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Articulos"
+                            [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                            <ng-template pTemplate="caption">
+                                <div class="flex align-items-center justify-content-between">
+                                    <h5 class="m-0">Inventario de Articulos</h5>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col col-md-7">
+                                            <div class="row">
+                                                <!-- <div class="col">
                                                 <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
                                             </div>
                                             <div class="col">
@@ -72,159 +85,141 @@
                                             </div>
                                             <div class="col">
                                                 <input class="form-control " type="file" id="formFileDisabled"   #fileImportInput name="File Upload"  id="txtFileUpload" (change)="fileChangeListener($event)" accept=".csv"/>
-                                               
-                                                  
                                             </div> -->
-                                            <!-- <div class="col">
+                                                <!-- <div class="col">
                                                 <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"(click)="Excel()" style="margin-left: 10px;"></button>
                                             </div> -->
+                                            </div>
+                                        </div>
+                                        <div class="col col-md-5">
+                                            <span class="p-input-icon-left" style="width: 100%;">
+                                                <i class="pi pi-search"></i>
+                                                <input pInputText type="text"
+                                                    (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                                    placeholder="Buscar..." [style]="{'width': '100%'}" />
+                                            </span>
                                         </div>
                                     </div>
-                                    <div class="col col-md-5">
-                                        <span class="p-input-icon-left" style="width: 100%;">
-                                      <i class="pi pi-search"></i>
-                                      <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar..." [style]="{'width': '100%'}"/>
-                                    </span>
-                                    </div>
                                 </div>
-                            </div>
-                        </ng-template>
-                        <ng-template pTemplate="header" let-columns>
-                            <tr>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
 
-                                <th style="width: 2rem">
-                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                                </th>
-                                <th></th>
-                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                    <div class="flex justify-content-center align-items-center">
-                                        {{col.header}}
-                                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                                    </div>
-                                </th>
+                                    <th style="width: 2rem">
+                                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                    </th>
+                                    <th></th>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        <div class="flex justify-content-center align-items-center">
+                                            {{col.header}}
+                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                                        </div>
+                                    </th>
 
 
-                            </tr>
+                                </tr>
 
-                        </ng-template>
-                        <ng-template pTemplate="body" let-rowData let-columns="columns">
-                            <tr>
-                                <td>
-                                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-                                </td>
-                                <td>
-                                    <div style="display: inline-flex">
-                                        <!-- <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editArticulo(rowData)"></button>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr>
+                                    <td>
+                                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                    </td>
+                                    <td>
+                                        <div style="display: inline-flex">
+                                            <!-- <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editArticulo(rowData)"></button>
                                         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteArticulo(rowData)" style="margin-left: 3px;"></button> -->
-                                    </div>
-                                </td>
-                         
-
-                                    <td *ngIf="rowData.imagen==''">
-                                        <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png"  width="40" height="40%" class="shadow-1" />
-                                      
+                                        </div>
                                     </td>
 
-                                <td *ngIf="rowData.imagen!=''">
-                             
-                                    <img [src]=rowData.imagen width="40" height="40%" class="shadow-1" />
-                                </td>
 
-                                <td>
-                                    {{rowData['sku']}}
-                                </td>
-                                <td>
-                                    {{rowData['descripcion']}}
-                                </td>
-                                <td>
-                                    {{rowData['existencia']}}
-                                </td>
-                                <!-- <td>
-                                {{rowData['fechaIngreso']}}
-                              </td>
-                              <td>
-                                {{rowData['categoria']}}
-                              </td>
-                              <td>
-                                {{rowData['unidad']}}
-                              </td>-->
-                                <td>
-                                    {{rowData['talla']}}
-                                </td>
-                                <td>
-                                    {{rowData['ubicacion']}}
-                                </td>
-                                <td>
-                                    {{rowData['precio']}}
-                                </td>
-                                <td>
-                                    <button pButton pRipple icon="pi pi-tags" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" (click)="viewCodebar(rowData)"></button>
-                                </td>
-                                <td>
-                                    <p-inputNumber inputId="integeronly" > </p-inputNumber>
-                                </td> 
-                            </tr>
-                        </ng-template>
-                      <ng-template pTemplate="summary">
-                        <div class="flex align-items-center justify-content-between">
-                            <h5>   En total se enviaran <p-badge [value]="1" severity="danger" size="large" styleClass="mr-2"></p-badge> prendas.</h5> 
-                        </div>
-                    </ng-template>
+                                    <td *ngIf="rowData.imagen==''">
+                                        <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png"
+                                            width="40" height="40%" class="shadow-1" />
 
-                 
-                    </p-table>
+                                    </td>
+
+                                    <td *ngIf="rowData.imagen!=''">
+
+                                        <img [src]=rowData.imagen width="40" height="40%" class="shadow-1" />
+                                    </td>
+
+                                    <td>
+                                        {{rowData['sku']}}
+                                    </td>
+                                    <td>
+                                        {{rowData['descripcion']}}
+                                    </td>
+                                    <td>
+                                        {{rowData['existencia']}}
+                                    </td>
+                                    <td>
+                                        {{rowData['talla']}}
+                                    </td>
+                                    <td>
+                                        {{rowData['ubicacion']}}
+                                    </td>
+                                    <td>
+                                        {{rowData['precio']}}
+                                    </td>
+                                    <td>
+                                        <button pButton pRipple icon="pi pi-tags"
+                                            class="p-button-rounded p-button-rounded" style="margin-left: 3px;"
+                                            (click)="viewCodebar(rowData)"></button>
+                                    </td>
+                                    <td>
+                                        <p-inputNumber inputId="integeronly"> </p-inputNumber>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="summary">
+                                <div class="flex align-items-center justify-content-between">
+                                    <h5> En total se enviaran <p-badge [value]="1" severity="danger" size="large"
+                                            styleClass="mr-2"></p-badge> prendas.</h5>
+                                </div>
+                            </ng-template>
+
+
+                        </p-table>
+                    </div>
                 </div>
             </div>
-              </div>
-          </div>
-
-
-        <!-- <div class="field">
-            <label for="fecha">Fecha</label>
-            <input type="text" pInputText id="fecha"  [(ngModel)]="movimiento.fecha" required autofocus [disabled]="true" />
-           
-        </div>
-        <div class="field">
-            <label for="nombre">Status</label>
-            <input type="text" pInputText id="status"  [(ngModel)]="movimiento.status" required autofocus [disabled]="true" />
-            </div>
-        <div class="field">
-            <label for="direccion">Dirección</label>
-            <input type="text" pInputText id="direccion" [(ngModel)]="movimiento.direccion"  [disabled]="true">
         </div>
 
-        <div class="field">
-            <label for="telefono1">Envia</label>
-            <input type="text" pInputText id="envia"  [(ngModel)]="movimiento.usuarioEnvia" [disabled]="true" />
-           
-        </div>
-        <div class="field">
-            <label for="telefono1">Recibe</label>
-            <input type="text" pInputText id="recibe" [(ngModel)]="movimiento.usuarioRecibe"  [disabled]="true" />
-           
-        </div> -->
-    
-    </ng-template>
-    
-    <ng-template pTemplate="footer">
-        
-        <button pButton pRipple label="Aceptar" icon="pi pi-check" class="p-button-text" (click)="hideDialog()"></button>
     </ng-template>
 
     <ng-template pTemplate="footer">
-                       
 
+        <button pButton pRipple label="Aceptar" icon="pi pi-check" class="p-button-text"
+            (click)="hideDialog()"></button>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
         <div class="row">
             <div class="col-sm">
-                <p-button icon="pi pi-send" label="Registrar Envio" styleClass="p-button-text"></p-button>
-               </div>
-               <div class="col-sm">
-               
-               </div>
-          <div class="col-sm">
-            <p-button icon="pi pi-check" label="Validar envio" styleClass="p-button-text"></p-button>
-          </div>
-          
+                <p-button icon="pi pi-send" label="Registrar Envio" styleClass="p-button-text"
+                    (onClick)="registraEnvio()"></p-button>
+            </div>
+            <div class="col-sm">
+
+            </div>
+            <div class="col-sm">
+                <p-button icon="pi pi-check" label="Validar envio" styleClass="p-button-text"
+                    (onClick)="validaEnvio()"></p-button>
+            </div>
+
         </div>
     </ng-template>
 </p-dialog>
+
+<!-- confirmacion de envio -->
+
+<div class="card flex justify-content-center gap-2">
+    <p-toast></p-toast>
+    <p-confirmDialog #cd [style]="{width: '50vw'}">
+        <ng-template pTemplate="footer">
+            <button type="button" class="p-button-danger" pButton icon="pi pi-times" label="cancelar" (click)="cd.reject()"></button>
+            <button type="button" class="p-button-success" pButton icon="pi pi-check" label="cerrar Guia" (click)="cd.accept()"></button>
+        </ng-template>
+    </p-confirmDialog>
+</div>

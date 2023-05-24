@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ResponseModel } from '../models/response.model';
+import { MovimientosInventarioModel } from '../models/movimientos-inventario.model';
 
 
 @Injectable({
@@ -17,6 +18,13 @@ export class MovimientosService {
   getallMovimientos():Observable<ResponseModel>{
  
     return this.http.get<ResponseModel>(environment.apiService + 'Movimientos/Movimientos')
+    .pipe(
+      map (res => res)
+    );
+  }
+
+  addMovimiento(request:MovimientosInventarioModel): Observable<ResponseModel>{
+    return this.http.post<ResponseModel>(environment.apiService + 'Movimientos/Add',request)
     .pipe(
       map (res => res)
     );
