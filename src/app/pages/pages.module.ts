@@ -52,6 +52,9 @@ import {DividerModule} from 'primeng/divider';
 import {KnobModule} from 'primeng/knob';
 import {PickListModule} from 'primeng/picklist';
 
+import { ChipModule } from 'primeng/chip';
+
+
 
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
@@ -85,6 +88,7 @@ import { AddPagoPedidoComponent } from './apartados/add-pago-pedido/add-pago-ped
 import { ControEnviosComponent } from './contro-envios/contro-envios.component';
 import { TabViewModule } from 'primeng/tabview';
 import { VentasCajaComponent } from './informes/ventas-caja/ventas-caja.component';
+import { EnvioComponent } from './contro-envios/envio/envio.component';
 
 @NgModule({
     imports: [
@@ -131,9 +135,11 @@ import { VentasCajaComponent } from './informes/ventas-caja/ventas-caja.componen
         TagModule,
         ConfirmPopupModule,
         AccordionModule,
+        ChipModule,
         //NgxBarcode6Module,
         TabViewModule,
-        PickListModule
+        PickListModule,
+        
 ],  providers: [ConfirmationService,MessageService,PickListModule],
     declarations: [
         ContentComponent,
@@ -174,7 +180,8 @@ import { VentasCajaComponent } from './informes/ventas-caja/ventas-caja.componen
         AddPagoApartadoComponent,
         AddPagoPedidoComponent,
         ControEnviosComponent,
-        VentasCajaComponent
+        VentasCajaComponent,
+        EnvioComponent
     ]
 })
 export class PagesModule { }

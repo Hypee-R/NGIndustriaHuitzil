@@ -12,7 +12,7 @@
             <i class="pi pi-send"></i>
             <span>Envios</span>
         </ng-template>
-        <p-table #dt [value]="lstCambiosDevoluciones" [rows]="rows" [paginator]="true" dataKey="idCambioDevolucion" [globalFilterFields]="['venta.noTicket']" [responsive]="true" responsiveLayout="scroll" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} cambios y/o devoluciones"
+        <p-table #dt [value]="lstMovimientos" [rows]="rows" [paginator]="true" dataKey="idCambioDevolucion" [globalFilterFields]="['venta.noTicket']" [responsive]="true" responsiveLayout="scroll" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} cambios y/o devoluciones"
                         [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                         <ng-template pTemplate="caption">
                             <div class="flex align-items-center justify-content-between">
@@ -21,7 +21,7 @@
                                     <div class="col col-md-7">
                                         <div class="row">
                                             <div class="col col-md-3">
-                                                <!-- <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" ></button> -->
+                                               <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2"  (click)="showDetailAdd()" ></button>
                                             </div>
                                         </div>
                                     </div>
@@ -39,8 +39,10 @@
                                 <th style="width: 3rem"></th>
                                 <th>Id Movimiento</th>
                                 <th>Fecha</th>
-                                <th>Ubicacion</th>
+                                <th>Envia</th>
+                                <th>Ubicacion salida</th>
                                 <th>Recibe</th>
+                                <th>Ubicacion Llegada</th>
                                 <th>Status</th>
                           
                             </tr>
@@ -48,255 +50,39 @@
                         <ng-template pTemplate="body" let-cambio let-expanded="expanded">
                             <tr>
                                 <td>
-
-                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" pTooltip="Ver Detalles." ></button>
+                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" pTooltip="Ver Detalles." (click)="showDetail(cambio)" ></button>
                                 </td>
                                 <td>
-                                    <p-badge [value]="cambio.venta.noTicket" severity="danger" size="large" styleClass="mr-2"></p-badge>
+                                    <p-badge [value]="cambio.idMovimiento" severity="danger" size="large" styleClass="mr-2"></p-badge>
                                 </td>
                                 <td>{{cambio.fecha | date: 'dd/MM/yyyy, hh:mm a'}}</td>
+                                
                                 <td>
-                                    San martin texmelucan
+                                    {{cambio.usuarioEnvia}}
                                 </td>
                                 <td>
-                                    Jose Daniel
+                                   {{cambio.direccion}}
                                 </td>
-                     
                                 <td>
-                                    En transito
+                                    {{cambio.usuarioRecibe}}
+                                </td>
+                                <td>
+                                  Puebla
+                                </td>
+                                <td>
+                                    {{cambio.status}}
                                 </td>
                      
                      
                             </tr>
                         </ng-template>
-                        <ng-template pTemplate="rowexpansion" let-cambio>
-                            <tr>
-                                <td colspan="10">
-                                    <div class="p-3">
-                                        <!-- <p-table [value]="cambio.cambiosDevolucionesArticulos" dataKey="idCambioDevolucion">
-                                            <ng-template pTemplate="header">
-                                                <tr>
-                                                    <th colspan="3">Información Articulo Anterior</th>
-                                                    <th colspan="1">Cantidad</th>
-                                                    <th colspan="5">Información Articulo Nuevo</th>
-                                                    <th colspan="1"></th>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="body" let-cambio>
-                                                <tr>
-                                                    <td>
-                                                        <img src="assets/img/only_logo_huitzil.png" width="40" height="40%" class="shadow-1" /> </td>
-                                                    <td class="text-decoration-line-through">{{cambio.ventaArticulo.articulo.sku}}</td>
-                                                    <td class="text-decoration-line-through">{{cambio.ventaArticulo.articulo.descripcion}}</td>
-                                                    <td>
-                                                        <p-badge [value]="cambio.cantidad" severity="warning" styleClass="mr-2" size="large"></p-badge>
-                                                    </td>
-                                                    <td>
-                                                        <img [src]="cambio.articulo.imagen" width="40" height="40%" class="shadow-1" />
-                                                    </td>
-                                                    <td>{{cambio.articulo.sku}}</td>
-                                                    <td>{{cambio.articulo.descripcion}}</td>
-                                                    <td>{{cambio.articulo.talla}}</td>
-                                                    <td>{{cambio.articulo.precio | currency:'MXN' }}</td>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="emptymessage">
-                                                <tr>
-                                                    <td colspan="6">There are no order for this product yet.</td>
-                                                </tr>
-                                            </ng-template>
-                                        </p-table> -->
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-template>
+                       
                     </p-table>
     </p-tabPanel>
-    <p-tabPanel header="Header II">
-        <ng-template pTemplate="header">
-            <i class="pi pi-box"></i>
-            <span>Inventarios</span>
-        </ng-template>
-        <p-divider align="center">
-            <span class="p-tag">Solicitud de Envio</span>
-        </p-divider>
-        <div class="container">
-            <div class="row">
-              <div class="col-sm">
-               <h5>Fecha:   <span class="pi pi-calendar-times"   id="fecha">{{CurrentDate | date:'dd/MM/yyyy, hh:mm a'}}</span></h5>
-              </div>
-              
-            </div>
-            <div class="row">
-               
-                <div class="col-sm">
-                 <h5>Folio:</h5><input type="text" pInputText  />
-                </div>
-                 <div class="col-sm">
-                 <h5>Tipo Paquete:</h5><input type="text" pInputText  />
-                </div>
-                 <div class="col-sm">
-                 <h5>Responsable:</h5><input type="text" pInputText />
-                </div>
-            
-              </div>
-            <p-divider align="center">
-                <span class="p-tag">Movimiento</span>
-            </p-divider>
-            <div class="row">
-                <div class="col-sm">
-                 <h5>Envio de:</h5>  <p-dropdown [options]="listUbicaciones" (onChange)="onChangeInventario($event)"  optionValue="direccion" [(ngModel)]="idUbicacionde"  placeholder="Selecciona una ubicacion" optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
-               
-                </div>
-               
-                <div class="col-sm">
-               <h5>Para:</h5>
-               <p-dropdown [options]="listUbicaciones"   [(ngModel)]="idUbicacionpara"  optionValue="idUbicacion" placeholder="Selecciona una ubicacion" optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
-               
-                </div>
-              </div>
-              <p-divider align="center">
-                <span class="p-tag">Inventario</span>
-            </p-divider>
-              <div class="row">
-             <div *ngIf="!loading && listArticulos != undefined ">
-
-        
-                <div *ngIf="!loading && listArticulos.length > 0">
-                    <p-table #dt [value]="listArticulos" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedArticulos" [rowHover]="true"
-                        dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Articulos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
-                        <ng-template pTemplate="caption">
-                            <div class="flex align-items-center justify-content-between">
-                                <h5 class="m-0">Inventario de Articulos</h5>
-                                <br>
-                                <div class="row">
-                                    <div class="col col-md-7">
-                                        <div class="row">
-                                            <!-- <div class="col">
-                                                <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
-                                            </div>
-                                            <div class="col">
-                                                <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m" [disabled]="!selectedArticulos || !selectedArticulos.length"></button>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-control " type="file" id="formFileDisabled"   #fileImportInput name="File Upload"  id="txtFileUpload" (change)="fileChangeListener($event)" accept=".csv"/>
-                                               
-                                                  
-                                            </div> -->
-                                            <!-- <div class="col">
-                                                <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"(click)="Excel()" style="margin-left: 10px;"></button>
-                                            </div> -->
-                                        </div>
-                                    </div>
-                                    <div class="col col-md-5">
-                                        <span class="p-input-icon-left" style="width: 100%;">
-                                      <i class="pi pi-search"></i>
-                                      <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar..." [style]="{'width': '100%'}"/>
-                                    </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </ng-template>
-                        <ng-template pTemplate="header" let-columns>
-                            <tr>
-
-                                <th style="width: 2rem">
-                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                                </th>
-                                <th></th>
-                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                    <div class="flex justify-content-center align-items-center">
-                                        {{col.header}}
-                                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                                    </div>
-                                </th>
-
-
-                            </tr>
-
-                        </ng-template>
-                        <ng-template pTemplate="body" let-rowData let-columns="columns">
-                            <tr>
-                                <td>
-                                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-                                </td>
-                                <td>
-                                    <div style="display: inline-flex">
-                                        <!-- <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editArticulo(rowData)"></button>
-                                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteArticulo(rowData)" style="margin-left: 3px;"></button> -->
-                                    </div>
-                                </td>
-                         
-
-                                    <td *ngIf="rowData.imagen==''">
-                                        <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png"  width="40" height="40%" class="shadow-1" />
-                                      
-                                    </td>
-
-                                <td *ngIf="rowData.imagen!=''">
-                             
-                                    <img [src]=rowData.imagen width="40" height="40%" class="shadow-1" />
-                                </td>
-
-                                <td>
-                                    {{rowData['sku']}}
-                                </td>
-                                <td>
-                                    {{rowData['descripcion']}}
-                                </td>
-                                <td>
-                                    {{rowData['existencia']}}
-                                </td>
-                                <!-- <td>
-                                {{rowData['fechaIngreso']}}
-                              </td>
-                              <td>
-                                {{rowData['categoria']}}
-                              </td>
-                              <td>
-                                {{rowData['unidad']}}
-                              </td>-->
-                                <td>
-                                    {{rowData['talla']}}
-                                </td>
-                                <td>
-                                    {{rowData['ubicacion']}}
-                                </td>
-                                <td>
-                                    {{rowData['precio']}}
-                                </td>
-                                <td>
-                                    <button pButton pRipple icon="pi pi-tags" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" (click)="viewCodebar(rowData)"></button>
-                                </td>
-                                <!-- <td>
-                                    <button pButton pRipple icon="pi pi-qrcode" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" (click)="imprimir()"></button>
-                                </td> -->
-                            </tr>
-                        </ng-template>
-                        <!-- <ng-template pTemplate="summary">
-                        <div class="flex align-items-center justify-content-between">
-                            En total hay {{listUsuarios ? listUsuarios.length : 0 }} usuarios.
-                        </div>
-                    </ng-template> -->
-                    </p-table>
-                </div>
-            </div>
-              </div>
-          </div>
-    </p-tabPanel>
-    <!-- <p-tabPanel header="Header III">
-        <ng-template pTemplate="header">
-            <i class="pi pi-search"></i>
-            <span>Header III</span>
-            <i class="pi pi-cog"></i>
-        </ng-template>
-        <p>
-            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa
-            qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
-        </p>
-    </p-tabPanel> -->
+  
 </p-tabView>
             </div>
+            <app-envio (saveEnvio)="getMovimientos()" [(_movimiento)]="selectedMovimiento" [(_accion)]= "accion" *ngIf="accion != ''"></app-envio>
         </div>
     </div>
 
