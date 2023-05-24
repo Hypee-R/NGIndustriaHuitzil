@@ -52,6 +52,9 @@ import {DividerModule} from 'primeng/divider';
 import {KnobModule} from 'primeng/knob';
 import {PickListModule} from 'primeng/picklist';
 
+import { ChipModule } from 'primeng/chip';
+
+
 
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
@@ -132,9 +135,11 @@ import { EnvioComponent } from './contro-envios/envio/envio.component';
         TagModule,
         ConfirmPopupModule,
         AccordionModule,
+        ChipModule,
         //NgxBarcode6Module,
         TabViewModule,
-        PickListModule
+        PickListModule,
+        
 ],  providers: [ConfirmationService,MessageService,PickListModule],
     declarations: [
         ContentComponent,
