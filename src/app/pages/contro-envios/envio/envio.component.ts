@@ -35,14 +35,11 @@ export class EnvioComponent implements OnInit {
   selectedArticulo: productoModel = new productoModel();
   constructor(private variablesGL: VariablesService,private ubicacionesService:UbicacionesService, private inventarioService: InventarioService) {
     this.cols = [
-      // { field: 'idArticulo', header: 'ID' },
+  
       { field: '', header: 'Imagen' },
       { field: 'sku', header: 'SKU' },
       { field: 'descripcion', header: 'Descripcion' },
       { field: 'existencia', header: 'Existencia' },
-      // { field: 'fechaIngreso', header: 'Fecha Ingreso' },
-      // { field:'categoria',header:'Categoria'},
-      // { field: 'unidad', header: 'Unidad' },
       { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
       { field: 'precio', header: 'precio' },
@@ -66,16 +63,13 @@ export class EnvioComponent implements OnInit {
       this.visibleDialog = estado;
   });
 
-  
-  //if(this._movimiento){
+
     this.movimiento = this._movimiento
-    
-   // this.nombreCompleto = this.cliente.nombre + " " + this.cliente.apellidoPaterno + " " + this.cliente.apellidoMaterno
-  //}
+   
    }
    ngOnChanges(changes: SimpleChange): void {
     this.movimiento = this._movimiento
-    ///this.consultarAbonos()
+ 
    
   }
   ngOnInit(): void {
@@ -85,12 +79,7 @@ export class EnvioComponent implements OnInit {
         for(let ubicacion of response.respuesta){
           this.listUbicaciones.push(ubicacion)
         }
-        if(this.variablesGL.getSucursal()){
-          let ubiPreselected = this.listUbicaciones.find(x => x.direccion == this.variablesGL.getSucursal());
-
-          //this.idUbicacionpara= ubiPreselected.idUbicacion.toString();
-          console.log("data")
-        }
+      
       }
     }, err => {
   

@@ -11,6 +11,8 @@ export class MovimientosInventarioModel {
     direccion?: string;
     usuarioRecibe?: string;
     usuarioEnvia?: string;
+    ubicacionDestino?: number;
+    ubicacionDestinodesc:string;
     movimientoArticulos?: MovimientoArticuloModel[];
 }
 
