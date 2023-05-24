@@ -1,10 +1,9 @@
 import { Component, OnInit ,Input, Output,EventEmitter,SimpleChange} from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CambiosDevolucionesModel } from 'src/app/models/cambios-devoluciones.model';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
-
+import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { productoModel } from 'src/app/models/productos.model';
 import { imagen64 } from '../../inventario/inventario.component';
@@ -48,6 +47,8 @@ export class EnvioComponent implements OnInit {
     private inventarioService: InventarioService,
     private movientosService : MovimientosService,
     private toastr: ToastrService,
+    private confirmationService: ConfirmationService, 
+    private messageService: MessageService
     ) {
     this.cols = [
       { field: '', header: 'Imagen' },
@@ -71,14 +72,11 @@ export class EnvioComponent implements OnInit {
     }else{
       this.rows = 7;
     }
-   
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
       this.visibleDialog = estado;
   });
 
     this.movimiento = this._movimiento
-    
-  
    }
 
    ngOnChanges(changes: SimpleChange): void { 
@@ -115,12 +113,8 @@ export class EnvioComponent implements OnInit {
 
 
   onChangeInventario(event) {
-    //console.log('event :' + event);
-    //console.log(event.value);
     this.ubicacionDeSeleccionada = event.value
-    ///this.idUbicacionpara=this.ubicacionDeSeleccionada.direccion
     this.getArticulos(this.ubicacionDeSeleccionada.direccion);
-    //console.log(this.ubicacionDeSeleccionada)
 }
 
 onChangeDestino(event){
@@ -137,14 +131,11 @@ viewCodebar(producto : productoModel){
 }
 
 getArticulos(filtro:string) {
-  //console.log("Articulos")
   this.loading = true;
   this.inventarioService.SearchProductFilterUbicacion(filtro).subscribe(response => {
     console.log(response)
     if (response.exito) {
-      //console.log(response.exito)
       this.listArticulos = response.respuesta;
-      //console.log(this.listArticulos)
       this.loading = false;
       for (let art of this.listArticulos) {
         this.imagenes.push({ id: art.idArticulo, imagen64c: art.imagen })
@@ -165,32 +156,54 @@ getArticulos(filtro:string) {
   }
 
   registraEnvio(){
-    let date = formatDate(new Date(), 'yyyy/MM/dd', 'en').toString()
-    let newMovimiento = new MovimientosInventarioModel();
-    newMovimiento.fecha = date
-    newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion
-    newMovimiento.status = "Envio"
-    newMovimiento.receptor = 1
-    newMovimiento.usuario = 4
-    newMovimiento.direccion = this.ubicacionDeSeleccionada.direccion
-    newMovimiento.ubicacionDestino = this.ubicacionDestinoSeleccionada.idUbicacion
-    newMovimiento.usuarioEnvia = this.ubicacionDeSeleccionada.nombreEncargado
-    newMovimiento.usuarioRecibe = this.ubicacionDestinoSeleccionada.nombreEncargado
-    newMovimiento.movimientoArticulos = []
-    console.log(newMovimiento)
-    this.movientosService.addMovimiento(newMovimiento).subscribe(response => {
-      console.log(response)
-      if (response.exito) {
-        this.hideDialog()
-        this.toastr.success("Envio Registrado Correctamente",'Correcto');
-        setTimeout(() => {
-          this.saveEnvio.emit(true);
-        }, 100);
+
+    this.confirmationService.confirm({
+      message: 'Esta seguro de realizar el movimiento de inventario?',
+      header: 'Confirmacion de Envio',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+          this.messageService.add({ severity: 'success', summary: 'Confirmado', detail: 'has aceptado el envio ' });
+      },
+      reject: (type) => {
+          switch (type) {
+              case ConfirmEventType.REJECT:
+                  this.messageService.add({ severity: 'error', summary: 'cancelado', detail: 'Cancelo el envio de mercancia' });
+                  break;
+              case ConfirmEventType.CANCEL:
+                  this.messageService.add({ severity: 'warn', summary: 'cancelado', detail: 'No confirmo el envio' });
+                  break;
+          }
       }
-    }, err => {
-      this.toastr.error("Error",'Error en los servicios');
-      ///this.loading = false;
-    });
+  });
+
+    // let date = formatDate(new Date(), 'dd/MM/yyyy', 'en').toString()
+    // let newMovimiento = new MovimientosInventarioModel();
+    // newMovimiento.fecha = date
+    // newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion
+    // newMovimiento.status = "Envio"
+    // newMovimiento.receptor = 1
+    // newMovimiento.usuario = 4
+    // newMovimiento.direccion = this.ubicacionDeSeleccionada.direccion
+    // newMovimiento.ubicacionDestino = this.ubicacionDestinoSeleccionada.idUbicacion
+    // newMovimiento.usuarioEnvia = this.ubicacionDeSeleccionada.nombreEncargado
+    // newMovimiento.usuarioRecibe = this.ubicacionDestinoSeleccionada.nombreEncargado
+    // newMovimiento.movimientoArticulos = []
+    // console.log(newMovimiento)
+    // this.movientosService.addMovimiento(newMovimiento).subscribe(response => {
+    //   console.log(response)
+    //   if (response.exito) {
+    //     this.hideDialog()
+    //     this.toastr.success("Envio Registrado Correctamente",'Correcto');
+    //     setTimeout(() => {
+    //       this.saveEnvio.emit(true);
+    //     }, 100);
+    //   }
+    // }, err => {
+    //   this.toastr.error("Error",'Error en los servicios');
+    //   ///this.loading = false;
+    // });
     
   }
+
+
 }
