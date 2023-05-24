@@ -19,12 +19,13 @@ export class MovimientoArticuloModel {
     idCambioArticulo: number;
     idMovimiento: number;
     idArticulo: number;
-    sku?: number;
+    sku?: string;
     idUbicacion: number;
     idCategoria: string;
-    idTalla: string;
+    idTalla: number;
     existencia: number;
-    descripcion: number;
-    fechaIngreso?: number;
-    ubicacion?: productoModel;
+    descripcion: String;
+    fechaIngreso?: String;
+    // Todo : Cambio por string preguntar
+    ubicacion?: String;
 }

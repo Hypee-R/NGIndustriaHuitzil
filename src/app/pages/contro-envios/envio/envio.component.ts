@@ -12,6 +12,7 @@ import { MovimientosInventarioModel } from 'src/app/models/movimientos-inventari
 import {formatDate} from '@angular/common';
 import { MovimientosService } from 'src/app/services/movimientos.service';
 import { Toast, ToastrService } from 'ngx-toastr';
+import { MovimientoArticuloModel } from 'src/app/models/movimientos-inventario.model';
 
 @Component({
   selector: 'app-envio',
@@ -24,7 +25,7 @@ export class EnvioComponent implements OnInit {
   @Output() saveEnvio: EventEmitter<boolean> = new EventEmitter<boolean>();
   statusPantalla: number
   rows = 0;
-  selectedArticulos: productoModel[];
+  selectedArticulos: productoModel[] = [];
   visibleDialog: boolean;
   dialogSubscription: Subscription = new Subscription();
   submitted = false;
