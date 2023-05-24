@@ -113,13 +113,18 @@ export class EnvioComponent implements OnInit {
 
 
   onChangeInventario(event) {
-    this.ubicacionDeSeleccionada = event.value
-    this.getArticulos(this.ubicacionDeSeleccionada.direccion);
+      this.ubicacionDeSeleccionada = event.value
+      this.getArticulos(event.value.direccion);
 }
 
-onChangeDestino(event){
+
+onChangeDestino(event) {
   console.log(event.value)
+  
   this.ubicacionDestinoSeleccionada = event.value
+  this.idUbicacionde= this.ubicacionDestinoSeleccionada.nombreEncargado
+  +" "+this.ubicacionDestinoSeleccionada.apellidoPEncargado
+     +" "+this.ubicacionDestinoSeleccionada.apellidoMEncargado
 }
 
 viewCodebar(producto : productoModel){
