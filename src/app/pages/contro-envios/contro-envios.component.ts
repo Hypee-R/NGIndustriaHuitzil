@@ -74,6 +74,8 @@ export class ControEnviosComponent implements OnInit {
 
   showDetail(movimiento :MovimientosInventarioModel){
     this.selectedMovimiento = movimiento
+
+    console.log( this.selectedMovimiento)
     this.accion = 'Actualizar';
     this.openModal = 'Actualizar'
     setTimeout(() => {

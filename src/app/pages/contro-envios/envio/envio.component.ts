@@ -77,12 +77,14 @@ export class EnvioComponent implements OnInit {
   });
     this.accion = this._accion
     this.movimiento = this._movimiento
-   
+   console.log(    this.movimiento )
    }
 
 ngOnChanges(changes: SimpleChange): void {
     this.accion = this._accion
     console.log(this.accion)
+
+    console.log(this.movimiento)
     if(this.accion == "Registrar") this.movimiento = new MovimientosInventarioModel();
     if(this._movimiento) this.movimiento = this._movimiento
 
@@ -127,6 +129,8 @@ ngOnChanges(changes: SimpleChange): void {
         this.listUbicaciones = response.respuesta
         /*for(let ubicacion of response.respuesta){
           this.listUbicaciones.push(ubicacion)
+        }
+      
         }*/
         if(this.variablesGL.getSucursal()){
           let ubiPreselected = this.listUbicaciones.find(x => x.direccion == this.variablesGL.getSucursal());
@@ -185,6 +189,39 @@ getArticulos(filtro:string) {
 
   validaEnvio(){
     console.log(this.movimiento)
+    this.movimiento.status='ubicacion'
+    this.confirmationService.confirm({
+      message: 'Esta seguro de realizar el movimiento de inventario?',
+      header: 'Confirmacion de Envio',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.movientosService.cerrarMovimiento(this.movimiento).subscribe(response => {
+          console.log(response)
+          if (response.exito) {
+            this.hideDialog()
+            this.messageService.add({ severity: 'success', summary: 'Confirmado', detail: 'has validado el recibo' });
+          
+            setTimeout(() => {
+              this.saveEnvio.emit(true);
+            }, 100);
+          }
+        }, err => {
+          this.toastr.error("Error",'Error en los servicios');
+        });
+        
+
+        },
+      reject: (type) => {
+          switch (type) {
+              case ConfirmEventType.REJECT:
+                  this.messageService.add({ severity: 'error', summary: 'cancelado', detail: 'Cancelo el envio de mercancia' });
+                  break;
+              case ConfirmEventType.CANCEL:
+                  this.messageService.add({ severity: 'warn', summary: 'cancelado', detail: 'No confirmo el envio' });
+                  break;
+          }
+      }
+  });
   }
 
   registraEnvio(){
@@ -220,13 +257,13 @@ getArticulos(filtro:string) {
   }
 
   addMovimiento(){
-   let date = formatDate(new Date(), 'yyyy/MM/dd', 'en').toString()
+   let date = formatDate(new Date(), 'yyyy-MM-dd', 'en').toString()
     let newMovimiento = new MovimientosInventarioModel();
     let movimientosArticulos : MovimientoArticuloModel []= []
    
     console.log(this.selectedArticulos)
 
-    newMovimiento.fecha = this.CurrentDate.toString()
+    newMovimiento.fecha = date
     newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion
     newMovimiento.status = "Envio"
     newMovimiento.receptor = 1
@@ -243,8 +280,9 @@ getArticulos(filtro:string) {
       let newMovimientoArticulo =  new MovimientoArticuloModel()
       newMovimientoArticulo.idArticulo = articulo.idArticulo
       newMovimientoArticulo.sku = articulo.sku
+      newMovimientoArticulo.idCategoria = articulo.idCategoria.toString()
       newMovimientoArticulo.idUbicacion =  this.ubicacionDeSeleccionada.idUbicacion
-      newMovimientoArticulo.existencia = Number(articulo.existencia)
+      newMovimientoArticulo.existencia =2
       newMovimientoArticulo.idTalla = articulo.idTalla
       newMovimientoArticulo.descripcion = articulo.descripcion
       newMovimientoArticulo.fechaIngreso  = articulo.fechaIngreso
