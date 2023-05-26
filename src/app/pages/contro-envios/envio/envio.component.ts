@@ -225,12 +225,30 @@ getArticulos(filtro:string) {
   }
 
   registraEnvio(){
+    let valido = true
     if(this.ubicacionDeSeleccionada == undefined || this.ubicacionDestinoSeleccionada == undefined){
       this.toastr.error("Error","Selecciona una dirección de envio y una  dirección de destino")
       return
     }
     if(this.selectedArticulos.length == 0){
       this.toastr.error("Error","Debe selecionar al menos un articulo")
+      return
+    }
+
+    this.selectedArticulos.forEach(articulo => {
+      if(articulo.valueIn == null || articulo.valueIn == undefined ){
+        this.toastr.error("Error","Debe agregar una cantidad a " + articulo.descripcion)
+        valido = false
+        return
+      }
+      if(articulo.valueIn == 0){
+        this.toastr.error("Error","Debe agregar una cantidad mayor a 0 " + articulo.descripcion)
+        valido = false
+        return
+      }
+    })
+
+    if(!valido){
       return
     }
     this.confirmationService.confirm({
@@ -261,7 +279,7 @@ getArticulos(filtro:string) {
     let newMovimiento = new MovimientosInventarioModel();
     let movimientosArticulos : MovimientoArticuloModel []= []
    
-    console.log(this.selectedArticulos)
+    //console.log(this.selectedArticulos)
 
     newMovimiento.fecha = date
     newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion
@@ -282,7 +300,7 @@ getArticulos(filtro:string) {
       newMovimientoArticulo.sku = articulo.sku
       newMovimientoArticulo.idCategoria = articulo.idCategoria.toString()
       newMovimientoArticulo.idUbicacion =  this.ubicacionDeSeleccionada.idUbicacion
-      newMovimientoArticulo.existencia =2
+      newMovimientoArticulo.existencia = articulo.valueIn
       newMovimientoArticulo.idTalla = articulo.idTalla
       newMovimientoArticulo.descripcion = articulo.descripcion
       newMovimientoArticulo.fechaIngreso  = articulo.fechaIngreso
