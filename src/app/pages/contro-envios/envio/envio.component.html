@@ -190,7 +190,10 @@
                
             </div>
             <div class="col-sm">
-
+                <br>
+                <input   *ngIf="accion!= 'Registrar'" pInputText type="text"
+              
+                placeholder="Conteo Inventario" [style]="{'width': '100%'}" />
             </div>
             <div class="col-sm" >
                 <p-button *ngIf="accion== 'Registrar'" icon="pi pi-send" label="Registrar Envio" styleClass="p-button-text"
