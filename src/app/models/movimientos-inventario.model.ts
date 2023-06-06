@@ -12,6 +12,7 @@ export class MovimientosInventarioModel {
     direccion?: string;
     usuarioRecibe?: string;
     usuarioEnvia?: string;
+    ubicacionDestinodesc:string;
     movimientoArticulos?: MovimientoArticuloModel[];
 }
 
@@ -24,8 +25,8 @@ export class MovimientoArticuloModel {
     idCategoria: string;
     idTalla: number;
     existencia: number;
-    descripcion: String;
-    fechaIngreso?: String;
+    descripcion: string;
+    fechaIngreso?: string;
     // Todo : Cambio por string preguntar
-    ubicacion?: String;
+    ubicacion?: string;
 }

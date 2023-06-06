@@ -75,32 +75,63 @@ export class EnvioComponent implements OnInit {
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
       this.visibleDialog = estado;
   });
-
+    this.accion = this._accion
     this.movimiento = this._movimiento
+   console.log(    this.movimiento )
    }
 
-   ngOnChanges(changes: SimpleChange): void { 
+ngOnChanges(changes: SimpleChange): void {
     this.accion = this._accion
     console.log(this.accion)
-    if(this.accion == "Registrar"){
-      this.movimiento = new MovimientosInventarioModel();
+
+    console.log(this.movimiento)
+    if(this.accion == "Registrar") this.movimiento = new MovimientosInventarioModel();
+    if(this._movimiento) this.movimiento = this._movimiento
+
+    if(this.accion == "Actualizar"){
+      this.getArticulosMovimientos()
     }
-    if(this.movimiento){
-    this.movimiento = this._movimiento}
-    //this.getUbicaciones()
+    else{
+      this.listArticulos = []
+      this.getUbicaciones()
+    }
   }
   ngOnInit(): void {
-   this.getUbicaciones()
+  
+   if(this.accion == "Actualizar"){
+      this.getArticulosMovimientos()
+   }
+   else{
+    this.listArticulos = []
+    this.getUbicaciones()
+   }
   }
+
+  getArticulosMovimientos(){
+    this.listArticulos = []
+    this.movimiento.movimientoArticulos.forEach(articulo =>{
+      let ar = new productoModel
+      ar.sku = articulo.sku
+      ar.descripcion = articulo.descripcion
+      ar.existencia = articulo.existencia.toString()
+      ar.ubicacion = articulo.ubicacion
+      this.listArticulos.push(ar)
+    })
+  }
+
+
 
   getUbicaciones(){
     this.listUbicaciones.shift()
     console.log(this.movimiento)
     this.ubicacionesService.getUbicaciones().subscribe(response => {
       if(response.exito){
-        for(let ubicacion of response.respuesta){
+        this.listUbicaciones = response.respuesta
+        /*for(let ubicacion of response.respuesta){
           this.listUbicaciones.push(ubicacion)
         }
+      
+        }*/
         if(this.variablesGL.getSucursal()){
           let ubiPreselected = this.listUbicaciones.find(x => x.direccion == this.variablesGL.getSucursal());
           console.log("data")
@@ -112,14 +143,19 @@ export class EnvioComponent implements OnInit {
   }
 
 
-  onChangeInventario(event) {
+onChangeInventario(event) {
     this.ubicacionDeSeleccionada = event.value
     this.getArticulos(this.ubicacionDeSeleccionada.direccion);
 }
 
-onChangeDestino(event){
+
+onChangeDestino(event) {
   console.log(event.value)
+  
   this.ubicacionDestinoSeleccionada = event.value
+  this.idUbicacionde= this.ubicacionDestinoSeleccionada.nombreEncargado
+  +" "+this.ubicacionDestinoSeleccionada.apellidoPEncargado
+     +" "+this.ubicacionDestinoSeleccionada.apellidoMEncargado
 }
 
 viewCodebar(producto : productoModel){
@@ -153,15 +189,66 @@ getArticulos(filtro:string) {
 
   validaEnvio(){
     console.log(this.movimiento)
+    this.movimiento.status='ubicacion'
+    this.confirmationService.confirm({
+      message: 'Esta seguro de realizar el movimiento de inventario?',
+      header: 'Confirmacion de Envio',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.movientosService.cerrarMovimiento(this.movimiento).subscribe(response => {
+          console.log(response)
+          if (response.exito) {
+            this.hideDialog()
+            this.messageService.add({ severity: 'success', summary: 'Confirmado', detail: 'has validado el recibo' });
+          
+            setTimeout(() => {
+              this.saveEnvio.emit(true);
+            }, 100);
+          }
+        }, err => {
+          this.toastr.error("Error",'Error en los servicios');
+        });
+        
+
+        },
+      reject: (type) => {
+          switch (type) {
+              case ConfirmEventType.REJECT:
+                  this.messageService.add({ severity: 'error', summary: 'cancelado', detail: 'Cancelo el envio de mercancia' });
+                  break;
+              case ConfirmEventType.CANCEL:
+                  this.messageService.add({ severity: 'warn', summary: 'cancelado', detail: 'No confirmo el envio' });
+                  break;
+          }
+      }
+  });
   }
 
   registraEnvio(){
+    let valido = true
     if(this.ubicacionDeSeleccionada == undefined || this.ubicacionDestinoSeleccionada == undefined){
       this.toastr.error("Error","Selecciona una dirección de envio y una  dirección de destino")
       return
     }
     if(this.selectedArticulos.length == 0){
       this.toastr.error("Error","Debe selecionar al menos un articulo")
+      return
+    }
+
+    this.selectedArticulos.forEach(articulo => {
+      if(articulo.valueIn == null || articulo.valueIn == undefined ){
+        this.toastr.error("Error","Debe agregar una cantidad a " + articulo.descripcion)
+        valido = false
+        return
+      }
+      if(articulo.valueIn == 0){
+        this.toastr.error("Error","Debe agregar una cantidad mayor a 0 " + articulo.descripcion)
+        valido = false
+        return
+      }
+    })
+
+    if(!valido){
       return
     }
     this.confirmationService.confirm({
@@ -188,11 +275,11 @@ getArticulos(filtro:string) {
   }
 
   addMovimiento(){
-    let date = formatDate(new Date(), 'yyyy/MM/dd', 'en').toString()
+   let date = formatDate(new Date(), 'yyyy-MM-dd', 'en').toString()
     let newMovimiento = new MovimientosInventarioModel();
     let movimientosArticulos : MovimientoArticuloModel []= []
    
-    console.log(this.selectedArticulos)
+    //console.log(this.selectedArticulos)
 
     newMovimiento.fecha = date
     newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion
@@ -211,8 +298,9 @@ getArticulos(filtro:string) {
       let newMovimientoArticulo =  new MovimientoArticuloModel()
       newMovimientoArticulo.idArticulo = articulo.idArticulo
       newMovimientoArticulo.sku = articulo.sku
+      newMovimientoArticulo.idCategoria = articulo.idCategoria.toString()
       newMovimientoArticulo.idUbicacion =  this.ubicacionDeSeleccionada.idUbicacion
-      newMovimientoArticulo.existencia = Number(articulo.existencia)
+      newMovimientoArticulo.existencia = articulo.valueIn
       newMovimientoArticulo.idTalla = articulo.idTalla
       newMovimientoArticulo.descripcion = articulo.descripcion
       newMovimientoArticulo.fechaIngreso  = articulo.fechaIngreso

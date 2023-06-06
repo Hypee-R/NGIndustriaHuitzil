@@ -22,33 +22,18 @@ export interface imagen64 {
 })
 export class ControEnviosComponent implements OnInit {
   statusPantalla: number
-  listArticulos: productoModel[] ;
   loading: boolean = false;
-  imagenes: imagen64[] = []
-  list2: productoModel[];
   rows = 0;
   lstMovimientos: MovimientosInventarioModel[]=[];
-  selectedArticulos: productoModel[];
   accion = '';
-  selectedArticulo: productoModel = new productoModel();
-  cols: any[] = [];
+
 
   openModal = ''
   selectedMovimiento : MovimientosInventarioModel;
 
-  constructor( private primengConfig: PrimeNGConfig,   public variablesGL: VariablesService,    private cambiosDevolucionesService: VentasService,
-    private inventarioService: InventarioService,    private ubicacionesService:UbicacionesService,private movimientosService:MovimientosService) {
-      this.cols = [
-        { field: '', header: 'Imagen' },
-        { field: 'sku', header: 'SKU' },
-        { field: 'descripcion', header: 'Descripcion' },
-        { field: 'existencia', header: 'Existencia' },
-        { field: 'talla', header: 'Talla' },
-        { field: 'ubicacion', header: 'Ubicacion' },
-        { field: 'precio', header: 'precio' },
-        { field: '', header: 'Etiqueta'},
-        { field: '', header: 'Cantidad Envio'}
-      ];
+  constructor( private primengConfig: PrimeNGConfig,   public variablesGL: VariablesService
+    ,private movimientosService:MovimientosService) {
+   
       this.statusPantalla = this.variablesGL.getStatusPantalla();
       let status = this.variablesGL.getPantalla();
       if(status == 'celular'){
@@ -63,28 +48,18 @@ export class ControEnviosComponent implements OnInit {
      }
 
   ngOnInit(): void {
-   // getArticulos(filtro:string)
-    // this.list1 = //initialize list 1
-       this.list2 = [];//initialize list 2
+ 
        this.getMovimientos();
    
   }
  
 
-
-  viewCodebar(producto : productoModel){
-    this.accion = 'Codigo de Barras'
-    this.selectedArticulo = { ...producto };
-    setTimeout(() => {
-      this.variablesGL.showDialog.next(true);
-    }, 100);
-  }
  
   getMovimientos(){
     this.loading = true;
     this.movimientosService.getallMovimientos().subscribe(response => {
       if(response.exito){
-        console.log(response.respuesta)
+        //console.log(response.respuesta)
         this.lstMovimientos = response.respuesta
         this.loading = false;
         
@@ -99,6 +74,8 @@ export class ControEnviosComponent implements OnInit {
 
   showDetail(movimiento :MovimientosInventarioModel){
     this.selectedMovimiento = movimiento
+
+    console.log( this.selectedMovimiento)
     this.accion = 'Actualizar';
     this.openModal = 'Actualizar'
     setTimeout(() => {
@@ -107,8 +84,6 @@ export class ControEnviosComponent implements OnInit {
   
   } 
 
-
-  
   showDetailAdd(){
     this.accion = 'Registrar';
     this.openModal = 'Registrar'

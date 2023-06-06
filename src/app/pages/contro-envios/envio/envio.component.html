@@ -12,17 +12,19 @@
             <div class="row">
                 <div class="col-sm">
 
-                    <h5 *ngIf="accion!= 'Registrar'">Folio:<p-badge [value]="1" severity="danger" size="large"
-                            styleClass="mr-2"></p-badge></h5>
-                    <h5>Folio: <p-badge *ngIf="accion == 'Registrar'" [value]="etiqueta" severity="info" size="large"
-                            styleClass="mr-2"></p-badge> </h5>
+                    <h5 *ngIf="accion!= 'Registrar'">Folio: <p-badge *ngIf="accion!= 'Registrar'" [value]="movimiento.idMovimiento" severity="danger"  size="large" styleClass="mr-2"></p-badge></h5>
+                    <h5 *ngIf="accion == 'Registrar'">Folio: <p-badge *ngIf="accion == 'Registrar'" [value]="etiqueta" severity="info" size="large" styleClass="mr-2"></p-badge> </h5>
                 </div>
-                <div class="col-sm" *ngIf="movimiento != undefined ">
-                    <p-badge value="{{movimiento.status}}" size="large" severity="warning"></p-badge>
+                <div class="col-sm" *ngIf="accion!= 'Registrar'">
+                    <p-badge *ngIf="movimiento.status == 'Entregado'" value="{{movimiento.status}}" size="large"
+                        severity="warning"></p-badge>
+                    <p-badge *ngIf="movimiento.status == 'Envio'" value="{{movimiento.status}}" size="large"
+                        severity="info"></p-badge>
                 </div>
 
                 <div class="col-sm">
-                    <h5>Fecha: {{CurrentDate | date:'dd/MM/yyyy, hh:mm a'}}</h5>
+                    <h5 *ngIf="accion!= 'Registrar'">Fecha: {{movimiento.fecha | date:'dd/MM/yyyy, hh:mm a'}}</h5>
+                    <h5 *ngIf="accion == 'Registrar'">Fecha: {{CurrentDate | date:'dd/MM/yyyy, hh:mm a'}}</h5>
                 </div>
 
             </div>
@@ -31,8 +33,8 @@
                     <h5>Tipo Paquete:</h5><input type="text" pInputText />
                 </div>
                 <div class="col-sm">
-                    <h5>Responsable Destino:</h5><p-chip label="{{this.idUbicacionde}}" ></p-chip>
-
+                    <h5 *ngIf="accion== 'Registrar'">Responsable Destino:</h5><p-chip  *ngIf="accion== 'Registrar'"label="{{this.idUbicacionde}}"></p-chip>
+                    <h5 *ngIf="accion!= 'Registrar'">Responsable Destino:</h5><p-chip *ngIf="accion!= 'Registrar'" label="{{movimiento.usuarioRecibe}}"></p-chip>
                 </div>
             </div>
             <p-divider align="center">
@@ -40,15 +42,18 @@
             </p-divider>
             <div class="row">
                 <div class="col-sm">
-                    <h5>Envio de:</h5> <p-dropdown [options]="listUbicaciones" (onChange)="onChangeInventario($event)"
-                        optionLabel="direccion"  placeholder="Selecciona una ubicacion"
-                        optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
+                    <h5  *ngIf="accion!= 'Registrar'">Envio de:</h5>  <p-chip *ngIf="accion!= 'Registrar'" label="{{movimiento.direccion}}"></p-chip>
+
+                    <h5  *ngIf="accion== 'Registrar'" >Envio de:</h5> <p-dropdown *ngIf="accion== 'Registrar'" [options]="listUbicaciones" (onChange)="onChangeInventario($event)"
+                        optionLabel="direccion" placeholder="Selecciona una ubicacion" optionLabel="direccion"
+                        [style]="{'width': '100%'}"></p-dropdown>
 
                 </div>
 
                 <div class="col-sm">
-                    <h5>Para:</h5>
-                    <p-dropdown [options]="listUbicaciones" (onChange)="onChangeDestino($event)"
+                    <h5  *ngIf="accion!= 'Registrar'">Para:</h5> <p-chip *ngIf="accion!= 'Registrar'" label="{{movimiento.ubicacionDestinodesc}}"></p-chip>
+                    <h5 *ngIf="accion== 'Registrar'" >Para:</h5>
+                    <p-dropdown *ngIf="accion== 'Registrar'"  [options]="listUbicaciones" (onChange)="onChangeDestino($event)"
                         [(ngModel)]="idUbicacionpara" optionLabel="idUbicacion" placeholder="Selecciona una ubicacion"
                         optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
 
@@ -74,20 +79,7 @@
                                     <br>
                                     <div class="row">
                                         <div class="col col-md-7">
-                                            <div class="row">
-                                                <!-- <div class="col">
-                                                <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
-                                            </div>
-                                            <div class="col">
-                                                <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m" [disabled]="!selectedArticulos || !selectedArticulos.length"></button>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-control " type="file" id="formFileDisabled"   #fileImportInput name="File Upload"  id="txtFileUpload" (change)="fileChangeListener($event)" accept=".csv"/>
-                                            </div> -->
-                                                <!-- <div class="col">
-                                                <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"(click)="Excel()" style="margin-left: 10px;"></button>
-                                            </div> -->
-                                            </div>
+
                                         </div>
                                         <div class="col col-md-5">
                                             <span class="p-input-icon-left" style="width: 100%;">
@@ -166,7 +158,7 @@
                                             (click)="viewCodebar(rowData)"></button>
                                     </td>
                                     <td>
-                                        <p-inputNumber inputId="integeronly"> </p-inputNumber>
+                                        <p-inputNumber inputId="integeronly"  [(ngModel)]= rowData.valueIn> </p-inputNumber>
                                     </td>
                                 </tr>
                             </ng-template>
@@ -194,15 +186,19 @@
 
     <ng-template pTemplate="footer">
         <div class="row">
-            <div class="col-sm">
-                <p-button icon="pi pi-send" label="Registrar Envio" styleClass="p-button-text"
-                    (onClick)="registraEnvio()"></p-button>
+            <div class="col-sm" >
+               
             </div>
             <div class="col-sm">
-
+                <br>
+                <input   *ngIf="accion!= 'Registrar'" pInputText type="text"
+              
+                placeholder="Conteo Inventario" [style]="{'width': '100%'}" />
             </div>
-            <div class="col-sm">
-                <p-button icon="pi pi-check" label="Validar envio" styleClass="p-button-text"
+            <div class="col-sm" >
+                <p-button *ngIf="accion== 'Registrar'" icon="pi pi-send" label="Registrar Envio" styleClass="p-button-text"
+                (onClick)="registraEnvio()"></p-button>
+                <p-button *ngIf="accion!= 'Registrar'" icon="pi pi-check" label="Validar envio" styleClass="p-button-text"
                     (onClick)="validaEnvio()"></p-button>
             </div>
 
@@ -216,8 +212,10 @@
     <p-toast></p-toast>
     <p-confirmDialog #cd [style]="{width: '50vw'}">
         <ng-template pTemplate="footer">
-            <button type="button" class="p-button-danger" pButton icon="pi pi-times" label="cancelar" (click)="cd.reject()"></button>
-            <button type="button" class="p-button-success" pButton icon="pi pi-check" label="cerrar Guia" (click)="cd.accept()"></button>
+            <button type="button" class="p-button-danger" pButton icon="pi pi-times" label="cancelar"
+                (click)="cd.reject()"></button>
+            <button type="button" class="p-button-success" pButton icon="pi pi-check" label="cerrar Guia"
+                (click)="cd.accept()"></button>
         </ng-template>
     </p-confirmDialog>
 </div>

@@ -16,6 +16,7 @@ export class productoModel{
   imagen:string;
   precio:number;
   sku: string;
+  valueIn? : number
     constructor(){
     this.idArticulo = 0;
     this.status = '';
