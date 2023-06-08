@@ -12,6 +12,7 @@ export class MovimientosInventarioModel {
     direccion?: string;
     usuarioRecibe?: string;
     usuarioEnvia?: string;
+    tipoPaquete?:string;
     ubicacionDestinodesc:string;
     movimientoArticulos?: MovimientoArticuloModel[];
 }

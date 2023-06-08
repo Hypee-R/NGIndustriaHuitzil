@@ -30,7 +30,9 @@
             </div>
             <div class="row">
                 <div class="col-sm">
-                    <h5>Tipo Paquete:</h5><input type="text" pInputText />
+                    <h5 *ngIf="accion== 'Registrar'">Tipo Paquete:</h5><input *ngIf="accion== 'Registrar'"  type="text" pInputText value="{{movimiento.tipoPaquete}}"/>
+                    <h5 *ngIf="accion!= 'Registrar'">Tipo Paquete:</h5><p-chip *ngIf="accion!= 'Registrar'" label="{{movimiento.tipoPaquete}}"></p-chip>
+            
                 </div>
                 <div class="col-sm">
                     <h5 *ngIf="accion== 'Registrar'">Responsable Destino:</h5><p-chip  *ngIf="accion== 'Registrar'"label="{{this.idUbicacionde}}"></p-chip>
