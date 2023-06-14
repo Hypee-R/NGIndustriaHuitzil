@@ -46,7 +46,7 @@
                 <div class="col-sm">
                     <h5  *ngIf="accion!= 'Registrar'">Envio de:</h5>  <p-chip *ngIf="accion!= 'Registrar'" label="{{movimiento.direccion}}"></p-chip>
 
-                    <h5  *ngIf="accion== 'Registrar'" >Envio de:</h5> <p-dropdown *ngIf="accion== 'Registrar'" [options]="listUbicaciones" (onChange)="onChangeInventario($event)"
+                    <h5  *ngIf="accion== 'Registrar'" >Envio de:</h5> <p-dropdown appendTo="body" *ngIf="accion== 'Registrar'" [options]="listUbicaciones" (onChange)="onChangeInventario($event)"
                         optionLabel="direccion" placeholder="Selecciona una ubicacion" optionLabel="direccion"
                         [style]="{'width': '100%'}"></p-dropdown>
 
@@ -55,7 +55,7 @@
                 <div class="col-sm">
                     <h5  *ngIf="accion!= 'Registrar'">Para:</h5> <p-chip *ngIf="accion!= 'Registrar'" label="{{movimiento.ubicacionDestinodesc}}"></p-chip>
                     <h5 *ngIf="accion== 'Registrar'" >Para:</h5>
-                    <p-dropdown *ngIf="accion== 'Registrar'"  [options]="listUbicaciones" (onChange)="onChangeDestino($event)"
+                    <p-dropdown appendTo="body" *ngIf="accion== 'Registrar'"  [options]="listUbicaciones" (onChange)="onChangeDestino($event)"
                         [(ngModel)]="idUbicacionpara" optionLabel="idUbicacion" placeholder="Selecciona una ubicacion"
                         optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
 
