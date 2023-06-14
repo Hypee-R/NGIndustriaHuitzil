@@ -127,11 +127,7 @@ ngOnChanges(changes: SimpleChange): void {
     this.ubicacionesService.getUbicaciones().subscribe(response => {
       if(response.exito){
         this.listUbicaciones = response.respuesta
-        /*for(let ubicacion of response.respuesta){
-          this.listUbicaciones.push(ubicacion)
-        }
-      
-        }*/
+  
         if(this.variablesGL.getSucursal()){
           let ubiPreselected = this.listUbicaciones.find(x => x.direccion == this.variablesGL.getSucursal());
           console.log("data")
@@ -189,7 +185,7 @@ getArticulos(filtro:string) {
 
   validaEnvio(){
     console.log(this.movimiento)
-    this.movimiento.status='ubicacion'
+    this.movimiento.status='UBICACION'
     this.confirmationService.confirm({
       message: 'Esta seguro de realizar el movimiento de inventario?',
       header: 'Confirmacion de Envio',
@@ -278,33 +274,55 @@ getArticulos(filtro:string) {
    let date = formatDate(new Date(), 'yyyy-MM-dd', 'en').toString()
     let newMovimiento = new MovimientosInventarioModel();
     let movimientosArticulos : MovimientoArticuloModel []= []
-   
-    //console.log(this.selectedArticulos)
+  
 
     newMovimiento.fecha = date
     newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion
-    newMovimiento.status = "Envio"
+    newMovimiento.status = "ENVIO"
     newMovimiento.receptor = 1
     newMovimiento.usuario = 4
     newMovimiento.direccion = this.ubicacionDeSeleccionada.direccion
     newMovimiento.ubicacionDestino = this.ubicacionDestinoSeleccionada.idUbicacion
     newMovimiento.usuarioEnvia = this.ubicacionDeSeleccionada.nombreEncargado
     newMovimiento.usuarioRecibe = this.ubicacionDestinoSeleccionada.nombreEncargado
-   
+    newMovimiento.tipoPaquete ="DHL"
     
+   console.log(this.movimiento)
+   console.log(this.ubicacionDestinoSeleccionada)
+   console.log(this.ubicacionDeSeleccionada)
     /// cambiar por articulos seleccionados
     this.selectedArticulos.forEach(articulo =>
     {
       let newMovimientoArticulo =  new MovimientoArticuloModel()
-      newMovimientoArticulo.idArticulo = articulo.idArticulo
-      newMovimientoArticulo.sku = articulo.sku
-      newMovimientoArticulo.idCategoria = articulo.idCategoria.toString()
-      newMovimientoArticulo.idUbicacion =  this.ubicacionDeSeleccionada.idUbicacion
-      newMovimientoArticulo.existencia = articulo.valueIn
-      newMovimientoArticulo.idTalla = articulo.idTalla
-      newMovimientoArticulo.descripcion = articulo.descripcion
-      newMovimientoArticulo.fechaIngreso  = articulo.fechaIngreso
-      newMovimientoArticulo.ubicacion = articulo.ubicacion
+
+
+      newMovimientoArticulo. idArticulo = articulo.idArticulo
+      newMovimientoArticulo.status= articulo.status
+      newMovimientoArticulo.existencia= articulo.existencia
+      newMovimientoArticulo.descripcion= articulo.descripcion
+      newMovimientoArticulo.fechaIngreso= articulo.fechaIngreso
+      newMovimientoArticulo.idUbicacion= articulo.idUbicacion
+      newMovimientoArticulo.idCategoria= articulo.idCategoria
+      newMovimientoArticulo.idTalla= articulo.idTalla
+      newMovimientoArticulo.talla= articulo.talla
+      newMovimientoArticulo.ubicacion= articulo.ubicacion
+      newMovimientoArticulo.categoria= articulo.categoria
+      newMovimientoArticulo.imagen= articulo.imagen
+      newMovimientoArticulo.precio= articulo.precio
+      newMovimientoArticulo.sku= articulo.sku
+      newMovimientoArticulo.cantMovimiento= articulo.valueIn
+
+
+
+      // newMovimientoArticulo.idArticulo = articulo.idArticulo
+      // newMovimientoArticulo.sku = articulo.sku
+      // newMovimientoArticulo.idCategoria = articulo.idCategoria.toString()
+      // newMovimientoArticulo.idUbicacion =  this.ubicacionDeSeleccionada.idUbicacion
+      // newMovimientoArticulo.existencia = articulo.valueIn
+      // newMovimientoArticulo.idTalla = articulo.idTalla
+      // newMovimientoArticulo.descripcion = articulo.descripcion
+      // newMovimientoArticulo.fechaIngreso  = articulo.fechaIngreso
+      // newMovimientoArticulo.ubicacion = articulo.ubicacion
       movimientosArticulos.push(newMovimientoArticulo)
     }
     )
