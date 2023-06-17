@@ -23,14 +23,14 @@
                 </div>
 
                 <div class="col-sm">
-                    <h5 *ngIf="accion!= 'Registrar'">Fecha: {{movimiento.fecha | date:'dd/MM/yyyy, hh:mm a'}}</h5>
-                    <h5 *ngIf="accion == 'Registrar'">Fecha: {{CurrentDate | date:'dd/MM/yyyy, hh:mm a'}}</h5>
+                    <h5 *ngIf="accion!= 'Registrar'">Fecha: {{movimiento.fecha | date:'dd/MM/yyyy'}}</h5>
+                    <h5 *ngIf="accion == 'Registrar'">Fecha: {{CurrentDate | date:'dd/MM/yyyy'}}</h5>
                 </div>
 
             </div>
             <div class="row">
                 <div class="col-sm">
-                    <h5 *ngIf="accion== 'Registrar'">Tipo Paquete:</h5><input *ngIf="accion== 'Registrar'" [ngModel]="movimiento.tipoPaquete"  type="text" pInputText value="{{movimiento.tipoPaquete}}"/>
+                    <h5 *ngIf="accion== 'Registrar'">Tipo Paquete:</h5><input *ngIf="accion== 'Registrar'" [ngModel]="this.movimiento.tipoPaquete"  type="text" pInputText value="{{this.movimiento.tipoPaquete}}"/>
                     <h5 *ngIf="accion!= 'Registrar'">Tipo Paquete:</h5><p-chip *ngIf="accion!= 'Registrar'" label="{{movimiento.tipoPaquete}}"></p-chip>
             
                 </div>

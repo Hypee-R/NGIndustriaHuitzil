@@ -1,91 +1,95 @@
 <div [ngClass]="{'container': statusPantalla <= 10}">
-
     <div class="card shadow mb-5 bg-body rounded">
         <div class="card-header text-uppercase">Control de envios de Mercancia e Impresion de codigo de barras</div>
         <span class="lstick"></span>
         <div class="card-body overflow-auto">
             <div class="row ">
-           
-<p-tabView styleClass="tabview-custom">
-    <p-tabPanel>
-        <ng-template pTemplate="header">
-            <i class="pi pi-send"></i>
-            <span>Envios</span>
-        </ng-template>
-        <p-table #dt [value]="lstMovimientos" [rows]="rows" [paginator]="true" dataKey="idCambioDevolucion" [globalFilterFields]="['venta.noTicket']" [responsive]="true" responsiveLayout="scroll" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} cambios y/o devoluciones"
-                        [showCurrentPageReport]="true" styleClass="p-datatable-sm">
-                        <ng-template pTemplate="caption">
-                            <div class="flex align-items-center justify-content-between">
 
-                                <div class="row">
-                                    <div class="col col-md-7">
-                                        <div class="row">
-                                            <div class="col col-md-3">
-                                               <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2"  (click)="showDetailAdd()" ></button>
+                <p-tabView styleClass="tabview-custom">
+                    <p-tabPanel>
+                        <ng-template pTemplate="header">
+                            <i class="pi pi-send"></i>
+                            <span>Envios</span>
+                        </ng-template>
+                        <p-table #dt [value]="lstMovimientos" [rows]="rows" [paginator]="true"
+                            dataKey="idCambioDevolucion" [globalFilterFields]="['venta.noTicket']" [responsive]="true"
+                            responsiveLayout="scroll"
+                            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} cambios y/o devoluciones"
+                            [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                            <ng-template pTemplate="caption">
+                                <div class="flex align-items-center justify-content-between">
+
+                                    <div class="row">
+                                        <div class="col col-md-7">
+                                            <div class="row">
+                                                <div class="col col-md-3">
+                                                    <button pButton pRipple label="Agregar" icon="pi pi-plus"
+                                                        class="p-button-success mr-2"
+                                                        (click)="showDetailAdd()"></button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col col-md-5">
-                                        <span class="p-input-icon-left" style="width: 100%;">
-                                <i class="pi pi-search"></i>
-                                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar por fecha..." [style]="{'width': '100%'}"/>
-                              </span>
+                                        <div class="col col-md-5">
+                                            <span class="p-input-icon-left" style="width: 100%;">
+                                                <i class="pi pi-search"></i>
+                                                <input pInputText type="text"
+                                                    (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                                    placeholder="Buscar por fecha..." [style]="{'width': '100%'}" />
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </ng-template>
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th style="width: 3rem"></th>
-                                <th>Id Movimiento</th>
-                                <th>Fecha</th>
-                                <th>Envia</th>
-                                <th>Ubicacion salida</th>
-                                <th>Recibe</th>
-                                <th>Ubicacion Llegada</th>
-                                <th>Status</th>
-                          
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-cambio let-expanded="expanded">
-                            <tr>
-                                <td>
-                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" pTooltip="Ver Detalles." (click)="showDetail(cambio)" ></button>
-                                </td>
-                                <td>
-                                    <p-badge [value]="cambio.idMovimiento" severity="danger" size="large" styleClass="mr-2"></p-badge>
-                                </td>
-                                <td>{{cambio.fecha | date: 'dd/MM/yyyy, hh:mm a'}}</td>
-                                
-                                <td>
-                                    {{cambio.usuarioEnvia}}
-                                </td>
-                                <td>
-                                   {{cambio.direccion}}
-                                </td>
-                                <td>
-                                    {{cambio.usuarioRecibe}}
-                                </td>
-                                <td>
-                                    {{cambio.ubicacionDestinodesc}}
-                                 
-                                </td>
-                                <td>
-                                    {{cambio.status}}
-                                </td>
-                     
-                     
-                            </tr>
-                        </ng-template>
-                       
-                    </p-table>
-    </p-tabPanel>
-  
-</p-tabView>
+                            </ng-template>
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 3rem"></th>
+                                    <th>Id Movimiento</th>
+                                    <th>Fecha</th>
+                                    <th>Envia</th>
+                                    <th>Ubicacion salida</th>
+                                    <th>Recibe</th>
+                                    <th>Ubicacion Llegada</th>
+                                    <th>Status</th>
+
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cambio let-expanded="expanded">
+                                <tr>
+                                    <td>
+                                        <button pButton pRipple icon="pi pi-pencil"
+                                            class="p-button-rounded p-button-success mr-2" pTooltip="Ver Detalles."
+                                            (click)="showDetail(cambio)"></button>
+                                    </td>
+                                    <td>
+                                        <p-badge [value]="cambio.idMovimiento" severity="danger" size="large"
+                                            styleClass="mr-2"></p-badge>
+                                    </td>
+                                    <td>{{cambio.fecha | date: 'dd/MM/yyyy, hh:mm a'}}</td>
+
+                                    <td>
+                                        {{cambio.usuarioEnvia}}
+                                    </td>
+                                    <td>
+                                        {{cambio.direccion}}
+                                    </td>
+                                    <td>
+                                        {{cambio.usuarioRecibe}}
+                                    </td>
+                                    <td>
+                                        {{cambio.ubicacionDestinodesc}}
+
+                                    </td>
+                                    <td>
+                                        {{cambio.status}}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </p-tabPanel>
+                </p-tabView>
             </div>
-           </div>
+        </div>
     </div>
-    <app-envio (saveEnvio)="getMovimientos()" [(_movimiento)]="selectedMovimiento" [(_accion)]= "accion" *ngIf="accion != ''"></app-envio>   
+    <app-envio (saveEnvio)="getMovimientos()" [(_movimiento)]="selectedMovimiento" [(_accion)]="accion"
+        *ngIf="accion != ''"></app-envio>
 </div>
-
-

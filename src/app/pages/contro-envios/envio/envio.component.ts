@@ -312,33 +312,22 @@ getArticulos(filtro:string) {
       newMovimientoArticulo.sku= articulo.sku
       newMovimientoArticulo.cantMovimiento= articulo.valueIn
 
-
-
-      // newMovimientoArticulo.idArticulo = articulo.idArticulo
-      // newMovimientoArticulo.sku = articulo.sku
-      // newMovimientoArticulo.idCategoria = articulo.idCategoria.toString()
-      // newMovimientoArticulo.idUbicacion =  this.ubicacionDeSeleccionada.idUbicacion
-      // newMovimientoArticulo.existencia = articulo.valueIn
-      // newMovimientoArticulo.idTalla = articulo.idTalla
-      // newMovimientoArticulo.descripcion = articulo.descripcion
-      // newMovimientoArticulo.fechaIngreso  = articulo.fechaIngreso
-      // newMovimientoArticulo.ubicacion = articulo.ubicacion
       movimientosArticulos.push(newMovimientoArticulo)
     }
     )
     newMovimiento.movimientoArticulos = movimientosArticulos
     console.log(newMovimiento)
-    this.movientosService.addMovimiento(newMovimiento).subscribe(response => {
-      console.log(response)
-      if (response.exito) {
-        this.hideDialog()
-        this.toastr.success("Envio Registrado Correctamente",'Correcto');
-        setTimeout(() => {
-          this.saveEnvio.emit(true);
-        }, 100);
-      }
-    }, err => {
-      this.toastr.error("Error",'Error en los servicios');
-    });
+    // this.movientosService.addMovimiento(newMovimiento).subscribe(response => {
+    //   console.log(response)
+    //   if (response.exito) {
+    //     this.hideDialog()
+    //     this.toastr.success("Envio Registrado Correctamente",'Correcto');
+    //     setTimeout(() => {
+    //       this.saveEnvio.emit(true);
+    //     }, 100);
+    //   }
+    // }, err => {
+    //   this.toastr.error("Error",'Error en los servicios');
+    // });
   }
 }
