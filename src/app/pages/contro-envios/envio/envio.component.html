@@ -119,9 +119,7 @@
                                     </td>
                                     <td>
                                         <div style="display: inline-flex">
-                                            <!-- <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editArticulo(rowData)"></button>
-                                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteArticulo(rowData)" style="margin-left: 3px;"></button> -->
-                                        </div>
+                                          </div>
                                     </td>
 
 
@@ -153,14 +151,15 @@
                                     </td>
                                     <td>
                                         {{rowData['precio']}}
+                               
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <button pButton pRipple icon="pi pi-tags"
                                             class="p-button-rounded p-button-rounded" style="margin-left: 3px;"
                                             (click)="viewCodebar(rowData)"></button>
-                                    </td>
+                                    </td> -->
                                     <td>
-                                        <p-inputNumber inputId="integeronly"  [(ngModel)]= rowData.valueIn> </p-inputNumber>
+                                        <p-inputNumber inputId="integeronly"  [(ngModel)]= rowData.cantMovimiento> </p-inputNumber>
                                     </td>
                                 </tr>
                             </ng-template>

@@ -58,7 +58,7 @@ export class EnvioComponent implements OnInit {
       { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
       { field: 'precio', header: 'precio' },
-      { field: '', header: 'Etiqueta'},
+      // { field: '', header: 'Etiqueta'},
       { field: '', header: 'Cantidad'}
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
@@ -110,12 +110,9 @@ ngOnChanges(changes: SimpleChange): void {
   getArticulosMovimientos(){
     this.listArticulos = []
     this.movimiento.movimientoArticulos.forEach(articulo =>{
-      let ar = new productoModel
-      ar.sku = articulo.sku
-      ar.descripcion = articulo.descripcion
-      ar.existencia = articulo.existencia.toString()
-      ar.ubicacion = articulo.ubicacion
-      this.listArticulos.push(ar)
+console.log(articulo)
+
+      this.listArticulos.push(articulo)
     })
   }
 
@@ -221,32 +218,32 @@ getArticulos(filtro:string) {
   }
 
   registraEnvio(){
-    let valido = true
-    if(this.ubicacionDeSeleccionada == undefined || this.ubicacionDestinoSeleccionada == undefined){
-      this.toastr.error("Error","Selecciona una dirección de envio y una  dirección de destino")
-      return
-    }
-    if(this.selectedArticulos.length == 0){
-      this.toastr.error("Error","Debe selecionar al menos un articulo")
-      return
-    }
+    // let valido = true
+    // if(this.ubicacionDeSeleccionada == undefined || this.ubicacionDestinoSeleccionada == undefined){
+    //   this.toastr.error("Error","Selecciona una dirección de envio y una  dirección de destino")
+    //   return
+    // }
+    // if(this.selectedArticulos.length == 0){
+    //   this.toastr.error("Error","Debe selecionar al menos un articulo")
+    //   return
+    // }
 
-    this.selectedArticulos.forEach(articulo => {
-      if(articulo.valueIn == null || articulo.valueIn == undefined ){
-        this.toastr.error("Error","Debe agregar una cantidad a " + articulo.descripcion)
-        valido = false
-        return
-      }
-      if(articulo.valueIn == 0){
-        this.toastr.error("Error","Debe agregar una cantidad mayor a 0 " + articulo.descripcion)
-        valido = false
-        return
-      }
-    })
+    // this.selectedArticulos.forEach(articulo => {
+    //   if(articulo.CantMovimiento == null || articulo.CantMovimiento == undefined ){
+    //     this.toastr.error("Error","Debe agregar una cantidad a " + articulo.descripcion)
+    //     valido = false
+    //     return
+    //   }
+    //   if(articulo.CantMovimiento == 0){
+    //     this.toastr.error("Error","Debe agregar una cantidad mayor a 0 " + articulo.descripcion)
+    //     valido = false
+    //     return
+    //   }
+    // })
 
-    if(!valido){
-      return
-    }
+    // if(!valido){
+    //   return
+    // }
     this.confirmationService.confirm({
       message: 'Esta seguro de realizar el movimiento de inventario?',
       header: 'Confirmacion de Envio',
@@ -279,7 +276,7 @@ getArticulos(filtro:string) {
     newMovimiento.fecha = date
     newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion
     newMovimiento.status = "ENVIO"
-    newMovimiento.receptor = 1
+   // newMovimiento.receptor = 1
     newMovimiento.usuario = 4
     newMovimiento.direccion = this.ubicacionDeSeleccionada.direccion
     newMovimiento.ubicacionDestino = this.ubicacionDestinoSeleccionada.idUbicacion
@@ -310,24 +307,24 @@ getArticulos(filtro:string) {
       newMovimientoArticulo.imagen= articulo.imagen
       newMovimientoArticulo.precio= articulo.precio
       newMovimientoArticulo.sku= articulo.sku
-      newMovimientoArticulo.cantMovimiento= articulo.valueIn
+      newMovimientoArticulo.cantMovimiento= articulo.CantMovimiento
 
       movimientosArticulos.push(newMovimientoArticulo)
     }
     )
     newMovimiento.movimientoArticulos = movimientosArticulos
     console.log(newMovimiento)
-    // this.movientosService.addMovimiento(newMovimiento).subscribe(response => {
-    //   console.log(response)
-    //   if (response.exito) {
-    //     this.hideDialog()
-    //     this.toastr.success("Envio Registrado Correctamente",'Correcto');
-    //     setTimeout(() => {
-    //       this.saveEnvio.emit(true);
-    //     }, 100);
-    //   }
-    // }, err => {
-    //   this.toastr.error("Error",'Error en los servicios');
-    // });
+    this.movientosService.addMovimiento(newMovimiento).subscribe(response => {
+      console.log(response)
+      if (response.exito) {
+        this.hideDialog()
+        this.toastr.success("Envio Registrado Correctamente",'Correcto');
+        setTimeout(() => {
+          this.saveEnvio.emit(true);
+        }, 100);
+      }
+    }, err => {
+      this.toastr.error("Error",'Error en los servicios');
+    });
   }
 }
