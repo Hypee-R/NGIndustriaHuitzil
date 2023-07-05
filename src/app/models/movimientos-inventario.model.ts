@@ -13,6 +13,7 @@ export class MovimientosInventarioModel {
   usuarioRecibe?: string;
   usuarioEnvia?: string;
   tipoPaquete?: string;
+  totalPiezas?: number;
   ubicacionDestinodesc: string;
   movimientoArticulos?: MovimientoArticuloModel[];
 }

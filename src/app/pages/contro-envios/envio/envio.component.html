@@ -1,19 +1,20 @@
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '950px'}" header="{{accion}} Mercancia" [modal]="true"
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '950px'}" header="{{accion}} de Mercancia" [modal]="true"
     styleClass="p-fluid">
     <ng-template pTemplate="content">
-        <ng-template pTemplate="header">
-            <i class="pi pi-box"></i>
-            <span>Inventarios</span>
-        </ng-template>
+        <p-messages *ngIf="accion== 'ENVIO'" [(value)]="messages" [enableService]="false" [closable]="false"></p-messages>
+       
         <p-divider align="center">
             <span class="p-tag">Solicitud de Envio</span>
         </p-divider>
+        
         <div class="container">
             <div class="row">
                 <div class="col-sm">
 
-                    <h5 *ngIf="accion!= 'Registrar'">Folio: <p-badge *ngIf="accion!= 'Registrar'" [value]="movimiento.idMovimiento" severity="danger"  size="large" styleClass="mr-2"></p-badge></h5>
-                    <h5 *ngIf="accion == 'Registrar'">Folio: <p-badge *ngIf="accion == 'Registrar'" [value]="etiqueta" severity="info" size="large" styleClass="mr-2"></p-badge> </h5>
+                    <h5 *ngIf="accion!= 'Registrar'">Folio: <p-badge *ngIf="accion!= 'Registrar'"
+                            [value]="movimiento.idMovimiento" severity="danger" size="large"
+                            styleClass="mr-2"></p-badge></h5>
+                    <h5 *ngIf="accion == 'Registrar'">Folio:</h5>
                 </div>
                 <div class="col-sm" *ngIf="accion!= 'Registrar'">
                     <p-badge *ngIf="movimiento.status == 'Entregado'" value="{{movimiento.status}}" size="large"
@@ -23,20 +24,24 @@
                 </div>
 
                 <div class="col-sm">
-                    <h5 *ngIf="accion!= 'Registrar'">Fecha: {{movimiento.fecha | date:'dd/MM/yyyy'}}</h5>
-                    <h5 *ngIf="accion == 'Registrar'">Fecha: {{CurrentDate | date:'dd/MM/yyyy'}}</h5>
+                    <h5 *ngIf="accion!= 'Registrar'">Fecha: {{movimiento.fecha | date:'dd/MM/yyyy, hh:mm a'}}</h5>
+                    <h5 *ngIf="accion == 'Registrar'">Fecha: {{CurrentDate | date:'dd/MM/yyyy, hh:mm a'}}</h5>
                 </div>
 
             </div>
             <div class="row">
                 <div class="col-sm">
-                    <h5 *ngIf="accion== 'Registrar'">Tipo Paquete:</h5><input *ngIf="accion== 'Registrar'" [ngModel]="this.movimiento.tipoPaquete"  type="text" pInputText value="{{this.movimiento.tipoPaquete}}"/>
-                    <h5 *ngIf="accion!= 'Registrar'">Tipo Paquete:</h5><p-chip *ngIf="accion!= 'Registrar'" label="{{movimiento.tipoPaquete}}"></p-chip>
-            
+                    <h5 *ngIf="accion== 'Registrar'">Tipo Paquete:</h5><input *ngIf="accion== 'Registrar'" type="text"
+                        value="{{this.tipoPaquete}}" [(ngModel)]="tipoPaquete" pInputText/>
+                    <h5 *ngIf="accion!= 'Registrar'">Tipo Paquete:</h5><p-chip *ngIf="accion!= 'Registrar'"
+                        label="{{movimiento.tipoPaquete}}"></p-chip>
+
                 </div>
                 <div class="col-sm">
-                    <h5 *ngIf="accion== 'Registrar'">Responsable Destino:</h5><p-chip  *ngIf="accion== 'Registrar'"label="{{this.idUbicacionde}}"></p-chip>
-                    <h5 *ngIf="accion!= 'Registrar'">Responsable Destino:</h5><p-chip *ngIf="accion!= 'Registrar'" label="{{movimiento.usuarioRecibe}}"></p-chip>
+                    <h5 *ngIf="accion== 'Registrar'">Responsable Destino:</h5><p-chip *ngIf="accion== 'Registrar'"
+                        label="{{this.idUbicacionde}}"></p-chip>
+                    <h5 *ngIf="accion!= 'Registrar'">Responsable Destino:</h5><p-chip *ngIf="accion!= 'Registrar'"
+                        label="{{movimiento.usuarioRecibe}}"></p-chip>
                 </div>
             </div>
             <p-divider align="center">
@@ -44,27 +49,31 @@
             </p-divider>
             <div class="row">
                 <div class="col-sm">
-                    <h5  *ngIf="accion!= 'Registrar'">Envio de:</h5>  <p-chip *ngIf="accion!= 'Registrar'" label="{{movimiento.direccion}}"></p-chip>
+                    <h5 *ngIf="accion!= 'Registrar'">Envio de:</h5> <p-chip *ngIf="accion!= 'Registrar'"
+                        label="{{movimiento.direccion}}"></p-chip>
 
-                    <h5  *ngIf="accion== 'Registrar'" >Envio de:</h5> <p-dropdown appendTo="body" *ngIf="accion== 'Registrar'" [options]="listUbicaciones" (onChange)="onChangeInventario($event)"
+                    <h5 *ngIf="accion== 'Registrar'">Envio de:</h5> <p-dropdown appendTo="body"
+                        *ngIf="accion== 'Registrar'" [options]="listUbicaciones" (onChange)="onChangeInventario($event)"
                         optionLabel="direccion" placeholder="Selecciona una ubicacion" optionLabel="direccion"
                         [style]="{'width': '100%'}"></p-dropdown>
 
                 </div>
 
                 <div class="col-sm">
-                    <h5  *ngIf="accion!= 'Registrar'">Para:</h5> <p-chip *ngIf="accion!= 'Registrar'" label="{{movimiento.ubicacionDestinodesc}}"></p-chip>
-                    <h5 *ngIf="accion== 'Registrar'" >Para:</h5>
-                    <p-dropdown appendTo="body" *ngIf="accion== 'Registrar'"  [options]="listUbicaciones" (onChange)="onChangeDestino($event)"
-                        [(ngModel)]="idUbicacionpara" optionLabel="idUbicacion" placeholder="Selecciona una ubicacion"
-                        optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
+                    <h5 *ngIf="accion!= 'Registrar'">Para:</h5> <p-chip *ngIf="accion!= 'Registrar'"
+                        label="{{movimiento.ubicacionDestinodesc}}"></p-chip>
+                    <h5 *ngIf="accion== 'Registrar'">Para:</h5>
+                    <p-dropdown appendTo="body" *ngIf="accion== 'Registrar'" [options]="listUbicaciones"
+                        (onChange)="onChangeDestino($event)" [(ngModel)]="idUbicacionpara" optionLabel="idUbicacion"
+                        placeholder="Selecciona una ubicacion" optionLabel="direccion"
+                        [style]="{'width': '100%'}"></p-dropdown>
 
                 </div>
             </div>
             <p-divider align="center">
                 <span class="p-tag">Inventario</span>
             </p-divider>
-            <div class="row">
+            <div class="row" *ngIf="accion== 'Registrar'">
                 <div *ngIf="!loading && listArticulos != undefined ">
 
 
@@ -119,7 +128,7 @@
                                     </td>
                                     <td>
                                         <div style="display: inline-flex">
-                                          </div>
+                                        </div>
                                     </td>
 
 
@@ -151,16 +160,116 @@
                                     </td>
                                     <td>
                                         {{rowData['precio']}}
-                               
+
                                     </td>
-                                    <!-- <td>
-                                        <button pButton pRipple icon="pi pi-tags"
-                                            class="p-button-rounded p-button-rounded" style="margin-left: 3px;"
-                                            (click)="viewCodebar(rowData)"></button>
-                                    </td> -->
+                             
+
                                     <td>
-                                        <p-inputNumber inputId="integeronly"  [(ngModel)]= rowData.cantMovimiento> </p-inputNumber>
+                                        <p-inputNumber inputId="integeronly" [(ngModel)]=rowData.CantMovimiento></p-inputNumber>
                                     </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="summary">
+                                <div class="flex align-items-center justify-content-between">
+                                    <h5> En total se enviaran <p-badge [value]="this.conteo" severity="danger" size="large"  styleClass="mr-2"></p-badge> prendas.</h5>
+                                </div>
+                            </ng-template>
+
+
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="accion!= 'Registrar'">
+                <div *ngIf="!loading && listArticulos != undefined ">
+
+
+                    <div *ngIf="!loading && listArticulos.length > 0">
+                        <p-table #dt [value]="listArticulos" [columns]="cols" [rows]="rows" [paginator]="true"
+                            [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']"
+                            [responsive]="true" responsiveLayout="scroll" [(selection)]="selectedArticulos"
+                            [rowHover]="true" dataKey="idArticulo"
+                            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Articulos"
+                            [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                            <ng-template pTemplate="caption">
+                                <div class="flex align-items-center justify-content-between">
+                                    <h5 class="m-0">Inventario de Articulos</h5>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col col-md-7">
+
+                                        </div>
+                                        <div class="col col-md-5">
+                                            <span class="p-input-icon-left" style="width: 100%;">
+                                                <i class="pi pi-search"></i>
+                                                <input pInputText type="text"
+                                                    (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                                    placeholder="Buscar..." [style]="{'width': '100%'}" />
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+
+                                    
+                                    <th></th>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        <div class="flex justify-content-center align-items-center">
+                                            {{col.header}}
+                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                                        </div>
+                                    </th>
+
+
+                                </tr>
+
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr>
+                                   
+                                    <td>
+                                        <div style="display: inline-flex">
+                                        </div>
+                                    </td>
+
+
+                                    <td *ngIf="rowData.imagen==''">
+                                        <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png"
+                                            width="40" height="40%" class="shadow-1" />
+
+                                    </td>
+
+                                    <td *ngIf="rowData.imagen!=''">
+                                        <img [src]=rowData.imagen width="40" height="40%" class="shadow-1" />
+                                    </td>
+
+                                    <td>
+                                        {{rowData['sku']}}
+                                    </td>
+                                    <td>
+                                        {{rowData['descripcion']}}
+                                    </td>
+                                    <td>
+                                        {{rowData['existencia']}}
+                                    </td>
+                                    <td>
+                                        {{rowData['talla']}}
+                                    </td>
+                                    <td>
+                                        {{rowData['ubicacion']}}
+                                    </td>
+                                    <td>
+                                        {{rowData['precio']}}
+
+                                    </td>
+                                 
+                                    <td >
+                                        {{rowData['cantMovimiento']}}
+                                    </td>
+
+                                  
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="summary">
@@ -187,20 +296,21 @@
 
     <ng-template pTemplate="footer">
         <div class="row">
-            <div class="col-sm" >
-               
+            <div class="col-sm">
+
             </div>
             <div class="col-sm">
                 <br>
-                <input   *ngIf="accion!= 'Registrar'" pInputText type="text"
-              
-                placeholder="Conteo Inventario" [style]="{'width': '100%'}" />
+                <input *ngIf="accion!= 'Registrar'" pInputNumber type="text" placeholder="Conteo Inventario"    value="{{this.movimiento.totalPiezas}}" [(ngModel)]="this.movimiento.totalPiezas"
+                    [style]="{'width': '100%'}" />
             </div>
-            <div class="col-sm" >
-                <p-button *ngIf="accion== 'Registrar'" icon="pi pi-send" label="Registrar Envio" styleClass="p-button-text"
-                (onClick)="registraEnvio()"></p-button>
-                <p-button *ngIf="accion!= 'Registrar'" icon="pi pi-check" label="Validar envio" styleClass="p-button-text"
-                    (onClick)="validaEnvio()"></p-button>
+            <div class="col-sm">
+                <p-button *ngIf="accion== 'Registrar'" icon="pi pi-send" label="Realizar Envio"
+                    styleClass="p-button-text" (onClick)="registraEnvio()"></p-button>
+                    <p-button *ngIf="accion== 'ENVIO'" icon="pi pi-check" label="Validar Conteo"
+                    styleClass="p-button-text" (onClick)="validaConteo()"></p-button>
+                <p-button *ngIf="accion== 'CONTEO'" icon="pi pi-check" label="Recibir Mercancia"
+                    styleClass="p-button-text" (onClick)="RecibeEnvio()"></p-button>
             </div>
 
         </div>

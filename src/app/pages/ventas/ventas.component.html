@@ -41,19 +41,6 @@
                                             placeholder="Ingrese el nombre del producto/SKU/codigo de barras"
                                             [(ngModel)]="queryString" autofocus (change)="onchangeShear()">
                                     </div>
-                                    <!-- <p-autoComplete 
-                                    [(ngModel)]="selectedArticleNameAdvanced" 
-                                    [suggestions]="filteredArticle"    
-                                    placeholder="Ingrese el nombre del producto/SKU/codigo de barras" size="60"
-                                    (completeMethod)="getResultsArticles($event)" 
-                             
-                                    field="sku" [dropdown]="true"  >
-                                    <ng-template let-article pTemplate="item">
-                                      <div class="country-item ">
-                                        <div>{{article.sku}}</div>
-                                      </div>
-                                    </ng-template>
-                                  </p-autoComplete> -->
                                 </div>
 
                             </div>
@@ -151,20 +138,15 @@
                                     </div>
                                 </div>
                                 <div class="row">
-
                                     <div class="col-4">
-                                        <!-- <label>Total a pagar:0.00</label> -->
                                     </div>
                                     <div class="col-4">
                                         <button pButton type="button"
                                             class="p-button-raised p-button-rounded p-button-danger "
                                             (click)="cancelarCompra()">Cancelar</button>
                                     </div>
-
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -189,18 +171,7 @@
                             <button pButton type="button" class="p-button-raised p-button-rounded" icon="pi pi-book"
                                 label="Status de la caja" (click)="statusCashRegister()"></button>
                         </span>
-
-                        <!-- <div class="col-sm-2">
-                            <button pButton type="button" class="p-button-raised p-button-rounded" icon="pi pi-inbox" label="Abrir caja"  (click)="openCashRegister()"></button>
-                          
-                        </div>
-                        <div class="col-sm-2">
-                            <button pButton type="button" class="p-button-raised p-button-rounded" icon="pi pi-box" label="Cerrar Caja"  (click)="closeCashRegister()"></button>
-                        </div>
-                        <div class="col-sm-2">
-                            <button pButton type="button" class="p-button-raised p-button-rounded" icon="pi pi-book" label="Status de la caja" 
-                                (click)="statusCashRegister()"></button>
-                        </div> -->
+                       
                     </div>
 
                     <p-divider>Acciones</p-divider>
@@ -362,7 +333,7 @@
                     <h5>SU CAMBIO: </h5>
                     <button pButton pRipple icon="pi pi-sync" type="button" label="Success"
                         class="p-button-rounded p-button-success p-button-lg" label=" {{this.cambioVenta}}"></button>
-                    
+
                 </div>
 
             </div>
