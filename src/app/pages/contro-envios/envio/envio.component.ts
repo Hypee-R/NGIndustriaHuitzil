@@ -45,7 +45,6 @@ export class EnvioComponent implements OnInit {
   accion = '';
   etiqueta = ""
   messages: Message[] | undefined;
-
   
   selectedArticulo: productoModel = new productoModel();
   constructor(private variablesGL: VariablesService,
@@ -103,9 +102,19 @@ ngOnChanges(changes: SimpleChange): void {
   }
   ngOnInit(): void {
    
-   if(this.accion == "ENVIO" || this.accion == "CONTEO" ){
+   if(this.accion == "ENVIO"  ){
       this.getArticulosMovimientos()
       this.messages = [{ severity: 'success', summary: 'Realizar Conteo', detail: "Se confirmara el conteo de Piezas del Envio" }];
+   }
+   if(this.accion == "CONTEO" ){
+    this.getArticulosMovimientos()
+    this.messages = [{ severity: 'warn', summary: 'Realizar Recibo', detail: "Se confirmara el Recibo de Piezas del Envio" }];
+  
+   }
+   if(this.accion == "RECIBO" ){
+    this.getArticulosMovimientos()
+    this.messages = [{ severity: 'info', summary: 'En sucursal', detail: "Se Las piezas se encuentran en sucursal disponibles, Total "+this.movimiento.totalPiezas }];
+  
    }
    else{
     this.listArticulos = []
@@ -186,12 +195,11 @@ getArticulos(filtro:string) {
     this.variablesGL.showDialog.next(false);
   }
   validaConteo(){
-    console.log(this.movimiento.movimientoArticulos[0].cantMovimiento)
-//if(this.conteo=this.movimiento.movimientoArticulos)
+
 
     this.movimiento.status='CONTEO'
     this.confirmationService.confirm({
-      message: 'Confirma que se realizo el conteo De la mercancia correctamente  ',
+      message: 'Confirma que se realizo el conteo De la mercancia correctamente: Total Piezas '+this.movimiento.totalPiezas,
       header: 'Confirmar conteo',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
@@ -275,9 +283,7 @@ getArticulos(filtro:string) {
 
     this.selectedArticulos.forEach(articulo => {
 //Conteo de Piezas
-console.log(articulo.CantMovimiento)
-console.log(this.conteo+=articulo.CantMovimiento)
-this.conteo+=articulo.CantMovimiento
+
       if(articulo.CantMovimiento == null || articulo.CantMovimiento == undefined ){
         this.toastr.error("Error","Debe agregar una cantidad a " + articulo.descripcion)
         valido = false
@@ -295,9 +301,18 @@ this.conteo+=articulo.CantMovimiento
       return
     }
 
-    console.log(this.conteo)
+  //Calculamos el TOTAL 
+  this.conteo = this.selectedArticulos.reduce(
+    (acc, el) => acc + el.CantMovimiento,
+    0
+  );
+
+
+  console.log("Total: ", this.conteo)
+
+
     this.confirmationService.confirm({
-      message: 'Esta seguro de realizar el movimiento de inventario? Total de piezas'+this.conteo.toString(),
+      message: 'Esta seguro de realizar el movimiento de inventario? Total de piezas:'+  this.conteo,
       header: 'Confirmacion de Envio',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
@@ -332,7 +347,7 @@ this.conteo+=articulo.CantMovimiento
     newMovimiento.usuarioEnvia = this.ubicacionDeSeleccionada.nombreEncargado
     newMovimiento.usuarioRecibe = this.ubicacionDestinoSeleccionada.nombreEncargado
     newMovimiento.tipoPaquete =this.tipoPaquete
-    
+    newMovimiento.totalPiezas =this.conteo
     /// cambiar por articulos seleccionados
     this.selectedArticulos.forEach(articulo =>
     {
@@ -358,18 +373,26 @@ this.conteo+=articulo.CantMovimiento
 
     newMovimiento.totalPiezas =this.conteo
     newMovimiento.movimientoArticulos = movimientosArticulos
+
+  
     console.log(newMovimiento)
-    // this.movientosService.addMovimiento(newMovimiento).subscribe(response => {
-    //   console.log(response)
-    //   if (response.exito) {
-    //     this.hideDialog()
-    //     this.toastr.success("Envio Registrado Correctamente",'Correcto');
-    //     setTimeout(() => {
-    //       this.saveEnvio.emit(true);
-    //     }, 100);
-    //   }
-    // }, err => {
-    //   this.toastr.error("Error",'Error en los servicios');
-    // });
+    this.movientosService.addMovimiento(newMovimiento).subscribe(response => {
+      console.log(response)
+      if (response.exito) {
+        this.hideDialog()
+        this.toastr.success("Envio Registrado Correctamente",'Correcto');
+        setTimeout(() => {
+          this.saveEnvio.emit(true);
+        }, 100);
+      }
+    }, err => {
+      this.toastr.error("Error",'Error en los servicios');
+    });
   }
+
+
+
+
+
+
 }

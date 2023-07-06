@@ -1,8 +1,10 @@
 <p-dialog [(visible)]="visibleDialog" [style]="{width: '950px'}" header="{{accion}} de Mercancia" [modal]="true"
     styleClass="p-fluid">
     <ng-template pTemplate="content">
-        <p-messages *ngIf="accion== 'ENVIO'" [(value)]="messages" [enableService]="false" [closable]="false"></p-messages>
-       
+        <p-messages *ngIf="accion== 'ENVIO'  " [(value)]="messages" [enableService]="false" [closable]="false"></p-messages>
+        <p-messages *ngIf="accion== 'CONTEO'" [(value)]="messages" [enableService]="false" [closable]="false"></p-messages>
+        <p-messages *ngIf="accion== 'RECIBO'" [(value)]="messages" [enableService]="false" [closable]="false"></p-messages>
+        
         <p-divider align="center">
             <span class="p-tag">Solicitud de Envio</span>
         </p-divider>
@@ -167,6 +169,11 @@
                                     <td>
                                         <p-inputNumber inputId="integeronly" [(ngModel)]=rowData.CantMovimiento></p-inputNumber>
                                     </td>
+                                    <td>Total:</td>
+                                    <td>
+                                      {{ conteo }}
+                                    </td>
+
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="summary">
@@ -272,12 +279,12 @@
                                   
                                 </tr>
                             </ng-template>
-                            <ng-template pTemplate="summary">
+                            <!-- <ng-template pTemplate="summary">
                                 <div class="flex align-items-center justify-content-between">
-                                    <h5> En total se enviaran <p-badge [value]="1" severity="danger" size="large"
+                                    <h5> En total se enviaran <p-badge [value]="movimiento.totalPiezas" severity="danger" size="large"
                                             styleClass="mr-2"></p-badge> prendas.</h5>
                                 </div>
-                            </ng-template>
+                            </ng-template> -->
 
 
                         </p-table>
@@ -301,8 +308,10 @@
             </div>
             <div class="col-sm">
                 <br>
-                <input *ngIf="accion!= 'Registrar'" pInputNumber type="text" placeholder="Conteo Inventario"    value="{{this.movimiento.totalPiezas}}" [(ngModel)]="this.movimiento.totalPiezas"
-                    [style]="{'width': '100%'}" />
+
+                <p-inputNumber *ngIf="accion== 'ENVIO'"  [(ngModel)]="this.movimiento.totalPiezas"></p-inputNumber>
+                <!-- <inputNumber *ngIf="accion!= 'Registrar'"  type="text" placeholder="Conteo Inventario"    value="{{this.movimiento.totalPiezas}}" [(ngModel)]="this.movimiento.totalPiezas"
+                    [style]="{'width': '100%'}" /> -->
             </div>
             <div class="col-sm">
                 <p-button *ngIf="accion== 'Registrar'" icon="pi pi-send" label="Realizar Envio"
