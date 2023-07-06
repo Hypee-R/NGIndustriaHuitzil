@@ -549,8 +549,7 @@ export class VentasComponent implements OnInit {
 
         try {
           const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
-          // const respuesta = true;
-
+      
           if (respuesta == true) {
        
             console.log("Impresión correcta");

@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
-import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
+import { ConfirmationService, MessageService, ConfirmEventType, Message } from 'primeng/api';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { productoModel } from 'src/app/models/productos.model';
 import { imagen64 } from '../../inventario/inventario.component';
@@ -32,6 +32,9 @@ export class EnvioComponent implements OnInit {
   listUbicaciones: UbicacionModel[] = [];
   movimiento: MovimientosInventarioModel = new MovimientosInventarioModel();
   loading: boolean = false;
+  tipoPaquete:string;
+  conteo;
+  //totalPiezas:number;
   idUbicacionpara:string;
   ubicacionDeSeleccionada:UbicacionModel;
   ubicacionDestinoSeleccionada:UbicacionModel;
@@ -40,7 +43,9 @@ export class EnvioComponent implements OnInit {
   imagenes: imagen64[] = []
   cols: any[] = [];
   accion = '';
-  etiqueta = "Nuevo Envio"
+  etiqueta = ""
+  messages: Message[] | undefined;
+  
   selectedArticulo: productoModel = new productoModel();
   constructor(private variablesGL: VariablesService,
     private ubicacionesService:UbicacionesService,
@@ -58,7 +63,7 @@ export class EnvioComponent implements OnInit {
       { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
       { field: 'precio', header: 'precio' },
-      { field: '', header: 'Etiqueta'},
+      // { field: '', header: 'Etiqueta'},
       { field: '', header: 'Cantidad'}
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
@@ -83,12 +88,11 @@ export class EnvioComponent implements OnInit {
 ngOnChanges(changes: SimpleChange): void {
     this.accion = this._accion
     console.log(this.accion)
-
     console.log(this.movimiento)
     if(this.accion == "Registrar") this.movimiento = new MovimientosInventarioModel();
     if(this._movimiento) this.movimiento = this._movimiento
 
-    if(this.accion == "Actualizar"){
+    if(this.accion == "Detalle" ){
       this.getArticulosMovimientos()
     }
     else{
@@ -97,9 +101,20 @@ ngOnChanges(changes: SimpleChange): void {
     }
   }
   ngOnInit(): void {
-  
-   if(this.accion == "Actualizar"){
+   
+   if(this.accion == "ENVIO"  ){
       this.getArticulosMovimientos()
+      this.messages = [{ severity: 'success', summary: 'Realizar Conteo', detail: "Se confirmara el conteo de Piezas del Envio" }];
+   }
+   if(this.accion == "CONTEO" ){
+    this.getArticulosMovimientos()
+    this.messages = [{ severity: 'warn', summary: 'Realizar Recibo', detail: "Se confirmara el Recibo de Piezas del Envio" }];
+  
+   }
+   if(this.accion == "RECIBO" ){
+    this.getArticulosMovimientos()
+    this.messages = [{ severity: 'info', summary: 'En sucursal', detail: "Se Las piezas se encuentran en sucursal disponibles, Total "+this.movimiento.totalPiezas }];
+  
    }
    else{
     this.listArticulos = []
@@ -110,12 +125,9 @@ ngOnChanges(changes: SimpleChange): void {
   getArticulosMovimientos(){
     this.listArticulos = []
     this.movimiento.movimientoArticulos.forEach(articulo =>{
-      let ar = new productoModel
-      ar.sku = articulo.sku
-      ar.descripcion = articulo.descripcion
-      ar.existencia = articulo.existencia.toString()
-      ar.ubicacion = articulo.ubicacion
-      this.listArticulos.push(ar)
+console.log(articulo)
+
+      this.listArticulos.push(articulo)
     })
   }
 
@@ -127,11 +139,7 @@ ngOnChanges(changes: SimpleChange): void {
     this.ubicacionesService.getUbicaciones().subscribe(response => {
       if(response.exito){
         this.listUbicaciones = response.respuesta
-        /*for(let ubicacion of response.respuesta){
-          this.listUbicaciones.push(ubicacion)
-        }
-      
-        }*/
+  
         if(this.variablesGL.getSucursal()){
           let ubiPreselected = this.listUbicaciones.find(x => x.direccion == this.variablesGL.getSucursal());
           console.log("data")
@@ -186,13 +194,50 @@ getArticulos(filtro:string) {
     this.submitted = false;
     this.variablesGL.showDialog.next(false);
   }
+  validaConteo(){
 
-  validaEnvio(){
-    console.log(this.movimiento)
-    this.movimiento.status='ubicacion'
+
+    this.movimiento.status='CONTEO'
     this.confirmationService.confirm({
-      message: 'Esta seguro de realizar el movimiento de inventario?',
-      header: 'Confirmacion de Envio',
+      message: 'Confirma que se realizo el conteo De la mercancia correctamente: Total Piezas '+this.movimiento.totalPiezas,
+      header: 'Confirmar conteo',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.movientosService.cerrarMovimiento(this.movimiento).subscribe(response => {
+          console.log(response)
+          if (response.exito) {
+            this.hideDialog()
+            this.messageService.add({ severity: 'success', summary: 'Confirmado', detail: 'has validado el recibo' });
+          
+            setTimeout(() => {
+              this.saveEnvio.emit(true);
+            }, 100);
+          }
+        }, err => {
+          this.toastr.error("Error",'Error en los servicios');
+        });
+        
+
+        },
+      reject: (type) => {
+          switch (type) {
+              case ConfirmEventType.REJECT:
+                  this.messageService.add({ severity: 'error', summary: 'cancelado', detail: 'Cancelo el Conteo de mercancia' });
+                  break;
+              case ConfirmEventType.CANCEL:
+                  this.messageService.add({ severity: 'warn', summary: 'cancelado', detail: 'No confirmo el conteo' });
+                  break;
+          }
+      }
+  });
+  }
+
+  RecibeEnvio(){
+    console.log(this.movimiento)
+    this.movimiento.status='RECIBO'
+    this.confirmationService.confirm({
+      message: 'Al recibir la mercancia se Confirma que se recibio en la sucursal destino ',
+      header: 'Recibir Mercancia?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.movientosService.cerrarMovimiento(this.movimiento).subscribe(response => {
@@ -226,6 +271,7 @@ getArticulos(filtro:string) {
 
   registraEnvio(){
     let valido = true
+  //  let total=0
     if(this.ubicacionDeSeleccionada == undefined || this.ubicacionDestinoSeleccionada == undefined){
       this.toastr.error("Error","Selecciona una dirección de envio y una  dirección de destino")
       return
@@ -236,23 +282,37 @@ getArticulos(filtro:string) {
     }
 
     this.selectedArticulos.forEach(articulo => {
-      if(articulo.valueIn == null || articulo.valueIn == undefined ){
+//Conteo de Piezas
+
+      if(articulo.CantMovimiento == null || articulo.CantMovimiento == undefined ){
         this.toastr.error("Error","Debe agregar una cantidad a " + articulo.descripcion)
         valido = false
         return
       }
-      if(articulo.valueIn == 0){
+      if(articulo.CantMovimiento == 0){
         this.toastr.error("Error","Debe agregar una cantidad mayor a 0 " + articulo.descripcion)
         valido = false
         return
       }
+
     })
 
     if(!valido){
       return
     }
+
+  //Calculamos el TOTAL 
+  this.conteo = this.selectedArticulos.reduce(
+    (acc, el) => acc + el.CantMovimiento,
+    0
+  );
+
+
+  console.log("Total: ", this.conteo)
+
+
     this.confirmationService.confirm({
-      message: 'Esta seguro de realizar el movimiento de inventario?',
+      message: 'Esta seguro de realizar el movimiento de inventario? Total de piezas:'+  this.conteo,
       header: 'Confirmacion de Envio',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
@@ -275,40 +335,46 @@ getArticulos(filtro:string) {
   }
 
   addMovimiento(){
-   let date = formatDate(new Date(), 'yyyy-MM-dd', 'en').toString()
+   let date = formatDate(new Date(), 'dd/MM/yyyy, hh:mm a', 'en').toString()
     let newMovimiento = new MovimientosInventarioModel();
     let movimientosArticulos : MovimientoArticuloModel []= []
-   
-    //console.log(this.selectedArticulos)
-
     newMovimiento.fecha = date
     newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion
-    newMovimiento.status = "Envio"
-    newMovimiento.receptor = 1
+    newMovimiento.status = "ENVIO"
     newMovimiento.usuario = 4
     newMovimiento.direccion = this.ubicacionDeSeleccionada.direccion
     newMovimiento.ubicacionDestino = this.ubicacionDestinoSeleccionada.idUbicacion
     newMovimiento.usuarioEnvia = this.ubicacionDeSeleccionada.nombreEncargado
     newMovimiento.usuarioRecibe = this.ubicacionDestinoSeleccionada.nombreEncargado
-   
-    
+    newMovimiento.tipoPaquete =this.tipoPaquete
+    newMovimiento.totalPiezas =this.conteo
     /// cambiar por articulos seleccionados
     this.selectedArticulos.forEach(articulo =>
     {
       let newMovimientoArticulo =  new MovimientoArticuloModel()
-      newMovimientoArticulo.idArticulo = articulo.idArticulo
-      newMovimientoArticulo.sku = articulo.sku
-      newMovimientoArticulo.idCategoria = articulo.idCategoria.toString()
-      newMovimientoArticulo.idUbicacion =  this.ubicacionDeSeleccionada.idUbicacion
-      newMovimientoArticulo.existencia = articulo.valueIn
-      newMovimientoArticulo.idTalla = articulo.idTalla
-      newMovimientoArticulo.descripcion = articulo.descripcion
-      newMovimientoArticulo.fechaIngreso  = articulo.fechaIngreso
-      newMovimientoArticulo.ubicacion = articulo.ubicacion
+      newMovimientoArticulo. idArticulo = articulo.idArticulo
+      newMovimientoArticulo.status= articulo.status
+      newMovimientoArticulo.existencia= articulo.existencia
+      newMovimientoArticulo.descripcion= articulo.descripcion
+      newMovimientoArticulo.fechaIngreso= articulo.fechaIngreso
+      newMovimientoArticulo.idUbicacion= articulo.idUbicacion
+      newMovimientoArticulo.idCategoria= articulo.idCategoria
+      newMovimientoArticulo.idTalla= articulo.idTalla
+      newMovimientoArticulo.talla= articulo.talla
+      newMovimientoArticulo.ubicacion= articulo.ubicacion
+      newMovimientoArticulo.categoria= articulo.categoria
+      newMovimientoArticulo.imagen= articulo.imagen
+      newMovimientoArticulo.precio= articulo.precio
+      newMovimientoArticulo.sku= articulo.sku
+      newMovimientoArticulo.cantMovimiento= articulo.CantMovimiento
       movimientosArticulos.push(newMovimientoArticulo)
     }
     )
+
+    newMovimiento.totalPiezas =this.conteo
     newMovimiento.movimientoArticulos = movimientosArticulos
+
+  
     console.log(newMovimiento)
     this.movientosService.addMovimiento(newMovimiento).subscribe(response => {
       console.log(response)
@@ -323,4 +389,10 @@ getArticulos(filtro:string) {
       this.toastr.error("Error",'Error en los servicios');
     });
   }
+
+
+
+
+
+
 }

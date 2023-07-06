@@ -1,14 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
 import { PrimeNGConfig } from 'primeng/api';
-import { productoModel } from 'src/app/models/productos.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
-import { InventarioService } from 'src/app/services/inventario.service';
-import { CambiosDevolucionesModel } from '../../models/cambios-devoluciones.model';
-import { VentasService } from '../../services/ventas.service';
-import { UbicacionModel } from 'src/app/models/ubicacion.model';
-import { UbicacionesService } from 'src/app/services/ubicaciones.service';
-
 import { MovimientosService } from 'src/app/services/movimientos.service';
 import { MovimientosInventarioModel } from 'src/app/models/movimientos-inventario.model';
 export interface imagen64 {
@@ -26,8 +18,6 @@ export class ControEnviosComponent implements OnInit {
   rows = 0;
   lstMovimientos: MovimientosInventarioModel[]=[];
   accion = '';
-
-
   openModal = ''
   selectedMovimiento : MovimientosInventarioModel;
 
@@ -54,12 +44,10 @@ export class ControEnviosComponent implements OnInit {
   }
  
 
- 
   getMovimientos(){
     this.loading = true;
     this.movimientosService.getallMovimientos().subscribe(response => {
       if(response.exito){
-        //console.log(response.respuesta)
         this.lstMovimientos = response.respuesta
         this.loading = false;
         
@@ -74,9 +62,8 @@ export class ControEnviosComponent implements OnInit {
 
   showDetail(movimiento :MovimientosInventarioModel){
     this.selectedMovimiento = movimiento
-
-    console.log( this.selectedMovimiento)
-    this.accion = 'Actualizar';
+    console.log( this.selectedMovimiento.status)
+    this.accion =  this.selectedMovimiento.status;
     this.openModal = 'Actualizar'
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);

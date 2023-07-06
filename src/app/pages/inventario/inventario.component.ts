@@ -51,16 +51,11 @@ export class InventarioComponent implements OnInit {
 
   ) {
 
-
     this.cols = [
-      // { field: 'idArticulo', header: 'ID' },
       { field: '', header: 'Imagen' },
       { field: 'sku', header: 'SKU' },
       { field: 'descripcion', header: 'Descripcion' },
       { field: 'existencia', header: 'Existencia' },
-      // { field: 'fechaIngreso', header: 'Fecha Ingreso' },
-      // { field:'categoria',header:'Categoria'},
-      // { field: 'unidad', header: 'Unidad' },
       { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
       { field: 'precio', header: 'precio' },
@@ -87,11 +82,6 @@ export class InventarioComponent implements OnInit {
   //Impresion 
   imprimir(articulo : productoModel){
     console.log(articulo)
-    /*this.inventarioService.getImprimirEtiquetas(articulo).subscribe(response => {
-    console.log(response);
-    }, err => {
-      console.log("Error:"+err);
-    });*/
     alert("Impresion de etiquetas")
   }
 

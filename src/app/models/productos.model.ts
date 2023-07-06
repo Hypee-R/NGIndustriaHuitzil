@@ -16,7 +16,7 @@ export class productoModel{
   imagen:string;
   precio:number;
   sku: string;
-  valueIn? : number
+  CantMovimiento? : number
     constructor(){
     this.idArticulo = 0;
     this.status = '';
@@ -31,5 +31,6 @@ export class productoModel{
     this.imagen='';
     this.precio = 0;
     this.sku = '';
+    this.CantMovimiento = 0;
   }
 }
