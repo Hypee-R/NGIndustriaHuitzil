@@ -12,6 +12,7 @@ import {formatDate} from '@angular/common';
 import { MovimientosService } from 'src/app/services/movimientos.service';
 import { Toast, ToastrService } from 'ngx-toastr';
 import { MovimientoArticuloModel } from 'src/app/models/movimientos-inventario.model';
+import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 
 @Component({
   selector: 'app-envio',
@@ -45,7 +46,7 @@ export class EnvioComponent implements OnInit {
   accion = '';
   etiqueta = ""
   messages: Message[] | undefined;
-  
+  userAuth: UsuarioAuthModel;
   selectedArticulo: productoModel = new productoModel();
   constructor(private variablesGL: VariablesService,
     private ubicacionesService:UbicacionesService,
@@ -55,6 +56,8 @@ export class EnvioComponent implements OnInit {
     private confirmationService: ConfirmationService, 
     private messageService: MessageService
     ) {
+      this.userAuth = JSON.parse(localStorage.getItem('usuario'));
+     console.log(this.userAuth);
     this.cols = [
       { field: '', header: 'Imagen' },
       { field: 'sku', header: 'SKU' },
@@ -82,13 +85,11 @@ export class EnvioComponent implements OnInit {
   });
     this.accion = this._accion
     this.movimiento = this._movimiento
-   console.log(    this.movimiento )
    }
 
 ngOnChanges(changes: SimpleChange): void {
     this.accion = this._accion
     console.log(this.accion)
-    console.log(this.movimiento)
     if(this.accion == "Registrar") this.movimiento = new MovimientosInventarioModel();
     if(this._movimiento) this.movimiento = this._movimiento
 
@@ -120,13 +121,13 @@ ngOnChanges(changes: SimpleChange): void {
     this.listArticulos = []
     this.getUbicaciones()
    }
+   
   }
 
   getArticulosMovimientos(){
+    //Traemos los Articulos Movimientos
     this.listArticulos = []
     this.movimiento.movimientoArticulos.forEach(articulo =>{
-console.log(articulo)
-
       this.listArticulos.push(articulo)
     })
   }
@@ -134,15 +135,14 @@ console.log(articulo)
 
 
   getUbicaciones(){
+    console.log("Get Ubicacions")
     this.listUbicaciones.shift()
-    console.log(this.movimiento)
     this.ubicacionesService.getUbicaciones().subscribe(response => {
       if(response.exito){
         this.listUbicaciones = response.respuesta
   
         if(this.variablesGL.getSucursal()){
           let ubiPreselected = this.listUbicaciones.find(x => x.direccion == this.variablesGL.getSucursal());
-          console.log("data")
         }
       }
     }, err => {
@@ -307,10 +307,6 @@ getArticulos(filtro:string) {
     0
   );
 
-
-  console.log("Total: ", this.conteo)
-
-
     this.confirmationService.confirm({
       message: 'Esta seguro de realizar el movimiento de inventario? Total de piezas:'+  this.conteo,
       header: 'Confirmacion de Envio',
@@ -334,6 +330,8 @@ getArticulos(filtro:string) {
     
   }
 
+
+  //Registro de Movimientos 
   addMovimiento(){
    let date = formatDate(new Date(), 'dd/MM/yyyy, hh:mm a', 'en').toString()
     let newMovimiento = new MovimientosInventarioModel();
@@ -341,7 +339,7 @@ getArticulos(filtro:string) {
     newMovimiento.fecha = date
     newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion
     newMovimiento.status = "ENVIO"
-    newMovimiento.usuario = 4
+    newMovimiento.usuario = this.userAuth.id
     newMovimiento.direccion = this.ubicacionDeSeleccionada.direccion
     newMovimiento.ubicacionDestino = this.ubicacionDestinoSeleccionada.idUbicacion
     newMovimiento.usuarioEnvia = this.ubicacionDeSeleccionada.nombreEncargado
