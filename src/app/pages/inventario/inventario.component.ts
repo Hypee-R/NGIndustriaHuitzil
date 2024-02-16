@@ -69,9 +69,9 @@ export class InventarioComponent implements OnInit {
     }else if(status == 'tablet'){
       this.rows = 7;
     }else if(status == 'laptop'){
-      this.rows = 7;
+      this.rows = 4;
     }else{
-      this.rows = 7;
+      this.rows = 11;
     }
   
   }
