@@ -29,7 +29,7 @@ export class productoModel{
     this.talla='';
     this.ubicacion='';
     this.imagen='';
-    this.precio = 0;
+    this.precio = 0.00;
     this.sku = '';
     this.CantMovimiento = 0;
   }

@@ -69,9 +69,9 @@ export class InventarioComponent implements OnInit {
     }else if(status == 'tablet'){
       this.rows = 7;
     }else if(status == 'laptop'){
-      this.rows = 7;
+      this.rows = 4;
     }else{
-      this.rows = 7;
+      this.rows = 11;
     }
   
   }
@@ -97,6 +97,7 @@ export class InventarioComponent implements OnInit {
     this.loading = true;
     this.inventarioService.getArticulos().subscribe(response => {
       if (response.exito) {
+        console.log(response.respuesta)
         this.listArticulos = response.respuesta;
         this.loading = false;
         for (let art of this.listArticulos) {

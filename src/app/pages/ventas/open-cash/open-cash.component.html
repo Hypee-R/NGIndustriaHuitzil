@@ -14,7 +14,7 @@
             <div class="field">
                 <label for="descripcion">Fecha y Hora</label>
                 <p-calendar [(ngModel)]="fecha" [showTime]="true" [showSeconds]="true" inputId="time" required="true"
-                    dateFormat="dd/mm/yy"></p-calendar>
+                    dateFormat="dd/mm/yy" disabled="true"></p-calendar>
                 <small class="p-error" *ngIf="submitted && !fecha">La fecha y hora es requerida.</small>
             </div>
         </ng-container>
@@ -23,22 +23,24 @@
         <ng-template #cerrarTemplate>
             <ng-container *ngIf="accion == 'Cerrar'; else statusTemplate">
 
-                <h5>Fondo en caja:<button pButton pRipple icon="pi pi-dollar" type="button"
-                    class="p-button-rounded p-button-help" label="{{openCashModel.monto}}"></button> </h5>
+                <h5>Fondo en caja:<button pButton pRipple  type="button"
+                    class="p-button-rounded p-button-help" label="{{openCashModel.monto| currency:'MXN' }}"></button> </h5>
 
                 <div class="field">
                     <label for="descripcion">Monto Cierre</label>
                     <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.montoCierre" required />
                     <small class="p-error"
-                        *ngIf="submitted && !openCashModel.montoCierre || openCashModel?.montoCierre == 0">La monto
+                        *ngIf="submitted && !openCashModel.montoCierre || openCashModel?.montoCierre == 0">El monto
                         cierre es requerido.</small>
                 </div>
                 <div class="field">
-                    <label for="descripcion">Fecha y Hora Cierre</label>
-                    <p-calendar [(ngModel)]="fechaCierre" [showTime]="true" [showSeconds]="true" inputId="time"
+                    <label for="descripcion">Fecha y Hora Cierre:</label>
+                    <label >{{this.fechaCierre| date: 'dd/MM/yyyy HH:mm'}}</label>
+                    
+                    <!-- <p-calendar [(ngModel)]="fechaCierre" [showTime]="true" [showSeconds]="true" inputId="time"
                         required="true" dateFormat="dd/mm/yy"></p-calendar>
                     <small class="p-error" *ngIf="submitted && !fechaCierre">La fecha y hora de cierre es
-                        requerida.</small>
+                        requerida.</small> -->
                 </div>
 
                 <div class="field">
@@ -52,11 +54,11 @@
                     <span class="p-tag">Información de caja</span>
                 </p-divider>
                 <div class="row">
-                    <h5>Total efectivo:  <p-chip  label="{{totalEfectivodata}}"></p-chip>  </h5>
-                    <h5>Total con tarjeta:<p-chip  label="{{totalTarjetadata}}"></p-chip>   </h5>
-                    <h5>Total Multiple:<p-chip  label="{{totalMultipledata}}"></p-chip> </h5>
-                    <h5>Total Ventas:<p-chip  label="{{totalVentas}}"></p-chip></h5>
-                    <h5>Total en caja:<p-chip  label="{{openCashModel.monto+totalVentas}}"></p-chip></h5>
+                    <h5>Total efectivo:  <p-chip  label="{{totalEfectivodata| currency:'MXN' }}"></p-chip>  </h5>
+                    <h5>Total con tarjeta:<p-chip  label="{{totalTarjetadata| currency:'MXN' }}"></p-chip>   </h5>
+                    <h5>Total Multiple:<p-chip  label="{{totalMultipledata| currency:'MXN' }}"></p-chip> </h5>
+                    <h5>Total Ventas:<p-chip  label="{{totalVentas| currency:'MXN' }}"></p-chip></h5>
+                    <h5>Total en caja:<p-chip  label="{{openCashModel.monto+totalVentas| currency:'MXN' }}"></p-chip></h5>
                 </div>
             </ng-container>
         </ng-template>
@@ -86,11 +88,11 @@
                 <span class="p-tag">Información de caja</span>
             </p-divider>
             <div class="row">
-                <h5>Total efectivo:  <p-chip  label="{{totalEfectivodata}}"></p-chip>  </h5>
-                <h5>Total con tarjeta:<p-chip  label="{{totalTarjetadata}}"></p-chip>   </h5>
-                <h5>Total Multiple:<p-chip  label="{{totalMultipledata}}"></p-chip> </h5>
-                <h5>Total Ventas:<p-chip  label="{{totalVentas}}"></p-chip></h5>
-                <h5>Total en caja:<p-chip  label="{{openCashModel.monto+totalVentas}}"></p-chip></h5>
+                <h5>Total efectivo:  <p-chip  label="{{totalEfectivodata| currency:'MXN' }}"></p-chip>  </h5>
+                <h5>Total con tarjeta:<p-chip  label="{{totalTarjetadata| currency:'MXN' }}"></p-chip>   </h5>
+                <h5>Total Multiple:<p-chip  label="{{totalMultipledata| currency:'MXN' }}"></p-chip> </h5>
+                <h5>Total Ventas:<p-chip  label="{{totalVentas| currency:'MXN' }}"></p-chip></h5>
+                <h5>Total en caja:<p-chip  label="{{openCashModel.monto+totalVentas| currency:'MXN' }}"></p-chip></h5>
             </div>
 
 

@@ -92,19 +92,19 @@
                                        
                                     </td>
                                     <td>
-                                        {{rowData['fecha'] }}
+                                        {{ rowData['fecha'] | date: 'dd/MM/yyyy HH:mm' }}
                                     </td>
                                     
                                     <td>
                                         <div *ngIf="rowData['fechaCierre'] == null"> Caja abierta </div>
-                                        {{rowData['fechaCierre']}}
+                                        {{rowData['fechaCierre']| date: 'dd/MM/yyyy HH:mm'}}
                                     </td>
                                     
                                     <td>
-                                        {{rowData['monto']}}
+                                        {{rowData['monto']| currency:'MXN' }}
                                     </td>
                                     <td>
-                                        {{rowData['montoCierre']}}
+                                        {{rowData['montoCierre']| currency:'MXN' }}
                                     </td>
 
                                     <td>

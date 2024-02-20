@@ -12,7 +12,7 @@ export class CajaModel{
     this.idCaja = 0;
     this.idEmpleado = 0;
     this.fecha = '';
-    this.monto = 500;
+    this.monto = 1000;
     this.fechaCierre = null;
     this.montoCierre = 1000;
   }
