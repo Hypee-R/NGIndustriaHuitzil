@@ -34,7 +34,7 @@ export class InformesComponent implements OnInit {
 
     this.cols = [
       { field : 'N de caja', header:'N de caja'},
-      { field: 'usuario', header: 'Usuario'},
+      { field: 'usuario', header: 'Empleado'},
       {field:'x',header:'Ubicación'},
       { field: 'fecha', header: 'Fecha' },
       {field: 'fechaCierre',header:'Fecha Cierre'},

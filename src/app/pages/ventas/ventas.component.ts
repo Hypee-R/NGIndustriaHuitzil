@@ -14,8 +14,6 @@ import { formatDate } from '@angular/common';
 import ConectorPluginV3 from "src/app/ConectorPluginV3";
 import { ClientesService } from 'src/app/services/clientes.service';
 import { CatClienteModel } from 'src/app/models/clientes.model';
-import { ConfirmationService, PrimeNGConfig } from 'primeng/api';
-import { trigger,state,style,transition,animate } from '@angular/animations';
 import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 
 @Component({

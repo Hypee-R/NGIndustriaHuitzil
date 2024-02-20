@@ -51,7 +51,8 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
 import {DividerModule} from 'primeng/divider';
 import {KnobModule} from 'primeng/knob';
 import {PickListModule} from 'primeng/picklist';
-
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
 import { ChipModule } from 'primeng/chip';
 
 
@@ -139,7 +140,7 @@ import { EnvioComponent } from './contro-envios/envio/envio.component';
         //NgxBarcode6Module,
         TabViewModule,
         PickListModule,
-        
+        AvatarModule
 ],  providers: [ConfirmationService,MessageService,PickListModule],
     declarations: [
         ContentComponent,

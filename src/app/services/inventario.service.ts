@@ -25,7 +25,7 @@ export class InventarioService {
   getArticulos(): Observable<ResponseModel>{
     
     let sucursal ;
-    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
+    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined||this.variablesGL.getSucursal()== ""){
       sucursal="all"
     }else{
       sucursal=this.variablesGL.getSucursal()

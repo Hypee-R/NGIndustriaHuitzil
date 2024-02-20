@@ -49,9 +49,10 @@ export class OpenCashComponent implements OnInit {
         }
         if(this._caja){
           this.openCashModel = this._caja;
+          console.log(this.openCashModel.fecha)
           this.fecha = this.openCashModel.fecha != '' ? this.variablesGL.getFormatoFecha(this.openCashModel.fecha) : new Date();
           if(this.accion == 'Cerrar'){
-            this.fechaCierre = null;
+            this.fechaCierre =  new Date();
 
             this.ventasService.getVentasByCaja(this.openCashModel.idCaja).subscribe(response => {
               if(response.exito){
@@ -182,6 +183,8 @@ export class OpenCashComponent implements OnInit {
     if(this.accion == 'Abrir' && this.openCashModel.monto > 0){
       console.log('Agregar');
       this.openCashModel.fecha = this.fecha ? this.variablesGL.setFormatoFecha(this.fecha) : '';
+
+
         this.ventasService.openCaja(this.openCashModel).subscribe(response => {
             console.log(response);
             if(response.exito){
@@ -198,16 +201,15 @@ export class OpenCashComponent implements OnInit {
         });
     }else if(this.accion == 'Cerrar' && this.openCashModel.montoCierre > 0){
       // if(this.openCashModel.monto+this.totalVentas!=this.openCashModel.montoCierre){
-
       //   this.toastr.warning("Hay una Diferencia en el cierre escribe el motivo", 'Diferencia!');
        
 
 
       // }else{
+
+      console.log(this.fechaCierre)
+      console.log(this.variablesGL.setFormatoFecha(this.fecha))
         if(this.fechaCierre > this.fecha){
-
-
-
           console.log('Actualizar');
           this.openCashModel.fechaCierre = this.fechaCierre ? this.variablesGL.setFormatoFecha(this.fechaCierre) : '';
           console.log(this.openCashModel)

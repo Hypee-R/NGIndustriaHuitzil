@@ -18,6 +18,7 @@ export class VentasCajaComponent implements OnInit {
   ventas: VentaModel[] = [];
   rows = 0;
   cols: any[] = [];
+  loading: boolean = false;
   constructor(private variablesGL: VariablesService, private toastr: ToastrService) {
 
     this.cols = [

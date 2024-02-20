@@ -92,40 +92,67 @@ export class VariablesService {
     return this.datePipe.transform(fecha,'dd/MM/yyyy hh:mm:ss a');
   }
 
-  getFormatoFecha(fecha: string){
+  getFormatoFecha(fecha: string): Date {
     console.log('fecha ', fecha);
 
     const [dateComponents, timeComponents, ap, mm] = fecha.split(' ');
 
-    // console.log(dateComponents); // 👉️ "07/21/2024"
-    // console.log(timeComponents); // 👉️ "04:24:37"
-    console.log(ap); // 👉️ "a. p."
-    // console.log(mm); // 👉️ "m. m."
-    const [month, day, year] = dateComponents.split('/');
+    const [day, month, year] = dateComponents.split('/');
     const [hours, minutes, seconds] = timeComponents.split(':');
 
-    let hora = 0;
-    hora = Number.parseInt(hours);
-    //PM
-    if(ap?.includes('p')){
-      if(Number.parseInt(hours) != 12){
-        hora = Number.parseInt(hours)+12;
-      }else{
-        hora = Number.parseInt(hours);
-      }
+    let hora = Number.parseInt(hours);
+
+    // PM
+    if (ap?.includes('p')) {
+        if (hora !== 12) {
+            hora = hora + 12;
+        }
     }
-    //AM
-    else if(ap?.includes('a')){
-      if(Number.parseInt(hours) != 12){
-        hora = Number.parseInt(hours);
-      }else{
-        hora = Number.parseInt(hours)-12;
-      }
+    // AM
+    else if (ap?.includes('a')) {
+        if (hora === 12) {
+            hora = hora - 12;
+        }
     }
 
-    // console.log(hora);
+    return new Date(+year, +month - 1, +day, hora, +minutes, +seconds);
+}
 
-    return new Date(+year, +month - 1, +day, +hora, +minutes, +seconds);
-  }
+
+  // getFormatoFecha(fecha: string){
+  //   console.log('fecha ', fecha);
+
+  //   const [dateComponents, timeComponents, ap, mm] = fecha.split(' ');
+
+  //   // console.log(dateComponents); // 👉️ "07/21/2024"
+  //   // console.log(timeComponents); // 👉️ "04:24:37"
+  //   console.log(ap); // 👉️ "a. p."
+  //   // console.log(mm); // 👉️ "m. m."
+  //   const [month, day, year] = dateComponents.split('/');
+  //   const [hours, minutes, seconds] = timeComponents.split(':');
+
+  //   let hora = 0;
+  //   hora = Number.parseInt(hours);
+  //   //PM
+  //   if(ap?.includes('p')){
+  //     if(Number.parseInt(hours) != 12){
+  //       hora = Number.parseInt(hours)+12;
+  //     }else{
+  //       hora = Number.parseInt(hours);
+  //     }
+  //   }
+  //   //AM
+  //   else if(ap?.includes('a')){
+  //     if(Number.parseInt(hours) != 12){
+  //       hora = Number.parseInt(hours);
+  //     }else{
+  //       hora = Number.parseInt(hours)-12;
+  //     }
+  //   }
+
+  //   // console.log(hora);
+
+  //   return new Date(+year, +month - 1, +day, +hora, +minutes, +seconds);
+  // }
 
 }
