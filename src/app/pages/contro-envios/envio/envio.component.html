@@ -26,8 +26,8 @@
                 </div>
 
                 <div class="col-sm">
-                    <h5 *ngIf="accion!= 'Registrar'">Fecha: {{movimiento.fecha | date:'dd/MM/yyyy, hh:mm a'}}</h5>
-                    <h5 *ngIf="accion == 'Registrar'">Fecha: {{CurrentDate | date:'dd/MM/yyyy, hh:mm a'}}</h5>
+                    <h5 *ngIf="accion!= 'Registrar'">Fecha: {{movimiento.fecha }}</h5>
+                    <h5 *ngIf="accion == 'Registrar'">Fecha: {{CurrentDate  | date: 'dd/MM/yyyy, hh:mm a'}}</h5>
                 </div>
 
             </div>

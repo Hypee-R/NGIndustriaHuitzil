@@ -23,8 +23,7 @@
                         <p-table #dt [value]="listClientes" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['nombre','apellidoPaterno','apellidoMaterno','telefono1','telefono2','direccion','correo','encargadoNombre']" [responsive]="true" responsiveLayout="scroll"
                             [(selection)]="selectedClientes" [rowHover]="true" dataKey="idCliente" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                             <ng-template pTemplate="caption">
-                                <div class="flex align-items-center justify-content-between">
-                                   
+                                <div class="flex align-items-center justify-content-between">                                 
                                     <div class="row">
                                         <div class="col col-md-7">
                                             <div class="row">
@@ -33,8 +32,7 @@
                                                 </div>
                                                 <div class="col col-md-3">
                                                     <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger m" (click)="deleteSelectedClientes()" [disabled]="!selectedClientes || !selectedClientes.length"></button>
-                                                </div>
-                                               
+                                                </div>                                              
                                             </div>
                                         </div>
                                         <div class="col col-md-5">
