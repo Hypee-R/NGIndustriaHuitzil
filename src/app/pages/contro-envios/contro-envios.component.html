@@ -14,7 +14,7 @@
                             <div *ngIf="!loading && lstMovimientos.length > 0">
 
 
-                            </div>
+                         
                         <p-table #dt [value]="lstMovimientos" [rows]="rows" [paginator]="true"
                             dataKey="idCambioDevolucion" [globalFilterFields]="['venta.noTicket']" [responsive]="true"
                             responsiveLayout="scroll"

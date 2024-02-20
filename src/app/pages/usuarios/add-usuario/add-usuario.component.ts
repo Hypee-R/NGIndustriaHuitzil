@@ -89,9 +89,9 @@ getSucursales(){
       && this.usuario.usuario?.length > 3 && this.usuario.telefono?.length == 10 && this.usuario.correo.match(this.pattern) && this.usuario.idRol &&this.usuario.direccion?.length > 2){
       console.log('datos validos!!');
 
-      this.usuario.rol = "asasdasd";
-      this.usuario.impresora = "asasdasd";
-      this.usuario.pc = "asasdasd";
+       this.usuario.rol = "";
+      // this.usuario.impresora = "asasdasd";
+      // this.usuario.pc = "asasdasd";
       this.usuario.password = this.variablesGL.getSHA1('123456789');
       console.log('data usuario ', this.usuario);
 

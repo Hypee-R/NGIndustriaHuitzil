@@ -28,7 +28,6 @@
             <small class="p-error" *ngIf="submitted && !usuario.idRol">El rol es requerido.</small>
         </div>
         <br>
-        <br>
         <div class="field">
             <label for="usuario">Sucursal</label>
             <p-dropdown class="p-background" [options]="listSucursales" [(ngModel)]="usuario.direccion" optionLabel="direccion" optionValue="direccion" [style]="{'width': '100%'}" placeholder="Selecciona una ubicacion"></p-dropdown>
@@ -47,6 +46,20 @@
             <input type="tel" pInputText id="telefono" [(ngModel)]="usuario.telefono" required/>
             <small class="p-error" *ngIf="submitted && !usuario.telefono">El telefono es requerido.</small>
             <small class="p-error" *ngIf="submitted && usuario.telefono?.length > 0 && usuario.telefono?.length != 10">El telefono debe contener 10 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="telefono">Impresora</label>
+            <input type="text" pInputText id="impresora" [(ngModel)]="usuario.impresora" required/>
+            <small class="p-error" *ngIf="submitted && !usuario.impresora">La Impresora es requerida.</small>
+            <small class="p-error" *ngIf="submitted && usuario.impresora?.length > 0 && usuario.impresora?.length <= 2">la Impresora debe contener minimo 3 caracteres</small>
+        </div>
+        <br>
+        <div class="field">
+            <label for="telefono">Pc</label>
+            <input type="text" pInputText id="pc" [(ngModel)]="usuario.pc" required/>
+            <small class="p-error" *ngIf="submitted && !usuario.pc">La Impresora es requerida.</small>
+            <small class="p-error" *ngIf="submitted && usuario.pc?.length > 0 && usuario.pc?.length <= 2">la PC debe contener minimo 3 caracteres</small>
         </div>
         <br>
         <div class="field">

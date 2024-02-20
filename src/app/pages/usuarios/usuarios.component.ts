@@ -58,6 +58,7 @@ export class UsuariosComponent implements OnInit {
       let userLogged: UsuarioAuthModel = JSON.parse(localStorage.getItem('usuario'));
       this.usuariosService.getUsuarios().subscribe(response => {
         if(response.exito){
+          console.log( response.respuesta)
           this.listUsuarios = response.respuesta;
           let userLoggedIndex = this.listUsuarios.findIndex(x => x.idUser == userLogged.id);
           this.listUsuarios.splice(userLoggedIndex, 1);
