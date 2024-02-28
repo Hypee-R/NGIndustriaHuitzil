@@ -90,7 +90,7 @@ import { ControEnviosComponent } from './contro-envios/contro-envios.component';
 import { TabViewModule } from 'primeng/tabview';
 import { VentasCajaComponent } from './informes/ventas-caja/ventas-caja.component';
 import { EnvioComponent } from './contro-envios/envio/envio.component';
-
+import { PanelModule } from 'primeng/panel';
 @NgModule({
     imports: [
         CommonModule,
@@ -140,7 +140,8 @@ import { EnvioComponent } from './contro-envios/envio/envio.component';
         //NgxBarcode6Module,
         TabViewModule,
         PickListModule,
-        AvatarModule
+        AvatarModule,
+        PanelModule
 ],  providers: [ConfirmationService,MessageService,PickListModule],
     declarations: [
         ContentComponent,

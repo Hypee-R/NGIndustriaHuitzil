@@ -141,12 +141,13 @@ export class VentasComponent implements OnInit {
 
 
   openProductsM() {
-    this.variablesGL.showLoading();
+    //this.variablesGL.showLoading();
     this.accion = ''
+    // this.accionAdd = ''
     this.accionAdd = ''
     this.openProducts = "Productos"
-    this.articlesSelected = []
-    this.getArticulos()
+     this.articlesSelected = []
+     this.getArticulos()
   }
 
   openCashRegister() {
@@ -206,7 +207,7 @@ export class VentasComponent implements OnInit {
     this.articulos = 0
     this.total = 0
     this.articlesShell = []
- 
+
   }
   getArticulos() {
     this.inventarioService.getArticulos().subscribe(response => {
@@ -360,7 +361,7 @@ export class VentasComponent implements OnInit {
   }
 
   downloadTicket() {
- 
+
   }
 
   downloadPDF() {
@@ -423,16 +424,16 @@ export class VentasComponent implements OnInit {
         this.toastr.error("Error el importe debe ser exacto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
       }
-  
-     
-     
+
+
+
 
 
     }
   }
 
 
- 
+
 
   openModalAdd() {
     this.accion = ''
@@ -443,6 +444,7 @@ export class VentasComponent implements OnInit {
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
+
   }
 
   //Funcion de Venta Limpio separada
@@ -502,7 +504,7 @@ export class VentasComponent implements OnInit {
 
          this.clienteName=this.selectedclienteNameAdvanced.nombre+this.selectedclienteNameAdvanced.apellidoPaterno+this.selectedclienteNameAdvanced.apellidoMaterno
         }
-       
+
        console.log(this.selectedclienteNameAdvanced)
        console.log(this.clienteName)
         //code Impresion
@@ -547,9 +549,9 @@ export class VentasComponent implements OnInit {
 
         try {
           const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
-      
+
           if (respuesta == true) {
-       
+
             console.log("Impresión correcta");
             this.display = false;
           } else {
@@ -741,8 +743,8 @@ export class VentasComponent implements OnInit {
     console.log(this.totalVenta+":"+this.total)
     if(this.totalVenta>this.total){
       this.cambioVenta = Math.abs(this.total - this.totalVenta);
-      
-     
+
+
       this.toastr.success("Su cambio es :"+     this.cambioVenta , 'Cambio!');
     }else{
       console.log("no es igual");
@@ -750,8 +752,8 @@ export class VentasComponent implements OnInit {
      // this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
     }
-  
-    
+
+
   }
 
   toggle(index: number) {
