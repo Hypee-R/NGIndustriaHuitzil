@@ -1,0 +1,64 @@
+/* Estilos para los contenedores */
+.producto, .caja, .acciones,.cajaclose {
+  margin-bottom: 20px; /* Agrega un margen inferior de 20px */
+  cursor: pointer; /* Cambia el cursor al pasar sobre los elementos */
+}
+
+/* Estilos compartidos para los botones */
+.button-container {
+  border-radius: 8px; /* Borde redondeado */
+  overflow: hidden; /* Oculta cualquier contenido que se desborde */
+  transition: background-color 0.3s ease; /* Transición suave del color de fondo */
+}
+
+.button-container:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Cambia el color de fondo al pasar el cursor */
+}
+
+.button-content {
+  padding: 20px; /* Espacio interior */
+}
+
+.font-bold {
+  font-weight: bold; /* Texto en negrita */
+}
+
+.text-white {
+  color: #fff; /* Color de texto blanco */
+}
+
+/* Estilos específicos para cada tipo de contenedor */
+.producto .bg-purple-200 {
+  background-color: #7885f3; /* Color morado */
+}
+.caja .bg-blue-200 {
+  background-color: #4891cd; /* Color azul */
+}
+.cajaclose .bg-blue-250 {
+  background-color: #73b9f3; /* Color azul */
+}
+
+.acciones .bg-green-200 {
+  background-color: #5bd261; /* Color verde */
+}
+
+/* Estilos compartidos entre los contenedores */
+.p-3 {
+  padding: 0.75rem; /* 12px de relleno en todos los lados */
+}
+
+.text-white {
+  color: #fff; /* Color de texto blanco */
+}
+
+.h-6rem {
+  height: 6rem; /* Altura de 6rem */
+}
+
+.border-round {
+  border-radius: 8px; /* Borde redondeado con un radio de 8px */
+}
+
+.m-0 {
+  margin: 0; /* Sin margen */
+}
