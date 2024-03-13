@@ -62,3 +62,46 @@
 .m-0 {
   margin: 0; /* Sin margen */
 }
+.custom-height {
+  height: 100px; /* Define la altura deseada en píxeles o cualquier otra unidad de medida */
+}
+.tooltip-container {
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  top: -60px; /* Ajusta según sea necesario para la posición vertical */
+  left: 50%; /* Ajusta según sea necesario para la posición horizontal */
+  background-color: rgba(0, 0, 0, 0.5); /* Color de fondo con más transparencia */
+  color: white; /* Color del texto */
+  font-size: 1rem; /* Tamaño de fuente */
+  padding: 8px 12px; /* Espaciado interno */
+  border-radius: 4px; /* Borde redondeado */
+  opacity: 1; /* Mantener siempre visible */
+  transform: translateX(-50%) translateY(-20px); /* Posición inicial */
+  animation: bounce 2s infinite; /* Animación de salto con un tiempo más largo */
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%; /* Se alinea con el borde superior del tooltip */
+  left: 50%; /* Se alinea con el centro del tooltip */
+  margin-left: -8px; /* Ajusta según sea necesario para la posición horizontal */
+  border-width: 8px; /* Tamaño de la flecha */
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent; /* Color de la flecha con más transparencia */
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateX(-50%) translateY(-20px); /* Posición inicial */
+  }
+  40% {
+    transform: translateX(-50%) translateY(-30px); /* Posición de rebote */
+  }
+  60% {
+    transform: translateX(-50%) translateY(-25px); /* Posición de rebote */
+  }
+}
