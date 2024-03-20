@@ -6,6 +6,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { SideUserComponent } from './components/side-user/side-user.component';
+import { DiscountSelectorComponent } from './components/discount-selector/discount-selector.component';
+
 
 //PrimeNG
 import { PanelMenuModule } from 'primeng/panelmenu';
@@ -16,6 +18,7 @@ import { SalesPaymentTypeComponent } from './components/charts/sales-payment-typ
 import { SalesLocationRankingComponent } from './components/charts/sales-location-ranking/sales-location-ranking.component';
 import { EmployeeSalesRankingComponent } from './components/charts/employee-sales-ranking/employee-sales-ranking.component';
 import { RankingItemsSoldComponent } from './components/charts/ranking-items-sold/ranking-items-sold.component';
+import { DropdownModule } from 'primeng/dropdown';
 import { NgApexchartsModule } from 'ng-apexcharts';
 //import { NgxBarcode6Module } from 'ngx-barcode6';
 
@@ -31,6 +34,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
       //PrimeNG
       PanelMenuModule,
       TieredMenuModule,
+      DropdownModule,
     ],
     declarations: [
       NavBarComponent,
@@ -41,7 +45,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
       SalesPaymentTypeComponent,
       SalesLocationRankingComponent,
       EmployeeSalesRankingComponent,
-      RankingItemsSoldComponent
+      RankingItemsSoldComponent,
+      DiscountSelectorComponent
     ],
     exports: [
       NavBarComponent,
@@ -53,6 +58,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
       SalesLocationRankingComponent,
       EmployeeSalesRankingComponent,
       RankingItemsSoldComponent,
+      DiscountSelectorComponent,
     ]
 })
 export class SharedModule { }

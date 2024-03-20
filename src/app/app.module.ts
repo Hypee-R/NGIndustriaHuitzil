@@ -16,6 +16,7 @@ import { AuthInterceptorService } from 'src/config/interceptor.auth';
 @NgModule({
   declarations: [
     AppComponent,
+    
 
   ],
   imports: [
