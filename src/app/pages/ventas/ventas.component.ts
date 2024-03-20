@@ -25,6 +25,7 @@ import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 
 
 export class VentasComponent implements OnInit {
+  
   activeState: boolean[] = [false];
   cadenaProductos: string = "\n";
   impresoras = [];
@@ -78,9 +79,10 @@ export class VentasComponent implements OnInit {
   ) {
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
-      { field: 'cantidad', header: 'Cantidad' },
-      { field: 'descripcion', header: 'Producto' },
-      { field: 'precio', header: 'Precio' },
+   
+      { field: 'cantidad', header: 'CANTIDAD' },
+      { field: 'descripcion', header: 'PRODUCTO' },
+      { field: 'precio', header: 'PRECIO' },
       { field: 'sku', header: 'SKU' }
 
     ];
@@ -102,6 +104,7 @@ export class VentasComponent implements OnInit {
   selectedValues: string[] = [];
 
   async ngOnInit() {
+    
     this.loading = false
     this.getCaja();
     this.getClientes()
@@ -187,6 +190,12 @@ export class VentasComponent implements OnInit {
     this.articlesShell[index].cantidad += 1
     this.articulos += 1
     this.total += product.precio
+    this.totalLetra = this.numeroALetras(this.total, {
+      plural: 'PESOS MEXICANOS',
+      singular: 'PESO MEXICANO',
+      centPlural: 'CENTAVOS',
+      centSingular: 'CENTAVO'
+    });
 
   }
 
@@ -201,9 +210,15 @@ export class VentasComponent implements OnInit {
     this.articlesShell.push(artc)
     this.articulos += 1
     this.total += product.precio
-
+    this.totalLetra = this.numeroALetras(this.total, {
+      plural: 'PESOS MEXICANOS',
+      singular: 'PESO MEXICANO',
+      centPlural: 'CENTAVOS',
+      centSingular: 'CENTAVO'
+    });
   }
   cancelarCompra() {
+    this.toastr.error('Se cancelo la Venta correctamente', 'Atención!');
     this.articulos = 0
     this.total = 0
     this.articlesShell = []
@@ -767,6 +782,23 @@ onTabClose(event) {
 onTabOpen(event) {
 
   alert({severity:'info', summary:'Tab Expanded', detail: 'Index: ' + event.index})
+}
+
+onDiscountSelected(selectedDiscount: number) {
+  // Manejar el valor seleccionado aquí
+  console.log("Descuento seleccionado:", selectedDiscount['value']);
+ 
+  // También puedes realizar otras operaciones según sea necesario
+  const porcentajeDescuento = selectedDiscount['value'];
+console.log(porcentajeDescuento)
+  // Calcular el descuento
+  const descuento = (this.total * porcentajeDescuento) / 100;
+  console.log(descuento)
+  // Restar el descuento al total
+  const totalConDescuento = this.total - descuento;
+  console.log("Total con Descuento"+totalConDescuento)
+  
+
 }
 
 
