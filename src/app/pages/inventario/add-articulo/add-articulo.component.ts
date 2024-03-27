@@ -43,7 +43,7 @@ export class AddArticuloComponent implements OnInit {
   selectedCategoria: CategoriaModel;
   selectedTalla: CatTallaModel;
   selectedUbicacion: UbicacionModel;
-  
+
 
   dialogSubscription: Subscription = new Subscription();
 
@@ -67,7 +67,7 @@ export class AddArticuloComponent implements OnInit {
     ) {
       this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
         this.visibleDialog = estado;
-        this.previsualizacion = "'assets/img/default-image.jpg'" 
+        this.previsualizacion = "'assets/img/default-image.jpg'"
         if(this._editproducto){
           this.producto = this._editproducto;
           this.previsualizacion = this.sanitizer.bypassSecurityTrustResourceUrl(this._editproducto.imagen)
@@ -83,7 +83,7 @@ export class AddArticuloComponent implements OnInit {
             for (let i = 0 ; i< Number(this._editproducto.existencia); i++){
                 this.noEtiquetas.push(1)
             }
-            
+
         }
     });
 
@@ -112,7 +112,7 @@ hideDialog() {
 
 
 saveArticulo(){
-  this.submitted = true;  
+  this.submitted = true;
   if(this._accion != 'Codigo de Barras'){
     if(this.producto.existencia?.length > 0){
     if(this._accion == 'Agregar'){
@@ -246,8 +246,7 @@ extraerBase64 = async ($event: any) => new Promise((resolve, reject) => {
       console.log("Error:"+JSON.stringify(err));
       this.toastr.error('Hubo un problema al conectar con los servicios de Impresion','Ups!!');
     });
- 
-  }
 
+  }
 
 }

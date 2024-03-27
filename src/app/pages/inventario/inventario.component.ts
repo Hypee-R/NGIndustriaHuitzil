@@ -73,15 +73,20 @@ export class InventarioComponent implements OnInit {
     }else{
       this.rows = 11;
     }
-  
+
   }
   ngOnInit() {
     this.getArticulos();
 
   }
-  //Impresion 
+  //Impresion
   imprimir(articulo : productoModel){
     console.log(articulo)
+    /*this.inventarioService.getImprimirEtiquetas(articulo).subscribe(response => {
+    console.log(response);
+    }, err => {
+      console.log("Error:"+err);
+    });*/
     alert("Impresion de etiquetas")
   }
 
@@ -193,7 +198,7 @@ export class InventarioComponent implements OnInit {
     });
   }
   Excel() {
-   
+
    let ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.listArticulos.map(row => ({
     id_articulo: row.idArticulo ,
     status: row.status,
@@ -251,8 +256,8 @@ export class InventarioComponent implements OnInit {
       this.fileReset();
     }
   }
-   ConvertStringToNumber(input: string) { 
-    if (input.trim().length==0) { 
+   ConvertStringToNumber(input: string) {
+    if (input.trim().length==0) {
         return NaN;
     }
     return Number(input);
@@ -315,7 +320,7 @@ export class InventarioComponent implements OnInit {
     console.log("save data field")
     const recorreArray = (arr) => {
       for (let i = 0; i <= arr.length - 1; i++) {
-       
+
 
         this.productoFile.idArticulo= arr[i].idArticulo,
         this.productoFile.status= arr[i].status,
@@ -332,8 +337,8 @@ export class InventarioComponent implements OnInit {
         this.productoFile.  precio= arr[i].precio,
         this.productoFile. sku=arr[i].sku,
 
-          
-         
+
+
        console.log(this.productoFile)
        if(this.productoFile.sku!==""){
         this.articuloService.agregaArticulo( this.productoFile).subscribe(response => {
@@ -352,7 +357,7 @@ export class InventarioComponent implements OnInit {
           this.toastr.error('Hubo un problema al conectar con los servicios en linea', 'Ups!!');
         });
        }
-     
+
 
   }
 }
@@ -361,7 +366,7 @@ recorreArray(data);
 
 this.toastr.success('Registro Guardado  con exito!!', 'Exito');
 
-this.getArticulos() 
+this.getArticulos()
 
   }
 
