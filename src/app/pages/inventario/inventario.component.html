@@ -140,9 +140,12 @@
                                         {{rowData['ubicacion']}}
                                     </td>
                                     <td>
-                                        
+
                                         {{rowData['precio']| currency:'MXN' }}
                                     </td>
+                                    <td>
+                                      <button pButton pRipple icon="pi pi-tags" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" (click)="viewCodebar(rowData)"></button>
+                                  </td>
                                     <!-- <td>
                                         <button pButton pRipple icon="pi pi-tags"
                                             class="p-button-rounded p-button-rounded" style="margin-left: 3px;"
