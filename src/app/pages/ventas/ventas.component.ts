@@ -25,7 +25,7 @@ import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 
 
 export class VentasComponent implements OnInit {
-  
+
   activeState: boolean[] = [false];
   cadenaProductos: string = "\n";
   impresoras = [];
@@ -53,6 +53,7 @@ export class VentasComponent implements OnInit {
   openProducts = '';
   articulos = 0
   total = 0
+  descuento = 0
   totalLetra = "";
   totalVenta  =0;
   cambioVenta: number;
@@ -79,7 +80,7 @@ export class VentasComponent implements OnInit {
   ) {
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
-   
+
       { field: 'cantidad', header: 'CANTIDAD' },
       { field: 'descripcion', header: 'PRODUCTO' },
       { field: 'precio', header: 'PRECIO' },
@@ -104,7 +105,7 @@ export class VentasComponent implements OnInit {
   selectedValues: string[] = [];
 
   async ngOnInit() {
-    
+
     this.loading = false
     this.getCaja();
     this.getClientes()
@@ -169,6 +170,8 @@ export class VentasComponent implements OnInit {
   }
 
   statusCashRegister() {
+    this.openProducts = ""
+    this.accionAdd = ''
     this.accion = 'Status';
     this.getCaja();
   }
@@ -787,7 +790,7 @@ onTabOpen(event) {
 onDiscountSelected(selectedDiscount: number) {
   // Manejar el valor seleccionado aquí
   console.log("Descuento seleccionado:", selectedDiscount['value']);
- 
+
   // También puedes realizar otras operaciones según sea necesario
   const porcentajeDescuento = selectedDiscount['value'];
 console.log(porcentajeDescuento)
@@ -795,9 +798,10 @@ console.log(porcentajeDescuento)
   const descuento = (this.total * porcentajeDescuento) / 100;
   console.log(descuento)
   // Restar el descuento al total
-  const totalConDescuento = this.total - descuento;
-  console.log("Total con Descuento"+totalConDescuento)
-  
+  // const totalConDescuento = this.total - descuento;
+  // console.log("Total con Descuento"+totalConDescuento)
+
+ this. descuento=descuento
 
 }
 
