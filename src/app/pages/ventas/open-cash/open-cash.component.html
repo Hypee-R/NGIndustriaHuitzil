@@ -1,5 +1,5 @@
 
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Caja" [modal]="true" 
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Caja" [modal]="true"
     styleClass="p-fluid">
 
     <ng-template pTemplate="content" >
@@ -36,7 +36,7 @@
                 <div class="field">
                     <label for="descripcion">Fecha y Hora Cierre:</label>
                     <label >{{this.fechaCierre| date: 'dd/MM/yyyy HH:mm'}}</label>
-                    
+
                     <!-- <p-calendar [(ngModel)]="fechaCierre" [showTime]="true" [showSeconds]="true" inputId="time"
                         required="true" dateFormat="dd/mm/yy"></p-calendar>
                     <small class="p-error" *ngIf="submitted && !fechaCierre">La fecha y hora de cierre es
@@ -58,7 +58,7 @@
                     <h5>Total con tarjeta:<p-chip  label="{{totalTarjetadata| currency:'MXN' }}"></p-chip>   </h5>
                     <h5>Total Multiple:<p-chip  label="{{totalMultipledata| currency:'MXN' }}"></p-chip> </h5>
                     <h5>Total Ventas:<p-chip  label="{{totalVentas| currency:'MXN' }}"></p-chip></h5>
-                    <h5>Total en caja:<p-chip  label="{{openCashModel.monto+totalVentas| currency:'MXN' }}"></p-chip></h5>
+                    <h5>Total en caja,Fondo mas ventas en efectivo:<p-chip  label="{{openCashModel.monto+totalEfectivodata| currency:'MXN' }}"></p-chip></h5>
                 </div>
             </ng-container>
         </ng-template>

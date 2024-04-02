@@ -15,6 +15,7 @@ export class VentaModel {
     tarjeta?: number;
     efectivo?: number;
     caja?: CajaModel;
+    descuento?: number;
     ventaArticulo: VentaArticuloModel[];
     constructor(){
       this.idVenta = 0;
@@ -28,7 +29,7 @@ export class VentaModel {
       this.total = 0;
       this.tarjeta = 0;
       this.efectivo = 0;
-      
+this.descuento=0;
     }
 }
 
