@@ -58,13 +58,13 @@ export class OpenCashComponent implements OnInit {
               if(response.exito){
                 console.log(response.respuesta)
                 this.ventas = response.respuesta
-               
+
                 let total=0
                 let totalEfectivo=0
                 let totalTarjeta=0
                 let totalMultiple=0
                 response.respuesta.forEach(function(a){
-                  
+
                   total += a.total;
                   if(a.tipoPago=="TARJETA"){
                     totalTarjeta +=a.total
@@ -81,7 +81,7 @@ export class OpenCashComponent implements OnInit {
 
                   }
 
-                
+
                 });
                 console.log(total);
 
@@ -91,8 +91,8 @@ export class OpenCashComponent implements OnInit {
                this. totalMultipledata=totalMultiple
               }
 
-           
-        
+
+
             })
           }
 
@@ -106,13 +106,13 @@ export class OpenCashComponent implements OnInit {
               if(response.exito){
                 console.log(response.respuesta)
                 this.ventas = response.respuesta
-               
+
                 let total=0
                 let totalEfectivo=0
                 let totalTarjeta=0
                 let totalMultiple=0
                 response.respuesta.forEach(function(a){
-                  
+
                   total += a.total;
                   if(a.tipoPago=="TARJETA"){
                     totalTarjeta +=a.total
@@ -129,7 +129,7 @@ export class OpenCashComponent implements OnInit {
 
                   }
 
-                
+
                 });
                 console.log(total);
 
@@ -139,12 +139,12 @@ export class OpenCashComponent implements OnInit {
                this. totalMultipledata=totalMultiple
               }
 
-           
-        
+
+
             })
           }
 
-          
+
         }
       }
     });
@@ -163,7 +163,7 @@ export class OpenCashComponent implements OnInit {
 
   ngOnInit(): void {
 
-    
+
   }
 
   ngOnDestroy(): void {
@@ -202,9 +202,6 @@ export class OpenCashComponent implements OnInit {
     }else if(this.accion == 'Cerrar' && this.openCashModel.montoCierre > 0){
       // if(this.openCashModel.monto+this.totalVentas!=this.openCashModel.montoCierre){
       //   this.toastr.warning("Hay una Diferencia en el cierre escribe el motivo", 'Diferencia!');
-       
-
-
       // }else{
 
       console.log(this.fechaCierre)
@@ -213,8 +210,8 @@ export class OpenCashComponent implements OnInit {
           console.log('Actualizar');
           this.openCashModel.fechaCierre = this.fechaCierre ? this.variablesGL.setFormatoFecha(this.fechaCierre) : '';
           console.log(this.openCashModel)
-  
-  
+
+
           this.ventasService.closeCaja(this.openCashModel).subscribe(response => {
             console.log(response);
             if(response.exito){
@@ -222,7 +219,7 @@ export class OpenCashComponent implements OnInit {
                 this.submitted = false;
                 this.variablesGL.showDialog.next(false);
                 //Impresion del Status de la caja
-             
+
                 this.impresionCierreCaja()
               }else{
                 this.toastr.info(response.mensaje, 'Atención!')
@@ -237,7 +234,7 @@ export class OpenCashComponent implements OnInit {
         }
      // }
 
-     
+
     }
   }
 
