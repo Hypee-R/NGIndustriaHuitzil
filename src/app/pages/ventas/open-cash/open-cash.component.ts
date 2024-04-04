@@ -16,6 +16,7 @@ import Swal from 'sweetalert2'
   styleUrls: ['./open-cash.component.css']
 })
 export class OpenCashComponent implements OnInit {
+  user = JSON.parse(localStorage.getItem('usuario'));
   impresoraSeleccionada: string = "TicketsZebraSistema";
   @Input() _accion: string;
   @Input() _caja: CajaModel;
@@ -162,7 +163,7 @@ export class OpenCashComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    console.log(this.user.ubicacion)
 
   }
 
@@ -237,7 +238,7 @@ export class OpenCashComponent implements OnInit {
 
     }
   }
-
+  //TODO validar el tiket nuevamente con los datos de mejora como nombre del cajero etc
   //Impresion del cierre del status de la caja
   async impresionCierreCaja(){
   //code Impresion
@@ -262,7 +263,8 @@ export class OpenCashComponent implements OnInit {
     .EscribirTexto("Total Ventas:"+this.totalVentas)
     .Feed(1)
     .EscribirTexto("Cerro Caja:"+this.openCashModel.fechaCierre)
-    .EscribirTexto("con el monto de :"+this.openCashModel.monto+this.totalVentas)
+    .EscribirTexto("con el monto de :"+this.openCashModel.monto+this.totalEfectivodata)
+    .EscribirTexto("*solo se contempla el Efectivo en caja, los multiples con tarjeta los valida el administrador*")
     .Feed(1)
     .EscribirTexto("*Recuerda conservar este ticket para tu respaldo al cierre de tu caja en buen estado *")
     .Feed(1)

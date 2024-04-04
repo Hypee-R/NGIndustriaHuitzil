@@ -109,26 +109,26 @@ export class VentasComponent implements OnInit {
 
     this.loading = false
     this.getCaja();
-    this.getClientes()
+    //this.getClientes() se comento porque ya no se utiliza el cliente
     this.user = JSON.parse(localStorage.getItem('usuario'));
   }
 
-  getClientes() {
-    this.clientes = []
-    this.clientesService.getClientes().subscribe(response => {
-      if (response.exito) {
-        this.clientes = response.respuesta;
-        console.log(this.clientes);
-      } else {
-        this.variablesGL.hideLoading();
+  // getClientes() {
+  //   this.clientes = []
+  //   this.clientesService.getClientes().subscribe(response => {
+  //     if (response.exito) {
+  //       this.clientes = response.respuesta;
+  //       console.log(this.clientes);
+  //     } else {
+  //       this.variablesGL.hideLoading();
 
-        this.toastr.error(response.mensaje, 'Error!');
-      }
-    }, err => {
-      this.variablesGL.hideLoading();
-      this.toastr.error('Hubo un error al buscar cliente', 'Error!');
-    });
-  }
+  //       this.toastr.error(response.mensaje, 'Error!');
+  //     }
+  //   }, err => {
+  //     this.variablesGL.hideLoading();
+  //     this.toastr.error('Hubo un error al buscar cliente', 'Error!');
+  //   });
+  // }
 
   getResultsClients(event) {
     let filtered: any[] = [];
