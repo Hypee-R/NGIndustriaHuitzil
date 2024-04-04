@@ -1,6 +1,6 @@
 
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Caja" [modal]="true"
-    styleClass="p-fluid">
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Caja: {{this.openCashModel.idCaja}} de {{this.user.nombre}}" [modal]="true"styleClass="p-fluid">
+<h5>Sucursal:{{this.user.ubicacion}}</h5>
 
     <ng-template pTemplate="content" >
 
@@ -92,7 +92,8 @@
                 <h5>Total con tarjeta:<p-chip  label="{{totalTarjetadata| currency:'MXN' }}"></p-chip>   </h5>
                 <h5>Total Multiple:<p-chip  label="{{totalMultipledata| currency:'MXN' }}"></p-chip> </h5>
                 <h5>Total Ventas:<p-chip  label="{{totalVentas| currency:'MXN' }}"></p-chip></h5>
-                <h5>Total en caja:<p-chip  label="{{openCashModel.monto+totalVentas| currency:'MXN' }}"></p-chip></h5>
+                <!-- <h5>Total en caja:<p-chip  label="{{openCashModel.monto+totalVentas| currency:'MXN' }}"></p-chip></h5> -->
+                <h5>Total en caja,Fondo mas ventas en efectivo:<p-chip  label="{{openCashModel.monto+totalEfectivodata| currency:'MXN' }}"></p-chip></h5>
             </div>
 
 
