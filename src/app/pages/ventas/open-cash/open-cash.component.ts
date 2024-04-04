@@ -238,7 +238,7 @@ export class OpenCashComponent implements OnInit {
 
     }
   }
-
+  //TODO validar el tiket nuevamente con los datos de mejora como nombre del cajero etc
   //Impresion del cierre del status de la caja
   async impresionCierreCaja(){
   //code Impresion
