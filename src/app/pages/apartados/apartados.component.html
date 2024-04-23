@@ -1,40 +1,20 @@
 <div [ngClass]="{'container': statusPantalla <= 10}">
 
-    <div class="card shadow mb-7 bg-body rounded">
+    <div class="card shadow mb-5 bg-body rounded">
         <div class="card-header text-uppercase"> Apartados</div>
         <span class="lstick"></span>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-9">
-                    <div class="row">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-3 md:col-3">
-                                    <p-autoComplete [(ngModel)]="selectedclienteNameAdvanced"  (ngModelChange)="cambie()" [suggestions]="filteredClients"    placeholder="Ingrese el nombre del cliente" size="40"
-                                    (completeMethod)="getResultsClients($event)" field="nombre" [dropdown]="true">
-                                    <ng-template let-cliente pTemplate="item">
-                                      <div class="cliente-item ">
-                                        <div>{{cliente.nombre }} {{cliente.apellidoPaterno}} {{cliente.apellidoMaterno}}</div>  
-                                    </div>
-                                    </ng-template>
-                                  </p-autoComplete>
-                                </div>
-                                <div class = "col-1 md: col-2">
-                                    <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalAdd()"></button>
-                                </div>
-                                <!--<div class="col-3 md:col-2" >
-                                    <button pButton pRipple label="Consultar Apartados" icon="pi pi-book" type="button" class="p-button-success" (click)="consultaApartado()"></button>
-                                </div>-->
-                                <div class="col-3 md:col-3">
-                                    <button pButton pRipple label="Consultar Apartados" icon="pi pi-book" type="button" class="p-button-help" (click)="consultarPedidoEspecial()"></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-12">
+                    <p-toolbar styleClass="mb-4">   
+                        <div class = "col-1 md: col-2">
+                              <button pButton pRipple label="NUEVO" icon="pi pi-plus" class="p-button-success mr-2" (click)="openAddPedido()"></button>
+                         </div>
+                    </p-toolbar>
                 </div>
-                <div *ngIf="!loading  && showTable ">
-                    <p-table #dt [value]="allApartados" [columns]="colsApartados" [rows]="rowsApartados" [paginator]="true" [globalFilterFields]="['nombre','apellidoPaterno','apellidoMaterno','telefono1','telefono2','direccion','correo','encargadoNombre']" [responsive]="true" responsiveLayout="scroll"
-                        [(selection)]="selectedClientes" [rowHover]="true" dataKey="idCliente" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Apartados" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                <div *ngIf="!loading  ">
+                    <p-table #dt [value]="allApartados" [columns]="colsApartados" [rows]="rowsApartados" [paginator]="true" [globalFilterFields]="[]" [responsive]="true" responsiveLayout="scroll"
+                        [(selection)]="selectedApartados" [rowHover]="true" dataKey="idApartado" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Apartados" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                         <ng-template pTemplate="caption">
                             <div class="flex align-items-center justify-content-between">
                             </div>
@@ -46,11 +26,22 @@
                                 </th>
                                 <th></th>
                                 <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                    <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field == 'direccion' || col.field == 'encargadoNombre' ? '16em' : '11em'}">
+                                    <div class="flex justify-content-center align-items-center">
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                     </div>
                                 </th>
+                                <th>
+                                    MONTO TOTAL
+                                </th>
+                                <th>
+                                    RESTO
+                                </th>
+                                <th>
+                                    ACCIONES
+                                </th>
+                                
+                                
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
@@ -64,202 +55,288 @@
                                     </div>
                                 </td>
                                 <td>
+                                    {{rowData['idApartado']}}
+                                </td>
+                                <td>
                                     {{rowData['cliente']}}
                                 </td>
+                    
                                 <td>
-                                    {{rowData['articulo']}}
+                                    {{rowData['fecha'] | date: 'dd/MM/yyyy, hh:mm a'}}
                                 </td>
-                                <td>
-                                    {{rowData['fecha']}}
-                                </td>
-                                <td>
-                                    {{rowData['fechaEntrega']}}
-                                </td>
-                                <td>
-                                    {{rowData['telefono']}}
-                                </td>
-                                <td>
-                                    {{rowData['direccion']}}
-                                </td>
+                                
                                 <td>
                                     <p-badge *ngIf="rowData['status'] == 'Entregado'"  [value]="rowData.status" severity="warning" size="large" styleClass="mr-2"></p-badge>
                                     <p-badge *ngIf="rowData['status'] == 'Espera'"  [value]="rowData.status" severity="info" size="large" styleClass="mr-2"></p-badge>
                                 </td>
-                                <!--<td *ngFor="let col of columns">
-                                    {{rowData[col.field]}}
-                                </td>-->
+                                <td>
+                                    {{rowData['total'] | currency:'MXN'}}
+                                </td>
+                                <td>
+                                    {{rowData['resto'] | currency:'MXN'}}
+                                </td>
+                               
                                 <td>
                                     <div style="display: inline-flex">
-
-                                        <button *ngIf="rowData['type'] == 'A'" pButton pRipple icon="pi pi-window-maximize" class="p-button-rounded p-button-success mr-2" (click)="showDetail(rowData)" ></button>
-                                        <button *ngIf="rowData['type'] == 'E' || rowData['type'] == 'I'" pButton pRipple icon="pi pi-window-maximize" class="p-button-rounded p-button-help mr-2" (click)="showDetailPedido(rowData)" ></button>
-                                    </div>
+                                        <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success mr-2" (click)="showDetail(rowData)" ></button>
+                                     </div>
                                 </td>
                             </tr>
                         </ng-template>
                        
                     </p-table>
                 </div>
-
-
-
-                <div class="col-12">
-                    <br>
-                    <div *ngIf="apartadoByUser">
-                        <p-table #dt [value]="listApartados" [columns]="cols" [rows]="rows" [paginator]="true"  [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll"  
-                        dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Apartados" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
-                        <ng-template pTemplate="caption">
-                            <div class="flex align-items-center justify-content-between">
-                                <h5 class="m-0">HIstorial de Articulos Apartados de {{selectedclienteNameAdvanced.nombre }} {{selectedclienteNameAdvanced.apellidoPaterno}} {{selectedclienteNameAdvanced.apellidoMaterno}}</h5>
-                                <br>
-                              
-                            </div>
-                        </ng-template>
-                        <ng-template pTemplate="header" let-columns >
-                            <tr>
-
-                                <!--<th style="width: 2rem">
-                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                                </th>-->
-                                
-                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                    <div class="flex justify-content-center align-items-center">
-                                        {{col.header}}
-                                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                                    </div>
-                                </th>
-
-
-                            </tr>
-
-                        </ng-template>
-                        <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded" let-pagos>
-                            <tr>
-                                <td>
-                                    {{rowData['articulo']}}
-                                </td>
-                                <td>
-                                    {{rowData['talla']}}
-                                </td>
-                                <td>
-                                    {{rowData['precio']}}
-                                </td>
-                                <td>
-                                    {{rowData['fecha']}}
-                                </td>
-                                <td>
-                                    {{rowData['fechaEntrega']}}
-                                </td>
-                                <td>
-                                    {{rowData['telefono']}}
-                                </td>
-                                <td>
-                                    {{rowData['direccion']}}
-                                </td>
-                                <td>
-                                    <p-badge *ngIf="rowData['status'] == 'Entregado'"  [value]="rowData.status" severity="warning" size="large" styleClass="mr-2"></p-badge>
-                                    <p-badge *ngIf="rowData['status'] == 'Espera'"  [value]="rowData.status" severity="info" size="large" styleClass="mr-2"></p-badge>
-                                </td>
-                                <td>
-                                    <button *ngIf="rowData['status'] == 'Espera'" pButton pRipple icon="pi pi-play" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" [pTooltip]="botonEntregar" (click)="entregarPedido(rowData,'A')" [disabled]="rowData.status == 'Entregado'"></button>
-                                    <button pButton pRipple icon="pi pi-money-bill" class="p-button-rounded p-button-success"  style="margin-left: 3px;" [pTooltip]="botonHacerAbono" (click)="makePay(rowData)" ></button>
-                                </td>
-                            </tr>
-                        </ng-template>
-                        
-                        </p-table>
-                    </div>
-                    <div *ngIf="crearApartado">
-                    <br>
-                    <p >
-                        Sin apartados  Pedientes {{selectedclienteNameAdvanced.nombre }} {{selectedclienteNameAdvanced.apellidoPaterno}} {{selectedclienteNameAdvanced.apellidoMaterno}}
-                    </p>
-                    <div class="row">
-                        <div class="col-1 md:col-3" >
-                            <button pButton pRipple label="Apartar" icon="pi pi-book" type="button" class="p-button-success" (click)=" openAddApartado()"></button>
-                        </div>
-                    </div>
-                        <br>
-                    <app-loading *ngIf="loading"></app-loading>
-                    <app-add-apartado [_accion]="accion" [(_editCliente)]="selectedclienteNameAdvanced" (saveApartado)="consultaApartado()"  *ngIf="accion != ''"></app-add-apartado>
-                    </div>
-                    <div *ngIf="showPedidos">
-
-                        <p-table #dt [value]="listPedidos" [columns]="colsPedidos" [rows]="rows" [paginator]="true"  [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll"  
-                        dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Apartados" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
-                        <ng-template pTemplate="caption">
-                            <div class="flex align-items-center justify-content-between">
-                                <h5 class="m-0">Apartados de {{selectedclienteNameAdvanced.nombre }} {{selectedclienteNameAdvanced.apellidoPaterno}} {{selectedclienteNameAdvanced.apellidoMaterno}}</h5>
-                                <br>
-                              
-                            </div>
-                        </ng-template>
-                        <ng-template pTemplate="header" let-columns >
-                            <tr>
-                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                    <div class="flex justify-content-center align-items-center">
-                                        {{col.header}}
-                                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                                    </div>
-                                </th>
-
-
-                            </tr>
-
-                        </ng-template>
-                        <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded" let-pagos>
-                            <tr>
-                                <td>
-                                    {{rowData['idApartado']}}
-                                </td>
-                    
-                                <td>
-                                    {{rowData['fecha']}}
-                                </td>
-                                <td>
-                                    {{rowData['fechaEntrega']}}
-                                </td>
-                                <td>
-                                    {{rowData['telefono']}}
-                                </td>
-                                <td>
-                                    {{rowData['direccion']}}
-                                </td>
-                                <td>
-                                    <p-badge *ngIf="rowData['status'] == 'Entregado'"  [value]="rowData.status" severity="warning" size="large" styleClass="mr-2"></p-badge>
-                                    <p-badge *ngIf="rowData['status'] == 'Espera'"  [value]="rowData.status" severity="info" size="large" styleClass="mr-2"></p-badge>
-                                </td>
-                                <td>
-                                    <button *ngIf="rowData['status'] == 'Espera'" pButton pRipple icon="pi pi-play" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" [pTooltip]="botonEntregar" (click)="entregarPedido(rowData,'E')" [disabled]="rowData.status == 'Entregado'"></button>
-                                    <button pButton pRipple icon="pi pi-money-bill" class="p-button-rounded p-button-success"  style="margin-left: 3px;" [pTooltip]="botonHacerAbono" (click)="makePayPedido(rowData)" ></button>
-                                </td>
-                            </tr>
-                        </ng-template>
-                        
-                        </p-table>
-                        
-                        <br>
-                        <div *ngIf="crearPedido">
-                        <p >
-                            Sin Apartados al cliente: {{selectedclienteNameAdvanced.nombre }} {{selectedclienteNameAdvanced.apellidoPaterno}} {{selectedclienteNameAdvanced.apellidoMaterno}}
-                        </p>
-                        <div class="row">
-                            <div class="col-2 md:col-3" >
-                                <button pButton pRipple label="Nuevo Apartado" icon="pi pi-book" type="button" class="p-button-help" (click)=" openAddPedido()"></button>
-                            </div>
-                        </div>
-                        </div>
-                            <br>
-                        <app-loading *ngIf="loading"></app-loading>
-                        <app-add-apartado [_accion]="accion" [(_editCliente)]="selectedclienteNameAdvanced" (saveApartado)="consultaApartado()"  *ngIf="accion == 'Apartar'"></app-add-apartado>
-                        <app-add-pedido-especial [_accion]="accionPedido"  [(_editCliente)]="selectedclienteNameAdvanced"  (saveApartado)="consultarPedidoEspecial()" *ngIf="accionPedido == 'new'"></app-add-pedido-especial>
-                      
-                    </div>
-                    <app-add-cliente [_accion]="accionAdd"  *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>
-                    <app-add-pago-apartado [_listPagos]="listPagos" [(_apartado)]="selectedApartado" (saveApartado)="consultaApartado()"  *ngIf="accionPago == 'Add'"></app-add-pago-apartado>
-                    <app-add-pago-pedido [_listPagos]="listPagos" [(_apartado)]="selectedApartado" (saveApartado)="consultaApartado()" [(_listArticulos)]="listArticulosApartados" *ngIf="accionPago == 'Pedidos'"></app-add-pago-pedido>
-                </div>
-        </div>
+           </div>
     </div>
+    <p-dialog [(visible)]="showNewReserve" 
+    header="Nuevo apartado"
+    [style]="{width: '90%',heigth :'95%'}" 
+    [modal]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="dialog-content">
+                <div class="left-column">
+                    <div>
+                    <div class="field">
+                        <label for="cliente">Seleciona un cliente</label>
+                        <p-autoComplete 
+                        [(ngModel)]="selectedClient"
+                        [suggestions]="filteredClients"    
+                        placeholder="Ingrese el nombre del cliente" 
+                        size="40"
+                        (completeMethod)="getResultsClients($event)" field="nombreCompleto" appendTo="body" [dropdown]="true">
+                        <ng-template let-cliente pTemplate="item">
+                            <div class="cliente-item ">
+                            <div>{{cliente.nombre }} {{cliente.apellidoPaterno}} {{cliente.apellidoMaterno}}</div>  
+                        </div>
+                        </ng-template>
+                        </p-autoComplete>
+                        <p *ngIf="filteredClients.length == 0 && nameCliente != undefined"> No hay un cliente con ese nombre</p>
+                    </div>
+                    <br>
+                    </div>
+                    <div>
+                    <div class="row">
+                        <div class="col-8 md:col-6">
+                          <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                            <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras"
+                              [(ngModel)]="queryString" autofocus (change)="onchangeShear()">
+                          </div>
+                        </div>
+                      </div>
+                    <p-table #dt [value]="listArticulos" [columns]="colsProducts" [rows]="6" [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true" dataKey="idProducto" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+                    [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                    <ng-template pTemplate="caption">
+                        <div class="col col-md-5">
+                            <span class="p-input-icon-left" style="width: 100%;">
+                          <i class="pi pi-search"></i>
+                          <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar..." [style]="{'width': '100%'}"/>
+                        </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
 
+                            <th style="width: 2em;"></th>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field == 'descripcion' ? '12em' : '4em'}">
+                                    {{col.header}}
+
+                                </div>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr >         
+                            <td  *ngIf="rowData.existencia != 0">
+                                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning" (click)="addProductApartado(rowData)"></button>
+                            </td> 
+                            <td  *ngIf="rowData.existencia == 0">
+                             <label >Sin stock</label>
+                            </td>
+                            <td *ngFor="let col of columns">
+                                {{rowData[col.field]}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                    </div>
+                    <br>
+                </div>
+                <div class="right-column">
+                    <div class="dialog-content">
+                        <div class="left-column">
+                          <h6>Articulos seleccionados: {{articulos}}</h6>     
+                        </div>
+                        <div class="right-column">
+                          <h6>Total:$ {{total}}</h6>
+                        </div>
+                      </div>
+                    <p-table *appRefreshTable="articulos" #dt [value]="articulosApartados" [columns]="colSku" [rows]="6"
+                    [paginator]="true" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
+                    currentPageReportTemplate="Mostrando {first} a {last}  productos" [showCurrentPageReport]="true">
+                    <ng-template pTemplate="header" let-columns>
+                      <tr class="header-row">
+                        <th style="width: 1rem">
+                            RESTAR/AGREGAR
+                        </th>
+                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                          <div class="flex justify-content-center align-items-center"
+                            [ngStyle]="{'width': col.field == 'nombre' ? '6em' : '6em'}">
+                            {{col.header}}
+                          </div>
+                        </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
+                      <tr>
+                        <td>
+                          <div style="display: inline-flex">
+                            <button pButton pRipple icon="pi pi-minus" class="p-button-rounded p-button-danger"
+                              (click)="deleteProduct(rowData,i)"></button>
+                            <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success"
+                              (click)="addArticle(rowData,i)" style="margin-left: 3px;"></button>
+                          </div>
+                        </td>
+                        <td *ngFor="let col of columns">
+                          <ng-container *ngIf="col.field === 'precio'; else otherField">
+                            {{ rowData[col.field] | currency:'MXN':'symbol':'1.2-2' }}
+                          </ng-container>
+                          <ng-template #otherField>
+                            {{ rowData[col.field] }}
+                          </ng-template>
+                        </td>
+                        <td>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                            (click)="deleteArticle(rowData,i)" style="margin-left: 3px;"></button>
+                        </td>
+                      
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </div>
+              </div>
+            
+            
+        </ng-template>
+        
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+            <button pButton pRipple label="Crear Apartado" icon="pi pi-check" class="p-button-text" (click)="addApartado()"></button>
+        </ng-template>
+    
+    </p-dialog>
+
+    <p-dialog [(visible)]="showPagosPedido" header="Historial de Pagos" [modal]="true" styleClass="p-fluid" >
+
+        <ng-template pTemplate="content">
+            <div class="dialog-content">
+            <div class="left-column">
+                <div class="dialog-content">
+                    <h5>
+                        Total a pagar {{this.selectedApartado.total  | currency:'MXN':'symbol':'1.2-2'}}
+                    </h5>
+                    <h5>
+                        Monto por pagar {{this.selectedApartado.resto  | currency:'MXN':'symbol':'1.2-2'}}
+                    </h5>
+                    <div *ngIf="hacerPago">
+                       
+                         <div class="field">
+                        <label for="fecha">Fecha</label>
+                        <input type="date" pInputText id="fecha"  [(ngModel)]="pagoApartado.fecha" [disabled]="false" />
+                        <small class="p-error" *ngIf="submitted && pagoApartado.fecha == ''" >  Debe seleccionar una fecha</small>
+                        </div>
+                         <div class="field">
+                        <label for="cantidad">Monto</label>
+                        <input type="number" pInputText id="cantidad" [(ngModel)]="pagoApartado.cantidad"[disabled]="false" min="0" max = {{_apartado.precio}}>
+                        <small class="p-error" *ngIf="submitted && pagoApartado.cantidad > this.selectedApartado.resto" >La cantidad debe ser menor al costo del articulo</small>
+                         </div>
+                    <br>
+                    <button pButton type="button" label="Hacer pago"  class="p-button-info" (click)="addPago()" [disabled]="!hacerPago"></button>
+                    </div>
+                    <div *ngIf="!hacerPago">
+                        Se ha terminado de liquidar el Apartado
+                    </div>
+                        <p-table #dt [value]="listPagos" [columns]="colsPagos" [rows]="rows" [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
+                                            dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Pagos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                                            <ng-template pTemplate="caption">
+                                               
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    
+                                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                        <div class="flex justify-content-center align-items-center">
+                                                            {{col.header}}
+                                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                                                        </div>
+                                                    </th>
+                
+                
+                                                </tr>
+                
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                                <tr>
+                                                    <td>
+                                                        {{rowData['idPagoApartado']}}
+                                                    </td>
+                                                    <td>
+                                                        {{rowData['fecha']  | date: 'dd/MM/yyyy, hh:mm a'}}
+                                                    </td>
+                                                    <td>
+                                                        {{rowData['cantidad'] | currency:'MXN':'symbol':'1.2-2' }}
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                          
+                        </p-table>
+                   
+                    </div>
+                
+                </div>
+            <div class="right-column">
+                <h5>
+                    Articulos Apartados
+                 </h5>
+                <div class="dialog-content">
+                    <p-table *appRefreshTable="articulos" #dt [value]="articulosByApartado" [columns]="colSku" [rows]="6"
+                    [paginator]="true" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
+                    currentPageReportTemplate="Mostrando {first} a {last}  productos" [showCurrentPageReport]="true">
+                    <ng-template pTemplate="header" let-columns>
+                      <tr class="header-row">
+                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                          <div class="flex justify-content-center align-items-center"
+                            [ngStyle]="{'width': col.field == 'nombre' ? '6em' : '6em'}">
+                            {{col.header}}
+                          </div>
+                        </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
+                      <tr>
+                        <td *ngFor="let col of columns">
+                          <ng-container *ngIf="col.field === 'precio'; else otherField">
+                            {{ rowData[col.field] | currency:'MXN':'symbol':'1.2-2' }}
+                          </ng-container>
+                          <ng-template #otherField>
+                            {{ rowData[col.field] }}
+                          </ng-template>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                    </div>
+                </div>
+            </div>
+           
+            
+        </ng-template>
+        
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cerrar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialogPagos()"></button>
+            <button *ngIf="!hacerPago" pButton pRipple label="Entregar" icon="pi pi-check" class="p-button-text" (click)="entregarPedido()"></button>
+        </ng-template>
+    
+    </p-dialog>
 </div>

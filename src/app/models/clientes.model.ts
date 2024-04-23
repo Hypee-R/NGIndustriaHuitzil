@@ -7,6 +7,7 @@ export class CatClienteModel{
     telefono2: string;
     direccion: string;
     visible : boolean;
+    nombreCompleto : string;
     constructor(){
       this.idCliente = 0;
       this.nombre = '';
@@ -16,6 +17,7 @@ export class CatClienteModel{
       this.telefono2 = '';
       this.direccion = '';
       this.visible = true
+      this.nombreCompleto = this.nombre + "dsadsasd"
     }
   }
   

@@ -5,17 +5,19 @@ import { productoModel } from 'src/app/models/productos.model';
 import { VentaModel } from 'src/app/models/venta.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { ToastrService } from 'ngx-toastr';
+import { CambiosDevolucionesModel } from 'src/app/models/cambios-devoluciones.model';
 @Component({
   selector: 'app-ventas-caja',
   templateUrl: './ventas-caja.component.html',
   styleUrls: ['./ventas-caja.component.css']
 })
 export class VentasCajaComponent implements OnInit {
-  @Input() _listVentas : VentaModel[] 
+  @Input() _listVentas : VentaModel[]
   statusPantalla: number;
   visibleDialog: boolean;
   dialogSubscription: Subscription = new Subscription();
   ventas: VentaModel[] = [];
+  lstCambiosDevoluciones: CambiosDevolucionesModel[]=[];
   rows = 0;
   cols: any[] = [];
   loading: boolean = false;
@@ -27,7 +29,7 @@ export class VentasCajaComponent implements OnInit {
       { field: 'tipoVenta', header: 'TIPO DE V.' },
       {field: 'fecha',header:'FECHA'},
       {field: 'noArticulos',header:'NoArticulos'},
-     
+
       {field: 'efectivo',header:'EFECTIVO'},
       {field: 'efectivo',header:'TARJETA'},
       {field: 'subtotal',header:'SUBTOTAL'},
@@ -37,10 +39,10 @@ export class VentasCajaComponent implements OnInit {
 
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
       this.visibleDialog = estado;
-          
-      } 
+
+      }
     );
-    
+
     this.statusPantalla = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();
     if(status == 'celular'){
@@ -59,9 +61,10 @@ export class VentasCajaComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.ventas = this._listVentas
-    //console.log(this.ventas)
+    //this.lstCambiosDevoluciones=this._listVentas
+    //console.log( this._listVentas)
     //this.consultarAbonos()
-   
+
   }
 
   ExcelIndividual(){
@@ -74,7 +77,7 @@ export class VentasCajaComponent implements OnInit {
       NoArticulo: venta.noArticulos,
       Subtotal : venta.subtotal,
       Total : venta.total
-    
+
    })), { header: ['Ticket','TipoPago','TipoVenta','Fecha','NoArticulo','Subtotal','Total'] })
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Informe de ventas');

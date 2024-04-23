@@ -118,13 +118,13 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
   }
 
   addApartado(){
-    let apartadoCorrecto = true
+   /* let apartadoCorrecto = true
     //let idParent = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
 
     
     if(this.listArticulosSelected.length != 0)
     {
-      if(this.apartado.fecha == ""){
+      if(this.apartado.fecha == null){
         this.toastr.error('Faltan datos', 'Error!');
       }
       this.apartado.idEmpleado = this.cliente.idCliente
@@ -174,8 +174,7 @@ export class AddPedidoEspecialComponent implements OnInit,OnChanges,OnDestroy {
     }
       else{
         this.toastr.error("Seleeciona un articulo", 'Error!');
-      }
-    
+      }*/
   }
 
   addArticles(){
