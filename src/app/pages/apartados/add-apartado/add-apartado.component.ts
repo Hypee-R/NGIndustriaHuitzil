@@ -105,13 +105,13 @@ export class AddApartadoComponent implements OnInit {
   }
 
   addApartado(){
-    this.apartado.idEmpleado = this.cliente.idCliente
+    /*this.apartado.idEmpleado = this.cliente.idCliente
     this.apartado.idArticulo = this.selectedArticuloAdvanced.idArticulo
     this.apartado.direccion = this.cliente.direccion
     this.apartado.telefono = this.cliente.telefono1
     this.apartado.idTalla = this.selectedTalla
     this.apartado.type = "A"
-    if(this.apartado.idArticulo == undefined || this.apartado.idTalla == undefined || this.apartado.fecha == "" || this.apartado.idArticulo == 0){
+    if(this.apartado.idArticulo == undefined || this.apartado.idTalla == undefined  || this.apartado.idArticulo == 0){
       this.toastr.error('Faltan datos', 'Error!');
     }
     else{
@@ -129,7 +129,7 @@ export class AddApartadoComponent implements OnInit {
           }
       })
       
-    }
+    }*/
     /*console.log(this.selectedTalla)
     console.log(this.apartado)*/
   }

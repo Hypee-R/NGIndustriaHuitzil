@@ -1,0 +1,24 @@
+.dialog-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño */
+    gap: 20px; /* Espacio entre las columnas */
+  }
+.left-column, .right-column {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .left-column {
+    /* Estilos para la primera columna */
+  }
+  
+  .right-column {
+    /* Estilos para la segunda columna */
+  }
+  .rounded-outline {
+    display: inline-block; /* Para que el contorno se ajuste al texto */
+    padding: 8px 8px 8px 8px; /* Espaciado interno alrededor del texto */
+    border: 2px solid #e7e7e7; /* Grosor y color del contorno */
+    border-radius: 5px; /* Radio de borde para hacerlo redondeado */
+  }

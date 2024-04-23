@@ -51,6 +51,13 @@ export class ApartadosService {
        map (res => res)
      );
    }
+
+   getArticuloByApartado(idApartado : number): Observable<ResponseModel>{
+     return this.http.get<ResponseModel>(environment.apiService + `Apartados/ArticuloByApartado?idApartado=${idApartado}`)
+     .pipe(
+       map (res => res)
+     );
+   }
  
    agregaPago(request: PagoApartado): Observable<ResponseModel>{
      return this.http.post<ResponseModel>(environment.apiService + 'PagosApartados/Agrega', request)
