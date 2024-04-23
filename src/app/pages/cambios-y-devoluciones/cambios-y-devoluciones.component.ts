@@ -43,6 +43,7 @@ export class CambiosYDevolucionesComponent implements OnInit {
     this.loading = true;
     this.cambiosDevolucionesService.getCambiosDevoluciones().subscribe(response => {
       if(response.exito){
+        console.log(response.respuesta)
         this.lstCambiosDevoluciones = response.respuesta
         this.lstCambiosDevoluciones.forEach(cambio => {
           cambio.fecha = this.variablesGL.getFormatoFecha(cambio.fecha).toString();

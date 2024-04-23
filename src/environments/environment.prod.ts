@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  apiService: "http://localhost:5000/",
+  apiService: "https://industrias-huitzil.ngrok.app/",
   //apiService: "http://huitzil-001-site1.ftempurl.com/",
-//apiService: "https://huitzil-servicesapi.herokuapp.com/",
-   //apiService: "https://huitzildev.azurewebsites.net/"
+  //apiService: "https://huitzil-servicesapi.herokuapp.com/",
+  //apiService: "https://huitzildev.azurewebsites.net/"
 };

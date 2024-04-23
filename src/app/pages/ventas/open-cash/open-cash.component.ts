@@ -16,6 +16,7 @@ import Swal from 'sweetalert2'
   styleUrls: ['./open-cash.component.css']
 })
 export class OpenCashComponent implements OnInit {
+  user = JSON.parse(localStorage.getItem('usuario'));
   impresoraSeleccionada: string = "TicketsZebraSistema";
   @Input() _accion: string;
   @Input() _caja: CajaModel;
@@ -58,13 +59,13 @@ export class OpenCashComponent implements OnInit {
               if(response.exito){
                 console.log(response.respuesta)
                 this.ventas = response.respuesta
-               
+
                 let total=0
                 let totalEfectivo=0
                 let totalTarjeta=0
                 let totalMultiple=0
                 response.respuesta.forEach(function(a){
-                  
+
                   total += a.total;
                   if(a.tipoPago=="TARJETA"){
                     totalTarjeta +=a.total
@@ -81,7 +82,7 @@ export class OpenCashComponent implements OnInit {
 
                   }
 
-                
+
                 });
                 console.log(total);
 
@@ -91,8 +92,8 @@ export class OpenCashComponent implements OnInit {
                this. totalMultipledata=totalMultiple
               }
 
-           
-        
+
+
             })
           }
 
@@ -106,13 +107,13 @@ export class OpenCashComponent implements OnInit {
               if(response.exito){
                 console.log(response.respuesta)
                 this.ventas = response.respuesta
-               
+
                 let total=0
                 let totalEfectivo=0
                 let totalTarjeta=0
                 let totalMultiple=0
                 response.respuesta.forEach(function(a){
-                  
+
                   total += a.total;
                   if(a.tipoPago=="TARJETA"){
                     totalTarjeta +=a.total
@@ -129,7 +130,7 @@ export class OpenCashComponent implements OnInit {
 
                   }
 
-                
+
                 });
                 console.log(total);
 
@@ -139,12 +140,12 @@ export class OpenCashComponent implements OnInit {
                this. totalMultipledata=totalMultiple
               }
 
-           
-        
+
+
             })
           }
 
-          
+
         }
       }
     });
@@ -162,8 +163,8 @@ export class OpenCashComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.user.ubicacion)
 
-    
   }
 
   ngOnDestroy(): void {
@@ -202,9 +203,6 @@ export class OpenCashComponent implements OnInit {
     }else if(this.accion == 'Cerrar' && this.openCashModel.montoCierre > 0){
       // if(this.openCashModel.monto+this.totalVentas!=this.openCashModel.montoCierre){
       //   this.toastr.warning("Hay una Diferencia en el cierre escribe el motivo", 'Diferencia!');
-       
-
-
       // }else{
 
       console.log(this.fechaCierre)
@@ -213,8 +211,8 @@ export class OpenCashComponent implements OnInit {
           console.log('Actualizar');
           this.openCashModel.fechaCierre = this.fechaCierre ? this.variablesGL.setFormatoFecha(this.fechaCierre) : '';
           console.log(this.openCashModel)
-  
-  
+
+
           this.ventasService.closeCaja(this.openCashModel).subscribe(response => {
             console.log(response);
             if(response.exito){
@@ -222,7 +220,7 @@ export class OpenCashComponent implements OnInit {
                 this.submitted = false;
                 this.variablesGL.showDialog.next(false);
                 //Impresion del Status de la caja
-             
+
                 this.impresionCierreCaja()
               }else{
                 this.toastr.info(response.mensaje, 'Atención!')
@@ -237,10 +235,10 @@ export class OpenCashComponent implements OnInit {
         }
      // }
 
-     
+
     }
   }
-
+  //TODO validar el tiket nuevamente con los datos de mejora como nombre del cajero etc
   //Impresion del cierre del status de la caja
   async impresionCierreCaja(){
   //code Impresion
@@ -265,7 +263,8 @@ export class OpenCashComponent implements OnInit {
     .EscribirTexto("Total Ventas:"+this.totalVentas)
     .Feed(1)
     .EscribirTexto("Cerro Caja:"+this.openCashModel.fechaCierre)
-    .EscribirTexto("con el monto de :"+this.openCashModel.monto+this.totalVentas)
+    .EscribirTexto("con el monto de :"+this.openCashModel.monto+this.totalEfectivodata)
+    .EscribirTexto("*solo se contempla el Efectivo en caja, los multiples con tarjeta los valida el administrador*")
     .Feed(1)
     .EscribirTexto("*Recuerda conservar este ticket para tu respaldo al cierre de tu caja en buen estado *")
     .Feed(1)

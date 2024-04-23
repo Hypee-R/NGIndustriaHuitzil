@@ -42,7 +42,7 @@ export class VariablesService {
     this.router.navigate(['/login'], { replaceUrl: true });
     localStorage.d = "";
     localStorage.clear();
-    //location.reload();
+    location.reload();
   }
 
   changeTheme(darkTheme: boolean){

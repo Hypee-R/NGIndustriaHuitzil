@@ -60,16 +60,16 @@
             <div class="row position-absolute fixed-bottom mb-0 w-100">
               <div class="col-md-6 custom-height d-flex justify-content-center align-items-center" style="background-color: orange; color: white;">
                 <!-- <i class="pi pi-dollar" style="font-size: 2.5rem"> -->
-               
+
                   <span style="font-size: 2.5rem;">{{total| currency:'MXN' }}</span>
-             
+
                   <!-- <span style="font-size: 1.0rem;">{{totalLetra }}</span> -->
-                  
+
                 <!-- Contenido de la primera columna -->
               </div>
               <div class="col-md-3 custom-height d-flex justify-content-center align-items-center tooltip-container" style="background-color: green; color: white;" (click)="showDialog()">
                 <!-- Contenido de la segunda columna -->
-                <i class="pi pi-money-bill" style="font-size: 2.5rem"></i><span style="font-size: 1.5rem;">PAGAR</span> 
+                <i class="pi pi-money-bill" style="font-size: 2.5rem"></i><span style="font-size: 1.5rem;">PAGAR</span>
                 <div class="tooltip">Click para pagar</div>
               </div>
               <div class="col-md-3 custom-height d-flex justify-content-center align-items-center" style="background-color: red; color: white;" (click)="cancelarCompra()">
@@ -79,9 +79,9 @@
 
 
           </div>
-     
 
-      
+
+
         </div>
         <div class="col-md-4">
           <p-panel>
@@ -143,13 +143,13 @@
 
 
           </p-panel>
-          <p-panel>
+          <!-- <p-panel>
             <ng-template pTemplate="header">
               <span class="text-primary font-semibold text-xl">Informacion de Venta</span>
             </ng-template>
             <div class="row">
 
-              <div class="col-md-6"> <!-- Dos columnas en una fila -->
+              <div class="col-md-6">
 
 
 
@@ -161,7 +161,7 @@
             </div>
 
 
-          </p-panel>
+          </p-panel> -->
 
 
         </div>
@@ -172,7 +172,7 @@
 
 </div>
   <app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
-  <app-add-cliente [_accion]="accionAdd" *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente>
+  <!-- <app-add-cliente [_accion]="accionAdd" *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente> ya no se ocupa aqui la busqueda del cliente-->
   <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected"
     [_nArticles]="articulos" *ngIf="openProducts != ''" (_articulosS)="addProductVenta($event)"></app-open-productos>
 
@@ -223,8 +223,8 @@
           <!-- <button pButton type="button" label="Descuento" icon="pi pi-percentage"
           class="p-button-rounded p-button-warning p-button-lg" badge="8" badgeClass="p-badge-info"
           ></button> -->
-         
-          <!-- 
+
+          <!--
 
 
           <h5>Descuento cliente:-$0.0</h5>
@@ -245,8 +245,8 @@
 
         </div>
         <div class="col-sm">
-          
-          <h3>TOTAL: <button pButton pRipple icon="pi pi-dollar" type="button" class="p-button-rounded p-button-danger"   label="{{this.total}}"></button> </h3>
+
+          <h3>TOTAL: <button pButton pRipple icon="pi pi-dollar" type="button" class="p-button-rounded p-button-danger"   label="{{this.total-this.descuento}}"></button> </h3>
           <span style="font-size: 1rem;">{{totalLetra }}</span>
         </div>
 

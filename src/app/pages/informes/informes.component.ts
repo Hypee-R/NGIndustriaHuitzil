@@ -6,7 +6,6 @@ import * as XLSX from 'xlsx';
 import { ToastrService } from 'ngx-toastr';
 import { jsPDF } from "jspdf";
 import html2canvas from 'html2canvas';
-import { VentaArticuloModel } from 'src/app/models/VentaArticulo.Model';
 import { productoModel } from 'src/app/models/productos.model';
 import { CajaModel } from 'src/app/models/caja.model';
 
@@ -30,7 +29,7 @@ export class InformesComponent implements OnInit {
     public variablesGL: VariablesService,
     private toastr: ToastrService,
     private ventasService : VentasService
-  ) { 
+  ) {
 
     this.cols = [
       { field : 'N de caja', header:'N de caja'},
@@ -40,7 +39,7 @@ export class InformesComponent implements OnInit {
       {field: 'fechaCierre',header:'Fecha Cierre'},
       {field: 'monto',header:'Monto'},
       {field: 'montoCierre',header: 'Monto Cierre'}
-   
+
 
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
@@ -72,10 +71,10 @@ export class InformesComponent implements OnInit {
     }, err =>{
       this.loading = false
     })
-  
+
   }
 
-  
+
   getCajas() {
     this.loading = true;
     this.ventasService.getallCajas().subscribe(response => {
@@ -87,7 +86,7 @@ export class InformesComponent implements OnInit {
     }, err =>{
       this.loading = false
     })
-  
+
   }
 
   SearchByDates(){
@@ -97,10 +96,10 @@ export class InformesComponent implements OnInit {
       }
       else{
        /// this.cajas = []
-        
+
         this.ventasService.getallVentasCajasDate(this.fechaI,this.fechaF).subscribe(response =>{
           if(response.exito){
-            
+
            // console.log(response.respuesta)
             if(response.respuesta.length != 0){
               this.cajas = response.respuesta
@@ -111,19 +110,19 @@ export class InformesComponent implements OnInit {
               this.toastr.warning('No hay ventas esas fechas',"Error");
               this.getVentas()
             }
-          
+
         }
       })
       }
     }
-    else{ 
+    else{
       this.toastr.warning('Selecciona una fecha correcta',"Error");
     }
-    
+
   }
 
   Excel() {
-    
+
     /*if(this.fechaF != undefined && this.fechaI != undefined){
         console.log(this.fechaI)
         console.log(this.fechaF)
@@ -132,7 +131,7 @@ export class InformesComponent implements OnInit {
         }
         else{
         this.cajas = []
-        
+
         this.ventasService.getallVentasCajasDate(this.fechaI,this.fechaF).subscribe(response =>{
           if(response.exito){
             this.cajas = response.respuesta
@@ -144,7 +143,7 @@ export class InformesComponent implements OnInit {
               this.toastr.warning('No hay ventas esas fechas',"Error");
               this.getVentas()
             }
-          
+
         }
       })
     }
@@ -154,7 +153,7 @@ export class InformesComponent implements OnInit {
       this.GenerateExcel()
       //console.log(this.cajas)
     //}
-    
+
    }
 
    getArticulosVenta(ticket : string){
@@ -172,11 +171,11 @@ export class InformesComponent implements OnInit {
           this.ExcelIndividual(articulos.sort((a,b) =>{return a.idArticulo - b.idArticulo}),ticket)
         }
           console.log(articulos)
-         
+
         }
       })
 
-    
+
    }
 
    getVentasBycaja(idCaja : number){
@@ -217,7 +216,7 @@ export class InformesComponent implements OnInit {
     NoArticulos : row.noArticulos,
     Subtotal : row.subtotal,
     Total: row.total,*/
-    
+
    })), { header: ['Caja','Usuario','Ubicacion','Fecha','FechaCierre','MontoApertura','MontoCierre'] })
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Informe de ventas');
@@ -241,7 +240,7 @@ export class InformesComponent implements OnInit {
       Ubicacion : row.ubicacion,
       FechaIngreso : row.fechaIngreso
 
-    
+
    })), { header: ['Id','Descripcion','SKU','Precio','Talla','Unidad','Ubicacion','FechaIngreso'] })
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Informe de ventas');
