@@ -52,6 +52,14 @@ export class ApartadosService {
      );
    }
 
+   getPagoByCaja(idCaja : number): Observable<ResponseModel>{
+    // let sucursal = this.variablesGL.getSucursal() ?? "all";
+     return this.http.get<ResponseModel>(environment.apiService + `PagosApartados/Consulta/Caja?idCaja=${idCaja}`)
+     .pipe(
+       map (res => res)
+     );
+   }
+
    getArticuloByApartado(idApartado : number): Observable<ResponseModel>{
      return this.http.get<ResponseModel>(environment.apiService + `Apartados/ArticuloByApartado?idApartado=${idApartado}`)
      .pipe(
