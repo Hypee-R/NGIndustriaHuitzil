@@ -1,18 +1,17 @@
+
 import { Component, OnInit } from '@angular/core';
-import { error } from 'console';
 import { ToastrService } from 'ngx-toastr';
 import { CatApartadoModel } from 'src/app/models/apartado.model';
 import { ApartadoArticuloModel } from 'src/app/models/apartadoArticulo.model';
+import { CajaModel } from 'src/app/models/caja.model';
 import { CatClienteModel } from 'src/app/models/clientes.model';
 import { PagoApartado } from 'src/app/models/pagoApartado';
-import { productoVentaModel } from 'src/app/models/productoVenta.model';
 import { productoModel } from 'src/app/models/productos.model';
-import { CatTallaModel } from 'src/app/models/tallas.model';
 import { ApartadosService } from 'src/app/services/apartados.service';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { InventarioService } from 'src/app/services/inventario.service';
-import { TallasService } from 'src/app/services/tallas.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
+import { VentasService } from 'src/app/services/ventas.service';
 
 @Component({
   selector: 'app-apartados',
@@ -60,15 +59,18 @@ export class ApartadosComponent implements OnInit {
   selectedClient : CatClienteModel;
   colsProducts:any[] = [];
   queryString: string = '';
-  //articlesShell: productoVentaModel[] = [];
+  total = 0
+  totalLetra = "";
+  cashModel: CajaModel;
+  accion = '';
+  openCaja = true;
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
     private clientesService : ClientesService,
     private apartadoService : ApartadosService,
-    private tallasService:TallasService,
-    private inventarioService : InventarioService
-    
+    private inventarioService : InventarioService,
+    private ventasService: VentasService,
  
   ) {
     this.selectedArticuloAdvanced = new productoModel()
@@ -89,7 +91,6 @@ export class ApartadosComponent implements OnInit {
     this.colsPagos = 
 
     [
-      //{ field: 'idApartado', header: 'ID PEDIDO' },
       { field: 'idPagoApartado', header: 'ID PAGO' },
       { field: 'fecha',header:'FECHA PAGO'},
       { field: 'cantidad', header : 'CANTIDAD'}
@@ -138,7 +139,7 @@ export class ApartadosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+   
     this.getClientes()
     this.getApartados()
     this.getExistencias();
@@ -172,7 +173,6 @@ export class ApartadosComponent implements OnInit {
       this.toastr.error('Hubo un error al buscar cliente', 'Error!');
     });
 
-
   }
 
   getExistencias(){
@@ -191,11 +191,17 @@ export class ApartadosComponent implements OnInit {
     });
   }
 
-
   async showDetail(apartado: CatApartadoModel){
     this.hacerPago = apartado.resto != 0
     this.selectedApartado = apartado;
     this.pagoApartado = new PagoApartado()
+    if(apartado.status != 'Entregado'){
+      this.getCaja();
+    }
+    else{
+      this.toastr.info('El apartado ya fue entregado', 'Aviso');
+      //return;
+    }
     await this.apartadoService.getArticuloByApartado(apartado.idApartado).subscribe(response =>{
       if(response.exito){
           this.articulosByApartado = response.respuesta
@@ -210,21 +216,7 @@ export class ApartadosComponent implements OnInit {
     })
   }
 
-  showDetailPedido(apartado:CatApartadoModel){
-    this.selectedclienteNameAdvanced.idCliente = apartado.idCliente
-    this.clientes.forEach(cliente => {
-      if(cliente.idCliente == apartado.idCliente){
-        this.selectedclienteNameAdvanced = cliente
-      } 
-    });
-    //this.consultarPedidoEspecial()
-  }
-
   entregarPedido(){
-    //let d = new Date()
-    //let newApartado = apartado
-    //newApartado.fechaEntrega = d.toISOString().substring(0, 19);
-    //newApartado.status = "Entregado"
     this.selectedApartado.status = "Entregado"
     this.apartadoService.actualizaApartado(this.selectedApartado).subscribe(request =>{
       if(request.exito){
@@ -240,8 +232,7 @@ export class ApartadosComponent implements OnInit {
       this.toastr.error('Hubo un error al entregar el Apartado', 'Error!');
     });
     
-    
-    
+
   } 
 
   openAddPedido(){
@@ -251,58 +242,6 @@ export class ApartadosComponent implements OnInit {
     this.articulos = 0
     this.selectedClient = undefined
    
-  }
-
-
-  makePay(apartado : CatApartadoModel){
-    this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response => {
-    if (response.exito) {
-      this.listPagos =  response.respuesta
-      /*this.accion = ""
-      this.accionAdd = ''
-      this.accionPedido = ''
-      this.accionPago = "Add"
-      this.selectedApartado = apartado*/
-      setTimeout(() => {
-        this.variablesGL.showDialog.next(true);
-      }, 300);
-    } else {
-      this.variablesGL.hideLoading();
-     
-      this.toastr.error(response.mensaje, 'Error!');
-    }
-  }, err => {
-    this.variablesGL.hideLoading();
-    this.toastr.error('Hubo al obtener los pagos', 'Error!');
-  });
-  
-  }
-
-  makePayPedido(apartado:CatApartadoModel){
-    //this.accionPago = "Pedidos"
-    //this.accionPedido = ''
-    this.selectedApartado = apartado
-    //console.log(this.selectedApartado.idApartado)
-    setTimeout(() => {
-      this.variablesGL.showDialog.next(true);
-    }, 300);
-    this.apartadoService.getApartadoByUsuario(this.selectedclienteNameAdvanced.idCliente,"I",this.selectedApartado.idApartado).subscribe(responce =>{
-      if(responce.exito){
-        console.log(responce.respuesta)
-        this.listArticulosApartados = responce.respuesta
-
-        this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response =>{
-          if(responce.exito){
-            this.listPagos = response.respuesta
-                  setTimeout(() => {
-            this.variablesGL.showDialog.next(true);
-          }, 300);
-          }
-        })
-  
-      }
-    })
-    
   }
 
   getResultsClients(event) {
@@ -334,16 +273,12 @@ export class ApartadosComponent implements OnInit {
       this.toastr.warning('Selecciona un cliente', 'Aviso!');
       return
     }
-   
     this.apartado.idCliente = this.selectedClient.idCliente
     this.apartado.articulosApartados = this.articulosApartados
     this.apartado.total = this.total
     this.apartado.resto = this.total
     this.apartado.fecha = new Date()
     this.apartado.type = "A"
-    console.log(this.apartado)
-    //return
-  
    this.apartadoService.agregaApartado(this.apartado).subscribe(response =>{
           if(response.exito){
             this.hideDialog()
@@ -355,6 +290,7 @@ export class ApartadosComponent implements OnInit {
           }
       })
   }
+
   hideDialog() {
     this.submitted = false;
     this.cliente = new CatClienteModel();
@@ -363,9 +299,6 @@ export class ApartadosComponent implements OnInit {
 
   hideDialogPagos() {
     this.showPagosPedido = false
-   // this.submitted = false;
-    //this.cliente = new CatClienteModel();
-    //this.showNewReserve = false;
   }
 
   async addPago(){
@@ -386,17 +319,14 @@ export class ApartadosComponent implements OnInit {
       this.toastr.warning('La cantidad debe ser menor a '+ this.selectedApartado.resto, 'Aviso');
       return
     }
-    
     this.pagoApartado.idApartado = this.selectedApartado.idApartado
-    console.log(this.pagoApartado)
     this.selectedApartado.resto -=this.pagoApartado.cantidad
+    this.pagoApartado.idCaja = this.cashModel.idCaja
     await this.apartadoService.agregaPago(this.pagoApartado).subscribe(response =>{
       if(response.exito){
-        
         this.apartadoService.actualizaApartado(this.selectedApartado).subscribe(request =>{
           if(request.exito){
             this.toastr.success('Abono realizado correctamente', 'Aviso');
-            //this.toastr.success("Apartado Entregado","Correcto")
             this.getPagos(this.selectedApartado)
             this.pagoApartado = new PagoApartado()
             this.submitted = false
@@ -415,27 +345,10 @@ export class ApartadosComponent implements OnInit {
         this.toastr.success(response.mensaje, 'Error!');
       }
   })
-    //return
-    /*if(this.pagoApartado.cantidad < this._apartado.precio && this.pagoApartado.fecha != "")
-    {
-    this.pagoApartado.idApartado = this._apartado.idApartado
-    this.apartadoService.agregaPago(this.pagoApartado).subscribe(response =>{
-      if(response.exito){
-        this.toastr.success('Abono realizado', 'Sucess');
-        //this.getPagos()
-        setTimeout(() => {
-          
-        }, 200);
-      }
-      else{
-        this.toastr.success(response.mensaje, 'Error!');
-      }
-  })
-  }*/}
+  }
 
   async getPagos(apartado: CatApartadoModel){
     this.listPagos = []
-    //console.log(this._apartado.idApartado)
     await this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response =>{
         if(response.exito){
           this.listPagos = response.respuesta
@@ -444,8 +357,6 @@ export class ApartadosComponent implements OnInit {
     )
   }
 
-  total = 0
-  totalLetra = "";
   deleteProduct(product: ApartadoArticuloModel, index: number) {
     if (this.articulosApartados[index].cantidad > 1) {
       this.articulosApartados[index].cantidad -= 1
@@ -456,7 +367,6 @@ export class ApartadosComponent implements OnInit {
     this.total -= product.precio
     this.articulos -= 1
   }
-
 
   addArticle(product: productoModel, index: number) {
     this.articulosApartados[index].cantidad += 1
@@ -518,7 +428,7 @@ export class ApartadosComponent implements OnInit {
       return strMiles;
 
     return strMillones + ' ' + strMiles;
-  }//Millones()
+  }
 
   Seccion(num, divisor, strSingular, strPlural) {
     let cientos = Math.floor(num / divisor)
@@ -536,7 +446,7 @@ export class ApartadosComponent implements OnInit {
       letras += '';
 
     return letras;
-  }//Seccion()
+  }
 
   Miles(num) {
     let divisor = 1000;
@@ -550,7 +460,8 @@ export class ApartadosComponent implements OnInit {
       return strCentenas;
 
     return strMiles + ' ' + strCentenas;
-  }//Miles()
+  }
+
   Centenas(num) {
     let centenas = Math.floor(num / 100);
     let decenas = num - (centenas * 100);
@@ -571,7 +482,7 @@ export class ApartadosComponent implements OnInit {
     }
 
     return this.Decenas(decenas);
-  }//Centenas()
+  }
 
   Unidades(num) {
     switch (num) {
@@ -587,7 +498,7 @@ export class ApartadosComponent implements OnInit {
     }
 
     return '';
-  }//Unidades()
+  }
 
   Decenas(num) {
 
@@ -619,15 +530,14 @@ export class ApartadosComponent implements OnInit {
       case 9: return this.DecenasY('NOVENTA', unidad);
       case 0: return this.Unidades(unidad);
     }
-  }//Unidades()
+  }
 
   DecenasY(strSin, numUnidades) {
     if (numUnidades > 0)
       return strSin + ' Y ' + this.Unidades(numUnidades)
 
     return strSin;
-  }//DecenasY()
-
+  }
 
   onAutoCompleteSelect(event) {
     this.articulosApartados = []
@@ -636,6 +546,7 @@ export class ApartadosComponent implements OnInit {
         this.articulosApartados.push(event)
     }
   }
+
   onchangeShear() {
     if (this.queryString && this.queryString.trim().length > 0) {
       this.variablesGL.showLoading();
@@ -676,7 +587,6 @@ export class ApartadosComponent implements OnInit {
   }
 
   addProductApartado(product: productoModel) {
-   
     if(this.articulosApartados.length === 0){
       let artc = new ApartadoArticuloModel()
       artc.descripcion = product.descripcion
@@ -704,7 +614,6 @@ export class ApartadosComponent implements OnInit {
           artc.cantidad = 1
           artc.sku = product.sku
           artc.idArticulo = product.idArticulo
-          console.log(artc)
           this.articulosApartados.push(artc)
           this.articulos += 1
           this.total += product.precio
@@ -719,5 +628,71 @@ export class ApartadosComponent implements OnInit {
         this.addArticle(product,busqueda)
       }
     }
+  }
+
+  getCaja() {
+    this.ventasService.getCaja().subscribe(resp => {
+      //console.log('data vcaja ', resp);
+      if (resp.exito) {
+        this.cashModel = resp.respuesta;
+        console.log(this.cashModel)
+        console.log(this.accion)
+        if (this.cashModel.fecha != null && this.cashModel.fechaCierre == null) {
+          this.toastr.info('Actualmente hay una caja abierta', 'Atención!');
+          /*if (this.accion == 'Abrir') {
+            //console.log('No se puede abrir caja, hay una abierta...');
+            this.toastr.info('Actualmente hay una caja abierta', 'Atención!');
+            this.openCaja = true;
+            return;
+          }*/
+
+        } else if (this.cashModel.fecha != null && this.cashModel.fechaCierre != null) {
+          
+          this.openCaja = false;
+          this.toastr.warning('La caja esta cerrada, Abrir una nueva', 'Aviso!');
+          console.log(this.accion)
+          if (this.accion == 'Abrir') {
+            //console.log('Abrir caja...');
+            this.cashModel = new CajaModel();
+          } else if (this.accion == 'Cerrar') {
+           // console.log('ya está cerrada la caja');
+            this.toastr.info('Ya está cerrada la caja', 'Atención!');
+            this.accion = 'Status';
+          }
+        }
+
+
+
+        /*setTimeout(() => {
+          this.variablesGL.showDialog.next(true);
+        }, 100);*/
+
+
+      } else {
+
+        if (this.accion == 'Abrir') {
+          this.cashModel = new CajaModel();
+          setTimeout(() => {
+            this.variablesGL.showDialog.next(true);
+          }, 100);
+        } else {
+          this.openCaja = false;
+          this.toastr.info(resp.mensaje, 'Atención!');
+        }
+
+      }
+    },
+      err => {
+        this.toastr.error('Error al obtener status de la caja', 'Error!');
+        this.cashModel = new CajaModel();
+      });
+  }
+
+  openCashRegister() {
+    //this.openProducts = ""
+    //this.accionAdd = ''
+    this.accion = 'Abrir';
+    this.getCaja();
+
   }
 }

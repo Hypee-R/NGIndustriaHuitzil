@@ -53,7 +53,7 @@ export class VentasService {
     );
   }
   getCaja(): Observable<ResponseModel>{
-    console.log(this.user)
+    //console.log(this.user)
     return this.http.get<ResponseModel>(environment.apiService + `Ventas/Cash/Consulta?param=${this.user.id}`)
     .pipe(
       map (res => res)

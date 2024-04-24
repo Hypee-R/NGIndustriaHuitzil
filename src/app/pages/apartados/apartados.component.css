@@ -22,3 +22,17 @@
     border: 2px solid #e7e7e7; /* Grosor y color del contorno */
     border-radius: 5px; /* Radio de borde para hacerlo redondeado */
   }
+
+  .caja .bg-blue-200 {
+    background-color: #4891cd; /* Color azul */
+  }
+
+  /* Estilos para los contenedores */
+.producto, .caja, .acciones,.cajaclose {
+  margin-bottom: 20px; /* Agrega un margen inferior de 20px */
+  cursor: pointer; /* Cambia el cursor al pasar sobre los elementos */
+}
+
+.button-content {
+  padding: 20px; /* Espacio interior */
+}

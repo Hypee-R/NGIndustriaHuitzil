@@ -8,6 +8,8 @@ import { VentaModel } from 'src/app/models/venta.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from '../../../services/ventas.service';
 import Swal from 'sweetalert2'
+import { ApartadosService } from 'src/app/services/apartados.service';
+import { PagoApartado } from 'src/app/models/pagoApartado';
 
 
 @Component({
@@ -31,6 +33,7 @@ export class OpenCashComponent implements OnInit {
   dialogSubscription: Subscription = new Subscription();
   datePipe = new DatePipe("en-US");
   totalVentas;
+  totalApartados;
   totalEfectivodata;
   totalTarjetadata;
   totalMultipledata;
@@ -39,6 +42,7 @@ export class OpenCashComponent implements OnInit {
     private toastr: ToastrService,
     private variablesGL: VariablesService,
     private ventasService: VentasService,
+    private apartadosService: ApartadosService
   ) {
 
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
@@ -57,7 +61,7 @@ export class OpenCashComponent implements OnInit {
 
             this.ventasService.getVentasByCaja(this.openCashModel.idCaja).subscribe(response => {
               if(response.exito){
-                console.log(response.respuesta)
+               // console.log(response.respuesta)
                 this.ventas = response.respuesta
 
                 let total=0
@@ -90,6 +94,15 @@ export class OpenCashComponent implements OnInit {
                 this.totalEfectivodata=totalEfectivo
                this. totalTarjetadata=totalTarjeta
                this. totalMultipledata=totalMultiple
+               this.totalApartados = 0
+              this.apartadosService.getPagoByCaja(this.openCashModel.idCaja).subscribe(response =>{
+              if(response.exito){
+                var listPagos : PagoApartado[] = response.respuesta;
+                listPagos.forEach((pago) =>{
+                  this.totalApartados += pago.cantidad;
+                })
+              }
+            })
               }
 
 
@@ -133,7 +146,6 @@ export class OpenCashComponent implements OnInit {
 
                 });
                 console.log(total);
-
                 this.totalVentas=total;
                 this.totalEfectivodata=totalEfectivo
                this. totalTarjetadata=totalTarjeta
@@ -142,6 +154,15 @@ export class OpenCashComponent implements OnInit {
 
 
 
+            })
+            this.totalApartados = 0
+            this.apartadosService.getPagoByCaja(this.openCashModel.idCaja).subscribe(response =>{
+              if(response.exito){
+                var listPagos : PagoApartado[] = response.respuesta;
+                listPagos.forEach((pago) =>{
+                  this.totalApartados += pago.cantidad;
+                })
+              }
             })
           }
 

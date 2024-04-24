@@ -40,8 +40,6 @@
                                 <th>
                                     ACCIONES
                                 </th>
-                                
-                                
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
@@ -217,18 +215,14 @@
                 </div>
               </div>
             
-            
         </ng-template>
         
         <ng-template pTemplate="footer">
             <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
             <button pButton pRipple label="Crear Apartado" icon="pi pi-check" class="p-button-text" (click)="addApartado()"></button>
         </ng-template>
-    
     </p-dialog>
-
     <p-dialog [(visible)]="showPagosPedido" header="Historial de Pagos" [modal]="true" styleClass="p-fluid" >
-
         <ng-template pTemplate="content">
             <div class="dialog-content">
             <div class="left-column">
@@ -239,61 +233,70 @@
                     <h5>
                         Monto por pagar {{this.selectedApartado.resto  | currency:'MXN':'symbol':'1.2-2'}}
                     </h5>
-                    <div *ngIf="hacerPago">
-                       
-                         <div class="field">
-                        <label for="fecha">Fecha</label>
-                        <input type="date" pInputText id="fecha"  [(ngModel)]="pagoApartado.fecha" [disabled]="false" />
-                        <small class="p-error" *ngIf="submitted && pagoApartado.fecha == ''" >  Debe seleccionar una fecha</small>
+                    <div *ngIf="!openCaja">
+                            <div>
+                                NO EXISTE UNA CAJA ABIERTA PARA RECIBIR UN PAGO
+                            </div>
+                           <br>
+                            <div>
+                                <button pButton type="button" label="Abrir Caja"  
+                                class="p-button-info" (click)="openCashRegister()" icon="pi pi-inbox" ></button>
+                            </div>
+                            
+                    </div>
+
+                    <div *ngIf="openCaja">
+                        <div *ngIf="hacerPago">
+                            <div class="field">
+                            <label for="fecha">Fecha</label>
+                            <input type="date" pInputText id="fecha"  [(ngModel)]="pagoApartado.fecha" [disabled]="false" />
+                            <small class="p-error" *ngIf="submitted && pagoApartado.fecha == ''" >  Debe seleccionar una fecha</small>
+                            </div>
+                            <div class="field">
+                            <label for="cantidad">Monto</label>
+                            <input type="number" pInputText id="cantidad" [(ngModel)]="pagoApartado.cantidad"[disabled]="false" min="0" max = {{_apartado.precio}}>
+                            <small class="p-error" *ngIf="submitted && pagoApartado.cantidad > this.selectedApartado.resto" >La cantidad debe ser menor al costo del articulo</small>
+                            </div>
+                        <br>
+                        <button pButton type="button" label="Hacer pago"  class="p-button-info" (click)="addPago()" [disabled]="!hacerPago"></button>
                         </div>
-                         <div class="field">
-                        <label for="cantidad">Monto</label>
-                        <input type="number" pInputText id="cantidad" [(ngModel)]="pagoApartado.cantidad"[disabled]="false" min="0" max = {{_apartado.precio}}>
-                        <small class="p-error" *ngIf="submitted && pagoApartado.cantidad > this.selectedApartado.resto" >La cantidad debe ser menor al costo del articulo</small>
-                         </div>
-                    <br>
-                    <button pButton type="button" label="Hacer pago"  class="p-button-info" (click)="addPago()" [disabled]="!hacerPago"></button>
+                        <div *ngIf="!hacerPago">
+                            
+                            Se ha terminado de liquidar el Apartado
+                        </div>
                     </div>
-                    <div *ngIf="!hacerPago">
-                        Se ha terminado de liquidar el Apartado
+                    <div *ngIf="openCaja">
+                    <p-table #dt [value]="listPagos" [columns]="colsPagos" [rows]="rows" [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
+                    dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Pagos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+                    <ng-template pTemplate="caption">
+                    
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                <div class="flex justify-content-center align-items-center">
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </div>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr>
+            <td>
+                {{rowData['idPagoApartado']}}
+            </td>
+            <td>
+                {{rowData['fecha']  | date: 'dd/MM/yyyy, hh:mm a'}}
+            </td>
+            <td>
+                {{rowData['cantidad'] | currency:'MXN':'symbol':'1.2-2' }}
+            </td>
+        </tr>
+    </ng-template> 
+                    </p-table>
                     </div>
-                        <p-table #dt [value]="listPagos" [columns]="colsPagos" [rows]="rows" [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
-                                            dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Pagos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
-                                            <ng-template pTemplate="caption">
-                                               
-                                            </ng-template>
-                                            <ng-template pTemplate="header" let-columns>
-                                                <tr>
-                                                    
-                                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                                        <div class="flex justify-content-center align-items-center">
-                                                            {{col.header}}
-                                                            <p-sortIcon [field]="col.field"></p-sortIcon>
-                                                        </div>
-                                                    </th>
-                
-                
-                                                </tr>
-                
-                                            </ng-template>
-                                            <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                                <tr>
-                                                    <td>
-                                                        {{rowData['idPagoApartado']}}
-                                                    </td>
-                                                    <td>
-                                                        {{rowData['fecha']  | date: 'dd/MM/yyyy, hh:mm a'}}
-                                                    </td>
-                                                    <td>
-                                                        {{rowData['cantidad'] | currency:'MXN':'symbol':'1.2-2' }}
-                                                    </td>
-                                                </tr>
-                                            </ng-template>
-                                          
-                        </p-table>
-                   
-                    </div>
-                
+                </div>
                 </div>
             <div class="right-column">
                 <h5>
@@ -329,14 +332,12 @@
                     </div>
                 </div>
             </div>
-           
-            
         </ng-template>
-        
         <ng-template pTemplate="footer">
             <button pButton pRipple label="Cerrar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialogPagos()"></button>
-            <button *ngIf="!hacerPago" pButton pRipple label="Entregar" icon="pi pi-check" class="p-button-text" (click)="entregarPedido()"></button>
+            <button *ngIf="!hacerPago && selectedApartado.status != 'Entregado'" pButton pRipple label="Entregar" icon="pi pi-check" class="p-button-text" (click)="entregarPedido()"></button>
         </ng-template>
     
     </p-dialog>
+    <app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
 </div>
