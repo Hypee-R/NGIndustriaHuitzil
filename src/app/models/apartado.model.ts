@@ -2,18 +2,13 @@ import { ApartadoArticuloModel } from "./apartadoArticulo.model";
 
 export class CatApartadoModel{
     idApartado: number;
-    //idEmpleado: number;
     idCliente:number;
-    //idArticulo : number;
-    //idTalla : number;
     idParent: number;
     fecha: Date;
     fechaEntrega: string;
     telefono : string;
-    //direccion : string;
+    ubicacion:string;
     status : string;
-    //articulo: string;
-    //talla :string;
     precio : number;
     total :number;
     resto:number
