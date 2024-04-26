@@ -64,6 +64,7 @@ export class ApartadosComponent implements OnInit {
   cashModel: CajaModel;
   accion = '';
   openCaja = true;
+  sucursal =''
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -136,6 +137,12 @@ export class ApartadosComponent implements OnInit {
       this.rows = 7;
       this.rowsApartados = 12;
     }
+
+    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined||this.variablesGL.getSucursal()== ""){
+      this.sucursal="all"
+    }else{
+      this.sucursal=this.variablesGL.getSucursal()
+    }
   }
 
   ngOnInit(): void {
@@ -146,7 +153,7 @@ export class ApartadosComponent implements OnInit {
   }
 
   getApartados(){
-    this.apartadoService.getApartados().subscribe(response => {
+    this.apartadoService.getApartadosByUbicacion().subscribe(response => {
       if(response.exito){
         this.allApartados = response.respuesta
       }
@@ -278,6 +285,7 @@ export class ApartadosComponent implements OnInit {
     this.apartado.total = this.total
     this.apartado.resto = this.total
     this.apartado.fecha = new Date()
+    this.apartado.ubicacion= this.sucursal
     this.apartado.type = "A"
    this.apartadoService.agregaApartado(this.apartado).subscribe(response =>{
           if(response.exito){

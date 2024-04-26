@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { CatApartadoModel } from '../models/apartado.model';
 import { PagoApartado} from '../models/pagoApartado';
 import { ResponseModel } from '../models/response.model';
+import { VariablesService } from './variablesGL.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +13,29 @@ import { ResponseModel } from '../models/response.model';
 export class ApartadosService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private variablesGL: VariablesService
   ) {}
 
   
   getApartados(): Observable<ResponseModel>{
     return this.http.get<ResponseModel>(environment.apiService + 'Apartados/ConsultaAll')
+    .pipe(
+      map (res => res)
+    );
+  }
+
+  getApartadosByUbicacion(): Observable<ResponseModel>{
+    let sucursal ;
+    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
+      return this.http.get<ResponseModel>(environment.apiService + 'Apartados/ConsultaAll')
+    .pipe(
+      map (res => res)
+    );
+    }else{
+      sucursal=this.variablesGL.getSucursal()
+    }
+    return this.http.get<ResponseModel>(environment.apiService + `Apartados/ConsultaByUbicacion?ubicacion=${sucursal}`)
     .pipe(
       map (res => res)
     );
