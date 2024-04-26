@@ -7,7 +7,6 @@ import { CajaModel } from 'src/app/models/caja.model';
 import { VentaModel } from 'src/app/models/venta.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from '../../../services/ventas.service';
-import Swal from 'sweetalert2'
 import { ApartadosService } from 'src/app/services/apartados.service';
 import { PagoApartado } from 'src/app/models/pagoApartado';
 
@@ -48,137 +47,38 @@ export class OpenCashComponent implements OnInit {
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
       this.visibleDialog = estado;
 
-      if(this.visibleDialog){
-        if(this._accion){
+      if (this.visibleDialog) {
+        if (this._accion) {
           this.accion = this._accion;
         }
-        if(this._caja){
+        if (this._caja) {
           this.openCashModel = this._caja;
           console.log(this.openCashModel.fecha)
           this.fecha = this.openCashModel.fecha != '' ? this.variablesGL.getFormatoFecha(this.openCashModel.fecha) : new Date();
-          if(this.accion == 'Cerrar'){
-            this.fechaCierre =  new Date();
+          this.GetInformacionCaja()
 
-            this.ventasService.getVentasByCaja(this.openCashModel.idCaja).subscribe(response => {
-              if(response.exito){
-               // console.log(response.respuesta)
-                this.ventas = response.respuesta
-
-                let total=0
-                let totalEfectivo=0
-                let totalTarjeta=0
-                let totalMultiple=0
-                response.respuesta.forEach(function(a){
-
-                  total += a.total;
-                  if(a.tipoPago=="TARJETA"){
-                    totalTarjeta +=a.total
-
-                  }
-
-                  if(a.tipoPago=="EFECTIVO"){
-                    totalEfectivo +=a.total
-
-                  }
-
-                  if(a.tipoPago=="MULTIPLE"){
-                    totalMultiple +=a.total
-
-                  }
-
-
-                });
-                console.log(total);
-
-                this.totalVentas=total;
-                this.totalEfectivodata=totalEfectivo
-               this. totalTarjetadata=totalTarjeta
-               this. totalMultipledata=totalMultiple
-               this.totalApartados = 0
-              this.apartadosService.getPagoByCaja(this.openCashModel.idCaja).subscribe(response =>{
-              if(response.exito){
-                var listPagos : PagoApartado[] = response.respuesta;
-                listPagos.forEach((pago) =>{
-                  this.totalApartados += pago.cantidad;
-                })
-              }
-            })
-              }
-
-
-
-            })
+          if (this.accion == 'Cerrar') {
+            console.log("Cierre")
+            this.fechaCierre = new Date();
           }
-
-        //  if(this.openCashModel.montoCierre != null && this.accion == 'Status'){
-          if( this.accion == 'Status'){
+          if (this.accion == 'Status') {
             console.log("STATUS")
             console.log(this.openCashModel.idCaja)
             this.fechaCierre = this.openCashModel.fechaCierre != null ? this.variablesGL.getFormatoFecha(this.openCashModel.fechaCierre) : new Date();
-
-            this.ventasService.getVentasByCaja(this.openCashModel.idCaja).subscribe(response => {
-              if(response.exito){
-                console.log(response.respuesta)
-                this.ventas = response.respuesta
-
-                let total=0
-                let totalEfectivo=0
-                let totalTarjeta=0
-                let totalMultiple=0
-                response.respuesta.forEach(function(a){
-
-                  total += a.total;
-                  if(a.tipoPago=="TARJETA"){
-                    totalTarjeta +=a.total
-
-                  }
-
-                  if(a.tipoPago=="EFECTIVO"){
-                    totalEfectivo +=a.total
-
-                  }
-
-                  if(a.tipoPago=="MULTIPLE"){
-                    totalMultiple +=a.total
-
-                  }
-
-
-                });
-                console.log(total);
-                this.totalVentas=total;
-                this.totalEfectivodata=totalEfectivo
-               this. totalTarjetadata=totalTarjeta
-               this. totalMultipledata=totalMultiple
-              }
-
-
-
-            })
-            this.totalApartados = 0
-            this.apartadosService.getPagoByCaja(this.openCashModel.idCaja).subscribe(response =>{
-              if(response.exito){
-                var listPagos : PagoApartado[] = response.respuesta;
-                listPagos.forEach((pago) =>{
-                  this.totalApartados += pago.cantidad;
-                })
-              }
-            })
+         
           }
-
-
         }
       }
     });
 
     let status = this.variablesGL.getPantalla();
-    if(status == 'celular'){
+    if (status == 'celular') {
       this.rows = 6;
-    }else if(status == 'tablet'){
+    } else if (status == 'tablet') {
       this.rows = 7;
-    }else if(status == 'laptop'){
+    } else if (status == 'laptop') {
       this.rows = 5;
-    }else{
+    } else {
       this.rows = 11;
     }
   }
@@ -189,7 +89,7 @@ export class OpenCashComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    if(this.dialogSubscription){
+    if (this.dialogSubscription) {
       this.dialogSubscription.unsubscribe();
     }
   }
@@ -200,101 +100,98 @@ export class OpenCashComponent implements OnInit {
     this.variablesGL.showDialog.next(false);
   }
 
-  saveCaja(){
+  saveCaja() {
     this.submitted = true;
-    if(this.accion == 'Abrir' && this.openCashModel.monto > 0){
-      console.log('Agregar');
+    if (this.accion == 'Abrir' && this.openCashModel.monto > 0) {
       this.openCashModel.fecha = this.fecha ? this.variablesGL.setFormatoFecha(this.fecha) : '';
-
-
-        this.ventasService.openCaja(this.openCashModel).subscribe(response => {
-            console.log(response);
-            if(response.exito){
-                this.toastr.success(response.mensaje, 'Exito!');
-                this.submitted = false;
-                this.variablesGL.showDialog.next(false);
-            }else{
-                this.toastr.info(response.mensaje, 'Atención!')
-            }
-        },
+      this.ventasService.openCaja(this.openCashModel).subscribe(response => {
+        console.log(response);
+        if (response.exito) {
+          this.toastr.success(response.mensaje, 'Exito!');
+          this.submitted = false;
+          this.variablesGL.showDialog.next(false);
+        } else {
+          this.toastr.info(response.mensaje, 'Atención!')
+        }
+      },
         err => {
           console.log('error -> ', err);
-          this.toastr.error('Ocurrió un error al hacer la operación','Error!');
+          this.toastr.error('Ocurrió un error al hacer la operación', 'Error!');
         });
-    }else if(this.accion == 'Cerrar' && this.openCashModel.montoCierre > 0){
+    } else if (this.accion == 'Cerrar' && this.openCashModel.montoCierre > 0) {
+
       // if(this.openCashModel.monto+this.totalVentas!=this.openCashModel.montoCierre){
       //   this.toastr.warning("Hay una Diferencia en el cierre escribe el motivo", 'Diferencia!');
       // }else{
 
       console.log(this.fechaCierre)
       console.log(this.variablesGL.setFormatoFecha(this.fecha))
-        if(this.fechaCierre > this.fecha){
-          console.log('Actualizar');
-          this.openCashModel.fechaCierre = this.fechaCierre ? this.variablesGL.setFormatoFecha(this.fechaCierre) : '';
-          console.log(this.openCashModel)
+      if (this.fechaCierre > this.fecha) {
 
+        this.openCashModel.fechaCierre = this.fechaCierre ? this.variablesGL.setFormatoFecha(this.fechaCierre) : '';
+        console.log(this.openCashModel)
 
-          this.ventasService.closeCaja(this.openCashModel).subscribe(response => {
-            console.log(response);
-            if(response.exito){
-                this.toastr.success(response.mensaje, 'Exito!');
-                this.submitted = false;
-                this.variablesGL.showDialog.next(false);
-                //Impresion del Status de la caja
-
-                this.impresionCierreCaja()
-              }else{
-                this.toastr.info(response.mensaje, 'Atención!')
-            }
-          },
+        this.ventasService.closeCaja(this.openCashModel).subscribe(response => {
+          console.log(response);
+          if (response.exito) {
+            this.toastr.success(response.mensaje, 'Exito!');
+            this.submitted = false;
+            this.variablesGL.showDialog.next(false);
+            //Impresion del Status de la caja
+            this.impresionCierreCaja()
+          } else {
+            this.toastr.info(response.mensaje, 'Atención!')
+          }
+        },
           err => {
             console.log('error -> ', err);
-            this.toastr.error('Ocurrió un error al hacer la operación','Error!');
+            this.toastr.error('Ocurrió un error al hacer la operación', 'Error!');
           });
-        }else{
-          this.toastr.error('La fecha de cierre debe ser posterior a la fecha que se abrió la caja', 'Error');
-        }
-     // }
+      } else {
+        this.toastr.error('La fecha de cierre debe ser posterior a la fecha que se abrió la caja', 'Error');
+      }
+      // }
 
 
     }
   }
+
   //TODO validar el tiket nuevamente con los datos de mejora como nombre del cajero etc
   //Impresion del cierre del status de la caja
-  async impresionCierreCaja(){
-  //code Impresion
-  const conector = new ConectorPluginV3();
-  conector
-    .Iniciar()
-    .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-    .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-    .Feed(1)
-    .EscribirTexto("*Apertura y Cierre de caja*")
-    .Feed(1)
-    .EscribirTexto("Caja:"+this.openCashModel.idCaja)
-    .Feed(1)
-    .EscribirTexto("*Empleado:"+this.openCashModel.idEmpleado)
-    .Feed(1)
-    .EscribirTexto("Abrio Caja:"+this.openCashModel.fecha)
-    .EscribirTexto("con el monto de :"+this.openCashModel.monto)
-    .Feed(1)
-    .EscribirTexto("Total con Tarjeta:"+this.totalTarjetadata)
-    .EscribirTexto("Total Efectivo:"+this.totalEfectivodata)
-    .EscribirTexto("Total Multiple:"+this.totalEfectivodata)
-    .EscribirTexto("Total Ventas:"+this.totalVentas)
-    .Feed(1)
-    .EscribirTexto("Cerro Caja:"+this.openCashModel.fechaCierre)
-    .EscribirTexto("con el monto de :"+this.openCashModel.monto+this.totalEfectivodata)
-    .EscribirTexto("*solo se contempla el Efectivo en caja, los multiples con tarjeta los valida el administrador*")
-    .Feed(1)
-    .EscribirTexto("*Recuerda conservar este ticket para tu respaldo al cierre de tu caja en buen estado *")
-    .Feed(1)
-    .Corte(1)
-    .Iniciar()
-    .Feed(1);
-    try{
+  async impresionCierreCaja() {
+    //code Impresion
+    const conector = new ConectorPluginV3();
+    conector
+      .Iniciar()
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+      .Feed(1)
+      .EscribirTexto("*Apertura y Cierre de caja*")
+      .Feed(1)
+      .EscribirTexto("Caja:" + this.openCashModel.idCaja)
+      .Feed(1)
+      .EscribirTexto("*Empleado:" + this.user.nombre)
+      .Feed(1)
+      .EscribirTexto("Abrio Caja:" + this.openCashModel.fecha)
+      .EscribirTexto("con el monto de :" + this.openCashModel.monto)
+      .Feed(1)
+      .EscribirTexto("Total con Tarjeta:" + this.totalTarjetadata)
+      .EscribirTexto("Total Efectivo:" + this.totalEfectivodata)
+     // .EscribirTexto("Total Multiple:" + this.totalEfectivodata)
+      .EscribirTexto("Total Ventas:" + this.totalVentas)
+      .Feed(1)
+      .EscribirTexto("Cerro Caja:" + this.openCashModel.fechaCierre)
+      .EscribirTexto("con el monto de :" + this.openCashModel.monto + this.totalEfectivodata)
+      .EscribirTexto("*solo se contempla el Efectivo en caja, los multiples con tarjeta los valida el administrador*")
+      .Feed(1)
+      .EscribirTexto("*Recuerda conservar este ticket para tu respaldo al cierre de tu caja en buen estado *")
+      .Feed(1)
+      .Corte(1)
+      .Iniciar()
+      .Feed(1);
+    try {
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
-     // const respuesta = true;
+      // const respuesta = true;
 
       if (respuesta == true) {
         //Limpiar objetos al finalizar una compra correcta
@@ -305,9 +202,75 @@ export class OpenCashComponent implements OnInit {
         console.log("Error: " + respuesta);
       }
 
-    }catch (error) {
+    } catch (error) {
       this.toastr.warning("Se Realizo el cierre correctamente pero no se encontro la impresora:TicketsZebraSistema", 'Atencion!');
 
     }
   }
+  async GetInformacionCaja()
+  {
+
+    this.ventasService.getVentasByCaja(this.openCashModel.idCaja).subscribe(response => {
+      if (response.exito) {
+        console.log(response.respuesta)
+        this.ventas = response.respuesta
+
+        let total = 0
+        let totalEfectivo = 0
+        let totalTarjeta = 0
+        let totalMultiple = 0
+        response.respuesta.forEach(function (a) {
+
+          total += a.total;
+          if (a.tipoPago == "TARJETA") {
+            totalTarjeta += a.total
+
+          }
+
+          if (a.tipoPago == "EFECTIVO") {
+            totalEfectivo += a.total
+
+          }
+
+          if (a.tipoPago == "MULTIPLE") {
+            totalTarjeta += a.tarjeta
+            totalMultiple += a.total
+            totalEfectivo += a.efectivo
+          }
+
+
+        });
+        console.log(total);
+
+        this.totalVentas = total;
+        this.totalEfectivodata = totalEfectivo
+        this.totalTarjetadata = totalTarjeta
+        this.totalMultipledata = totalMultiple
+        this.totalApartados = 0
+        this.apartadosService.getPagoByCaja(this.openCashModel.idCaja).subscribe(response => {
+          if (response.exito) {
+            var listPagos: PagoApartado[] = response.respuesta;
+            listPagos.forEach((pago) => {
+              this.totalApartados += pago.cantidad;
+            })
+          }
+        })
+      }
+
+
+
+    })
+    this.apartadosService.getPagoByCaja(this.openCashModel.idCaja).subscribe(response => {
+      if (response.exito) {
+        var listPagos: PagoApartado[] = response.respuesta;
+        listPagos.forEach((pago) => {
+          this.totalApartados += pago.cantidad;
+        })
+      }
+    })
+
+
+  }
+
+
 }

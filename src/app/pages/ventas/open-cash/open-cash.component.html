@@ -55,10 +55,12 @@
                 </p-divider>
                 <div class="row">
                     <h5>Total efectivo:  <p-chip  label="{{totalEfectivodata| currency:'MXN' }}"></p-chip>  </h5>
-                    <h5>Total con tarjeta:<p-chip  label="{{totalTarjetadata| currency:'MXN' }}"></p-chip>   </h5>
-                    <h5>Total Multiple:<p-chip  label="{{totalMultipledata| currency:'MXN' }}"></p-chip> </h5>
+                    <!-- TODO:se comento no es necesario mostrar al cerrar la caja -->
+                    <h5>Total con tarjeta:<p-chip  label="{{totalTarjetadata| currency:'MXN' }}"></p-chip>   </h5> 
+                    <!-- <h5>Total Multiple:<p-chip  label="{{totalMultipledata| currency:'MXN' }}"></p-chip> </h5> Mejor caso-->
                     <h5>Total Ventas:<p-chip  label="{{totalVentas| currency:'MXN' }}"></p-chip></h5>
-                    <h5>Total en caja,Fondo mas ventas en efectivo:<p-chip  label="{{openCashModel.monto+totalEfectivodata| currency:'MXN' }}"></p-chip></h5>
+                    <h5>Total Pagos Apartados:<p-chip  label="{{totalApartados | currency:'MXN' }}"></p-chip></h5>
+                    <h5>Total en caja,Fondo mas ventas en efectivo:<p-chip  label="{{openCashModel.monto+totalEfectivodata+totalApartados| currency:'MXN' }}"></p-chip></h5>
                 </div>
             </ng-container>
         </ng-template>
@@ -90,11 +92,11 @@
             <div class="row">
                 <h5>Total efectivo:  <p-chip  label="{{totalEfectivodata| currency:'MXN' }}"></p-chip>  </h5>
                 <h5>Total con tarjeta:<p-chip  label="{{totalTarjetadata| currency:'MXN' }}"></p-chip>   </h5>
-                <h5>Total Multiple:<p-chip  label="{{totalMultipledata| currency:'MXN' }}"></p-chip> </h5>
+                <!-- <h5>Total Multiple:<p-chip  label="{{totalMultipledata| currency:'MXN' }}"></p-chip> </h5> -->
                 <h5>Total Ventas:<p-chip  label="{{totalVentas| currency:'MXN' }}"></p-chip></h5>
                 <h5>Total Pagos Apartados:<p-chip  label="{{totalApartados | currency:'MXN' }}"></p-chip></h5>
                 <!-- <h5>Total en caja:<p-chip  label="{{openCashModel.monto+totalVentas| currency:'MXN' }}"></p-chip></h5> -->
-                <h5>Total en caja,Fondo mas ventas en efectivo:<p-chip  label="{{openCashModel.monto+totalEfectivodata| currency:'MXN' }}"></p-chip></h5>
+                <h5>Total en caja,Fondo mas ventas en efectivo:<p-chip  label="{{openCashModel.monto+totalEfectivodata+totalApartados| currency:'MXN' }}"></p-chip></h5>
             </div>
 
 
