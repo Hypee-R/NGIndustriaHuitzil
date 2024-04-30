@@ -32,8 +32,9 @@ export class ConfigService {
     let fechaHoy = this.pipe.transform(Date.now(), 'dd/MM/yyyy, h:mm:ss a');
     console.log(' fechaHoy ', fechaHoy, 'expiredTime ', fechaExpiracion);
 
-    if (fechaExpiracion >= fechaHoy) return true;
-    else return false;
+   // if (fechaExpiracion >= fechaHoy) return true;
+    //else return false;
+    return true
   }
 
   get token() {
