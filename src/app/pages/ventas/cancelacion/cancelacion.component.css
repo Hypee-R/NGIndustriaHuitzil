@@ -1,0 +1,15 @@
+:host>>>.p-datatable .p-datatable-thead>tr>th {
+    padding: .5rem .5rem;
+}
+
+:host>>>.p-datatable .p-datatable-tbody>tr>td {
+    padding: .5rem .5rem;
+}
+
+:host>>>.row-accessories {
+    background-color: rgba(102, 92, 233, 0.15) !important;
+  }
+  /* Estilo para fila cancelada */
+.cancelado-row {
+  background-color: rgba(255, 0, 0, 0.1); /* Color de fondo rojo tenue */
+}

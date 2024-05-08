@@ -15,6 +15,7 @@ import ConectorPluginV3 from "src/app/ConectorPluginV3";
 import { ClientesService } from 'src/app/services/clientes.service';
 import { CatClienteModel } from 'src/app/models/clientes.model';
 import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
+import { CambiosDevolucionesModel } from 'src/app/models/cambios-devoluciones.model';
 
 @Component({
   selector: 'app-ventas',
@@ -44,13 +45,14 @@ export class VentasComponent implements OnInit {
   articlesShell: productoVentaModel[] = [];
 
   ventaArticulo: VentaArticuloModel[] = [];
-
   openCash: Boolean = false
   cols: any[] = [];
   rows = 0;
   accion = '';
   accionAdd = '';
+  accionCancelacion=''
   openProducts = '';
+  openCancel = '';
   articulos = 0
   total = 0
   descuento = 0
@@ -72,12 +74,16 @@ export class VentasComponent implements OnInit {
   cashModel: CajaModel;
   CurrentDate = new Date();
   user: UsuarioAuthModel;
+  //Datos de cancelacion
+  lstCambiosDevoluciones: CambiosDevolucionesModel[]=[];
+  selectedCambio: CambiosDevolucionesModel;
   constructor(
     private toastr: ToastrService,
     private ventasService: VentasService,
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
     private clientesService: ClientesService,
+    private cambiosDevolucionesService: VentasService
   ) {
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
@@ -379,6 +385,27 @@ export class VentasComponent implements OnInit {
 
   }
 
+  getCambiosyDevoluciones(){
+    this.loading = true;
+    this.cambiosDevolucionesService.getCambiosDevoluciones().subscribe(response => {
+      if(response.exito){
+        console.log(response.respuesta)
+        this.lstCambiosDevoluciones = response.respuesta
+        this.lstCambiosDevoluciones.forEach(cambio => {
+          cambio.fecha = this.variablesGL.getFormatoFecha(cambio.fecha).toString();
+        });
+        this.loading = false;
+        // console.log('cambios devoluciones --> ', this.lstCambiosDevoluciones);
+
+      }else{
+        this.lstCambiosDevoluciones = [];
+        this.loading = false;
+      }
+    }, err => {
+      this.loading = false;;
+    });
+  }
+
   downloadTicket() {
 
   }
@@ -603,7 +630,13 @@ export class VentasComponent implements OnInit {
 
   }
 
-
+  openModalAddCancel(){
+    this.accionCancelacion = 'Agregar';
+    //this.selectedCambio = new CambiosDevolucionesModel();
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+}
 
   //Funcion Para Generar el Numero en letras del total de la compra
   Unidades(num) {

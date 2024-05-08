@@ -17,7 +17,7 @@ export class ApartadosService {
     private variablesGL: VariablesService
   ) {}
 
-  
+
   getApartados(): Observable<ResponseModel>{
     return this.http.get<ResponseModel>(environment.apiService + 'Apartados/ConsultaAll')
     .pipe(
@@ -84,7 +84,7 @@ export class ApartadosService {
        map (res => res)
      );
    }
- 
+
    agregaPago(request: PagoApartado): Observable<ResponseModel>{
      return this.http.post<ResponseModel>(environment.apiService + 'PagosApartados/Agrega', request)
      .pipe(

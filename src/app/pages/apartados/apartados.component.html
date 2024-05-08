@@ -6,7 +6,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-12">
-                    <p-toolbar styleClass="mb-4">   
+                    <p-toolbar styleClass="mb-4">
                         <div class = "col-1 md: col-2">
                               <button pButton pRipple label="NUEVO" icon="pi pi-plus" class="p-button-success mr-2" (click)="openAddPedido()"></button>
                          </div>
@@ -49,7 +49,7 @@
                                 </td>
                                 <td>
                                     <div style="display: inline-flex">
-                                        
+
                                     </div>
                                 </td>
                                 <td>
@@ -58,11 +58,11 @@
                                 <td>
                                     {{rowData['cliente']}}
                                 </td>
-                    
+
                                 <td>
                                     {{rowData['fecha'] | date: 'dd/MM/yyyy, hh:mm a'}}
                                 </td>
-                                
+
                                 <td>
                                     <p-badge *ngIf="rowData['status'] == 'Entregado'"  [value]="rowData.status" severity="warning" size="large" styleClass="mr-2"></p-badge>
                                     <p-badge *ngIf="rowData['status'] == 'Espera'"  [value]="rowData.status" severity="info" size="large" styleClass="mr-2"></p-badge>
@@ -73,7 +73,7 @@
                                 <td>
                                     {{rowData['resto'] | currency:'MXN'}}
                                 </td>
-                               
+
                                 <td>
                                     <div style="display: inline-flex">
                                         <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success mr-2" (click)="showDetail(rowData)" ></button>
@@ -81,14 +81,14 @@
                                 </td>
                             </tr>
                         </ng-template>
-                       
+
                     </p-table>
                 </div>
            </div>
     </div>
-    <p-dialog [(visible)]="showNewReserve" 
+    <p-dialog [(visible)]="showNewReserve"
     header="Nuevo apartado"
-    [style]="{width: '90%',heigth :'95%'}" 
+    [style]="{width: '90%',heigth :'95%'}"
     [modal]="true" styleClass="p-fluid">
         <ng-template pTemplate="content">
             <div class="dialog-content">
@@ -96,15 +96,15 @@
                     <div>
                     <div class="field">
                         <label for="cliente">Seleciona un cliente</label>
-                        <p-autoComplete 
+                        <p-autoComplete
                         [(ngModel)]="selectedClient"
-                        [suggestions]="filteredClients"    
-                        placeholder="Ingrese el nombre del cliente" 
+                        [suggestions]="filteredClients"
+                        placeholder="Ingrese el nombre del cliente"
                         size="40"
                         (completeMethod)="getResultsClients($event)" field="nombreCompleto" appendTo="body" [dropdown]="true">
                         <ng-template let-cliente pTemplate="item">
                             <div class="cliente-item ">
-                            <div>{{cliente.nombre }} {{cliente.apellidoPaterno}} {{cliente.apellidoMaterno}}</div>  
+                            <div>{{cliente.nombre }} {{cliente.apellidoPaterno}} {{cliente.apellidoMaterno}}</div>
                         </div>
                         </ng-template>
                         </p-autoComplete>
@@ -145,10 +145,10 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr >         
+                        <tr >
                             <td  *ngIf="rowData.existencia != 0">
                                 <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning" (click)="addProductApartado(rowData)"></button>
-                            </td> 
+                            </td>
                             <td  *ngIf="rowData.existencia == 0">
                              <label >Sin stock</label>
                             </td>
@@ -164,7 +164,7 @@
                 <div class="right-column">
                     <div class="dialog-content">
                         <div class="left-column">
-                          <h6>Articulos seleccionados: {{articulos}}</h6>     
+                          <h6>Articulos seleccionados: {{articulos}}</h6>
                         </div>
                         <div class="right-column">
                           <h6>Total:$ {{total}}</h6>
@@ -208,15 +208,15 @@
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
                             (click)="deleteArticle(rowData,i)" style="margin-left: 3px;"></button>
                         </td>
-                      
+
                       </tr>
                     </ng-template>
                   </p-table>
                 </div>
               </div>
-            
+
         </ng-template>
-        
+
         <ng-template pTemplate="footer">
             <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
             <button pButton pRipple label="Crear Apartado" icon="pi pi-check" class="p-button-text" (click)="addApartado()"></button>
@@ -239,14 +239,58 @@
                             </div>
                            <br>
                             <div>
-                                <button pButton type="button" label="Abrir Caja"  
+                                <button pButton type="button" label="Abrir Caja"
                                 class="p-button-info" (click)="openCashRegister()" icon="pi pi-inbox" ></button>
                             </div>
-                            
+
                     </div>
 
                     <div *ngIf="openCaja">
-                        <div *ngIf="hacerPago">
+                      <div *ngIf="hacerPago">
+                        <h5>
+                            Monto por pagar {{ faltante }}
+                        </h5>
+                        <div class="field">
+                            <label for="fecha">Fecha</label>
+                            <input type="date" pInputText id="fecha" [(ngModel)]="pagoApartado.fecha" [disabled]="false" />
+                            <small class="p-error" *ngIf="submitted && !pagoApartado.fecha">Debe seleccionar una fecha</small>
+                        </div>
+
+                        <div class="field">
+                            <label for="tipoPago">Tipo de Pago</label>
+                            <p-dropdown id="tipoPago" [options]="tiposPago" [(ngModel)]="pagoApartado.tipoPago" placeholder="Selecciona un tipo de pago" optionLabel="label" (onChange)="onTipoPagoChange($event)"></p-dropdown>
+                            <small class="p-error" *ngIf="submitted && !pagoApartado.tipoPago">Debe seleccionar un tipo de pago</small>
+                        </div>
+                        <!-- Mostrar campos adicionales si se selecciona "Múltiple" -->
+                        <div *ngIf="pagoApartado.tipoPagoValida === 'MULTIPLE'">
+                          <div class="field">
+                              <label for="inputTarjeta">Pago con Tarjeta</label>
+                              <input type="number" pInputText id="inputTarjeta" [(ngModel)]="pagoApartado.montoTarjeta" [disabled]="false" placeholder="Monto tarjeta" />
+                          </div>
+                          <div class="field">
+                              <label for="inputEfectivo">Pago en Efectivo</label>
+                              <input type="number" pInputText id="inputEfectivo" [(ngModel)]="pagoApartado.montoEfectivo" [disabled]="false" placeholder="Monto efectivo" />
+                          </div>
+                          <div class="field">
+                              <label for="cantidad">Monto Total</label>
+                              <input type="number" pInputText id="cantidad" [(ngModel)]="pagoApartado.cantidad"
+                                     [disabled]="true" [value]="sumarMontos()" />
+                          </div>
+                      </div>
+                      <div class="field" *ngIf="pagoApartado.tipoPagoValida !== 'MULTIPLE'">
+                          <label for="cantidad">Monto</label>
+                          <input type="number" pInputText id="cantidad" [(ngModel)]="pagoApartado.cantidad"
+                                 [disabled]="false" min="0" [max]="_apartado.precio">
+                          <small class="p-error" *ngIf="submitted && pagoApartado.cantidad > _apartado.precio">
+                              La cantidad debe ser menor al costo del artículo
+                          </small>
+                      </div>
+
+                        <br>
+                        <button pButton type="button" label="Hacer pago" class="p-button-info" (click)="addPago()" [disabled]="!hacerPago "></button>
+                    </div>
+
+                        <!-- <div *ngIf="hacerPago">
                             <div class="field">
                             <label for="fecha">Fecha</label>
                             <input type="date" pInputText id="fecha"  [(ngModel)]="pagoApartado.fecha" [disabled]="false" />
@@ -259,9 +303,9 @@
                             </div>
                         <br>
                         <button pButton type="button" label="Hacer pago"  class="p-button-info" (click)="addPago()" [disabled]="!hacerPago"></button>
-                        </div>
+                        </div> -->
                         <div *ngIf="!hacerPago">
-                            
+
                             Se ha terminado de liquidar el Apartado
                         </div>
                     </div>
@@ -269,7 +313,7 @@
                     <p-table #dt [value]="listPagos" [columns]="colsPagos" [rows]="rows" [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
                     dataKey="idArticulo" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Pagos" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                     <ng-template pTemplate="caption">
-                    
+
     </ng-template>
     <ng-template pTemplate="header" let-columns>
         <tr>
@@ -293,7 +337,7 @@
                 {{rowData['cantidad'] | currency:'MXN':'symbol':'1.2-2' }}
             </td>
         </tr>
-    </ng-template> 
+    </ng-template>
                     </p-table>
                     </div>
                 </div>
@@ -337,7 +381,7 @@
             <button pButton pRipple label="Cerrar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialogPagos()"></button>
             <button *ngIf="!hacerPago && selectedApartado.status != 'Entregado'" pButton pRipple label="Entregar" icon="pi pi-check" class="p-button-text" (click)="entregarPedido()"></button>
         </ng-template>
-    
+
     </p-dialog>
     <app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
 </div>

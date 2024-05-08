@@ -42,7 +42,7 @@ export class ApartadosComponent implements OnInit {
   selectedApartados = []
   showNewReserve = false
   showPagosPedido = false
-  apartado : CatApartadoModel = new CatApartadoModel() 
+  apartado : CatApartadoModel = new CatApartadoModel()
   showPedidos = false
   submitted = false;
   nombreCompleto = ""
@@ -65,6 +65,11 @@ export class ApartadosComponent implements OnInit {
   accion = '';
   openCaja = true;
   sucursal =''
+  tiposPago = [
+    { label: 'Efectivo', value: 'EFECTIVO' },
+    { label: 'Tarjeta', value: 'TARJETA' },
+    { label: 'Múltiple', value: 'MULTIPLE' }
+];
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -72,10 +77,10 @@ export class ApartadosComponent implements OnInit {
     private apartadoService : ApartadosService,
     private inventarioService : InventarioService,
     private ventasService: VentasService,
- 
+
   ) {
     this.selectedArticuloAdvanced = new productoModel()
-    this.selectedclienteNameAdvanced= new CatClienteModel() 
+    this.selectedclienteNameAdvanced= new CatClienteModel()
     this.statusPantalla = this.variablesGL.getStatusPantalla()
     this.cols = [
       { field: 'idArticulo', header: 'Articulo' },
@@ -86,25 +91,25 @@ export class ApartadosComponent implements OnInit {
       { field: 'telefono', header: 'Telefono' },
       { field: 'direccion', header: 'Dirección' },
       { field: 'status', header : 'Status'}
-    
+
     ];
 
-    this.colsPagos = 
+    this.colsPagos =
 
     [
       { field: 'idPagoApartado', header: 'ID PAGO' },
       { field: 'fecha',header:'FECHA PAGO'},
       { field: 'cantidad', header : 'CANTIDAD'}
-    
+
     ];
-    this.colsApartados = 
+    this.colsApartados =
 
     [
       { field: 'idApartado', header: 'ID PEDIDO' },
       { field: 'cliente', header: 'CLIENTE' },
       { field: 'fecha',header:'FECHA APARTADO'},
       { field: 'status', header : 'STATUS'}
-    
+
     ];
 
     this.colsProducts = [
@@ -112,10 +117,10 @@ export class ApartadosComponent implements OnInit {
       { field: 'descripcion',header:'Producto'},
       { field: 'talla',header: 'Talla'},
       { field: 'existencia',header:'Existencia'}
-      
+
     ];
     this.colSku = [
-   
+
       { field: 'cantidad', header: 'CANTIDAD' },
       { field: 'descripcion', header: 'PRODUCTO' },
       { field: 'precio', header: 'PRECIO' },
@@ -146,12 +151,24 @@ export class ApartadosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
+
     this.getClientes()
     this.getApartados()
     this.getExistencias();
   }
-
+  onTipoPagoChange(event) {
+    console.log(event.value.value)
+    this.pagoApartado.tipoPagoValida = event.value.value;
+    this.pagoApartado.tipoPago = event.value;
+}
+sumarMontos(): number {
+  // Calcula la suma de montoTarjeta y montoEfectivo si el tipo de pago es 'MULTIPLE'
+  if (this.pagoApartado.tipoPagoValida === 'MULTIPLE') {
+      return this.pagoApartado.montoTarjeta + this.pagoApartado.montoEfectivo;
+  } else {
+      return 0;  // Devuelve 0 si no es tipo 'MULTIPLE'
+  }
+}
   getApartados(){
     this.apartadoService.getApartadosByUbicacion().subscribe(response => {
       if(response.exito){
@@ -172,7 +189,7 @@ export class ApartadosComponent implements OnInit {
         this.clientes = response.respuesta;
       } else {
         this.variablesGL.hideLoading();
-       
+
         this.toastr.error(response.mensaje, 'Error!');
       }
     }, err => {
@@ -186,10 +203,10 @@ export class ApartadosComponent implements OnInit {
     this.inventarioService.getInexistencias().subscribe(response => {
       if (response.exito) {
         this.listArticulos = response.respuesta;
-        
+
       } else {
         this.variablesGL.hideLoading();
-       
+
         this.toastr.error(response.mensaje, 'Error!');
       }
     }, err => {
@@ -213,7 +230,7 @@ export class ApartadosComponent implements OnInit {
       if(response.exito){
           this.articulosByApartado = response.respuesta
         }
-      } 
+      }
     )
     await this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response =>{
             if(response.exito){
@@ -238,9 +255,9 @@ export class ApartadosComponent implements OnInit {
       this.variablesGL.hideLoading();
       this.toastr.error('Hubo un error al entregar el Apartado', 'Error!');
     });
-    
 
-  } 
+
+  }
 
   openAddPedido(){
     this.showNewReserve = true
@@ -248,13 +265,13 @@ export class ApartadosComponent implements OnInit {
     this.total= 0
     this.articulos = 0
     this.selectedClient = undefined
-   
+
   }
 
   getResultsClients(event) {
     this.nameCliente = event.query
     if(event.query){
-      this.filteredClients 
+      this.filteredClients
       = this.clientes.filter(cliente => {
           let name = cliente.nombre.toLocaleLowerCase() + " "+
            cliente.apellidoPaterno.toLocaleLowerCase() + " "+
@@ -319,6 +336,9 @@ export class ApartadosComponent implements OnInit {
       this.toastr.warning('Selecciona una fecha', 'Aviso');
       return
     }
+    if(this.pagoApartado.tipoPagoValida == "MULTIPLE"){
+      this.pagoApartado.cantidad=this.pagoApartado.montoTarjeta + this.pagoApartado.montoEfectivo
+    }
     if(this.pagoApartado.cantidad == 0){
       this.toastr.warning('La cantidad debe ser mayor a 0', 'Aviso');
       return
@@ -342,7 +362,7 @@ export class ApartadosComponent implements OnInit {
           else{
             this.toastr.error(request.mensaje,"Error")
           }
-          
+
         }, err => {
           this.variablesGL.hideLoading();
           this.toastr.error('Hubo un error al entregar el Apartado', 'Error!');
@@ -549,7 +569,7 @@ export class ApartadosComponent implements OnInit {
 
   onAutoCompleteSelect(event) {
     this.articulosApartados = []
-      
+
     if (event) {
         this.articulosApartados.push(event)
     }
@@ -613,7 +633,7 @@ export class ApartadosComponent implements OnInit {
       });
       }
     else{
-   
+
       let  busqueda  = this.articulosApartados.findIndex(producto => producto.idArticulo == product.idArticulo);
       if(busqueda == -1){
           let artc = new ApartadoArticuloModel()
@@ -655,7 +675,7 @@ export class ApartadosComponent implements OnInit {
           }*/
 
         } else if (this.cashModel.fecha != null && this.cashModel.fechaCierre != null) {
-          
+
           this.openCaja = false;
           this.toastr.warning('La caja esta cerrada, Abrir una nueva', 'Aviso!');
           console.log(this.accion)

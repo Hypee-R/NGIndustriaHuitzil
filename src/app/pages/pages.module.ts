@@ -91,6 +91,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { VentasCajaComponent } from './informes/ventas-caja/ventas-caja.component';
 import { EnvioComponent } from './contro-envios/envio/envio.component';
 import { PanelModule } from 'primeng/panel';
+import { CancelacionComponent } from './ventas/cancelacion/cancelacion.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -183,7 +184,8 @@ import { PanelModule } from 'primeng/panel';
         AddPagoPedidoComponent,
         ControEnviosComponent,
         VentasCajaComponent,
-        EnvioComponent
+        EnvioComponent,
+        CancelacionComponent
     ]
 })
 export class PagesModule { }

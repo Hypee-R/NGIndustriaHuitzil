@@ -138,7 +138,19 @@
                   </div>
                 </div>
               </div>
-
+              <div class="col-md-6">
+                <div class="acciones" (click)="openModalAddCancel()">
+                  <div class="button-container bg-red-200">
+                    <div class="button-content">
+                      <div class="font-bold w-full mb-1"><span>Cancelar Venta</span></div>
+                      <div class="text-white font-bold w-full flex align-items-center py-1">
+                        <i class="pi pi-ticket" style="font-size: 24px; margin-right: 10px;"></i>
+                        <!-- Icono de cotización -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
             </div>
 
 
@@ -175,6 +187,7 @@
   <!-- <app-add-cliente [_accion]="accionAdd" *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente> ya no se ocupa aqui la busqueda del cliente-->
   <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected"
     [_nArticles]="articulos" *ngIf="openProducts != ''" (_articulosS)="addProductVenta($event)"></app-open-productos>
+ <app-cancelacion [_accion]="accionCancelacion" [(_details)]="selectedCambio" [_allCambiosDevoluciones]="lstCambiosDevoluciones" (saveCambioDevolucion)="getCambiosyDevoluciones()" *ngIf="accionCancelacion != ''"></app-cancelacion>
 
 
 
@@ -185,13 +198,10 @@
         <div class="col-sm">
           <h5>Vendedor:{{user.nombre}} {{ user.apellidoPaterno}} {{ user.apellidoMaterno }}</h5>
         </div>
-        <!-- <div class="col-sm" align="center">
-          <img class="logo" src="../../../assets/img/caja.jpeg" alt="Login" height="100" width="100">
-        </div> -->
+
 
         <div class="col-sm">
           <h5>Total de articulos: {{articulos}}</h5>
-          <!-- <h5>Cliente:{{this.clienteName}}</h5> -->
 
         </div>
       </div>
@@ -203,8 +213,6 @@
         </div>
         <div class="col-sm">
           <app-discount-selector (discountSelected)="onDiscountSelected($event)"></app-discount-selector>
-          <!-- <h5>Datos de la venta</h5>
-          <h5>Total de articulos: {{articulos}}</h5> -->
 
         </div>
 
@@ -220,15 +228,7 @@
         <div class="col-sm">
           <h5>Subtotal:<button pButton pRipple icon="pi pi-dollar" type="button"
             class="p-button-rounded p-button-warning" label="{{this.total}}"></button> </h5>
-          <!-- <button pButton type="button" label="Descuento" icon="pi pi-percentage"
-          class="p-button-rounded p-button-warning p-button-lg" badge="8" badgeClass="p-badge-info"
-          ></button> -->
 
-          <!--
-
-
-          <h5>Descuento cliente:-$0.0</h5>
-          <h5>Descuento total:-$0.0</h5> -->
 
         </div>
 
@@ -275,9 +275,6 @@
                 <p-inputNumber [(ngModel)]="totalMultipleF" id="float-input2" (change)="changePage()"></p-inputNumber>
                 <label for="float-input2">Efectivo</label>
               </span>
-
-              <!-- <p-inputNumber placeholder="Efectivo" [(ngModel)]="totalMultipleF" title="Efectivo"
-                                (change)="changePage()"></p-inputNumber> -->
 
             </div>
 

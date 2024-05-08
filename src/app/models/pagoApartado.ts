@@ -5,10 +5,13 @@ export class PagoApartado{
     fecha: string;
     fechaEntrega: string;
     cantidad : number;
+    tipoPago:string;
+    tipoPagoValida:string;
+    montoTarjeta : number;
+    montoEfectivo : number;
     constructor(){
         this.idApartado = 0
         this.fecha = ''
         this.cantidad  = 0
     }
   }
-  

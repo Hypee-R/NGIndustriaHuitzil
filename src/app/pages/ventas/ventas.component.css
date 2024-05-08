@@ -41,7 +41,9 @@
 .acciones .bg-green-200 {
   background-color: #5bd261; /* Color verde */
 }
-
+.acciones .bg-red-200 {
+  background-color: #ff0404; /* Color verde */
+}
 /* Estilos compartidos entre los contenedores */
 .p-3 {
   padding: 0.75rem; /* 12px de relleno en todos los lados */
