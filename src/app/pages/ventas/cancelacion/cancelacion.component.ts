@@ -104,9 +104,8 @@ export class CancelacionComponent implements OnInit, OnDestroy {
     if(event?.key == 'Enter' || event == null){
       if(this.ventaByNoTicket.length == 0){
 
-        let existeCambio = this._allCambiosDevoluciones.find(x => x.venta.noTicket == this.noTicketVenta);
-        if(!existeCambio){
-
+   
+   
           this.loadResultVenta = true;
 
           this.ventasService.searchVentaByNoTicket(this.noTicketVenta).subscribe(response => {
@@ -129,9 +128,7 @@ export class CancelacionComponent implements OnInit, OnDestroy {
           //   this.loadResultVenta = false;
           // }, 800);
 
-        }else{
-          this.toastr.error('La venta ya tiene algún cambio realizado','Error!');
-        }
+      
       }else{
         this.toastr.error('Ya se han cargado los datos de la venta...', 'Error!');
       }
@@ -147,9 +144,6 @@ export class CancelacionComponent implements OnInit, OnDestroy {
     console.log('data cambio devolucion -> ', this.cambioDevolucion);
     console.log('data venta by ticket -> ', this.ventaByNoTicket[0]);
 
-
-    //Solo se hara si la cantidad de cambios no excede la cantidad de articulos vendidos
-    // if(!this.cambioDevolucion || this.cambioDevolucion.noArticulos < this.ventaByNoTicket[0].noArticulos){
       this.overlayProductos = panel;
       this.ventaArticleSelected = ventaArticulo;
       //Aqui se verifica que solo se puedan hacer cambios respecto a la cantidad de articulos vendidos
@@ -163,66 +157,20 @@ export class CancelacionComponent implements OnInit, OnDestroy {
 
       this.overlayProductos.show(event);
 
-    // }else{
-    //   //Mandar mensaje de se han cambiado todos los articulos
-    //   this.toastr.error('Se han cambiado todos los articulos posibles...','Error!');
-    // }
+ 
   }
 
-  onSetChangeArticle(newArticulo: productoModel){
-    if(newArticulo){
-        // console.log('Cambiar articulo -> ', this.ventaArticleSelected.articulo);
-        // console.log('Por articulo -> ', newArticulo);
-        if(!this.cambioDevolucion){
-            this.ventaArticleSelected.cantidad--;
-            this.cambioDevolucion = new CambiosDevolucionesModel();
-            this.cambioDevolucion.idCambioDevolucion = 0;
-            this.cambioDevolucion.idVenta = this.ventaByNoTicket[0].idVenta;
-            this.cambioDevolucion.fecha = Date.now().toString();
-            this.cambioDevolucion.noArticulos = 1;
-            this.cambioDevolucion.cambiosDevolucionesArticulos = [];
-            this.cambioDevolucion.cambiosDevolucionesArticulos.push(
-            {
-              idCambioArticulo: 0,
-              idCambioDevolucion: 0,
-              idVentaArticulo: this.ventaArticleSelected.idVentaArticulo,
-              idArticulo: newArticulo.idArticulo,
-              cantidad: 1,
-              estado: 'CAMBIO',
-              motivoCambio: 'Cambio por otro articulo',
-              precioAnterior: this.ventaArticleSelected.precioUnitario,
-              precioActual: newArticulo.precio,
-              deducible: newArticulo.precio - this.ventaArticleSelected.precioUnitario,
-              articulo: newArticulo,
-              ventaArticulo: this.ventaArticleSelected
-            });
-            this.cambioDevolucion.subtotal = newArticulo.precio - this.ventaArticleSelected.precioUnitario;
-            this.cambioDevolucion.total = this.cambioDevolucion.subtotal;
-            this.cambiosDevoluciones.push(this.cambioDevolucion);
-
-            this.actualizaCambiosDevolucionesArticulo();
-
-        }else{
-            this.ventaArticleSelected.cantidad--;
-            this.cambioDevolucion.noArticulos++;
-            this.cambioDevolucion.fecha = Date.now().toString();
-            this.setArticulosCambioDevolucion(newArticulo);
-        }
-
-        this.overlayProductos.hide();
-    }
-  }
 
   onSaveCambioDevolucion(){
+    console.log('CambiosDevolucionModel --> ',this.ventaByNoTicket);
     let cambioDevolucionRequest = {...this.cambioDevolucion};
     cambioDevolucionRequest.fecha = this.variablesGL.setFormatoFecha(cambioDevolucionRequest.fecha);
-    cambioDevolucionRequest.cambiosDevolucionesArticulos.forEach(cambio => {
-      //cambio.articulo = null;
-      cambio.ventaArticulo.cambiosArticulo = null;
-    });
-      console.log('CambiosDevolucionModel --> ',cambioDevolucionRequest);
 
-      this.cambioDevolucionService.postCambiosDevoluciones(cambioDevolucionRequest).subscribe(response => {
+
+
+      console.log('CambiosDevolucionModel --> ',cambioDevolucionRequest);
+      this.ventaByNoTicket[0].fecha=this.variablesGL.setFormatoFecha(this.ventaByNoTicket[0].fecha)
+      this.cambioDevolucionService.postCancelacion(this.ventaByNoTicket[0]).subscribe(response => {
         console.log('data respuesta cambio devolucion ', response);
         if(response.exito){
           this.toastr.success(response.mensaje, 'Exito!');
@@ -265,61 +213,10 @@ export class CancelacionComponent implements OnInit, OnDestroy {
         this.cambioDevolucion.total = this.cambioDevolucion.subtotal;
       }
 
-      this.actualizaCambiosDevolucionesArticulo();
+     // this.actualizaCambiosDevolucionesArticulo();
   }
 
-  actualizaCambiosDevolucionesArticulo(){
-    // console.log('Cambio devolucion', this.cambioDevolucion);
-    let cambiosArticulo = this.cambioDevolucion.cambiosDevolucionesArticulos.filter(x => x.ventaArticulo.idArticulo == this.ventaArticleSelected.idArticulo);
-    this.ventaByNoTicket[0].ventaArticulo.find(x => x.idArticulo == this.ventaArticleSelected.idArticulo).cambiosArticulo = cambiosArticulo;
-  }
-
-  onDeleteArticuloCambio(deleteCambio: CambiosDevolucionesArticuloModel){
-    console.log('delete articulo cambio', deleteCambio.idArticulo);
-    console.log('del articulo venta ', deleteCambio.ventaArticulo.idArticulo);
-
-    this.ventaArticleSelected = deleteCambio.ventaArticulo;
-
-    if(deleteCambio.cantidad > 1){
-      this.cambioDevolucion.cambiosDevolucionesArticulos.find(x => x.idArticulo == deleteCambio.idArticulo).cantidad--;
-    }else{
-      let idxCambioArticuloDelete = this.cambioDevolucion.cambiosDevolucionesArticulos.findIndex(x => x.idArticulo == deleteCambio.idArticulo);
-      this.cambioDevolucion.cambiosDevolucionesArticulos.splice(idxCambioArticuloDelete, 1);
-    }
-
-    this.cambioDevolucion.subtotal = this.cambioDevolucion.subtotal - (deleteCambio.precioActual - deleteCambio.precioAnterior);
-    this.cambioDevolucion.total = this.cambioDevolucion.subtotal;
-
-    this.actualizaCambiosDevolucionesArticulo();
-    this.ventaByNoTicket[0].ventaArticulo.find(x => x.idArticulo == deleteCambio.ventaArticulo.idArticulo).cantidad++;
-
-    this.cambioDevolucion.noArticulos--;
-    if(this.cambioDevolucion.noArticulos == 0){
-      this.cambioDevolucion = null;
-      this.cambiosDevoluciones = [];
-    }
 
 
-    // if(cambio.cantidad == 1){
-    //   let idxDelete = this.cambioDevolucion.cambiosDevolucionesArticulos.findIndex(x => x.idArticulo == this.ventaArticleSelected.idArticulo);
-    //   this.cambioDevolucion.cambiosDevolucionesArticulos.splice(idxDelete, 1);
-    // }else if(cambio.cantidad > 1){
-    //   cambio.cantidad--;
-    // }
-
-    // //Actualiza total y subtotal
-    // this.cambioDevolucion.subtotal = this.cambioDevolucion.subtotal - (cambio.precioActual - cambio.precioAnterior);
-    // this.cambioDevolucion.total = this.cambioDevolucion.subtotal;
-
-    // this.ventaByNoTicket[0].ventaArticulo.find(x => x.idArticulo == cambio.ventaArticulo.idArticulo).cantidad++;
-    // this.actualizaCambiosDevolucionesArticulo();
-
-    // this.cambioDevolucion.noArticulos--;
-    // if(this.cambioDevolucion.noArticulos == 0){
-    //   this.cambioDevolucion = null;
-    //   this.cambiosDevoluciones = [];
-    // }
-
-  }
 
 }

@@ -96,6 +96,13 @@ export class VentasService {
       map (res => res)
     );
   }
+  postCancelacion(request: VentaModel): Observable<ResponseModel>{
+    console.log(request)
+    return this.http.post<ResponseModel>(environment.apiService + 'Ventas/sales/cancela', request)
+    .pipe(
+      map (res => res)
+    );
+  }
 
   putCambiosDevoluciones(request: CambiosDevolucionesModel): Observable<ResponseModel>{
     return this.http.put<ResponseModel>(environment.apiService + 'Ventas/Returns/Actualiza', request)
