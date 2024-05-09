@@ -149,7 +149,7 @@ export class CancelacionComponent implements OnInit, OnDestroy {
 
 
     //Solo se hara si la cantidad de cambios no excede la cantidad de articulos vendidos
-    if(!this.cambioDevolucion || this.cambioDevolucion.noArticulos < this.ventaByNoTicket[0].noArticulos){
+    // if(!this.cambioDevolucion || this.cambioDevolucion.noArticulos < this.ventaByNoTicket[0].noArticulos){
       this.overlayProductos = panel;
       this.ventaArticleSelected = ventaArticulo;
       //Aqui se verifica que solo se puedan hacer cambios respecto a la cantidad de articulos vendidos
@@ -163,10 +163,10 @@ export class CancelacionComponent implements OnInit, OnDestroy {
 
       this.overlayProductos.show(event);
 
-    }else{
-      //Mandar mensaje de se han cambiado todos los articulos
-      this.toastr.error('Se han cambiado todos los articulos posibles...','Error!');
-    }
+    // }else{
+    //   //Mandar mensaje de se han cambiado todos los articulos
+    //   this.toastr.error('Se han cambiado todos los articulos posibles...','Error!');
+    // }
   }
 
   onSetChangeArticle(newArticulo: productoModel){

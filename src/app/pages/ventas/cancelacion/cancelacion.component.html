@@ -34,7 +34,7 @@
                             <th>Subtotal</th>
                             <th>Total</th>
                             <th>Status</th>
-                            <th></th>
+                            <!-- <th></th> -->
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-venta let-expanded="expanded">
@@ -55,9 +55,10 @@
                             <td>{{venta.subtotal | currency:'MXN' }}</td>
                             <td>{{venta.total | currency:'MXN' }}</td>
                             <td>{{venta.status }}</td>
-                            <td *ngIf="venta.status === 'CONCLUIDA'">
-                              <p-button icon="pi pi-times"></p-button>
-                           </td>
+                            <!-- <td *ngIf="venta.status === 'CONCLUIDA'">
+                              <p-button icon="pi pi-times" (onClick)="changeArticle($event, panel, null)"></p-button>
+
+                           </td> -->
 
                         </tr>
                     </ng-template>
@@ -106,7 +107,9 @@
                                                 </td>
                                                 <td>{{article.precioUnitario | currency:'MXN' }}</td>
                                                 <td>{{article.subtotal | currency:'MXN' }}</td>
-
+                                                <!-- <td>
+                                                  <p-button type="button" icon="pi pi-sort-alt" pTooltip="Cambiar Articulo" (onClick)="changeArticle($event, panel, article)"></p-button>
+                                              </td> -->
                                             </tr>
                                         </ng-template>
 
@@ -299,7 +302,7 @@
     </ng-template>
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" [disabled]="accion != 'Agregar' || !cambioDevolucion" (click)="onSaveCambioDevolucion()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"  (click)="onSaveCambioDevolucion()"></button>
     </ng-template>
 
 </p-dialog>
