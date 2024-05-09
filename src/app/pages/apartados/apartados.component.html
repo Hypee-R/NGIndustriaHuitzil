@@ -277,11 +277,12 @@
                                      [disabled]="true" [value]="sumarMontos()" />
                           </div>
                       </div>
+            
                       <div class="field" *ngIf="pagoApartado.tipoPagoValida !== 'MULTIPLE'">
                           <label for="cantidad">Monto</label>
                           <input type="number" pInputText id="cantidad" [(ngModel)]="pagoApartado.cantidad"
-                                 [disabled]="false" min="0" [max]="_apartado.precio">
-                          <small class="p-error" *ngIf="submitted && pagoApartado.cantidad > _apartado.precio">
+                                 [disabled]="false" min="0" [max]="this.selectedApartado.resto ">
+                          <small class="p-error" *ngIf="submitted && pagoApartado.cantidad > this.selectedApartado.resto ">
                               La cantidad debe ser menor al costo del artículo
                           </small>
                       </div>
@@ -289,21 +290,7 @@
                         <br>
                         <button pButton type="button" label="Hacer pago" class="p-button-info" (click)="addPago()" [disabled]="!hacerPago "></button>
                     </div>
-
-                        <!-- <div *ngIf="hacerPago">
-                            <div class="field">
-                            <label for="fecha">Fecha</label>
-                            <input type="date" pInputText id="fecha"  [(ngModel)]="pagoApartado.fecha" [disabled]="false" />
-                            <small class="p-error" *ngIf="submitted && pagoApartado.fecha == ''" >  Debe seleccionar una fecha</small>
-                            </div>
-                            <div class="field">
-                            <label for="cantidad">Monto</label>
-                            <input type="number" pInputText id="cantidad" [(ngModel)]="pagoApartado.cantidad"[disabled]="false" min="0" max = {{_apartado.precio}}>
-                            <small class="p-error" *ngIf="submitted && pagoApartado.cantidad > this.selectedApartado.resto" >La cantidad debe ser menor al costo del articulo</small>
-                            </div>
-                        <br>
-                        <button pButton type="button" label="Hacer pago"  class="p-button-info" (click)="addPago()" [disabled]="!hacerPago"></button>
-                        </div> -->
+                        
                         <div *ngIf="!hacerPago">
 
                             Se ha terminado de liquidar el Apartado
@@ -327,9 +314,15 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns">
         <tr>
+        <td>
+                {{rowData['tipoPagoValida']}}
+            </td> 
             <td>
-                {{rowData['idPagoApartado']}}
-            </td>
+                {{rowData['montoTarjeta']| currency:'MXN':'symbol':'1.2-2'}}
+            </td> 
+            <td>
+                {{rowData['montoEfectivo']| currency:'MXN':'symbol':'1.2-2'}}
+            </td> 
             <td>
                 {{rowData['fecha']  | date: 'dd/MM/yyyy, hh:mm a'}}
             </td>

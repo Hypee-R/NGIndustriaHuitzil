@@ -86,6 +86,8 @@ export class ApartadosService {
    }
 
    agregaPago(request: PagoApartado): Observable<ResponseModel>{
+
+    console.log(request)
      return this.http.post<ResponseModel>(environment.apiService + 'PagosApartados/Agrega', request)
      .pipe(
        map (res => res)

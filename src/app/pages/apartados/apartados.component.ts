@@ -97,7 +97,9 @@ export class ApartadosComponent implements OnInit {
     this.colsPagos =
 
     [
-      { field: 'idPagoApartado', header: 'ID PAGO' },
+      { field: 'tipoPagoValida', header: 'TIPO PAGO' },
+      { field: 'montotarjeta', header: 'TARJETA' },
+      { field: 'montoefectivo', header: 'EFECTIVO' },
       { field: 'fecha',header:'FECHA PAGO'},
       { field: 'cantidad', header : 'CANTIDAD'}
 
@@ -233,6 +235,7 @@ sumarMontos(): number {
       }
     )
     await this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response =>{
+      console.log(response)
             if(response.exito){
               this.listPagos = response.respuesta
               this.showPagosPedido = true
@@ -350,6 +353,7 @@ sumarMontos(): number {
     this.pagoApartado.idApartado = this.selectedApartado.idApartado
     this.selectedApartado.resto -=this.pagoApartado.cantidad
     this.pagoApartado.idCaja = this.cashModel.idCaja
+
     await this.apartadoService.agregaPago(this.pagoApartado).subscribe(response =>{
       if(response.exito){
         this.apartadoService.actualizaApartado(this.selectedApartado).subscribe(request =>{
