@@ -33,7 +33,7 @@
             </div>
         </div>
     <p-table #dt [value]="ventas" [columns]="cols" [rows]="rows" [paginator]="true" [globalFilterFields]="['fecha','monto','montoCierre','fechaCierre','idCaja']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
-    dataKey="idVenta" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Ventas" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+    dataKey="idVenta" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Ventas" [showCurrentPageReport]="true" >
 
     <ng-template pTemplate="header" let-columns>
         <tr>
@@ -51,7 +51,9 @@
 
     </ng-template>
     <ng-template pTemplate="body" let-venta  let-expanded="expanded">
-        <tr>
+        <tr [ngClass]="{'cancelled-row': venta['status'] === 'CANCELADA'}">
+ 
+        
             <td>
                 <div style="display: inline-flex">
 
@@ -78,7 +80,6 @@
             </td>
 
             <td>
-                <!--<p-badge *ngIf="venta['tipoPago'] == 'Entregado'"  [value]="rowData.status" severity="warning" size="large" styleClass="mr-2"></p-badge>-->
                 <div *ngIf="venta['tipoPago'] =='TARJETA'"> N/A </div>
                 <div *ngIf="venta['tipoPago'] =='EFECTIVO'"> {{venta['total']| currency:'MXN' }} </div>
                 <div *ngIf="venta['tipoPago'] =='MULTIPLE'"> {{venta['efectivo']| currency:'MXN' }}</div>
@@ -98,8 +99,8 @@
             </td>
 
             <td>
-
-           </td>
+                {{venta['status']}}
+            </td>
         </tr>
     </ng-template>
 
@@ -158,13 +159,13 @@
                       <!-- <p-divider align="center">
                           <span class="p-tag">Cambios y Devoluciones de la venta</span>
                       </p-divider> -->
-                      <div *ngIf="!loading && venta.cambiosDevoluciones.length == 0">
+                      <div  *ngIf="venta.cambiosDevoluciones">
+                   <div *ngIf="!loading && venta.cambiosDevoluciones.length == 0">
 
+                       <app-item-empty></app-item-empty> 
+                       </div> 
 
-
-                        <!-- <app-item-empty></app-item-empty> -->
-                      </div>
-
+                   
 
                       <div class="text-center"  *ngIf="!loading && venta.cambiosDevoluciones.length > 0">
                         <h4>Detalles del Cambios y/o Devoluciónes</h4>
@@ -246,7 +247,7 @@
                     </p-table>
 
                </div>
-
+            </div>
                 </div>
             </td>
         </tr>

@@ -234,12 +234,18 @@ body {
     color: var(--color-dark) !important;
 }
 
-.p-datatable .p-datatable-thead>tr>th {
+.p-datatable .p-datatable-thead>th {
     background: var(--color-white) !important;
     color: var(--color-dark) !important;
 }
 
-.p-datatable .p-datatable-tbody>tr>td {
+/* se agregaron los colores para las candelaciones */
+.cancelled-row {
+    background: red !important;
+    color: var(--color-white) !important;
+}
+
+.p-datatable .p-datatable-tbody>td {
     background: var(--color-white) !important;
     color: var(--color-dark) !important;
 }
