@@ -220,19 +220,22 @@ export class OpenCashComponent implements OnInit {
         let totalTarjeta = 0
         let totalMultiple = 0
         response.respuesta.forEach(function (a) {
+           console.log(a.status)
+           if( a.status !="CONCLUIDA"){
+            total += a.total;
+           }
 
-          total += a.total;
-          if (a.tipoPago == "TARJETA") {
+          if (a.tipoPago == "TARJETA"  && a.status !="CONCLUIDA" ) {
             totalTarjeta += a.total
 
           }
 
-          if (a.tipoPago == "EFECTIVO") {
+          if (a.tipoPago == "EFECTIVO" && a.status !="CONCLUIDA" ) {
             totalEfectivo += a.total
 
           }
 
-          if (a.tipoPago == "MULTIPLE") {
+          if (a.tipoPago == "MULTIPLE"  && a.status !="CONCLUIDA" ) {
             totalTarjeta += a.tarjeta
             totalMultiple += a.total
             totalEfectivo += a.efectivo
