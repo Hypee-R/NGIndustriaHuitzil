@@ -154,7 +154,7 @@ export class VentasComponent implements OnInit {
   openProductsM() {
     //this.variablesGL.showLoading();
     this.accion = ''
-    // this.accionAdd = ''
+    this.accionCancelacion = '';
     this.accionAdd = ''
     this.openProducts = "Productos"
      this.articlesSelected = []
@@ -162,6 +162,7 @@ export class VentasComponent implements OnInit {
   }
 
   openCashRegister() {
+    this.accionCancelacion = '';
     this.openProducts = ""
     this.accionAdd = ''
     this.accion = 'Abrir';
@@ -172,11 +173,13 @@ export class VentasComponent implements OnInit {
   closeCashRegister() {
     this.openProducts = ""
     this.accionAdd = ''
+    this.accionCancelacion = '';
     this.accion = 'Cerrar';
     this.getCaja();
   }
 
   statusCashRegister() {
+    this.accionCancelacion = '';
     this.openProducts = ""
     this.accionAdd = ''
     this.accion = 'Status';
@@ -631,6 +634,8 @@ export class VentasComponent implements OnInit {
   }
 
   openModalAddCancel(){
+    this.accion = ''
+    this.openProducts = ''
     this.accionCancelacion = 'Agregar';
     //this.selectedCambio = new CambiosDevolucionesModel();
     setTimeout(() => {
