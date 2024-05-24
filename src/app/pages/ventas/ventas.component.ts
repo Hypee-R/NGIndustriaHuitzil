@@ -50,20 +50,20 @@ export class VentasComponent implements OnInit {
   rows = 0;
   accion = '';
   accionAdd = '';
-  accionCancelacion=''
+  accionCancelacion = ''
   openProducts = '';
   openCancel = '';
   articulos = 0
   total = 0
   descuento = 0
-  porcentajeDescuentoAplicar=0
+  porcentajeDescuentoAplicar = 0
   totalLetra = "";
-  totalVenta  =0;
+  totalVenta = 0;
   cambioVenta: number;
   totalMultipleF: number;
   totalMultipleT: number;
   //Busqueda CLIENTES
-   clienteName = 'MOSTRADOR';
+  clienteName = 'MOSTRADOR';
   //resultsClientes:  CatProveedorModel[];
   selectedclienteNameAdvanced: CatClienteModel;
   filteredClients: CatClienteModel[];
@@ -75,7 +75,7 @@ export class VentasComponent implements OnInit {
   CurrentDate = new Date();
   user: UsuarioAuthModel;
   //Datos de cancelacion
-  lstCambiosDevoluciones: CambiosDevolucionesModel[]=[];
+  lstCambiosDevoluciones: CambiosDevolucionesModel[] = [];
   selectedCambio: CambiosDevolucionesModel;
   constructor(
     private toastr: ToastrService,
@@ -157,8 +157,8 @@ export class VentasComponent implements OnInit {
     this.accionCancelacion = '';
     this.accionAdd = ''
     this.openProducts = "Productos"
-     this.articlesSelected = []
-     this.getArticulos()
+    this.articlesSelected = []
+    this.getArticulos()
   }
 
   openCashRegister() {
@@ -203,7 +203,7 @@ export class VentasComponent implements OnInit {
     this.articlesShell[index].cantidad += 1
     this.articulos += 1
     this.total += product.precio
-    this.totalLetra = this.numeroALetras(this.total-this.descuento, {
+    this.totalLetra = this.numeroALetras(this.total - this.descuento, {
       plural: 'PESOS MEXICANOS',
       singular: 'PESO MEXICANO',
       centPlural: 'CENTAVOS',
@@ -223,7 +223,7 @@ export class VentasComponent implements OnInit {
     this.articlesShell.push(artc)
     this.articulos += 1
     this.total += product.precio
-    this.totalLetra = this.numeroALetras(this.total-this.descuento, {
+    this.totalLetra = this.numeroALetras(this.total - this.descuento, {
       plural: 'PESOS MEXICANOS',
       singular: 'PESO MEXICANO',
       centPlural: 'CENTAVOS',
@@ -378,7 +378,7 @@ export class VentasComponent implements OnInit {
       this.toastr.warning('No hay Articulos para vizualizar cotizacion', 'Atención!');
     } else {
       this.displayCotizacion = true;
-      this.totalLetra = this.numeroALetras(this.total-this.descuento, {
+      this.totalLetra = this.numeroALetras(this.total - this.descuento, {
         plural: 'PESOS MEXICANOS',
         singular: 'PESO MEXICANO',
         centPlural: 'CENTAVOS',
@@ -388,10 +388,10 @@ export class VentasComponent implements OnInit {
 
   }
 
-  getCambiosyDevoluciones(){
+  getCambiosyDevoluciones() {
     this.loading = true;
     this.cambiosDevolucionesService.getCambiosDevoluciones().subscribe(response => {
-      if(response.exito){
+      if (response.exito) {
         console.log(response.respuesta)
         this.lstCambiosDevoluciones = response.respuesta
         this.lstCambiosDevoluciones.forEach(cambio => {
@@ -400,7 +400,7 @@ export class VentasComponent implements OnInit {
         this.loading = false;
         // console.log('cambios devoluciones --> ', this.lstCambiosDevoluciones);
 
-      }else{
+      } else {
         this.lstCambiosDevoluciones = [];
         this.loading = false;
       }
@@ -441,7 +441,9 @@ export class VentasComponent implements OnInit {
   async PostVentaRegistro(tipoPago: string) {
     if (tipoPago == "MULTIPLE") {
       this.totalVenta = this.totalMultipleT + this.totalMultipleF
-      if (this.totalVenta>=this.total-this.descuento) {
+
+
+      if (this.totalVenta == this.total - this.descuento) {
         this.changePage();
         this.RegistraVentaValid(tipoPago);
 
@@ -452,7 +454,7 @@ export class VentasComponent implements OnInit {
 
     }
     if (tipoPago == "EFECTIVO") {
-      if (this.totalVenta>=this.total-this.descuento) {
+      if (this.totalVenta == this.total - this.descuento) {
         this.changePage();
         this.RegistraVentaValid(tipoPago);
 
@@ -465,7 +467,7 @@ export class VentasComponent implements OnInit {
     }
     if (tipoPago == "TARJETA") {
       this.toastr.warning("Recuerda Validar el cobro en terminal la venta se registrara ", 'Atencion!');
-      if (this.totalVenta==this.total-this.descuento) {
+      if (this.totalVenta == this.total - this.descuento) {
         this.changePage();
         this.RegistraVentaValid(tipoPago);
 
@@ -524,11 +526,11 @@ export class VentasComponent implements OnInit {
     this.RegistraVenta.subtotal = this.total;
     this.RegistraVenta.tipoPago = tipoPago;
     this.RegistraVenta.tipoVenta = "CONTADO";
-    this.RegistraVenta.total = this.total-this.descuento;
+    this.RegistraVenta.total = this.total - this.descuento;
     this.RegistraVenta.tarjeta = this.totalMultipleT;
     this.RegistraVenta.efectivo = this.totalMultipleF;
     this.RegistraVenta.ventaArticulo = this.ventaArticulo;
-    this.RegistraVenta.descuento=this.porcentajeDescuentoAplicar;
+    this.RegistraVenta.descuento = this.porcentajeDescuentoAplicar;
 
 
 
@@ -537,26 +539,26 @@ export class VentasComponent implements OnInit {
       console.log('data=> ', resp);
 
       if (resp.exito) {
-             //Limpiar objetos al finalizar una compra correcta
-             this.cadenaProductos = ""
-             this.RegistraVenta = new VentaModel();
-             this.ventaArticulo = [];
-             this.articulos = 0
-             this.total = 0
-             this.articlesShell = []
-             this.totalVenta= 0
-             this.totalMultipleF=0;
-             this.totalMultipleT=0;
-             this.activeState=[false];
+        //Limpiar objetos al finalizar una compra correcta
+        this.cadenaProductos = ""
+        this.RegistraVenta = new VentaModel();
+        this.ventaArticulo = [];
+        this.articulos = 0
+        this.total = 0
+        this.articlesShell = []
+        this.totalVenta = 0
+        this.totalMultipleF = 0;
+        this.totalMultipleT = 0;
+        this.activeState = [false];
         this.toastr.success(resp.mensaje, 'Exito!');
 
-        if(this.selectedclienteNameAdvanced.nombre!=undefined && this.selectedclienteNameAdvanced.nombre!=""){
+        if (this.selectedclienteNameAdvanced.nombre != undefined && this.selectedclienteNameAdvanced.nombre != "") {
 
-         this.clienteName=this.selectedclienteNameAdvanced.nombre+this.selectedclienteNameAdvanced.apellidoPaterno+this.selectedclienteNameAdvanced.apellidoMaterno
+          this.clienteName = this.selectedclienteNameAdvanced.nombre + this.selectedclienteNameAdvanced.apellidoPaterno + this.selectedclienteNameAdvanced.apellidoMaterno
         }
 
-       console.log(this.selectedclienteNameAdvanced)
-       console.log(this.clienteName)
+        console.log(this.selectedclienteNameAdvanced)
+        console.log(this.clienteName)
         //code Impresion
         const conector = new ConectorPluginV3();
         conector
@@ -568,9 +570,9 @@ export class VentasComponent implements OnInit {
           .Feed(1)
           .EscribirTexto("Caja:" + this.cashModel.idCaja)
           .Feed(1)
-          .EscribirTexto("Cajero:" + this.user.nombre+" "+ this.user.apellidoPaterno+" "+  this.user.apellidoMaterno )
+          .EscribirTexto("Cajero:" + this.user.nombre + " " + this.user.apellidoPaterno + " " + this.user.apellidoMaterno)
           .Feed(1)
-          .EscribirTexto("Cliente:" +this.clienteName)
+          .EscribirTexto("Cliente:" + this.clienteName)
           .Feed(1)
           .EscribirTexto("Ticket:" + this.RegistraVenta.noTicket)
           .Feed(1)
@@ -580,7 +582,7 @@ export class VentasComponent implements OnInit {
           .Feed(1)
           .EscribirTexto("Total:" + this.total + "MXN")
           .Feed(2)
-          .EscribirTexto(this.totalLetra = this.numeroALetras(this.total-this.descuento, {
+          .EscribirTexto(this.totalLetra = this.numeroALetras(this.total - this.descuento, {
             plural: 'PESOS MEXICANOS',
             singular: 'PESO MEXICANO',
             centPlural: 'CENTAVOS',
@@ -633,7 +635,7 @@ export class VentasComponent implements OnInit {
 
   }
 
-  openModalAddCancel(){
+  openModalAddCancel() {
     this.accion = ''
     this.openProducts = ''
     this.accionCancelacion = 'Agregar';
@@ -641,7 +643,7 @@ export class VentasComponent implements OnInit {
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
-}
+  }
 
   //Funcion Para Generar el Numero en letras del total de la compra
   Unidades(num) {
@@ -798,16 +800,16 @@ export class VentasComponent implements OnInit {
   };
 
   changePage() {
-    console.log(this.totalVenta+":"+this.total)
-    if(this.totalVenta>this.total){
+    console.log(this.totalVenta + ":" + this.total)
+    if (this.totalVenta > this.total) {
       this.cambioVenta = Math.abs(this.total - this.totalVenta);
 
 
-      this.toastr.success("Su cambio es :"+     this.cambioVenta , 'Cambio!');
-    }else{
+      this.toastr.success("Su cambio es :" + this.cambioVenta, 'Cambio!');
+    } else {
       console.log("no es igual");
       this.cambioVenta = 0
-     // this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+      // this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
     }
 
@@ -816,41 +818,41 @@ export class VentasComponent implements OnInit {
 
   toggle(index: number) {
     this.activeState[index] = !this.activeState[index];
-}
+  }
 
-onTabClose(event) {
-  alert({severity:'info', summary:'Tab Closed', detail: 'Index: ' + event.index})
-}
+  onTabClose(event) {
+    alert({ severity: 'info', summary: 'Tab Closed', detail: 'Index: ' + event.index })
+  }
 
-onTabOpen(event) {
+  onTabOpen(event) {
 
-  alert({severity:'info', summary:'Tab Expanded', detail: 'Index: ' + event.index})
-}
+    alert({ severity: 'info', summary: 'Tab Expanded', detail: 'Index: ' + event.index })
+  }
 
-onDiscountSelected(selectedDiscount: number) {
-  // Manejar el valor seleccionado aquí
-  console.log("Descuento seleccionado:", selectedDiscount['value']);
+  onDiscountSelected(selectedDiscount: number) {
+    // Manejar el valor seleccionado aquí
+    console.log("Descuento seleccionado:", selectedDiscount['value']);
 
-  // También puedes realizar otras operaciones según sea necesario
-  const porcentajeDescuento = selectedDiscount['value'];
-console.log(porcentajeDescuento)
+    // También puedes realizar otras operaciones según sea necesario
+    const porcentajeDescuento = selectedDiscount['value'];
+    console.log(porcentajeDescuento)
 
-this.porcentajeDescuentoAplicar=porcentajeDescuento
-  // Calcular el descuento
-  const descuento = (this.total * porcentajeDescuento) / 100;
-  console.log(descuento)
-  // Restar el descuento al total
-  // const totalConDescuento = this.total - descuento;
-  // console.log("Total con Descuento"+totalConDescuento)
+    this.porcentajeDescuentoAplicar = porcentajeDescuento
+    // Calcular el descuento
+    const descuento = (this.total * porcentajeDescuento) / 100;
+    console.log(descuento)
+    // Restar el descuento al total
+    // const totalConDescuento = this.total - descuento;
+    // console.log("Total con Descuento"+totalConDescuento)
 
- this. descuento=descuento
- this.totalLetra = this.numeroALetras(this.total-this.descuento, {
-  plural: 'PESOS MEXICANOS',
-  singular: 'PESO MEXICANO',
-  centPlural: 'CENTAVOS',
-  centSingular: 'CENTAVO'
-});
-}
+    this.descuento = descuento
+    this.totalLetra = this.numeroALetras(this.total - this.descuento, {
+      plural: 'PESOS MEXICANOS',
+      singular: 'PESO MEXICANO',
+      centPlural: 'CENTAVOS',
+      centSingular: 'CENTAVO'
+    });
+  }
 
 
 }
