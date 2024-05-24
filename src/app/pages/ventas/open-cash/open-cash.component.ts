@@ -65,7 +65,7 @@ export class OpenCashComponent implements OnInit {
             console.log("STATUS")
             console.log(this.openCashModel.idCaja)
             this.fechaCierre = this.openCashModel.fechaCierre != null ? this.variablesGL.getFormatoFecha(this.openCashModel.fechaCierre) : new Date();
-         
+
           }
         }
       }
@@ -221,21 +221,21 @@ export class OpenCashComponent implements OnInit {
         let totalMultiple = 0
         response.respuesta.forEach(function (a) {
            console.log(a.status)
-           if( a.status !="CONCLUIDA"){
+           if( a.status =="CONCLUIDA"){
             total += a.total;
            }
 
-          if (a.tipoPago == "TARJETA"  && a.status !="CONCLUIDA" ) {
+          if (a.tipoPago == "TARJETA"  && a.status =="CONCLUIDA" ) {
             totalTarjeta += a.total
 
           }
 
-          if (a.tipoPago == "EFECTIVO" && a.status !="CONCLUIDA" ) {
+          if (a.tipoPago == "EFECTIVO" && a.status =="CONCLUIDA" ) {
             totalEfectivo += a.total
 
           }
 
-          if (a.tipoPago == "MULTIPLE"  && a.status !="CONCLUIDA" ) {
+          if (a.tipoPago == "MULTIPLE"  && a.status =="CONCLUIDA" ) {
             totalTarjeta += a.tarjeta
             totalMultiple += a.total
             totalEfectivo += a.efectivo
@@ -244,20 +244,53 @@ export class OpenCashComponent implements OnInit {
 
         });
         console.log(total);
-
-        this.totalVentas = total;
-        this.totalEfectivodata = totalEfectivo
-        this.totalTarjetadata = totalTarjeta
-        this.totalMultipledata = totalMultiple
-        this.totalApartados = 0
         this.apartadosService.getPagoByCaja(this.openCashModel.idCaja).subscribe(response => {
           if (response.exito) {
+            response.respuesta.forEach(function (a) {
+              console.log(a.status)
+
+               total += a.total;
+
+
+             if (a.tipoPagoValida == "TARJETA"   ) {
+               totalTarjeta += a.montoTarjeta
+
+             }
+
+             if (a.tipoPagoValida == "EFECTIVO"  ) {
+              // totalEfectivo += a.total
+
+             }
+
+             if (a.tipoPagoValida == "MULTIPLE"  ) {
+               totalTarjeta += a.montoTarjeta
+               totalMultiple += a.total
+               totalEfectivo += a.montoEfectivo
+             }
+
+
+           });
+
+            console.log(response.respuesta)
             var listPagos: PagoApartado[] = response.respuesta;
             listPagos.forEach((pago) => {
               this.totalApartados += pago.cantidad;
             })
           }
         })
+
+
+
+        this.totalVentas = total;
+        this.totalEfectivodata = totalEfectivo
+        this.totalTarjetadata = totalTarjeta
+        this.totalMultipledata = totalMultiple
+        this.totalApartados = 0
+
+
+
+
+
       }
 
 

@@ -61,6 +61,7 @@ export class VentasCajaComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.ventas = this._listVentas
+    console.log(this.ventas)
     //this.lstCambiosDevoluciones=this._listVentas
     //console.log( this._listVentas)
     //this.consultarAbonos()
