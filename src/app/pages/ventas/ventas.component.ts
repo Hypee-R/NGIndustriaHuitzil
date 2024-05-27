@@ -30,7 +30,7 @@ export class VentasComponent implements OnInit {
   activeState: boolean[] = [false];
   cadenaProductos: string = "\n";
   impresoras = [];
-  impresoraSeleccionada: string = "TicketsZebraSistema";
+  impresoraSeleccionada: string = "Caja";
   mensaje: string = "";
   display: boolean = false;
   displayCotizacion: boolean = false;
@@ -539,18 +539,7 @@ export class VentasComponent implements OnInit {
       console.log('data=> ', resp);
 
       if (resp.exito) {
-        //Limpiar objetos al finalizar una compra correcta
-        this.cadenaProductos = ""
-        this.RegistraVenta = new VentaModel();
-        this.ventaArticulo = [];
-        this.articulos = 0
-        this.total = 0
-        this.articlesShell = []
-        this.totalVenta = 0
-        this.totalMultipleF = 0;
-        this.totalMultipleT = 0;
-        this.activeState = [false];
-        this.toastr.success(resp.mensaje, 'Exito!');
+
 
         if (this.selectedclienteNameAdvanced.nombre != undefined && this.selectedclienteNameAdvanced.nombre != "") {
 
@@ -559,6 +548,7 @@ export class VentasComponent implements OnInit {
 
         console.log(this.selectedclienteNameAdvanced)
         console.log(this.clienteName)
+        console.log(this.cadenaProductos)
         //code Impresion
         const conector = new ConectorPluginV3();
         conector
@@ -594,7 +584,6 @@ export class VentasComponent implements OnInit {
           .EscribirTexto("***Si requiere factura solo se podra expedir el dia de compra, de lo contrario se contemplara en ventas al Publico en General..***")
           .Feed(1)
           .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
-          .Feed(2)
           .Corte(1)
           .Iniciar()
           .Feed(1);
@@ -603,7 +592,18 @@ export class VentasComponent implements OnInit {
           const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
 
           if (respuesta == true) {
-
+            //Limpiar objetos al finalizar una compra correcta
+            this.cadenaProductos = ""
+            this.RegistraVenta = new VentaModel();
+            this.ventaArticulo = [];
+            this.articulos = 0
+            this.total = 0
+            this.articlesShell = []
+            this.totalVenta = 0
+            this.totalMultipleF = 0;
+            this.totalMultipleT = 0;
+            this.activeState = [false];
+            this.toastr.success(resp.mensaje, 'Exito!');
             console.log("Impresión correcta");
             this.display = false;
           } else {
@@ -611,7 +611,8 @@ export class VentasComponent implements OnInit {
           }
 
         } catch (error) {
-          this.toastr.warning("Se Realizo la venta correctamente pero no se encontro la impresora:TicketsZebraSistema", 'Atencion!');
+          console.log(error)
+          this.toastr.warning(error, 'Atencion!');
           //Limpiar objetos al finalizar una compra correcta
           this.cadenaProductos = ""
           this.RegistraVenta = new VentaModel();
