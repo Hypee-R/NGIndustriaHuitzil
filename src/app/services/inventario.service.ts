@@ -81,10 +81,10 @@ export class InventarioService {
   }
 
   searchProduct(queryString: string): Observable<ResponseModel> {
-    console.log(queryString);
 
     let sucursal ;
-    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
+
+    if(this.variablesGL.getRol()=== 'Administrador' ){
       sucursal="all"
     }else{
       sucursal=this.variablesGL.getSucursal()
