@@ -26,12 +26,20 @@ export class ApartadosService {
   }
 
   getApartadosByUbicacion(): Observable<ResponseModel>{
+    // let sucursal ;
+    // if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
+    //   return this.http.get<ResponseModel>(environment.apiService + 'Apartados/ConsultaAll')
+    // .pipe(
+    //   map (res => res)
+    // );
+    // }else{
+    //   sucursal=this.variablesGL.getSucursal()
+    // }
+
     let sucursal ;
-    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
-      return this.http.get<ResponseModel>(environment.apiService + 'Apartados/ConsultaAll')
-    .pipe(
-      map (res => res)
-    );
+
+    if(this.variablesGL.getRol()=== 'Administrador' ){
+      sucursal="all"
     }else{
       sucursal=this.variablesGL.getSucursal()
     }

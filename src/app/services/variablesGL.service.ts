@@ -80,12 +80,22 @@ export class VariablesService {
   }
 
   getSucursal(){
+    console.log(localStorage.getItem('rol'))
     return localStorage.getItem('sucursal');
   }
 
   setSucursal(value: string){
     localStorage.removeItem('sucursal');
     localStorage.setItem('sucursal', value);
+  }
+
+  setRol(value: string){
+    localStorage.removeItem('rol');
+    localStorage.setItem('rol', value);
+  }
+
+  getRol(){
+    return localStorage.getItem('rol');
   }
 
   setFormatoFecha(fecha: string | Date){

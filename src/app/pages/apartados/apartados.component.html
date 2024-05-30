@@ -5,26 +5,42 @@
         <span class="lstick"></span>
         <div class="card-body">
             <div class="row">
-                <div class="col-12">
+                <!-- <div class="col-12">
                     <p-toolbar styleClass="mb-4">
                         <div class = "col-1 md: col-2">
                               <button pButton pRipple label="NUEVO" icon="pi pi-plus" class="p-button-success mr-2" (click)="openAddPedido()"></button>
                          </div>
                     </p-toolbar>
-                </div>
+                </div> -->
                 <div *ngIf="!loading  ">
-                    <p-table #dt [value]="allApartados" [columns]="colsApartados" [rows]="rowsApartados" [paginator]="true" [globalFilterFields]="[]" [responsive]="true" responsiveLayout="scroll"
+                    <p-table #dt [value]="allApartados" [columns]="colsApartados" [rows]="rowsApartados" [paginator]="true" [globalFilterFields]="['idApartado','telefono1']" [responsive]="true" responsiveLayout="scroll"
                         [(selection)]="selectedApartados" [rowHover]="true" dataKey="idApartado" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Apartados" [showCurrentPageReport]="true" styleClass="p-datatable-sm">
                         <ng-template pTemplate="caption">
-                            <div class="flex align-items-center justify-content-between">
-                            </div>
-                        </ng-template>
+                        <div class="flex align-items-center justify-content-between">
+                          <div class="row">
+                              <div class="col col-md-7">
+                                  <div class="row">
+                                      <div class="col col-md-3">
+                                        <button pButton pRipple label="NUEVO" icon="pi pi-plus" class="p-button-success mr-2" (click)="openAddPedido()"></button>
+                                      </div>
+
+                                  </div>
+                              </div>
+                              <div class="col col-md-5">
+                                  <span class="p-input-icon-left" style="width: 100%;">
+                                  <i class="pi pi-search"></i>
+                                  <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar..." [style]="{'width': '100%'}"/>
+                                </span>
+                              </div>
+                          </div>
+                      </div>
+                  </ng-template>
                         <ng-template pTemplate="header" let-columns>
                             <tr>
-                                <th style="width: 2rem">
+                                <!-- <th style="width: 2rem">
                                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                                 </th>
-                                <th></th>
+                                <th></th> -->
                                 <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                     <div class="flex justify-content-center align-items-center">
                                         {{col.header}}
@@ -44,17 +60,20 @@
                         </ng-template>
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
                             <tr>
-                                <td>
+                                <!-- <td>
                                     <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-                                </td>
-                                <td>
+                                </td> -->
+                                <!-- <td>
                                     <div style="display: inline-flex">
 
                                     </div>
-                                </td>
+                                </td> -->
                                 <td>
                                     {{rowData['idApartado']}}
                                 </td>
+                                <td>
+                                  {{rowData['telefono1']}}
+                              </td>
                                 <td>
                                     {{rowData['cliente']}}
                                 </td>
@@ -277,7 +296,7 @@
                                      [disabled]="true" [value]="sumarMontos()" />
                           </div>
                       </div>
-            
+
                       <div class="field" *ngIf="pagoApartado.tipoPagoValida !== 'MULTIPLE'">
                           <label for="cantidad">Monto</label>
                           <input type="number" pInputText id="cantidad" [(ngModel)]="pagoApartado.cantidad"
@@ -290,7 +309,7 @@
                         <br>
                         <button pButton type="button" label="Hacer pago" class="p-button-info" (click)="addPago()" [disabled]="!hacerPago "></button>
                     </div>
-                        
+
                         <div *ngIf="!hacerPago">
 
                             Se ha terminado de liquidar el Apartado
@@ -316,13 +335,13 @@
         <tr>
         <td>
                 {{rowData['tipoPagoValida']}}
-            </td> 
+            </td>
             <td>
                 {{rowData['montoTarjeta']| currency:'MXN':'symbol':'1.2-2'}}
-            </td> 
+            </td>
             <td>
                 {{rowData['montoEfectivo']| currency:'MXN':'symbol':'1.2-2'}}
-            </td> 
+            </td>
             <td>
                 {{rowData['fecha']  | date: 'dd/MM/yyyy, hh:mm a'}}
             </td>

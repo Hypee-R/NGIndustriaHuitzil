@@ -23,9 +23,9 @@ export class InventarioService {
     }
 
   getArticulos(): Observable<ResponseModel>{
-    
+    console.log(this.variablesGL.getRol)
     let sucursal ;
-    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined||this.variablesGL.getSucursal()== ""){
+    if(this.variablesGL.getRol()=== 'Administrador' ){
       sucursal="all"
     }else{
       sucursal=this.variablesGL.getSucursal()
@@ -39,16 +39,18 @@ export class InventarioService {
   }
 
   getInexistencias(): Observable<ResponseModel>{
-    //Update 
+    //Update
     //let sucursal = this.variablesGL.getSucursal() ?? "all";
-   
+
     let sucursal ;
-    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
+
+    if(this.variablesGL.getRol()=== 'Administrador' ){
       sucursal="all"
     }else{
       sucursal=this.variablesGL.getSucursal()
     }
-    return this.http.get<ResponseModel>(environment.apiService + `Inventario/Inexistencias?sucursal=${sucursal}`)
+    console.log(this.variablesGL.getSucursal())
+    return this.http.get<ResponseModel>(environment.apiService + `Inventario/Consulta?sucursal=${sucursal}`)
     .pipe(
       map (res => res)
     );
@@ -80,7 +82,7 @@ export class InventarioService {
 
   searchProduct(queryString: string): Observable<ResponseModel> {
     console.log(queryString);
-   
+
     let sucursal ;
     if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
       sucursal="all"
@@ -93,7 +95,7 @@ export class InventarioService {
 
 
   SearchProductFilterUbicacion(sucursal: string): Observable<ResponseModel> {
-  
+
     return this.http.get<ResponseModel>(environment.apiService + `Inventario/SearchProductFilterUbicacion?sucursal=${sucursal}`);
   }
 }

@@ -108,6 +108,7 @@ export class ApartadosComponent implements OnInit {
 
     [
       { field: 'idApartado', header: 'ID PEDIDO' },
+      { field: 'cliente', header: 'TELEFONO' },
       { field: 'cliente', header: 'CLIENTE' },
       { field: 'fecha',header:'FECHA APARTADO'},
       { field: 'status', header : 'STATUS'}
@@ -145,11 +146,9 @@ export class ApartadosComponent implements OnInit {
       this.rowsApartados = 12;
     }
 
-    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined||this.variablesGL.getSucursal()== ""){
-      this.sucursal="all"
-    }else{
+
       this.sucursal=this.variablesGL.getSucursal()
-    }
+
   }
 
   ngOnInit(): void {
@@ -174,6 +173,7 @@ sumarMontos(): number {
   getApartados(){
     this.apartadoService.getApartadosByUbicacion().subscribe(response => {
       if(response.exito){
+        console.log(response)
         this.allApartados = response.respuesta
       }
       else{
@@ -186,7 +186,7 @@ sumarMontos(): number {
 
   getClientes(){
     this.clientes= []
-    this.clientesService.getClientes().subscribe(response => {
+    this.clientesService.getClientesBySucursal().subscribe(response => {
       if (response.exito) {
         this.clientes = response.respuesta;
       } else {

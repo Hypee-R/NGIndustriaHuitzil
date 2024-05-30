@@ -29,10 +29,11 @@ export class ClientesComponent implements OnInit {
   ) {
     this.cols = [
       { field: 'nombre', header: 'Nombre' },
-      { field: 'apellidoPaterno', header: 'Apellido Paterno' },
-      { field: 'apellidoMaterno', header: 'Apellido Materno' },
-      { field: 'telefono1', header: 'Telefono 1' },
-      { field: 'telefono2', header: 'Telefono 2' },
+      //TODO:se comento por nuevo requerimiento y se agrego en direccion el valor de la sucursal donde se creo
+      // { field: 'apellidoPaterno', header: 'Apellido Paterno' },
+      // { field: 'apellidoMaterno', header: 'Apellido Materno' },
+      { field: 'telefono1', header: 'Telefono' },
+     { field: 'telefono2', header: 'Telefono 2' },
       { field: 'direccion', header: 'Dirección' },
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
@@ -54,7 +55,7 @@ export class ClientesComponent implements OnInit {
 
   getClientes(){
       this.loading = true;
-      this.clientesService.getClientes().subscribe(response => {
+      this.clientesService.getClientesBySucursal().subscribe(response => {
         if(response.exito){
           //console.log(response.respuesta)
           this.listClientes = response.respuesta
@@ -81,7 +82,7 @@ export class ClientesComponent implements OnInit {
       this.variablesGL.showDialog.next(true);
     }, 100);
   }
-  
+
   deleteCliente(cliente: CatClienteModel){
     Swal.fire({
       title: `Está seguro de eliminar el cliente ${cliente.nombre}?`,

@@ -1,6 +1,12 @@
 <p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Cliente" [modal]="true" styleClass="p-fluid">
 
     <ng-template pTemplate="content">
+      <div class="field">
+        <label for="usuario">Sucursal</label>
+        <p-dropdown class="p-background" [options]="listSucursales" [(ngModel)]="cliente.direccion" optionLabel="direccion" optionValue="direccion" [style]="{'width': '100%'}" placeholder="Selecciona una ubicacion"></p-dropdown>
+        <small class="p-error" *ngIf="submitted && !cliente.direccion">La Ubicacion es requerida.</small>
+    </div>
+    <br>
         <div class="field">
             <label for="nombre">Nombre</label>
             <input type="text" pInputText id="nombre" [(ngModel)]="cliente.nombre" required autofocus />
@@ -8,24 +14,24 @@
             <small class="p-error" *ngIf="submitted && cliente.nombre?.length > 0 && cliente.nombre?.length <= 2">El nombre debe contener minimo 3 caracteres</small>
             </div>
         <br>
-        <div class="field">
+        <!-- <div class="field">
             <label for="apaterno">Apellido Paterno</label>
-            <input type="text" pInputText id="apaterno" [(ngModel)]="cliente.apellidoPaterno"/>
+            <input type="text" pInputText id="apaterno" [(ngModel)]="cliente.apellidoPaterno"/> -->
             <!--<small class="p-error" *ngIf="submitted && !cliente.apellidoPaterno">El apellido paterno es requerido.</small>
             <small class="p-error" *ngIf="submitted && cliente.apellidoPaterno?.length > 0 && cliente.apellidoPaterno?.length <= 2">El apellido paterno debe contener minimo 3 caracteres</small>
             -->
-        </div>
-        <br>
-        <div class="field">
+        <!-- </div>
+        <br> -->
+        <!-- <div class="field">
             <label for="amaterno">Apellido Materno</label>
-            <input type="text" pInputText id="amaterno" [(ngModel)]="cliente.apellidoMaterno"/>
+            <input type="text" pInputText id="amaterno" [(ngModel)]="cliente.apellidoMaterno"/> -->
             <!--<small class="p-error" *ngIf="submitted && !cliente.apellidoMaterno">El apellido materno es requerido.</small>
             <small class="p-error" *ngIf="submitted && cliente.apellidoMaterno?.length > 0 && cliente.apellidoMaterno?.length <= 2">El apellido materno debe contener minimo 3 caracteres</small>
             -->
-        </div>
-        <br>
+        <!-- </div>
+        <br> -->
         <div class="field">
-            <label for="telefono1">Telefono 1</label>
+            <label for="telefono1">Telefono </label>
             <input type="text" pInputText id="telefono1" [(ngModel)]="cliente.telefono1"/>
             <!--<small class="p-error" *ngIf="submitted && !cliente.telefono1">El telefono es requerido.</small>
             <small class="p-error" *ngIf="submitted && cliente.telefono1?.length > 0 && cliente.telefono1?.length <= 3">El telefono debe contener minimo 4 caracteres</small>
@@ -37,8 +43,8 @@
             <input type="tel" pInputText id="telefono2" [(ngModel)]="cliente.telefono2"/>
            <!-- <small class="p-error" *ngIf="submitted && !cliente.telefono2">El telefono es requerido.</small>
             <small class="p-error" *ngIf="submitted && cliente.telefono2?.length > 0 && cliente.telefono2?.length != 10">El telefono debe contener 10 caracteres</small>
-           -->
-        </div>
+          -->
+       </div>
         <br>
         <!--
         <div class="field">
@@ -47,13 +53,13 @@
             <small class="p-error" *ngIf="submitted && !cliente.correo">El correo es requerido.</small>
             <small class="p-error" *ngIf="submitted && cliente.correo?.length > 0 && !cliente.correo?.match(pattern)">El correo no tiene un formato valido.</small>
         </div>-->
-        <div class="field">
+        <!-- <div class="field">
             <label for="direccion">Dirección</label>
-            <input type="text" pInputText id="direccion" [(ngModel)]="cliente.direccion">
+            <input type="text" pInputText id="direccion" [(ngModel)]="cliente.direccion"> -->
             <!--<small class="p-error" *ngIf="submitted && !cliente.direccion">La dirección es requerida.</small>
             <small class="p-error" *ngIf="submitted && cliente.direccion?.length > 0 && cliente.direccion?.length <= 5">La dirección debe contener minimo 6 caracteres</small>
         --->
-        </div>
+        <!-- </div> -->
         <!--
         <div class="field">
             <label for="encargado">Encargado Nombre</label>
