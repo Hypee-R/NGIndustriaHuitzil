@@ -82,7 +82,6 @@ export class VentasComponent implements OnInit {
     private ventasService: VentasService,
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
-    private clientesService: ClientesService,
     private cambiosDevolucionesService: VentasService
   ) {
     this.selectedclienteNameAdvanced = new CatClienteModel()
