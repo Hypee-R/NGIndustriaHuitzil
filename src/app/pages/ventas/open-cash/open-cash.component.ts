@@ -18,7 +18,7 @@ import { PagoApartado } from 'src/app/models/pagoApartado';
 })
 export class OpenCashComponent implements OnInit {
   user = JSON.parse(localStorage.getItem('usuario'));
-  impresoraSeleccionada: string = "TicketsZebraSistema";
+  impresoraSeleccionada: string = "Caja";
   @Input() _accion: string;
   @Input() _caja: CajaModel;
   rows = 0;
