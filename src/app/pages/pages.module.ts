@@ -79,13 +79,9 @@ import { ClientesComponent } from './clientes/clientes.component';
 import { AddClienteComponent } from './clientes/add-cliente/add-cliente.component';
 //import { NgxBarcode6Module } from 'ngx-barcode6';
 import { ApartadosComponent } from './apartados/apartados.component';
-import { AddApartadoComponent } from './apartados/add-apartado/add-apartado.component';
-import { AddPedidoEspecialComponent } from './apartados/add-pedido-especial/add-pedido-especial.component';
 import { TagModule } from 'primeng/tag';
 import {ConfirmPopupModule} from 'primeng/confirmpopup';
 import {AccordionModule} from 'primeng/accordion';
-import { AddPagoApartadoComponent } from './apartados/add-pago-apartado/add-pago-apartado.component';
-import { AddPagoPedidoComponent } from './apartados/add-pago-pedido/add-pago-pedido.component';
 import { ControEnviosComponent } from './contro-envios/contro-envios.component';
 import { TabViewModule } from 'primeng/tabview';
 import { VentasCajaComponent } from './informes/ventas-caja/ventas-caja.component';
@@ -178,10 +174,6 @@ import { CancelacionComponent } from './ventas/cancelacion/cancelacion.component
         RefreshTableDirective,
         ClientesComponent,
         ApartadosComponent,
-        AddApartadoComponent,
-        AddPedidoEspecialComponent,
-        AddPagoApartadoComponent,
-        AddPagoPedidoComponent,
         ControEnviosComponent,
         VentasCajaComponent,
         EnvioComponent,
