@@ -8,6 +8,7 @@ import { TallasService } from '../../../services/tallas.service';
 import { ApartadosService } from '../../../services/apartados.service';
 import { PagoApartado } from 'src/app/models/pagoApartado';
 import ConectorPluginV3 from "src/app/ConectorPluginV3";
+import { async } from '@angular/core/testing';
 @Component({
   selector: 'app-add-pago-apartado',
   templateUrl: './add-pago-apartado.component.html',
@@ -88,7 +89,7 @@ export class AddPagoApartadoComponent implements OnInit, OnChanges {
     this.ngOnDestroy*/
   }
 
-  addPago() {
+  async addPago() {
     this.submitted = true
     if (this.pagoApartado.cantidad < this._apartado.precio && this.pagoApartado.fecha != "") {
       this.pagoApartado.idApartado = this._apartado.idApartado
@@ -97,7 +98,7 @@ export class AddPagoApartadoComponent implements OnInit, OnChanges {
           this.toastr.success('Abono realizado', 'Sucess');
           this.getPagos()
           setTimeout(() => {
-
+           this.geeneraTicket(this.pagoApartado)
           }, 200);
         }
         else {
@@ -132,7 +133,7 @@ export class AddPagoApartadoComponent implements OnInit, OnChanges {
   }
 
 
-  async geeneraTicket() {
+  async geeneraTicket(data:PagoApartado) {
     //code Impresion
     const conector = new ConectorPluginV3();
     conector
@@ -155,12 +156,12 @@ export class AddPagoApartadoComponent implements OnInit, OnChanges {
       .Feed(1)
       //.EscribirTexto("Total:" + this.total + "MXN")
       .Feed(2)
-      // .EscribirTexto( this.numeroALetras(this.total - this.descuento, {
-      //   plural: 'PESOS MEXICANOS',
-      //   singular: 'PESO MEXICANO',
-      //   centPlural: 'CENTAVOS',
-      //   centSingular: 'CENTAVO'
-      // }))
+    // .EscribirTexto( this.numeroALetras(this.data., {
+    //      plural: 'PESOS MEXICANOS',
+    //      singular: 'PESO MEXICANO',
+    //      centPlural: 'CENTAVOS',
+    //      centSingular: 'CENTAVO'
+    //    }))
       .Feed(2)
       .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
       .Feed(2)

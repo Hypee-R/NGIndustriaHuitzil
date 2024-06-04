@@ -12,7 +12,8 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from 'src/app/services/ventas.service';
-
+import { formatDate } from '@angular/common';
+import ConectorPluginV3 from "src/app/ConectorPluginV3";
 @Component({
   selector: 'app-apartados',
   templateUrl: './apartados.component.html',
@@ -21,14 +22,14 @@ import { VentasService } from 'src/app/services/ventas.service';
 export class ApartadosComponent implements OnInit {
   statusPantalla: number
   selectedclienteNameAdvanced: CatClienteModel
-  selectedApartado : CatApartadoModel
+  selectedApartado: CatApartadoModel
   loading: boolean = false
   filteredClients: CatClienteModel[] = []
   clientes: CatClienteModel[]
   cliente: CatClienteModel = new CatClienteModel();
   clienteName: string = ''
-  listPagos : PagoApartado[] = []
-  listArticulosApartados :  CatApartadoModel [] = []
+  listPagos: PagoApartado[] = []
+  listArticulosApartados: CatApartadoModel[] = []
   listArticulos: productoModel[] = [];
   filteredArticulos: productoModel[] = []
   selectedArticuloAdvanced: productoModel
@@ -42,84 +43,86 @@ export class ApartadosComponent implements OnInit {
   selectedApartados = []
   showNewReserve = false
   showPagosPedido = false
-  apartado : CatApartadoModel = new CatApartadoModel()
+  apartado: CatApartadoModel = new CatApartadoModel()
   showPedidos = false
   submitted = false;
   nombreCompleto = ""
-  nameCliente : String
-  nameProducto : String
+  nameCliente: String
+  nameProducto: String
   hacerPago = true
-  faltante : number = 0
-  pagoApartado : PagoApartado = new PagoApartado()
-  _apartado : CatApartadoModel = new CatApartadoModel();
+  faltante: number = 0
+  pagoApartado: PagoApartado = new PagoApartado()
+  _apartado: CatApartadoModel = new CatApartadoModel();
   articulos = 0
-  articulosApartados : ApartadoArticuloModel []= []
-  articulosByApartado : productoModel []= []
+  articulosApartados: ApartadoArticuloModel[] = []
+  articulosByApartado: productoModel[] = []
   searchTerm: string = '';
-  selectedClient : CatClienteModel;
-  colsProducts:any[] = [];
+  selectedClient: CatClienteModel;
+  colsProducts: any[] = [];
   queryString: string = '';
   total = 0
   totalLetra = "";
   cashModel: CajaModel;
   accion = '';
   openCaja = true;
-  sucursal =''
+  sucursal = ''
+  impresoraSeleccionada: string = "Caja";
+  cadenaProductos: string = "\n";
   tiposPago = [
     { label: 'Efectivo', value: 'EFECTIVO' },
     { label: 'Tarjeta', value: 'TARJETA' },
     { label: 'Múltiple', value: 'MULTIPLE' }
-];
+  ];
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
-    private clientesService : ClientesService,
-    private apartadoService : ApartadosService,
-    private inventarioService : InventarioService,
+    private clientesService: ClientesService,
+    private apartadoService: ApartadosService,
+    private inventarioService: InventarioService,
     private ventasService: VentasService,
 
   ) {
     this.selectedArticuloAdvanced = new productoModel()
-    this.selectedclienteNameAdvanced= new CatClienteModel()
+    this.selectedclienteNameAdvanced = new CatClienteModel()
     this.statusPantalla = this.variablesGL.getStatusPantalla()
     this.cols = [
       { field: 'idArticulo', header: 'Articulo' },
       { field: 'talla', header: 'Talla' },
-      { field : 'precio', header :'Precio'},
+      { field: 'precio', header: 'Precio' },
       { field: 'fecha', header: 'Fecha' },
-      { field : 'fechaEntrega', header : 'Fecha Entrega'},
+      { field: 'fechaEntrega', header: 'Fecha Entrega' },
       { field: 'telefono', header: 'Telefono' },
       { field: 'direccion', header: 'Dirección' },
-      { field: 'status', header : 'Status'}
+      { field: 'status', header: 'Status' }
 
     ];
 
     this.colsPagos =
 
-    [
-      { field: 'tipoPagoValida', header: 'TIPO PAGO' },
-      { field: 'montotarjeta', header: 'TARJETA' },
-      { field: 'montoefectivo', header: 'EFECTIVO' },
-      { field: 'fecha',header:'FECHA PAGO'},
-      { field: 'cantidad', header : 'CANTIDAD'}
+      [
+        { field: 'tipoPagoValida', header: 'TIPO PAGO' },
+        { field: 'montotarjeta', header: 'TARJETA' },
+        { field: 'montoefectivo', header: 'EFECTIVO' },
+        { field: 'fecha', header: 'FECHA PAGO' },
+        { field: 'cantidad', header: 'CANTIDAD' }
 
-    ];
+      ];
     this.colsApartados =
 
-    [
-      { field: 'idApartado', header: 'ID PEDIDO' },
-      { field: 'cliente', header: 'TELEFONO' },
-      { field: 'cliente', header: 'CLIENTE' },
-      { field: 'fecha',header:'FECHA APARTADO'},
-      { field: 'status', header : 'STATUS'}
+      [
+        { field: 'idApartado', header: 'ID PEDIDO' },
+        { field: 'cliente', header: 'TELEFONO' },
+        { field: 'cliente', header: 'CLIENTE' },
+        { field: 'fecha', header: 'FECHA APARTADO' },
+        { field: 'status', header: 'STATUS' }
 
-    ];
+      ];
 
     this.colsProducts = [
       { field: 'sku', header: 'SKU' },
-      { field: 'descripcion',header:'Producto'},
-      { field: 'talla',header: 'Talla'},
-      { field: 'existencia',header:'Existencia'}
+      { field: 'descripcion', header: 'Producto' },
+      { field: 'talla', header: 'Talla' },
+      { field: 'existencia', header: 'Existencia' }
 
     ];
     this.colSku = [
@@ -132,22 +135,22 @@ export class ApartadosComponent implements OnInit {
     ];
 
     let status = this.variablesGL.getPantalla();
-    if(status == 'celular'){
+    if (status == 'celular') {
       this.rows = 6;
       this.rowsApartados = 6;
-    }else if(status == 'tablet'){
+    } else if (status == 'tablet') {
       this.rows = 7;
       this.rowsApartados = 6;
-    }else if(status == 'laptop'){
+    } else if (status == 'laptop') {
       this.rows = 4;
       this.rowsApartados = 6;
-    }else{
+    } else {
       this.rows = 7;
       this.rowsApartados = 12;
     }
 
 
-      this.sucursal=this.variablesGL.getSucursal()
+    this.sucursal = this.variablesGL.getSucursal()
 
   }
 
@@ -161,31 +164,31 @@ export class ApartadosComponent implements OnInit {
     console.log(event.value.value)
     this.pagoApartado.tipoPagoValida = event.value.value;
     this.pagoApartado.tipoPago = event.value;
-}
-sumarMontos(): number {
-  // Calcula la suma de montoTarjeta y montoEfectivo si el tipo de pago es 'MULTIPLE'
-  if (this.pagoApartado.tipoPagoValida === 'MULTIPLE') {
-      return this.pagoApartado.montoTarjeta + this.pagoApartado.montoEfectivo;
-  } else {
-      return 0;  // Devuelve 0 si no es tipo 'MULTIPLE'
   }
-}
-  getApartados(){
+  sumarMontos(): number {
+    // Calcula la suma de montoTarjeta y montoEfectivo si el tipo de pago es 'MULTIPLE'
+    if (this.pagoApartado.tipoPagoValida === 'MULTIPLE') {
+      return this.pagoApartado.montoTarjeta + this.pagoApartado.montoEfectivo;
+    } else {
+      return 0;  // Devuelve 0 si no es tipo 'MULTIPLE'
+    }
+  }
+  getApartados() {
     this.apartadoService.getApartadosByUbicacion().subscribe(response => {
-      if(response.exito){
+      if (response.exito) {
         console.log(response)
         this.allApartados = response.respuesta
       }
-      else{
+      else {
         this.toastr.error(response.mensaje, 'Error!');
       }
-    },error =>{
+    }, error => {
       this.toastr.error('Hubo un error al buscar cliente', 'Error!');
     })
   }
 
-  getClientes(){
-    this.clientes= []
+  getClientes() {
+    this.clientes = []
     this.clientesService.getClientesBySucursal().subscribe(response => {
       if (response.exito) {
         this.clientes = response.respuesta;
@@ -201,7 +204,7 @@ sumarMontos(): number {
 
   }
 
-  getExistencias(){
+  getExistencias() {
     this.inventarioService.getInexistencias().subscribe(response => {
       if (response.exito) {
         this.listArticulos = response.respuesta;
@@ -217,42 +220,42 @@ sumarMontos(): number {
     });
   }
 
-  async showDetail(apartado: CatApartadoModel){
+  async showDetail(apartado: CatApartadoModel) {
     this.hacerPago = apartado.resto != 0
     this.selectedApartado = apartado;
     this.pagoApartado = new PagoApartado()
-    if(apartado.status != 'Entregado'){
+    if (apartado.status != 'Entregado') {
       this.getCaja();
     }
-    else{
+    else {
       this.toastr.info('El apartado ya fue entregado', 'Aviso');
       //return;
     }
-    await this.apartadoService.getArticuloByApartado(apartado.idApartado).subscribe(response =>{
-      if(response.exito){
-          this.articulosByApartado = response.respuesta
-        }
+    await this.apartadoService.getArticuloByApartado(apartado.idApartado).subscribe(response => {
+      if (response.exito) {
+        this.articulosByApartado = response.respuesta
       }
+    }
     )
-    await this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response =>{
+    await this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response => {
       console.log(response)
-            if(response.exito){
-              this.listPagos = response.respuesta
-              this.showPagosPedido = true
-            }
+      if (response.exito) {
+        this.listPagos = response.respuesta
+        this.showPagosPedido = true
+      }
     })
   }
 
-  entregarPedido(){
+  entregarPedido() {
     this.selectedApartado.status = "Entregado"
-    this.apartadoService.actualizaApartado(this.selectedApartado).subscribe(request =>{
-      if(request.exito){
-        this.toastr.success("Apartado Entregado","Aviso")
+    this.apartadoService.actualizaApartado(this.selectedApartado).subscribe(request => {
+      if (request.exito) {
+        this.toastr.success("Apartado Entregado", "Aviso")
         this.showPagosPedido = false
         this.getApartados();
       }
-      else{
-        this.toastr.error(request.mensaje,"Error")
+      else {
+        this.toastr.error(request.mensaje, "Error")
       }
     }, err => {
       this.variablesGL.hideLoading();
@@ -262,10 +265,10 @@ sumarMontos(): number {
 
   }
 
-  openAddPedido(){
+  openAddPedido() {
     this.showNewReserve = true
     this.articulosApartados = []
-    this.total= 0
+    this.total = 0
     this.articulos = 0
     this.selectedClient = undefined
 
@@ -273,50 +276,58 @@ sumarMontos(): number {
 
   getResultsClients(event) {
     this.nameCliente = event.query
-    if(event.query){
+    if (event.query) {
       this.filteredClients
-      = this.clientes.filter(cliente => {
-          let name = cliente.nombre.toLocaleLowerCase() + " "+
-           cliente.apellidoPaterno.toLocaleLowerCase() + " "+
-           cliente.apellidoPaterno.toLocaleLowerCase()
-           cliente.nombreCompleto = name
-           if(name.includes(event.query.toLocaleLowerCase())){
+        = this.clientes.filter(cliente => {
+          let name = cliente.nombre.toLocaleLowerCase() + " " +
+            cliente.apellidoPaterno.toLocaleLowerCase() + " " +
+            cliente.apellidoPaterno.toLocaleLowerCase()
+          cliente.nombreCompleto = name
+          if (name.includes(event.query.toLocaleLowerCase())) {
             return cliente
-           }
+          }
         }
-      )
+        )
     }
-    else{
+    else {
       this.filteredClients = this.clientes
     }
   }
 
-  addApartado(){
-    if(this.articulosApartados.length == 0){
+  async addApartado() {
+    if (this.articulosApartados.length == 0) {
       this.toastr.warning('Selecciona al menos un articulo', 'Aviso!');
       return
     }
-    if(this.selectedClient == undefined){
+    if (this.selectedClient == undefined) {
       this.toastr.warning('Selecciona un cliente', 'Aviso!');
       return
     }
+
+
     this.apartado.idCliente = this.selectedClient.idCliente
     this.apartado.articulosApartados = this.articulosApartados
     this.apartado.total = this.total
     this.apartado.resto = this.total
     this.apartado.fecha = new Date()
-    this.apartado.ubicacion= this.sucursal
+    this.apartado.ubicacion = this.sucursal
     this.apartado.type = "A"
-   this.apartadoService.agregaApartado(this.apartado).subscribe(response =>{
-          if(response.exito){
-            this.hideDialog()
-            this.toastr.success(response.mensaje, 'Sucess');
-            this.getApartados();
-          }
-          else{
-            this.toastr.error(response.mensaje, 'Error!');
-          }
-      })
+    const format = 'yyyy-MM-dd';
+    const locale = 'en-US';
+    const formattedDate = formatDate(new Date, format, locale);
+    this.apartado.noTicket = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
+
+    await this.apartadoService.agregaApartado(this.apartado).subscribe(response => {
+      if (response.exito) {
+        this.hideDialog()
+        this.toastr.success(response.mensaje, 'Sucess');
+        this.geeneraTicketApartado(this.apartado);
+        this.getApartados();
+      }
+      else {
+        this.toastr.error(response.mensaje, 'Error!');
+      }
+    })
   }
 
   hideDialog() {
@@ -329,62 +340,67 @@ sumarMontos(): number {
     this.showPagosPedido = false
   }
 
-  async addPago(){
+  async addPago() {
     this.submitted = true
-    if(this.selectedApartado.resto == 0){
+    if (this.selectedApartado.resto == 0) {
       this.toastr.warning('El apartado esta liquidado', 'Aviso');
       return
     }
-    if(this.pagoApartado.fecha == undefined || this.pagoApartado.fecha == ""){
+    if (this.pagoApartado.fecha == undefined || this.pagoApartado.fecha == "") {
       this.toastr.warning('Selecciona una fecha', 'Aviso');
       return
     }
-    if(this.pagoApartado.tipoPagoValida == "MULTIPLE"){
-      this.pagoApartado.cantidad=this.pagoApartado.montoTarjeta + this.pagoApartado.montoEfectivo
+    if (this.pagoApartado.tipoPagoValida == "MULTIPLE") {
+      this.pagoApartado.cantidad = this.pagoApartado.montoTarjeta + this.pagoApartado.montoEfectivo
     }
-    if(this.pagoApartado.cantidad == 0){
+    if (this.pagoApartado.cantidad == 0) {
       this.toastr.warning('La cantidad debe ser mayor a 0', 'Aviso');
       return
     }
-    if(this.pagoApartado.cantidad > this.selectedApartado.resto){
-      this.toastr.warning('La cantidad debe ser menor a '+ this.selectedApartado.resto, 'Aviso');
+    if (this.pagoApartado.cantidad > this.selectedApartado.resto) {
+      this.toastr.warning('La cantidad debe ser menor a ' + this.selectedApartado.resto, 'Aviso');
       return
     }
     this.pagoApartado.idApartado = this.selectedApartado.idApartado
-    this.selectedApartado.resto -=this.pagoApartado.cantidad
+    this.selectedApartado.resto -= this.pagoApartado.cantidad
     this.pagoApartado.idCaja = this.cashModel.idCaja
+    const format = 'yyyy-MM-dd';
+    const locale = 'en-US';
+    const formattedDate = formatDate(new Date, format, locale);
+    this.pagoApartado.noTicketPago = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
 
-    await this.apartadoService.agregaPago(this.pagoApartado).subscribe(response =>{
-      if(response.exito){
-        this.apartadoService.actualizaApartado(this.selectedApartado).subscribe(request =>{
-          if(request.exito){
+    await this.apartadoService.agregaPago(this.pagoApartado).subscribe(response => {
+      if (response.exito) {
+        this.apartadoService.actualizaApartado(this.selectedApartado).subscribe(request => {
+          if (request.exito) {
             this.toastr.success('Abono realizado correctamente', 'Aviso');
+            this.geeneraTicketPago(this.pagoApartado);
             this.getPagos(this.selectedApartado)
             this.pagoApartado = new PagoApartado()
             this.submitted = false
           }
-          else{
-            this.toastr.error(request.mensaje,"Error")
+          else {
+            this.toastr.error(request.mensaje, "Error")
           }
 
         }, err => {
           this.variablesGL.hideLoading();
-          this.toastr.error('Hubo un error al entregar el Apartado', 'Error!');
+          this.toastr.error('Hubo un error al entregar el Apartado', err);
         });
 
       }
-      else{
+      else {
         this.toastr.success(response.mensaje, 'Error!');
       }
-  })
+    })
   }
 
-  async getPagos(apartado: CatApartadoModel){
+  async getPagos(apartado: CatApartadoModel) {
     this.listPagos = []
-    await this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response =>{
-        if(response.exito){
-          this.listPagos = response.respuesta
-        }
+    await this.apartadoService.getPagoByApartado(apartado.idApartado).subscribe(response => {
+      if (response.exito) {
+        this.listPagos = response.respuesta
+      }
     }
     )
   }
@@ -575,9 +591,10 @@ sumarMontos(): number {
     this.articulosApartados = []
 
     if (event) {
-        this.articulosApartados.push(event)
+      this.articulosApartados.push(event)
     }
   }
+
 
   onchangeShear() {
     if (this.queryString && this.queryString.trim().length > 0) {
@@ -619,7 +636,7 @@ sumarMontos(): number {
   }
 
   addProductApartado(product: productoModel) {
-    if(this.articulosApartados.length === 0){
+    if (this.articulosApartados.length === 0) {
       let artc = new ApartadoArticuloModel()
       artc.descripcion = product.descripcion
       artc.precio = product.precio
@@ -635,29 +652,29 @@ sumarMontos(): number {
         centPlural: 'CENTAVOS',
         centSingular: 'CENTAVO'
       });
-      }
-    else{
+    }
+    else {
 
-      let  busqueda  = this.articulosApartados.findIndex(producto => producto.idArticulo == product.idArticulo);
-      if(busqueda == -1){
-          let artc = new ApartadoArticuloModel()
-          artc.descripcion = product.descripcion
-          artc.precio = product.precio
-          artc.cantidad = 1
-          artc.sku = product.sku
-          artc.idArticulo = product.idArticulo
-          this.articulosApartados.push(artc)
-          this.articulos += 1
-          this.total += product.precio
-          this.totalLetra = this.numeroALetras(this.total, {
-            plural: 'PESOS MEXICANOS',
-            singular: 'PESO MEXICANO',
-            centPlural: 'CENTAVOS',
-            centSingular: 'CENTAVO'
-          });
+      let busqueda = this.articulosApartados.findIndex(producto => producto.idArticulo == product.idArticulo);
+      if (busqueda == -1) {
+        let artc = new ApartadoArticuloModel()
+        artc.descripcion = product.descripcion
+        artc.precio = product.precio
+        artc.cantidad = 1
+        artc.sku = product.sku
+        artc.idArticulo = product.idArticulo
+        this.articulosApartados.push(artc)
+        this.articulos += 1
+        this.total += product.precio
+        this.totalLetra = this.numeroALetras(this.total, {
+          plural: 'PESOS MEXICANOS',
+          singular: 'PESO MEXICANO',
+          centPlural: 'CENTAVOS',
+          centSingular: 'CENTAVO'
+        });
       }
-      else{
-        this.addArticle(product,busqueda)
+      else {
+        this.addArticle(product, busqueda)
       }
     }
   }
@@ -671,12 +688,7 @@ sumarMontos(): number {
         console.log(this.accion)
         if (this.cashModel.fecha != null && this.cashModel.fechaCierre == null) {
           this.toastr.info('Actualmente hay una caja abierta', 'Atención!');
-          /*if (this.accion == 'Abrir') {
-            //console.log('No se puede abrir caja, hay una abierta...');
-            this.toastr.info('Actualmente hay una caja abierta', 'Atención!');
-            this.openCaja = true;
-            return;
-          }*/
+
 
         } else if (this.cashModel.fecha != null && this.cashModel.fechaCierre != null) {
 
@@ -687,18 +699,11 @@ sumarMontos(): number {
             //console.log('Abrir caja...');
             this.cashModel = new CajaModel();
           } else if (this.accion == 'Cerrar') {
-           // console.log('ya está cerrada la caja');
+            // console.log('ya está cerrada la caja');
             this.toastr.info('Ya está cerrada la caja', 'Atención!');
             this.accion = 'Status';
           }
         }
-
-
-
-        /*setTimeout(() => {
-          this.variablesGL.showDialog.next(true);
-        }, 100);*/
-
 
       } else {
 
@@ -727,4 +732,131 @@ sumarMontos(): number {
     this.getCaja();
 
   }
+
+  async geeneraTicketPago(data: PagoApartado) {
+    console.log(data)
+
+    //code Impresion
+    const conector = new ConectorPluginV3();
+    conector
+      .Iniciar()
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+      .Feed(1)
+      .EscribirTexto("***UniformesHuitzil***")
+      .Feed(1)
+      .EscribirTexto("Fecha:" + data.fecha)
+      .EscribirTexto("Ticket Abono:" + data.noTicketPago)
+      .Feed(1)
+      .EscribirTexto("Tipo Pago:" + data.tipoPagoValida)
+      .Feed(1)
+      .EscribirTexto("Total:" + data.cantidad + "MXN")
+      .Feed(2)
+      .EscribirTexto(this.numeroALetras(data.cantidad, {
+        plural: 'PESOS MEXICANOS',
+        singular: 'PESO MEXICANO',
+        centPlural: 'CENTAVOS',
+        centSingular: 'CENTAVO'
+      }))
+      .Feed(2)
+      .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+      .Feed(2)
+      .EscribirTexto("***Si requiere factura solo se podra expedir el dia de compra, de lo contrario se contemplara en ventas al Publico en General..***")
+      .Feed(1)
+      .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
+      .Corte(1)
+      .Iniciar()
+      .Feed(1);
+
+    try {
+      const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+
+      if (respuesta == true) {
+        this.toastr.success(respuesta.mensaje, 'Exito!');
+
+      } else {
+        console.log("Error: " + respuesta);
+      }
+
+    } catch (error) {
+      console.log(error)
+      this.toastr.warning(error, 'Atencion!');
+      //Limpiar objetos al finalizar una compra correct
+
+    }
+  }
+
+
+  async geeneraTicketApartado(data: CatApartadoModel) {
+    console.log(data.articulosApartados)
+    data.articulosApartados.forEach(element => {
+      this.cadenaProductos += element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + "\n".toString()
+
+
+    });
+
+// Convertir la cadena de fecha a un objeto Date
+const fecha = new Date(data.fecha);
+// Formatear la fecha
+const dia = String(fecha.getDate()).padStart(2, '0'); // Día con dos dígitos
+const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Mes con dos dígitos (Enero es 0)
+const anio = fecha.getFullYear(); // Año con cuatro dígitos
+
+// Construir la fecha formateada
+const fechaFormateada = `${dia}/${mes}/${anio}`;
+    //code Impresion
+    const conector = new ConectorPluginV3();
+    conector
+      .Iniciar()
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+      .Feed(1)
+      .EscribirTexto("***UniformesHuitzil***")
+      .Feed(1)
+      .EscribirTexto("Sucursal:"+data.ubicacion)
+      .Feed(1)
+      .EscribirTexto("Cliente:"+data.telefono)
+      .Feed(1)
+      .EscribirTexto("Fecha:" + fechaFormateada)
+      .Feed(1)
+      .EscribirTexto("Ticket Apartado:" + data.noTicket)
+      .Feed(1)
+      .EscribirTexto(this.cadenaProductos)
+      .Feed(1)
+      .EscribirTexto("Total:" + data.total + "MXN")
+      .Feed(1)
+      .EscribirTexto(this.numeroALetras(data.total, {
+        plural: 'PESOS MEXICANOS',
+        singular: 'PESO MEXICANO',
+        centPlural: 'CENTAVOS',
+        centSingular: 'CENTAVO'
+      }))
+      .Feed(1)
+      .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+      .Feed(1)
+      .EscribirTexto("***Si requiere factura solo se podra expedir el dia de compra, de lo contrario se contemplara en ventas al Publico en General..***")
+      .Feed(1)
+      .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
+      .Corte(1)
+      .Iniciar()
+      .Feed(1);
+
+    try {
+      const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+
+      if (respuesta == true) {
+        this.toastr.success(respuesta.mensaje, 'Exito!');
+
+      } else {
+        console.log("Error: " + respuesta);
+      }
+
+    } catch (error) {
+      console.log(error)
+      this.toastr.warning(error, 'Atencion!');
+      //Limpiar objetos al finalizar una compra correct
+
+    }
+  }
+
 }

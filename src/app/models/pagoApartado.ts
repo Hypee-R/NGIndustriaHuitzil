@@ -9,6 +9,7 @@ export class PagoApartado{
     tipoPagoValida:string;
     montoTarjeta : number;
     montoEfectivo : number;
+    noTicketPago:string
     constructor(){
         this.idApartado = 0
         this.fecha = ''
