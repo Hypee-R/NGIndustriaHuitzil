@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import ConectorPluginV3 from 'src/app/ConectorPluginV3';
+import ConectorPluginV3 from 'src/app/services/ConectorPluginV3';
 import { CajaModel } from 'src/app/models/caja.model';
 import { VentaModel } from 'src/app/models/venta.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
@@ -249,7 +249,7 @@ export class OpenCashComponent implements OnInit {
               totalApartados += a.cantidad;
 
               if (a.tipoPagoValida == "TARJETA") {
-                totalTarjeta += a.montoTarjeta;
+                totalTarjeta += a.cantidad;
               }
 
               if (a.tipoPagoValida == "EFECTIVO") {

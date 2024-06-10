@@ -11,7 +11,7 @@ import html2canvas from 'html2canvas';
 import { VentaModel } from 'src/app/models/venta.model';
 import { VentaArticuloModel } from 'src/app/models/VentaArticulo.Model';
 import { formatDate } from '@angular/common';
-import ConectorPluginV3 from "src/app/ConectorPluginV3";
+import ConectorPluginV3 from "src/app/services/ConectorPluginV3";
 import { CatClienteModel } from 'src/app/models/clientes.model';
 import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 import { CambiosDevolucionesModel } from 'src/app/models/cambios-devoluciones.model';

@@ -13,7 +13,7 @@ import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { formatDate } from '@angular/common';
-import ConectorPluginV3 from "src/app/ConectorPluginV3";
+import ConectorPluginV3 from "src/app/services/ConectorPluginV3";
 @Component({
   selector: 'app-apartados',
   templateUrl: './apartados.component.html',

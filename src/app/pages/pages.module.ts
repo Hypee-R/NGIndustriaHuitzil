@@ -20,8 +20,6 @@ import { TallasComponent } from './tallas/tallas.component';
 import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { RolesComponent } from './roles/roles.component';
-
-
 //PrimeNG
 import {DataViewModule} from 'primeng/dataview';
 import {BadgeModule} from 'primeng/badge';
@@ -54,9 +52,6 @@ import {PickListModule} from 'primeng/picklist';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { ChipModule } from 'primeng/chip';
-
-
-
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
 import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
