@@ -4,15 +4,14 @@
         <p-messages *ngIf="accion== 'ENVIO'  " [(value)]="messages" [enableService]="false" [closable]="false"></p-messages>
         <p-messages *ngIf="accion== 'CONTEO'" [(value)]="messages" [enableService]="false" [closable]="false"></p-messages>
         <p-messages *ngIf="accion== 'RECIBO'" [(value)]="messages" [enableService]="false" [closable]="false"></p-messages>
-        
+
         <p-divider align="center">
             <span class="p-tag">Solicitud de Envio</span>
         </p-divider>
-        
+
         <div class="container">
             <div class="row">
                 <div class="col-sm">
-
                     <h5 *ngIf="accion!= 'Registrar'">Folio: <p-badge *ngIf="accion!= 'Registrar'"
                             [value]="movimiento.idMovimiento" severity="danger" size="large"
                             styleClass="mr-2"></p-badge></h5>
@@ -24,12 +23,10 @@
                     <p-badge *ngIf="movimiento.status == 'Envio'" value="{{movimiento.status}}" size="large"
                         severity="info"></p-badge>
                 </div>
-
                 <div class="col-sm">
                     <h5 *ngIf="accion!= 'Registrar'">Fecha: {{movimiento.fecha }}</h5>
                     <h5 *ngIf="accion == 'Registrar'">Fecha: {{CurrentDate  | date: 'dd/MM/yyyy, hh:mm a'}}</h5>
                 </div>
-
             </div>
             <div class="row">
                 <div class="col-sm">
@@ -37,7 +34,6 @@
                         value="{{this.tipoPaquete}}" [(ngModel)]="tipoPaquete" pInputText/>
                     <h5 *ngIf="accion!= 'Registrar'">Tipo Paquete:</h5><p-chip *ngIf="accion!= 'Registrar'"
                         label="{{movimiento.tipoPaquete}}"></p-chip>
-
                 </div>
                 <div class="col-sm">
                     <h5 *ngIf="accion== 'Registrar'">Responsable Destino:</h5><p-chip *ngIf="accion== 'Registrar'"
@@ -164,12 +160,12 @@
                                         {{rowData['precio']}}
 
                                     </td>
-                             
+
 
                                     <td>
                                         <p-inputNumber inputId="integeronly" [(ngModel)]=rowData.CantMovimiento></p-inputNumber>
                                     </td>
-                                
+
 
                                 </tr>
                             </ng-template>
@@ -184,10 +180,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="accion!= 'Registrar'">
+            <div class="row" *ngIf=" accion === 'ENVIO' || accion === 'CONTEO' || accion === 'RECIBO'    ">
                 <div *ngIf="!loading && listArticulos != undefined ">
-
-
                     <div *ngIf="!loading && listArticulos.length > 0">
                         <p-table #dt [value]="listArticulos" [columns]="cols" [rows]="rows" [paginator]="true"
                             [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']"
@@ -217,7 +211,7 @@
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
 
-                                    
+
                                     <th></th>
                                     <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                         <div class="flex justify-content-center align-items-center">
@@ -232,7 +226,7 @@
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
                                 <tr>
-                                   
+
                                     <td>
                                         <div style="display: inline-flex">
                                         </div>
@@ -268,47 +262,31 @@
                                         {{rowData['precio']}}
 
                                     </td>
-                                 
+
                                     <td >
                                         {{rowData['cantMovimiento']}}
                                     </td>
 
-                                  
+
                                 </tr>
                             </ng-template>
-                            <!-- <ng-template pTemplate="summary">
-                                <div class="flex align-items-center justify-content-between">
-                                    <h5> En total se enviaran <p-badge [value]="movimiento.totalPiezas" severity="danger" size="large"
-                                            styleClass="mr-2"></p-badge> prendas.</h5>
-                                </div>
-                            </ng-template> -->
-
-
                         </p-table>
                     </div>
                 </div>
             </div>
         </div>
-
     </ng-template>
-
     <ng-template pTemplate="footer">
-
         <button pButton pRipple label="Aceptar" icon="pi pi-check" class="p-button-text"
             (click)="hideDialog()"></button>
     </ng-template>
-
     <ng-template pTemplate="footer">
         <div class="row">
             <div class="col-sm">
-
             </div>
             <div class="col-sm">
-                <br>
 
                 <p-inputNumber *ngIf="accion== 'ENVIO'"  [(ngModel)]="this.movimiento.totalPiezas"></p-inputNumber>
-                <!-- <inputNumber *ngIf="accion!= 'Registrar'"  type="text" placeholder="Conteo Inventario"    value="{{this.movimiento.totalPiezas}}" [(ngModel)]="this.movimiento.totalPiezas"
-                    [style]="{'width': '100%'}" /> -->
             </div>
             <div class="col-sm">
                 <p-button *ngIf="accion== 'Registrar'" icon="pi pi-send" label="Realizar Envio"
@@ -324,7 +302,6 @@
 </p-dialog>
 
 <!-- confirmacion de envio -->
-
 <div class="card flex justify-content-center gap-2">
     <p-toast></p-toast>
     <p-confirmDialog #cd [style]="{width: '50vw'}">

@@ -80,7 +80,7 @@ export class VariablesService {
   }
 
   getSucursal(){
-    console.log(localStorage.getItem('rol'))
+    // console.log(localStorage.getItem('rol'))
     return localStorage.getItem('sucursal');
   }
 

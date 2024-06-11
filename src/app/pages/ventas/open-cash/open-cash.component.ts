@@ -8,8 +8,6 @@ import { VentaModel } from 'src/app/models/venta.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from '../../../services/ventas.service';
 import { ApartadosService } from 'src/app/services/apartados.service';
-import { PagoApartado } from 'src/app/models/pagoApartado';
-
 
 @Component({
   selector: 'app-open-cash',
@@ -120,10 +118,6 @@ export class OpenCashComponent implements OnInit {
         });
     } else if (this.accion == 'Cerrar' && this.openCashModel.montoCierre > 0) {
 
-      // if(this.openCashModel.monto+this.totalVentas!=this.openCashModel.montoCierre){
-      //   this.toastr.warning("Hay una Diferencia en el cierre escribe el motivo", 'Diferencia!');
-      // }else{
-
       console.log(this.fechaCierre)
       console.log(this.variablesGL.setFormatoFecha(this.fecha))
       if (this.fechaCierre > this.fecha) {
@@ -137,7 +131,6 @@ export class OpenCashComponent implements OnInit {
             this.toastr.success(response.mensaje, 'Exito!');
             this.submitted = false;
             this.variablesGL.showDialog.next(false);
-            //Impresion del Status de la caja
             this.impresionCierreCaja()
           } else {
             this.toastr.info(response.mensaje, 'Atención!')

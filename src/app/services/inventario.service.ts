@@ -41,9 +41,7 @@ export class InventarioService {
   getInexistencias(): Observable<ResponseModel>{
     //Update
     //let sucursal = this.variablesGL.getSucursal() ?? "all";
-
     let sucursal ;
-
     if(this.variablesGL.getRol()=== 'Administrador' ){
       sucursal="all"
     }else{

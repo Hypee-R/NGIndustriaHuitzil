@@ -21,9 +21,8 @@ export class ControEnviosComponent implements OnInit {
   openModal = ''
   selectedMovimiento : MovimientosInventarioModel;
 
-  constructor( private primengConfig: PrimeNGConfig,   public variablesGL: VariablesService
+  constructor(   public variablesGL: VariablesService
     ,private movimientosService:MovimientosService) {
-   
       this.statusPantalla = this.variablesGL.getStatusPantalla();
       let status = this.variablesGL.getPantalla();
       if(status == 'celular'){
@@ -31,18 +30,15 @@ export class ControEnviosComponent implements OnInit {
       }else if(status == 'tablet'){
         this.rows = 7;
       }else if(status == 'laptop'){
-        this.rows = 7;
+        this.rows = 5;
       }else{
-        this.rows = 7;
+        this.rows = 11;
       }
      }
 
   ngOnInit(): void {
- 
        this.getMovimientos();
-   
   }
- 
 
   getMovimientos(){
     this.loading = true;
@@ -50,7 +46,7 @@ export class ControEnviosComponent implements OnInit {
       if(response.exito){
         this.lstMovimientos = response.respuesta
         this.loading = false;
-        
+
       }else{
         this.lstMovimientos = [];
         this.loading = false;
@@ -68,8 +64,8 @@ export class ControEnviosComponent implements OnInit {
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
-  
-  } 
+
+  }
 
   showDetailAdd(){
     this.accion = 'Registrar';
@@ -77,6 +73,5 @@ export class ControEnviosComponent implements OnInit {
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 300);
- 
-  } 
+  }
 }

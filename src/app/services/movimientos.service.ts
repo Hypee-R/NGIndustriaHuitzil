@@ -14,9 +14,9 @@ export class MovimientosService {
   constructor(
     private http: HttpClient
   ){}
-  
+
   getallMovimientos():Observable<ResponseModel>{
- 
+
     return this.http.get<ResponseModel>(environment.apiService + 'Movimientos/Movimientos')
     .pipe(
       map (res => res)
@@ -25,6 +25,12 @@ export class MovimientosService {
 
   addMovimiento(request:MovimientosInventarioModel): Observable<ResponseModel>{
     return this.http.post<ResponseModel>(environment.apiService + 'Movimientos/Add',request)
+    .pipe(
+      map (res => res)
+    );
+  }
+  validaConteo(request:MovimientosInventarioModel): Observable<ResponseModel>{
+    return this.http.post<ResponseModel>(environment.apiService + 'Movimientos/validaConteo',request)
     .pipe(
       map (res => res)
     );
