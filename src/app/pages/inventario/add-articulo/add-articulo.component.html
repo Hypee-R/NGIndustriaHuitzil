@@ -4,14 +4,14 @@
     <div *ngIf="accion != 'Codigo de Barras'">
         <label for="descripcion">Imagen</label>
         <br>
-        
+
         <div class="preview-img" *ngIf="previsualizacion" >
             <img  [src]="previsualizacion" alt="" width="250">
         </div>
         <div class="preview-img" *ngIf="!previsualizacion" >
             <img [src]="imageSource" alt="Image Source" width="250">
         </div>
-        
+
 
         <div class="field">
 
@@ -23,11 +23,11 @@
             <label for="descripcion">Estatus</label>
             <!-- <input type="text" pInputText id="status" [(ngModel)]="producto.status" required/> -->
             <p-dropdown [options]="lstEstatus" [(ngModel)]="producto.status" placeholder="Selecciona una opción" [style]="{'width': '100%'}" required="true"></p-dropdown>
-           
+
             <small class="p-error" *ngIf="submitted && !producto.status">La descripción es requerida.</small>
             <!-- <small class="p-error" *ngIf="submitted && producto.status?.length > 0 && producto.status?.length <= 2">Esl estatus debe contener minimo 3 caracteres</small> -->
         </div>
-      
+
         <br>
         <div class="field">
             <label for="descripcion">Descripción</label>
@@ -36,7 +36,7 @@
             <small class="p-error" *ngIf="submitted && producto.descripcion?.length > 0 && producto.descripcion?.length <= 2">La descripcion debe contener minimo 3 caracteres</small>
         </div>
         <br>
-        
+
         <div class="field">
             <label for="precio">Precio</label>
             <p-inputNumber [(ngModel)]="producto.precio" id="precio" inputId="minmaxfraction" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="5" required> </p-inputNumber>
@@ -60,7 +60,6 @@
         </div>
         <br>
         <div class="field">
-            <label for="fecha">Fecha de ingreso</label>: {{producto.fechaIngreso| date:'dd-MM-yyyy'}}
 
             <input type="date" pInputText id="idFecha" [(ngModel)]="producto.fechaIngreso" required/>
             <small class="p-error" *ngIf="submitted && !producto.fechaIngreso">La Fecha de ingreso es requerida.</small>
@@ -83,7 +82,7 @@
             <p-dropdown [options]="listTallas" [(ngModel)]="producto.idTalla" optionValue="idTalla" placeholder="Selecciona una talla" optionLabel="nombre" [style]="{'width': '100%'}"></p-dropdown>
         </div>
     </div>
-    <div  *ngIf="accion === 'Codigo de Barras'"> 
+    <div  *ngIf="accion === 'Codigo de Barras'">
             <p>{{_editproducto.descripcion}}</p>
 
             <div *ngIf = 'noEtiquetas.length != 0'>
@@ -92,7 +91,7 @@
                 <div class="container">
                     <div class="row">
                       <div class="col-md">
-                        Cantidad 
+                        Cantidad
                       </div>
                       <div class="col-md">
                         <input type="number" pInputText id="noEtiquetas" min = "1" max = {{noEtiquetas.length}} [(ngModel)]="noEtiquetasPrint" required/>
@@ -103,7 +102,7 @@
                       <div class="col-md">
                         </div>
                     </div>
-                  </div>                       
+                  </div>
             </div>
             <div *ngIf = 'noEtiquetas.length == 0'>
                 <p>Sin existencias en almacén</p>

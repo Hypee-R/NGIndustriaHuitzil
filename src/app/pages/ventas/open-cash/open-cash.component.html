@@ -1,8 +1,8 @@
 
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} Caja: {{this.openCashModel.idCaja}} de {{this.user.nombre}}" [modal]="true"styleClass="p-fluid">
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '650px'}" header="{{accion}} Caja: {{this.openCashModel.idCaja}} de {{this.user.nombre}}" [modal]="true"styleClass="p-fluid" appendTo="body">
 <h5>Sucursal:{{this.user.ubicacion}}</h5>
 
-    <ng-template pTemplate="content" >
+    <ng-template pTemplate="content"  >
 
         <ng-container *ngIf="accion == 'Abrir'; else cerrarTemplate">
             <div class="field">
@@ -37,10 +37,6 @@
                     <label for="descripcion">Fecha y Hora Cierre:</label>
                     <label >{{this.fechaCierre| date: 'dd/MM/yyyy HH:mm'}}</label>
 
-                    <!-- <p-calendar [(ngModel)]="fechaCierre" [showTime]="true" [showSeconds]="true" inputId="time"
-                        required="true" dateFormat="dd/mm/yy"></p-calendar>
-                    <small class="p-error" *ngIf="submitted && !fechaCierre">La fecha y hora de cierre es
-                        requerida.</small> -->
                 </div>
 
                 <div class="field">
