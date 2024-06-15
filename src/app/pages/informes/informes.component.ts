@@ -116,7 +116,7 @@ export class InformesComponent implements OnInit {
       }
     }
     else{
-      this.toastr.warning('Selecciona una fecha correcta',"Error");
+      this.toastr.warning('Selecciona una fecha valida',"Error");
     }
 
   }

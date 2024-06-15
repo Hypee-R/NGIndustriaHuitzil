@@ -60,7 +60,6 @@
         </div>
         <br>
         <div class="field">
-
             <input type="date" pInputText id="idFecha" [(ngModel)]="producto.fechaIngreso" required/>
             <small class="p-error" *ngIf="submitted && !producto.fechaIngreso">La Fecha de ingreso es requerida.</small>
             <small class="p-error" *ngIf="submitted && producto.fechaIngreso?.length > 0 && producto.fechaIngreso?.length <= 3">Se debe Contener fecha de ingreso</small>
