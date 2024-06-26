@@ -508,7 +508,7 @@ export class VentasComponent implements OnInit {
       vt.articulo = element;
 
       //Genera Cadena para Impresion Ticket con salto de pagina
-      this.cadenaProductos += element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + "\n".toString()
+      this.cadenaProductos += element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + " " + "$" + element.precio + "MXN" + "\n".toString()
 
       this.ventaArticulo.push(vt);
     });
@@ -554,22 +554,27 @@ export class VentasComponent implements OnInit {
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
           .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
           .Feed(1)
-          .EscribirTexto("***UniformesHuitzil***")
-          .Feed(1)
+          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
           .EscribirTexto("Caja:" + this.cashModel.idCaja)
-          .Feed(1)
           .EscribirTexto("Cajero:" + this.user.nombre + " " + this.user.apellidoPaterno + " " + this.user.apellidoMaterno)
           .Feed(1)
-          .EscribirTexto("Cliente:" + this.clienteName)
-          .Feed(1)
+          .EscribirTexto("Fecha:" + this.RegistraVenta.fecha)
+          .EscribirTexto("Cajero:" + this.user.nombre + " " + this.user.apellidoPaterno + " " + this.user.apellidoMaterno)
           .EscribirTexto("Ticket:" + this.RegistraVenta.noTicket)
           .Feed(1)
           .EscribirTexto("Articulos:" + this.articulos)
           .Feed(1)
+          .EscribirTexto("_____________________________________")
+          .EscribirTexto("ARTICULO | CANT| P/U|TOTAL")
+          .EscribirTexto("_____________________________________")
           .EscribirTexto(this.cadenaProductos)
-          .Feed(1)
-          .EscribirTexto("Total:" + this.total + "MXN")
+          .EscribirTexto("_____________________________________")
           .Feed(2)
+          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
+          .EscribirTexto("Descuento:" +this.descuento + "MXN")
+          .EscribirTexto("Total:" + this.total + "MXN")
+          .EscribirTexto("Cambio:" + this.cambioVenta + "MXN")
+          .Feed(1)
           .EscribirTexto(this.totalLetra = this.numeroALetras(this.total - this.descuento, {
             plural: 'PESOS MEXICANOS',
             singular: 'PESO MEXICANO',

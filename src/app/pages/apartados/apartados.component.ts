@@ -367,7 +367,7 @@ export class ApartadosComponent implements OnInit {
     const format = 'yyyy-MM-dd';
     const locale = 'en-US';
     const formattedDate = formatDate(new Date, format, locale);
-    this.pagoApartado.noTicketPago = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
+    this.pagoApartado.noTicketPago = Math.floor(1000 + Math.random() * 9000).toString();
 
     await this.apartadoService.agregaPago(this.pagoApartado).subscribe(response => {
       if (response.exito) {
@@ -743,30 +743,27 @@ export class ApartadosComponent implements OnInit {
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
       .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
       .Feed(1)
-      .EscribirTexto("***UniformesHuitzil***")
+      .EscribirTexto("***ABONO***")
       .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto("Fecha:" + data.fecha)
+      .EscribirTexto("Caja:" + data.idCaja)
       .EscribirTexto("Ticket Abono:" + data.noTicketPago)
       .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
       .EscribirTexto("Tipo Pago:" + data.tipoPagoValida)
       .Feed(1)
       .EscribirTexto("Total:" + data.cantidad + "MXN")
       .Feed(2)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto(this.numeroALetras(data.cantidad, {
         plural: 'PESOS MEXICANOS',
         singular: 'PESO MEXICANO',
         centPlural: 'CENTAVOS',
         centSingular: 'CENTAVO'
       }))
-      .Feed(2)
-      .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
-      .Feed(2)
-      .EscribirTexto("***Si requiere factura solo se podra expedir el dia de compra, de lo contrario se contemplara en ventas al Publico en General..***")
-      .Feed(1)
-      .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
+      .Feed(3)
       .Corte(1)
-      .Iniciar()
-      .Feed(1);
 
     try {
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
@@ -811,18 +808,26 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
       .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
       .Feed(1)
-      .EscribirTexto("***UniformesHuitzil***")
+      .EscribirTexto("***APARTADO***")
       .Feed(1)
-      .EscribirTexto("Sucursal:"+data.ubicacion)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .EscribirTexto("Fecha:" + fechaFormateada)
       .Feed(1)
-      .EscribirTexto("Cliente:"+data.telefono)
+      .EscribirTexto("Cliente:"+data.idCliente)
+      .Feed(1)
+      .EscribirTexto("Tel Cliente:"+data.telefono)
       .Feed(1)
       .EscribirTexto("Fecha:" + fechaFormateada)
       .Feed(1)
       .EscribirTexto("Ticket Apartado:" + data.noTicket)
       .Feed(1)
+      .EscribirTexto("_____________________________________")
+      .EscribirTexto("ARTICULO | CANT| P/U|TOTAL")
+      .EscribirTexto("_____________________________________")
       .EscribirTexto(this.cadenaProductos)
+      .EscribirTexto("_____________________________________")
       .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
       .EscribirTexto("Total:" + data.total + "MXN")
       .Feed(1)
       .EscribirTexto(this.numeroALetras(data.total, {
@@ -834,12 +839,10 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .Feed(1)
       .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
       .Feed(1)
-      .EscribirTexto("***Si requiere factura solo se podra expedir el dia de compra, de lo contrario se contemplara en ventas al Publico en General..***")
-      .Feed(1)
-      .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
+      .Feed(3)
       .Corte(1)
-      .Iniciar()
-      .Feed(1);
 
     try {
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);

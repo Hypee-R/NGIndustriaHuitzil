@@ -29,11 +29,23 @@ export class OpenCashComponent implements OnInit {
   openCashModel: CajaModel = new CajaModel();
   dialogSubscription: Subscription = new Subscription();
   datePipe = new DatePipe("en-US");
+  //Valores que se utilizan para mostrar totales
   totalVentas;
   totalApartadosPagos;
   totalEfectivodata;
   totalTarjetadata;
   totalMultipledata;
+  //Valores que se utilizan para ticket separados y ventas
+  //ventas
+  totalEfectivo = 0;
+  totalTarjeta = 0;
+  totalMultiple
+  //separados
+  totalApartados = 0;
+  totalEfectivoAbonos = 0;
+  totalTarjetaAbonos = 0;
+  totalMultipleAbonos
+  //Valores que se utilizan para ticket separados y ventas
   ventas: VentaModel[] = [];
   constructor(
     private toastr: ToastrService,
@@ -167,27 +179,31 @@ export class OpenCashComponent implements OnInit {
       .EscribirTexto("Abrio Caja:" + this.openCashModel.fecha)
       .EscribirTexto("Cerro Caja:" + this.openCashModel.fechaCierre)
       .Feed(1)
-      .EscribirTexto("Caja:" + this.openCashModel.idCaja)
+      .EscribirTexto("____________________________")
       .Feed(1)
-      .EscribirTexto("*Empleado:" + this.user.nombre)
+      .EscribirTexto("Apertura :" + this.openCashModel.monto)
       .Feed(1)
-      .EscribirTexto("Abrio Caja:" + this.openCashModel.fecha)
-      .EscribirTexto("con el monto de :" + this.openCashModel.monto)
+      .EscribirTexto("Total registro:$ " +  this.totalEfectivoAbonos+this.totalEfectivo)
       .Feed(1)
-      .EscribirTexto("Total con Tarjeta:" + this.totalTarjetadata)
-      .EscribirTexto("Total Efectivo:" + this.totalEfectivodata)
-     // .EscribirTexto("Total Multiple:" + this.totalEfectivodata)
-      .EscribirTexto("Total Ventas:" + this.totalVentas)
+      .EscribirTexto("Total caja:$ " + this.openCashModel.montoCierre)
       .Feed(1)
-      .EscribirTexto("Cerro Caja:" + this.openCashModel.fechaCierre)
-      .EscribirTexto("con el monto de :" + this.openCashModel.monto + this.totalEfectivodata)
-      .EscribirTexto("*solo se contempla el Efectivo en caja, los multiples con tarjeta los valida el administrador*")
+      .EscribirTexto("Diferencia:" + this.calcularDiferencia())
+      .Feed(1)
+      .EscribirTexto("____________________________")
+      .Feed(1)
+      .EscribirTexto("VENTAS" + "__" + "$TOTAL:" + this.totalVentas)
+      .Feed(1)
+      .EscribirTexto("Ventas EFE:" + this.totalEfectivo)
+      .EscribirTexto("Ventas TAR:" + this.totalTarjeta)
+      .Feed(1)
+      .EscribirTexto("SEPARADOS" + "__" + "$TOTAL:" +  this.totalApartadosPagos )
+      .Feed(1)
+      .EscribirTexto("Abonos EFE:" + this.totalEfectivoAbonos)
+      .EscribirTexto("Abonos TAR:" + this.totalTarjetaAbonos)
       .Feed(1)
       .EscribirTexto("*Recuerda conservar este ticket para tu respaldo al cierre de tu caja en buen estado *")
-      .Feed(1)
+      .Feed(4)
       .Corte(1)
-      .Iniciar()
-      .Feed(1);
     try {
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
       // const respuesta = true;
@@ -206,8 +222,10 @@ export class OpenCashComponent implements OnInit {
 
     }
   }
-  async GetInformacionCaja()
-  {
+  calcularDiferencia(): number {
+    return this.totalEfectivoAbonos + this.totalEfectivo - this.openCashModel.montoCierre;
+  }
+  async GetInformacionCaja() {
 
     this.ventasService.getVentasByCaja(this.openCashModel.idCaja).subscribe(response => {
       if (response.exito) {
@@ -218,7 +236,11 @@ export class OpenCashComponent implements OnInit {
         let totalEfectivo = 0;
         let totalTarjeta = 0;
         let totalMultiple = 0;
+
         let totalApartados = 0;
+        let totalEfectivoAbonos = 0;
+        let totalTarjetaAbonos = 0;
+        let totalMultipleAbonos = 0;
 
         response.respuesta.forEach(function (a) {
           if (a.status == "CONCLUIDA") {
@@ -248,25 +270,35 @@ export class OpenCashComponent implements OnInit {
               totalApartados += a.cantidad;
 
               if (a.tipoPagoValida == "TARJETA") {
-                totalTarjeta += a.cantidad;
+                totalTarjetaAbonos += a.cantidad;
               }
 
               if (a.tipoPagoValida == "EFECTIVO") {
-                totalEfectivo += a.cantidad;
+                totalEfectivoAbonos += a.cantidad
               }
 
               if (a.tipoPagoValida == "MULTIPLE") {
-                totalTarjeta += a.montoTarjeta;
-                totalMultiple += a.cantidad;
-                totalEfectivo += a.montoEfectivo;
+                totalTarjetaAbonos += a.montoTarjeta;
+                totalMultipleAbonos += a.cantidad;
+                totalEfectivoAbonos += a.montoEfectivo;
               }
             });
 
             // Mover las asignaciones aquí, después de que ambas respuestas han sido procesadas
             this.totalVentas = total;
-            this.totalEfectivodata = totalEfectivo;
-            this.totalTarjetadata = totalTarjeta;
-            this.totalMultipledata = totalMultiple;
+            this.totalEfectivodata = totalEfectivo+totalEfectivoAbonos;
+            this.totalTarjetadata = totalTarjeta+totalTarjetaAbonos;
+            this.totalMultipledata = totalMultiple+totalMultipleAbonos;
+            //valores individuales
+            this.totalEfectivo = totalEfectivo;
+            this.totalTarjeta = totalTarjeta;
+            this.totalMultiple=totalMultiple
+            //separados
+           //this.totalApartados = 0;
+            this. totalEfectivoAbonos = totalEfectivoAbonos;
+            this.totalTarjetaAbonos = totalTarjetaAbonos;
+            this.totalMultipleAbonos=totalMultipleAbonos
+
             this.totalApartadosPagos = totalApartados;
           }
         });
