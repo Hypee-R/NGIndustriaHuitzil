@@ -166,12 +166,18 @@ export class ApartadosComponent implements OnInit {
     this.pagoApartado.tipoPago = event.value;
   }
   sumarMontos(): number {
+    console.info( this.pagoApartado.montoTarjeta+this.pagoApartado.montoEfectivo)
     // Calcula la suma de montoTarjeta y montoEfectivo si el tipo de pago es 'MULTIPLE'
-    if (this.pagoApartado.tipoPagoValida === 'MULTIPLE') {
-      return this.pagoApartado.montoTarjeta + this.pagoApartado.montoEfectivo;
-    } else {
-      return 0;  // Devuelve 0 si no es tipo 'MULTIPLE'
-    }
+     // Asegurarse de que montoTarjeta y montoEfectivo sean números válidos
+  const montoTarjeta = isNaN(this.pagoApartado.montoTarjeta) ? 0 : this.pagoApartado.montoTarjeta;
+  const montoEfectivo = isNaN(this.pagoApartado.montoEfectivo) ? 0 : this.pagoApartado.montoEfectivo;
+
+  // Calcula la suma de montoTarjeta y montoEfectivo si el tipo de pago es 'MULTIPLE'
+  if (this.pagoApartado.tipoPagoValida === 'MULTIPLE') {
+    return montoTarjeta + montoEfectivo;
+  } else {
+    return 0;  // Devuelve 0 si no es tipo 'MULTIPLE'
+  }
   }
   getApartados() {
     this.apartadoService.getApartadosByUbicacion().subscribe(response => {
@@ -250,6 +256,7 @@ export class ApartadosComponent implements OnInit {
     this.selectedApartado.status = "Entregado"
     this.apartadoService.actualizaApartado(this.selectedApartado).subscribe(request => {
       if (request.exito) {
+        console.info(request)
         this.toastr.success("Apartado Entregado", "Aviso")
         this.showPagosPedido = false
         this.getApartados();
@@ -319,9 +326,11 @@ export class ApartadosComponent implements OnInit {
 
     await this.apartadoService.agregaApartado(this.apartado).subscribe(response => {
       if (response.exito) {
+        console.info(response)
         this.hideDialog()
         this.toastr.success(response.mensaje, 'Sucess');
-        this.geeneraTicketApartado(this.apartado);
+        const respuestaValida = response.respuesta != null && response.respuesta !== '' ? response.respuesta :  this.apartado.noTicket;
+        this.geeneraTicketApartado(this.apartado,respuestaValida);
         this.getApartados();
       }
       else {
@@ -357,18 +366,28 @@ export class ApartadosComponent implements OnInit {
       this.toastr.warning('La cantidad debe ser mayor a 0', 'Aviso');
       return
     }
-    if (this.pagoApartado.cantidad > this.selectedApartado.resto) {
-      this.toastr.warning('La cantidad debe ser menor a ' + this.selectedApartado.resto, 'Aviso');
+    // if (this.pagoApartado.cantidad >= this.selectedApartado.resto) {
+    //   this.toastr.warning('La cantidad debe ser menor o igual  ' + this.selectedApartado.resto, 'Aviso');
+    //   return
+    // }
+    if (this.pagoApartado.cantidad <= 0) {
+      this.toastr.warning('La cantidad debe ser mayor que 0' + this.pagoApartado.cantidad, 'Aviso');
+      console.error('La cantidad debe ser mayor que 0');
+      return
+      // Puedes lanzar un error, mostrar un mensaje al usuario, etc.
+  }
+    if(isNaN(this.pagoApartado.cantidad) ){
+      this.toastr.warning('La cantidad debe ser mayor que 0', 'Aviso');
+      console.error('La cantidad debe ser mayor que 0');
       return
     }
+
     this.pagoApartado.idApartado = this.selectedApartado.idApartado
     this.selectedApartado.resto -= this.pagoApartado.cantidad
     this.pagoApartado.idCaja = this.cashModel.idCaja
-    const format = 'yyyy-MM-dd';
-    const locale = 'en-US';
-    const formattedDate = formatDate(new Date, format, locale);
-    this.pagoApartado.noTicketPago = Math.floor(1000 + Math.random() * 9000).toString();
 
+    this.pagoApartado.noTicketPago = Math.floor(1000 + Math.random() * 9000).toString();
+    console.error(this.pagoApartado.cantidad);
     await this.apartadoService.agregaPago(this.pagoApartado).subscribe(response => {
       if (response.exito) {
         this.apartadoService.actualizaApartado(this.selectedApartado).subscribe(request => {
@@ -637,7 +656,7 @@ export class ApartadosComponent implements OnInit {
   }
 
 
-  async geeneraTicketApartado(data: CatApartadoModel) {
+  async geeneraTicketApartado(data: CatApartadoModel,idApartadoCreado:number) {
     console.log(data.articulosApartados)
     data.articulosApartados.forEach(element => {
       this.cadenaProductos += element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + "\n".toString()
@@ -672,7 +691,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .Feed(1)
       .EscribirTexto("Fecha:" + fechaFormateada)
       .Feed(1)
-      .EscribirTexto("Ticket Apartado:" + data.noTicket)
+      .EscribirTexto("Ticket Apartado:" + idApartadoCreado)
       .Feed(1)
       .EscribirTexto("_____________________________________")
       .Feed(1)

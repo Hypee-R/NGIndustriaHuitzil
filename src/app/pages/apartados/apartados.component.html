@@ -301,9 +301,10 @@
                           <label for="cantidad">Monto</label>
                           <input type="number" pInputText id="cantidad" [(ngModel)]="pagoApartado.cantidad"
                                  [disabled]="false" min="0" [max]="this.selectedApartado.resto ">
-                          <small class="p-error" *ngIf="submitted && pagoApartado.cantidad > this.selectedApartado.resto ">
-                              La cantidad debe ser menor al costo del artículo
-                          </small>
+
+                          <small class="p-error" *ngIf="submitted && pagoApartado.cantidad <= 0">
+                            La cantidad debe ser mayor a 0
+                        </small>
                       </div>
 
                         <br>
@@ -391,8 +392,9 @@
         </ng-template>
         <ng-template pTemplate="footer">
             <button pButton pRipple label="Cerrar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialogPagos()"></button>
-            <button *ngIf="!hacerPago && selectedApartado.status != 'Entregado'" pButton pRipple label="Entregar" icon="pi pi-check" class="p-button-text" (click)="entregarPedido()"></button>
-        </ng-template>
+            <button *ngIf="(!hacerPago || selectedApartado.resto == 0) && selectedApartado.status != 'Entregado'" pButton pRipple label="Entregar" icon="pi pi-check" class="p-button-text" (click)="entregarPedido()"></button>
+
+          </ng-template>
 
     </p-dialog>
     <app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
