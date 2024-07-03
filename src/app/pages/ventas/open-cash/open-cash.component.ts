@@ -171,19 +171,24 @@ export class OpenCashComponent implements OnInit {
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
       .Feed(1)
       .EscribirTexto("*CIERRE CAJA*")
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .Feed(1)
       .EscribirTexto("Suc:" + this.user.ubicacion)
+      .Feed(1)
+      .EscribirTexto("Caja:" + this.openCashModel.idCaja)
       .Feed(1)
       .EscribirTexto("Empleado:" + this.user.nombre)
       .Feed(1)
       .EscribirTexto("Abrio Caja:" + this.openCashModel.fecha)
+      .Feed(1)
       .EscribirTexto("Cerro Caja:" + this.openCashModel.fechaCierre)
       .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
       .EscribirTexto("____________________________")
       .Feed(1)
       .EscribirTexto("Apertura :" + this.openCashModel.monto)
       .Feed(1)
-      .EscribirTexto("Total registro:$ " +  this.totalEfectivoAbonos+this.totalEfectivo)
+      .EscribirTexto("Total registro:$ " + this.calcularRegistro())
       .Feed(1)
       .EscribirTexto("Total caja:$ " + this.openCashModel.montoCierre)
       .Feed(1)
@@ -191,18 +196,25 @@ export class OpenCashComponent implements OnInit {
       .Feed(1)
       .EscribirTexto("____________________________")
       .Feed(1)
-      .EscribirTexto("VENTAS" + "__" + "$TOTAL:" + this.totalVentas)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .EscribirTexto("VENTAS" + "__________" + "$TOTAL:" + this.totalVentas)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
       .Feed(1)
       .EscribirTexto("Ventas EFE:" + this.totalEfectivo)
+      .Feed(1)
       .EscribirTexto("Ventas TAR:" + this.totalTarjeta)
       .Feed(1)
-      .EscribirTexto("SEPARADOS" + "__" + "$TOTAL:" +  this.totalApartadosPagos )
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .EscribirTexto("SEPARADOS"+ "__________" + "$TOTAL:" +  this.totalApartadosPagos )
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
       .Feed(1)
       .EscribirTexto("Abonos EFE:" + this.totalEfectivoAbonos)
-      .EscribirTexto("Abonos TAR:" + this.totalTarjetaAbonos)
       .Feed(1)
-      .EscribirTexto("*Recuerda conservar este ticket para tu respaldo al cierre de tu caja en buen estado *")
-      .Feed(4)
+      .EscribirTexto("Abonos TAR:" + this.totalTarjetaAbonos)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .Feed(3)
+      .EscribirTexto("*Recuerda conservar este ticket para tu respaldo al cierre de tu caja en buen estado*")
+      .Feed(2)
       .Corte(1)
     try {
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
@@ -225,6 +237,11 @@ export class OpenCashComponent implements OnInit {
   calcularDiferencia(): number {
     return this.totalEfectivoAbonos + this.totalEfectivo - this.openCashModel.montoCierre;
   }
+  calcularRegistro(): number {
+    return  this.totalEfectivoAbonos+this.totalEfectivo;
+  }
+
+
   async GetInformacionCaja() {
 
     this.ventasService.getVentasByCaja(this.openCashModel.idCaja).subscribe(response => {

@@ -423,6 +423,7 @@ export class VentasComponent implements OnInit {
     if (tipoPago == "MULTIPLE") {
       this.totalVenta = this.totalMultipleT + this.totalMultipleF
    //   if (this.totalVenta == this.total - this.descuento) {
+
         this.changePage();
         this.RegistraVentaValid(tipoPago);
       // } else {
@@ -444,21 +445,16 @@ export class VentasComponent implements OnInit {
     }
     if (tipoPago == "TARJETA") {
       this.toastr.warning("Recuerda Validar el cobro en terminal la venta se registrara ", 'Atencion!');
-     // if (this.totalVenta == this.total - this.descuento) {
+      if (this.totalVenta == this.total - this.descuento) {
         this.changePage();
         this.RegistraVentaValid(tipoPago);{
 
         }
 
-      // } else {
-      //   this.toastr.error("Error el importe debe ser exacto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+     } else {
+         this.toastr.error("Error el importe debe ser exacto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
-      // }
-
-
-
-
-
+       }
     }
   }
 
@@ -519,7 +515,7 @@ export class VentasComponent implements OnInit {
       if (resp.exito) {
         console.log(this.selectedclienteNameAdvanced)
         console.log(this.clienteName)
-        console.log(this.cadenaProductos)
+        console.log(this.RegistraVenta.fecha)
         //code Impresion
         const conector = new ConectorPluginV3();
         conector
@@ -551,19 +547,21 @@ export class VentasComponent implements OnInit {
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
           .EscribirTexto("Descuento:" +this.descuento + "MXN")
           .Feed(1)
-          .EscribirTexto("Subttoal:" + this.total + "MXN")
+          .EscribirTexto("Subtotal:" + this.total + "MXN")
           .Feed(1)
-          .EscribirTexto("Total:" + this.getDescuentoAplicado( this.total,this.descuento)+ "MXN")
+          .EscribirTexto("Total:" + this.getDescuentoAplicado(this.total,this.descuento)+ "MXN")
           .Feed(1)
-          .EscribirTexto("Tipo Pago:" +tipoPago + "MXN")
+          .EscribirTexto("Tipo Pago:" +this.getTotalmontoMultiple(this.RegistraVenta))
+          .Feed(1)
+          .EscribirTexto("Cambio:" + this.cambioVenta + "MXN")
+          .Feed(1)
+          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
           .EscribirTexto(this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
             plural: 'PESOS MEXICANOS',
             singular: 'PESO MEXICANO',
             centPlural: 'CENTAVOS',
             centSingular: 'CENTAVO'
           }))
-          .EscribirTexto("Cambio:" + this.cambioVenta + "MXN")
-          .Feed(1)
           .Feed(2)
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
           .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
@@ -591,6 +589,7 @@ export class VentasComponent implements OnInit {
             this.totalMultipleF = 0;
             this.totalMultipleT = 0;
             this.activeState = [false];
+            this.totalVenta=0
             this.toastr.success(resp.mensaje, 'Exito!');
             console.log("Impresión correcta");
             this.display = false;
@@ -639,11 +638,23 @@ getDescuentoAplicado(total: number, descuento: number): number {
   return total - descuento;
 }
 
+getTotalmontoMultiple(venta:VentaModel): string {
+  if (venta.tipoPago === 'MULTIPLE') {
+    const montoTarjeta = venta.tarjeta || 0; // Utiliza 0 si el monto de la tarjeta no está definido
+    const montoEfectivo = venta.efectivo || 0; // Utiliza 0 si el monto en efectivo no está definido
+    return `MULTIPLE:Tarjeta: ${montoTarjeta}, Efectivo: ${montoEfectivo}`;
+  } else {
+    return ` ${venta.tipoPago}`;
+  }
+}
+
 
   changePage() {
-    console.log(this.totalVenta + ":" + this.total)
-    if (this.totalVenta > this.total) {
-      this.cambioVenta = Math.abs(this.total - this.totalVenta);
+    // console.log(this.totalVenta + ":" + this.total)
+    // console.log(this.total -this.descuento)
+
+    if (this.totalVenta  > this.total-this.descuento) {
+      this.cambioVenta = Math.abs(this.total - this.totalVenta -this.descuento);
 
 
       this.toastr.success("Su cambio es :" + this.cambioVenta, 'Cambio!');
