@@ -421,14 +421,19 @@ export class VentasComponent implements OnInit {
 
   async PostVentaRegistro(tipoPago: string) {
     if (tipoPago == "MULTIPLE") {
-      this.totalVenta = this.totalMultipleT + this.totalMultipleF
-   //   if (this.totalVenta == this.total - this.descuento) {
+      this.totalVenta = this.totalMultipleT + this.totalMultipleF;
+
+      if (this.totalVenta > this.total) {
+        const sobrante = this.totalVenta - this.total;
+        this.totalMultipleF -= sobrante;
+        this.cambioVenta=sobrante
+        this.RegistraVenta.total = this.totalVenta; // Asignar totalVenta a total si es mayor que total actual
+      }
+
 
         this.changePage();
         this.RegistraVentaValid(tipoPago);
-      // } else {
-      //   this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
-      // }
+
 
     }
     if (tipoPago == "EFECTIVO") {
