@@ -231,6 +231,9 @@ const ConectorPluginV3 = (() => {
       // Hacer la petición fetch a la URL construida
       const response = await fetch(url, {
         method: "POST",
+        headers: {
+          'Content-Type': 'application/json'  // Aquí es donde se establece el Content-Type
+      },
         body: JSON.stringify(payload),
       });
 
