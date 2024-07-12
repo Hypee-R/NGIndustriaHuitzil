@@ -528,7 +528,7 @@ export class VentasComponent implements OnInit {
           .Iniciar()
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
           .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-          .Feed(2)
+          .Feed(1)
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
           .EscribirTexto("Caja:" + this.cashModel.idCaja)
           .Feed(1)
@@ -576,11 +576,11 @@ export class VentasComponent implements OnInit {
           .EscribirTexto("***Venta publico Gral, Si requiere factura solicitarla durante la venta***")
           .Feed(1)
           .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
-          .Feed(2)
+          // .Feed(2)
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
           .ImprimirCodigoDeBarrasCodabar( this.RegistraVenta.noTicket,100,2,12)
-          .Feed(2)
-          .Feed(6)
+          // .Feed(2)
+          .Feed(3)
           .Corte(1)
 
 
