@@ -1,14 +1,15 @@
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '1000px'}" header="{{accion}}" [modal]="true" styleClass="p-fluid" appendTo="body">
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '1000px'}" header="{{accion}}" [modal]="true"
+  styleClass="p-fluid" appendTo="body">
 
-    <ng-template pTemplate="content">
+  <ng-template pTemplate="content">
 
-        <ng-container *ngIf="accion == 'Productos'">
-            <div class="col-12 md:col-3">
-                <div class="p-inputgroup">
-                    Articulos Agregados a la venta: {{articlesAddSales}}
-                </div>
-            </div>
-  <!--
+    <ng-container *ngIf="accion == 'Productos'">
+      <div class="col-12 md:col-3">
+        <div class="p-inputgroup">
+          Articulos Agregados a la venta: {{articlesAddSales}}
+        </div>
+      </div>
+      <!--
             <div class="col-12 md:col-3">
                 <div class="p-inputgroup">
                     <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
@@ -17,60 +18,65 @@
                 </div>
             </div>-->
 
-            <br>
-            <div class="row">
-                <p-table #dt [value]="articles" [columns]="colsProducts" [rows]="rows" [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true" responsiveLayout="scroll" [rowHover]="true" dataKey="idProducto" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
-                    [showCurrentPageReport]="true" styleClass="p-datatable-sm">
-                    <ng-template pTemplate="caption">
-                        <div class="col col-md-5">
-                            <span class="p-input-icon-left" style="width: 100%;">
-                          <i class="pi pi-search"></i>
-                          <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar..." [style]="{'width': '100%'}"/>
-                        </span>
-                        </div>
-                    </ng-template>
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-
-                            <th style="width: 2em;"></th>
-                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                <div class="flex justify-content-center align-items-center" [ngStyle]="{'width': col.field == 'descripcion' ? '12em' : '4em'}">
-                                    {{col.header}}
-
-                                </div>
-                            </th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr >
-
-
-                            <td  *ngIf="rowData.existencia != 0">
-                                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning" (click)="addProduct(rowData)"></button>
-                            </td>
-
-                            <td  *ngIf="rowData.existencia == 0">
-                             <label >Sin stock</label>
-                            </td>
-
-
-                            <td *ngFor="let col of columns">
-                                {{rowData[col.field]}}
-                            </td>
-
-
-                        </tr>
-                    </ng-template>
-
-                </p-table>
+      <app-loading *ngIf="loading"></app-loading>
+      <div class="row" *ngIf="!loading && articles.length > 0">
+        <p-table #dt [value]="articles" [columns]="colsProducts" [rows]="rows" [paginator]="true"
+          [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true"
+          responsiveLayout="scroll" [rowHover]="true" dataKey="idProducto"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+          [showCurrentPageReport]="true" styleClass="p-datatable-sm">
+          <ng-template pTemplate="caption">
+            <div class="col col-md-5">
+              <span class="p-input-icon-left" style="width: 100%;">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                  placeholder="Buscar..." [style]="{'width': '100%'}" />
+              </span>
             </div>
-        </ng-container>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
 
-    </ng-template>
+              <th style="width: 2em;"></th>
+              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                <div class="flex justify-content-center align-items-center"
+                  [ngStyle]="{'width': col.field == 'descripcion' ? '12em' : '4em'}">
+                  {{col.header}}
 
-    <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cerrar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="closeModal()"></button>
-    </ng-template>
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+              <td *ngIf="rowData.existencia != 0">
+                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning"
+                  (click)="addProduct(rowData)"></button>
+              </td>
+
+              <td *ngIf="rowData.existencia == 0">
+                <label>Sin stock</label>
+              </td>
+
+
+              <td *ngFor="let col of columns">
+                {{rowData[col.field]}}
+              </td>
+
+
+            </tr>
+          </ng-template>
+
+        </p-table>
+      </div>
+    </ng-container>
+
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button pButton pRipple label="Cerrar" icon="pi pi-times" type="button" class="p-button-text"
+      (click)="hideDialog()"></button>
+    <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="closeModal()"></button>
+  </ng-template>
 
 </p-dialog>

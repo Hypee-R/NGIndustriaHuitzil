@@ -60,18 +60,20 @@ export class InventarioComponent implements OnInit {
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();
+console.info(status)
     if(status == 'celular'){
       this.rows = 6;
     }else if(status == 'tablet'){
       this.rows = 7;
     }else if(status == 'laptop'){
-      this.rows = 4;
+      this.rows = 5;
     }else{
       this.rows = 11;
     }
 
   }
   ngOnInit() {
+
     this.getArticulos();
 
   }

@@ -97,14 +97,13 @@
                         (click)="deleteArticulo(rowData)" style="margin-left: 3px;"></button>
                     </div>
                   </td>
-                  <td *ngIf="rowData.imagen==''">
-                    <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png" width="40" height="40%"
+                  <td *ngIf="rowData.imagen=='NA'">
+                      <img src="../../../assets/img/iconNoImage.png" width="40" height="40%"
                       class="shadow-1" />
 
                   </td>
 
-                  <td *ngIf="rowData.imagen!=''">
-
+                  <td *ngIf="rowData.imagen && rowData.imagen !== 'NA' && rowData.imagen !== ''">
                     <img [src]=rowData.imagen width="40" height="40%" class="shadow-1" />
                   </td>
 

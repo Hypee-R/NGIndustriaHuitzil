@@ -219,6 +219,7 @@ export class VentasComponent implements OnInit {
 
   }
   getArticulos() {
+    this.variablesGL.showLoading();
     this.inventarioService.getArticulos().subscribe(response => {
       if (response.exito) {
         console.log(response.respuesta)
