@@ -641,7 +641,7 @@ export class ApartadosComponent implements OnInit {
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
 
       if (respuesta == true) {
-        this.toastr.success(respuesta.mensaje, 'Exito!');
+        this.toastr.success( 'Exito!');
 
       } else {
         console.log("Error: " + respuesta);
@@ -725,7 +725,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
 
       if (respuesta == true) {
-        this.toastr.success(respuesta.mensaje, 'Exito!');
+        this.toastr.success( 'Exito!');
 
       } else {
         console.log("Error: " + respuesta);

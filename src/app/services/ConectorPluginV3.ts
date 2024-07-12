@@ -214,22 +214,29 @@ const ConectorPluginV3 = (() => {
       const usuarioData = localStorage.getItem('usuario');
       const usuario = JSON.parse(usuarioData);
       console.info(usuario.pc)
- console.info(JSON.stringify(this.operaciones))
-      nombreImpresora= "Caja"
+      console.info(JSON.stringify(this.operaciones))
+      const payload = {
+        operaciones: this.operaciones,
+        nombreImpresora,
+        serial: this.serial,
+      };
+
+      nombreImpresora = "Caja"
       // Construir la URL con los parámetros recibidos
       const url = `${this.ruta}/printTicket?printer=${encodeURIComponent(nombreImpresora)}&pcname=${encodeURIComponent(usuario.pc)}&ticket=${encodeURIComponent(1234)}`;
 
       // Log para verificar la URL construida
       console.log(url);
-      console.log(this.operaciones)
+      console.log(JSON.stringify(payload))
       // Hacer la petición fetch a la URL construida
       const response = await fetch(url, {
         method: "POST",
-        body: JSON.stringify(this.operaciones),
+        body: JSON.stringify(payload),
       });
 
+      console.info(response.json())
       // Retornar la respuesta en formato JSON
-      return await response.json();
+      return await true;
       // nombreImpresora= "Caja"
       //   const payload = {
       //       operaciones: this.operaciones,
