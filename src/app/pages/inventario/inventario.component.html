@@ -97,7 +97,7 @@
                         (click)="deleteArticulo(rowData)" style="margin-left: 3px;"></button>
                     </div>
                   </td>
-                  <td *ngIf="rowData.imagen=='NA'">
+                  <td *ngIf="rowData.imagen=='NA'  || rowData.imagen =='' ">
                       <img src="../../../assets/img/iconNoImage.png" width="40" height="40%"
                       class="shadow-1" />
 
