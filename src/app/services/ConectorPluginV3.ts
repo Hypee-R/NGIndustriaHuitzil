@@ -5,8 +5,8 @@ const ConectorPluginV3 = (() => {
    * desde TypeScript
    *
    * @date 2022-12-01
-   * @author parzibyte
-   * @see https://parzibyte.me/blog
+   * @author
+   * @see
    */
 
   class Operacion {
