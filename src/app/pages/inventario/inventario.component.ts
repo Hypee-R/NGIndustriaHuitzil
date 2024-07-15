@@ -1,13 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { productoModel } from 'src/app/models/productos.model';
-
 import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import * as XLSX from 'xlsx';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { CategoriasService } from 'src/app/services/categorias.service';
-import { TallasService } from 'src/app/services/tallas.service';
 import { CatTallaModel } from 'src/app/models/tallas.model';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { CategoriaModel } from 'src/app/models/categoria.model';
@@ -42,7 +39,6 @@ export class InventarioComponent implements OnInit {
   accion = '';
   rows = 0;
   cols: any[] = [];
-  /* constructor( private messageService: MessageService, private confirmationService: ConfirmationService) { }*/
   constructor(
     public variablesGL: VariablesService,
     private inventarioService: InventarioService,
@@ -152,11 +148,20 @@ export class InventarioComponent implements OnInit {
   /// Editar componetente
   editArticulo(producto: productoModel) {
     //console.log(producto)
+    producto.fechaIngreso= this.formatDate(producto.fechaIngreso);
     this.accion = 'Actualizar';
+
     this.selectedArticulo = { ...producto };
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
+  }
+  formatDate(fechaISO: string): string {
+    const fecha = new Date(fechaISO);
+    const year = fecha.getFullYear();
+    const month = ('0' + (fecha.getMonth() + 1)).slice(-2); // agregar cero si el mes es de un dígito
+    const day = ('0' + fecha.getDate()).slice(-2); // agregar cero si el día es de un dígito
+    return `${year}-${month}-${day}`;
   }
 
   viewCodebar(producto : productoModel){

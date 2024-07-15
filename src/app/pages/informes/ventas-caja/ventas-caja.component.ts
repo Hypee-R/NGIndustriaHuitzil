@@ -29,11 +29,11 @@ export class VentasCajaComponent implements OnInit {
       { field: 'tipoVenta', header: 'TIPO DE V.' },
       {field: 'fecha',header:'FECHA'},
       {field: 'noArticulos',header:'NoArticulos'},
-
       {field: 'efectivo',header:'EFECTIVO'},
       {field: 'efectivo',header:'TARJETA'},
       {field: 'subtotal',header:'SUBTOTAL'},
-      {field: 'total',header: 'TOTAL'}
+      {field: 'total',header: 'TOTAL'},
+      {field: 'status',header: 'STATUS'}
 
     ];
 
@@ -61,6 +61,7 @@ export class VentasCajaComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.ventas = this._listVentas
+    console.log(this.ventas)
     //this.lstCambiosDevoluciones=this._listVentas
     //console.log( this._listVentas)
     //this.consultarAbonos()

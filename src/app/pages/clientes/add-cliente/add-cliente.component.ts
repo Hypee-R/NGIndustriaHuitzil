@@ -2,11 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { CatClienteModel } from 'src/app/models/clientes.model';
-import { CatProveedorModel } from 'src/app/models/proveedores.model';
+import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { ClientesService } from 'src/app/services/clientes.service';
-import { ProveedoresService } from 'src/app/services/proveedores.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
-
+import { UbicacionesService } from 'src/app/services/ubicaciones.service';
 @Component({
   selector: 'app-add-cliente',
   templateUrl: './add-cliente.component.html',
@@ -23,11 +22,13 @@ export class AddClienteComponent implements OnInit {
   accion = '';
   cliente: CatClienteModel = new CatClienteModel();
   pattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
+  listSucursales: UbicacionModel = new UbicacionModel();
   dialogSubscription: Subscription = new Subscription();
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
-    private clientesService: ClientesService
+    private clientesService: ClientesService,
+    private ubicacionesService:UbicacionesService
   ) {
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
         this.visibleDialog = estado;
@@ -42,12 +43,22 @@ export class AddClienteComponent implements OnInit {
 
   ngOnInit(): void {
     //this.proveedor = this._editProveedor;
+    this.getSucursales();
   }
 
   ngOnDestroy(): void {
       if(this.dialogSubscription){
         this.dialogSubscription.unsubscribe();
       }
+  }
+
+  getSucursales(){
+    this.ubicacionesService.getUbicaciones().subscribe(response => {
+      if(response.exito){
+        this.listSucursales = response.respuesta;
+        console.log( this.listSucursales)
+      }
+    });
   }
 
   hideDialog() {

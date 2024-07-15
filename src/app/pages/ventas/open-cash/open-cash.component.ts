@@ -2,14 +2,12 @@ import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import ConectorPluginV3 from 'src/app/ConectorPluginV3';
+import ConectorPluginV3 from 'src/app/services/ConectorPluginV3';
 import { CajaModel } from 'src/app/models/caja.model';
 import { VentaModel } from 'src/app/models/venta.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from '../../../services/ventas.service';
 import { ApartadosService } from 'src/app/services/apartados.service';
-import { PagoApartado } from 'src/app/models/pagoApartado';
-
 
 @Component({
   selector: 'app-open-cash',
@@ -18,7 +16,7 @@ import { PagoApartado } from 'src/app/models/pagoApartado';
 })
 export class OpenCashComponent implements OnInit {
   user = JSON.parse(localStorage.getItem('usuario'));
-  impresoraSeleccionada: string = "TicketsZebraSistema";
+  impresoraSeleccionada: string = "Caja";
   @Input() _accion: string;
   @Input() _caja: CajaModel;
   rows = 0;
@@ -31,11 +29,23 @@ export class OpenCashComponent implements OnInit {
   openCashModel: CajaModel = new CajaModel();
   dialogSubscription: Subscription = new Subscription();
   datePipe = new DatePipe("en-US");
+  //Valores que se utilizan para mostrar totales
   totalVentas;
-  totalApartados;
+  totalApartadosPagos;
   totalEfectivodata;
   totalTarjetadata;
   totalMultipledata;
+  //Valores que se utilizan para ticket separados y ventas
+  //ventas
+  totalEfectivo = 0;
+  totalTarjeta = 0;
+  totalMultiple
+  //separados
+  totalApartados = 0;
+  totalEfectivoAbonos = 0;
+  totalTarjetaAbonos = 0;
+  totalMultipleAbonos
+  //Valores que se utilizan para ticket separados y ventas
   ventas: VentaModel[] = [];
   constructor(
     private toastr: ToastrService,
@@ -65,7 +75,7 @@ export class OpenCashComponent implements OnInit {
             console.log("STATUS")
             console.log(this.openCashModel.idCaja)
             this.fechaCierre = this.openCashModel.fechaCierre != null ? this.variablesGL.getFormatoFecha(this.openCashModel.fechaCierre) : new Date();
-         
+
           }
         }
       }
@@ -120,10 +130,6 @@ export class OpenCashComponent implements OnInit {
         });
     } else if (this.accion == 'Cerrar' && this.openCashModel.montoCierre > 0) {
 
-      // if(this.openCashModel.monto+this.totalVentas!=this.openCashModel.montoCierre){
-      //   this.toastr.warning("Hay una Diferencia en el cierre escribe el motivo", 'Diferencia!');
-      // }else{
-
       console.log(this.fechaCierre)
       console.log(this.variablesGL.setFormatoFecha(this.fecha))
       if (this.fechaCierre > this.fecha) {
@@ -137,7 +143,6 @@ export class OpenCashComponent implements OnInit {
             this.toastr.success(response.mensaje, 'Exito!');
             this.submitted = false;
             this.variablesGL.showDialog.next(false);
-            //Impresion del Status de la caja
             this.impresionCierreCaja()
           } else {
             this.toastr.info(response.mensaje, 'Atención!')
@@ -164,31 +169,56 @@ export class OpenCashComponent implements OnInit {
     conector
       .Iniciar()
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
       .Feed(1)
-      .EscribirTexto("*Apertura y Cierre de caja*")
+      .EscribirTexto("*CIERRE CAJA*")
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .Feed(1)
+      .EscribirTexto("Suc:" + this.user.ubicacion)
       .Feed(1)
       .EscribirTexto("Caja:" + this.openCashModel.idCaja)
       .Feed(1)
-      .EscribirTexto("*Empleado:" + this.user.nombre)
+      .EscribirTexto("Empleado:" + this.user.nombre)
       .Feed(1)
       .EscribirTexto("Abrio Caja:" + this.openCashModel.fecha)
-      .EscribirTexto("con el monto de :" + this.openCashModel.monto)
-      .Feed(1)
-      .EscribirTexto("Total con Tarjeta:" + this.totalTarjetadata)
-      .EscribirTexto("Total Efectivo:" + this.totalEfectivodata)
-     // .EscribirTexto("Total Multiple:" + this.totalEfectivodata)
-      .EscribirTexto("Total Ventas:" + this.totalVentas)
       .Feed(1)
       .EscribirTexto("Cerro Caja:" + this.openCashModel.fechaCierre)
-      .EscribirTexto("con el monto de :" + this.openCashModel.monto + this.totalEfectivodata)
-      .EscribirTexto("*solo se contempla el Efectivo en caja, los multiples con tarjeta los valida el administrador*")
       .Feed(1)
-      .EscribirTexto("*Recuerda conservar este ticket para tu respaldo al cierre de tu caja en buen estado *")
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+      .EscribirTexto("_____________________________________")
       .Feed(1)
+      .EscribirTexto("Apertura :$ " + this.openCashModel.monto)
+      .Feed(1)
+      .EscribirTexto("Total TAR:$ " + this.totalTarjetadata )
+      .Feed(1)
+      .EscribirTexto("Total EFE:$ " + this.calcularRegistro())
+      .Feed(1)
+      .EscribirTexto("Total caja:$ " + this.openCashModel.montoCierre)
+      .Feed(1)
+      .EscribirTexto("Diferencia:" + this.calcularDiferencia())
+      .Feed(1)
+      .EscribirTexto("_____________________________________")
+      .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .EscribirTexto("VENTAS" + "__________" + "$TOTAL:" + this.totalVentas)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+      .Feed(1)
+      .EscribirTexto("Ventas EFE:" + this.totalEfectivo)
+      .Feed(1)
+      .EscribirTexto("Ventas TAR:" + this.totalTarjeta)
+      .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .EscribirTexto("SEPARADOS"+ "__________" + "$TOTAL:" +  this.totalApartadosPagos )
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+      .Feed(1)
+      .EscribirTexto("Abonos EFE:" + this.totalEfectivoAbonos)
+      .Feed(1)
+      .EscribirTexto("Abonos TAR:" + this.totalTarjetaAbonos)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .Feed(2)
+      .EscribirTexto("*Recuerda conservar este ticket para tu respaldo al cierre de tu caja en buen estado*")
+      .Feed(2)
+      .Feed(2)
       .Corte(1)
-      .Iniciar()
-      .Feed(1);
     try {
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
       // const respuesta = true;
@@ -207,67 +237,94 @@ export class OpenCashComponent implements OnInit {
 
     }
   }
-  async GetInformacionCaja()
-  {
+  calcularDiferencia(): number {
+    return this.totalEfectivoAbonos + this.totalEfectivo - this.openCashModel.montoCierre;
+  }
+  calcularRegistro(): number {
+    return  this.totalEfectivoAbonos+this.totalEfectivo;
+  }
+
+
+
+  async GetInformacionCaja() {
 
     this.ventasService.getVentasByCaja(this.openCashModel.idCaja).subscribe(response => {
       if (response.exito) {
-        console.log(response.respuesta)
-        this.ventas = response.respuesta
+        console.log(response.respuesta);
+        this.ventas = response.respuesta;
 
-        let total = 0
-        let totalEfectivo = 0
-        let totalTarjeta = 0
-        let totalMultiple = 0
+        let total = 0;
+        let totalEfectivo = 0;
+        let totalTarjeta = 0;
+        let totalMultiple = 0;
+
+        let totalApartados = 0;
+        let totalEfectivoAbonos = 0;
+        let totalTarjetaAbonos = 0;
+        let totalMultipleAbonos = 0;
+
         response.respuesta.forEach(function (a) {
-
-          total += a.total;
-          if (a.tipoPago == "TARJETA") {
-            totalTarjeta += a.total
-
+          if (a.status == "CONCLUIDA") {
+            total += a.total;
           }
 
-          if (a.tipoPago == "EFECTIVO") {
-            totalEfectivo += a.total
-
+          if (a.tipoPago == "TARJETA" && a.status == "CONCLUIDA") {
+            totalTarjeta += a.total;
           }
 
-          if (a.tipoPago == "MULTIPLE") {
-            totalTarjeta += a.tarjeta
-            totalMultiple += a.total
-            totalEfectivo += a.efectivo
+          if (a.tipoPago == "EFECTIVO" && a.status == "CONCLUIDA") {
+            totalEfectivo += a.total;
           }
 
-
+          if (a.tipoPago == "MULTIPLE" && a.status == "CONCLUIDA") {
+            totalTarjeta += a.tarjeta;
+            totalMultiple += a.total;
+            totalEfectivo += a.efectivo;
+          }
         });
-        console.log(total);
 
-        this.totalVentas = total;
-        this.totalEfectivodata = totalEfectivo
-        this.totalTarjetadata = totalTarjeta
-        this.totalMultipledata = totalMultiple
-        this.totalApartados = 0
         this.apartadosService.getPagoByCaja(this.openCashModel.idCaja).subscribe(response => {
           if (response.exito) {
-            var listPagos: PagoApartado[] = response.respuesta;
-            listPagos.forEach((pago) => {
-              this.totalApartados += pago.cantidad;
-            })
+            response.respuesta.forEach(function (a) {
+              console.log(a);
+
+              totalApartados += a.cantidad;
+
+              if (a.tipoPagoValida == "TARJETA") {
+                totalTarjetaAbonos += a.cantidad;
+              }
+
+              if (a.tipoPagoValida == "EFECTIVO") {
+                totalEfectivoAbonos += a.cantidad
+              }
+
+              if (a.tipoPagoValida == "MULTIPLE") {
+                totalTarjetaAbonos += a.montoTarjeta;
+                totalMultipleAbonos += a.cantidad;
+                totalEfectivoAbonos += a.montoEfectivo;
+              }
+            });
+
+            // Mover las asignaciones aquí, después de que ambas respuestas han sido procesadas
+            this.totalVentas = total;
+            this.totalEfectivodata = totalEfectivo+totalEfectivoAbonos;
+            this.totalTarjetadata = totalTarjeta+totalTarjetaAbonos;
+            this.totalMultipledata = totalMultiple+totalMultipleAbonos;
+            //valores individuales
+            this.totalEfectivo = totalEfectivo;
+            this.totalTarjeta = totalTarjeta;
+            this.totalMultiple=totalMultiple
+            //separados
+           //this.totalApartados = 0;
+            this. totalEfectivoAbonos = totalEfectivoAbonos;
+            this.totalTarjetaAbonos = totalTarjetaAbonos;
+            this.totalMultipleAbonos=totalMultipleAbonos
+
+            this.totalApartadosPagos = totalApartados;
           }
-        })
+        });
       }
-
-
-
-    })
-    this.apartadosService.getPagoByCaja(this.openCashModel.idCaja).subscribe(response => {
-      if (response.exito) {
-        var listPagos: PagoApartado[] = response.respuesta;
-        listPagos.forEach((pago) => {
-          this.totalApartados += pago.cantidad;
-        })
-      }
-    })
+    });
 
 
   }

@@ -13,6 +13,7 @@ export class CatApartadoModel{
     total :number;
     resto:number
     type : string;
+    noTicket:string;
     articulosApartados: ApartadoArticuloModel[];
     constructor(){
         this.idApartado = 0
@@ -20,7 +21,7 @@ export class CatApartadoModel{
         this.telefono = ""
         this.status = ""
         this.precio  = 0
-        this.type = ""
+        this.type = "",
+        this.noTicket=""
     }
   }
-  

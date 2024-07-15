@@ -1,4 +1,4 @@
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '1000px'}" header="{{accion}}" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '1000px'}" header="{{accion}}" [modal]="true" styleClass="p-fluid" appendTo="body">
 
     <ng-template pTemplate="content">
 
@@ -44,21 +44,21 @@
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
                         <tr >
 
-                               
+
                             <td  *ngIf="rowData.existencia != 0">
                                 <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning" (click)="addProduct(rowData)"></button>
                             </td>
-                                
+
                             <td  *ngIf="rowData.existencia == 0">
                              <label >Sin stock</label>
                             </td>
-                          
+
 
                             <td *ngFor="let col of columns">
                                 {{rowData[col.field]}}
                             </td>
 
-                            
+
                         </tr>
                     </ng-template>
 

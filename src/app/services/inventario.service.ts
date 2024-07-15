@@ -17,15 +17,15 @@ export class InventarioService {
     private variablesGL: VariablesService) { }
 
     getImprimirEtiquetas(Descripcion: string,sku: string,cantidad: number,pc: string): Observable<ResponseModelImprime>{
-      return this.http.get<ResponseModelImprime>(`http://127.0.0.1:5000/imprime?sku=${sku}&descripcion1=${Descripcion.substring(0,20)}&descripcion2=${Descripcion.substring(20,Descripcion.length)}&cantidad=${cantidad}&pcname=${pc}&printer=ZDesigner%20TLP%202844`).pipe(
+      return this.http.get<ResponseModelImprime>(`http://localhost:5000/imprime?sku=${sku}&descripcion1=${Descripcion.substring(0,20)}&descripcion2=${Descripcion.substring(20,Descripcion.length)}&cantidad=${cantidad}&pcname=${pc}&printer=ZDesigner%20TLP%202844`).pipe(
         map (res => res)
       );
     }
 
   getArticulos(): Observable<ResponseModel>{
-    
+    console.log(this.variablesGL.getRol)
     let sucursal ;
-    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined||this.variablesGL.getSucursal()== ""){
+    if(this.variablesGL.getRol()=== 'Administrador' ){
       sucursal="all"
     }else{
       sucursal=this.variablesGL.getSucursal()
@@ -39,16 +39,16 @@ export class InventarioService {
   }
 
   getInexistencias(): Observable<ResponseModel>{
-    //Update 
+    //Update
     //let sucursal = this.variablesGL.getSucursal() ?? "all";
-   
     let sucursal ;
-    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
+    if(this.variablesGL.getRol()=== 'Administrador' ){
       sucursal="all"
     }else{
       sucursal=this.variablesGL.getSucursal()
     }
-    return this.http.get<ResponseModel>(environment.apiService + `Inventario/Inexistencias?sucursal=${sucursal}`)
+    console.log(this.variablesGL.getSucursal())
+    return this.http.get<ResponseModel>(environment.apiService + `Inventario/Consulta?sucursal=${sucursal}`)
     .pipe(
       map (res => res)
     );
@@ -79,10 +79,10 @@ export class InventarioService {
   }
 
   searchProduct(queryString: string): Observable<ResponseModel> {
-    console.log(queryString);
-   
+
     let sucursal ;
-    if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
+
+    if(this.variablesGL.getRol()=== 'Administrador' ){
       sucursal="all"
     }else{
       sucursal=this.variablesGL.getSucursal()
@@ -93,7 +93,7 @@ export class InventarioService {
 
 
   SearchProductFilterUbicacion(sucursal: string): Observable<ResponseModel> {
-  
+
     return this.http.get<ResponseModel>(environment.apiService + `Inventario/SearchProductFilterUbicacion?sucursal=${sucursal}`);
   }
 }

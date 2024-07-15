@@ -36,7 +36,7 @@ const ConectorPluginV3 = (() => {
         static RECUPERACION_QR_MEDIA = 1;
         static RECUPERACION_QR_ALTA = 2;
         static RECUPERACION_QR_MEJOR = 3;
-
+        static impresoraSeleccionadaFija: string = "Caja";
         constructor(ruta: string = ConectorPlugin.URL_PLUGIN_POR_DEFECTO, serial: string = "") {
             this.ruta = ruta;
             this.serial = serial;
@@ -211,11 +211,13 @@ const ConectorPluginV3 = (() => {
         }
 
         async imprimirEn(nombreImpresora: string) {
+          nombreImpresora= "Caja"
             const payload = {
                 operaciones: this.operaciones,
                 nombreImpresora,
                 serial: this.serial,
             };
+            console.log(JSON.stringify(payload))
             const response = await fetch(this.ruta + "/imprimir", {
                 method: "POST",
                 body: JSON.stringify(payload),

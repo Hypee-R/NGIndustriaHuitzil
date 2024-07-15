@@ -20,8 +20,6 @@ import { TallasComponent } from './tallas/tallas.component';
 import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { RolesComponent } from './roles/roles.component';
-
-
 //PrimeNG
 import {DataViewModule} from 'primeng/dataview';
 import {BadgeModule} from 'primeng/badge';
@@ -54,9 +52,6 @@ import {PickListModule} from 'primeng/picklist';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { ChipModule } from 'primeng/chip';
-
-
-
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
 import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
@@ -79,18 +74,15 @@ import { ClientesComponent } from './clientes/clientes.component';
 import { AddClienteComponent } from './clientes/add-cliente/add-cliente.component';
 //import { NgxBarcode6Module } from 'ngx-barcode6';
 import { ApartadosComponent } from './apartados/apartados.component';
-import { AddApartadoComponent } from './apartados/add-apartado/add-apartado.component';
-import { AddPedidoEspecialComponent } from './apartados/add-pedido-especial/add-pedido-especial.component';
 import { TagModule } from 'primeng/tag';
 import {ConfirmPopupModule} from 'primeng/confirmpopup';
 import {AccordionModule} from 'primeng/accordion';
-import { AddPagoApartadoComponent } from './apartados/add-pago-apartado/add-pago-apartado.component';
-import { AddPagoPedidoComponent } from './apartados/add-pago-pedido/add-pago-pedido.component';
 import { ControEnviosComponent } from './contro-envios/contro-envios.component';
 import { TabViewModule } from 'primeng/tabview';
 import { VentasCajaComponent } from './informes/ventas-caja/ventas-caja.component';
 import { EnvioComponent } from './contro-envios/envio/envio.component';
 import { PanelModule } from 'primeng/panel';
+import { CancelacionComponent } from './ventas/cancelacion/cancelacion.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -177,13 +169,10 @@ import { PanelModule } from 'primeng/panel';
         RefreshTableDirective,
         ClientesComponent,
         ApartadosComponent,
-        AddApartadoComponent,
-        AddPedidoEspecialComponent,
-        AddPagoApartadoComponent,
-        AddPagoPedidoComponent,
         ControEnviosComponent,
         VentasCajaComponent,
-        EnvioComponent
+        EnvioComponent,
+        CancelacionComponent
     ]
 })
 export class PagesModule { }

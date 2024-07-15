@@ -11,10 +11,10 @@ import html2canvas from 'html2canvas';
 import { VentaModel } from 'src/app/models/venta.model';
 import { VentaArticuloModel } from 'src/app/models/VentaArticulo.Model';
 import { formatDate } from '@angular/common';
-import ConectorPluginV3 from "src/app/ConectorPluginV3";
-import { ClientesService } from 'src/app/services/clientes.service';
+import ConectorPluginV3 from "src/app/services/ConectorPluginV3";
 import { CatClienteModel } from 'src/app/models/clientes.model';
 import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
+import { CambiosDevolucionesModel } from 'src/app/models/cambios-devoluciones.model';
 
 @Component({
   selector: 'app-ventas',
@@ -29,7 +29,7 @@ export class VentasComponent implements OnInit {
   activeState: boolean[] = [false];
   cadenaProductos: string = "\n";
   impresoras = [];
-  impresoraSeleccionada: string = "TicketsZebraSistema";
+  impresoraSeleccionada: string = "Caja";
   mensaje: string = "";
   display: boolean = false;
   displayCotizacion: boolean = false;
@@ -44,24 +44,25 @@ export class VentasComponent implements OnInit {
   articlesShell: productoVentaModel[] = [];
 
   ventaArticulo: VentaArticuloModel[] = [];
-
   openCash: Boolean = false
   cols: any[] = [];
   rows = 0;
   accion = '';
   accionAdd = '';
+  accionCancelacion = ''
   openProducts = '';
+  openCancel = '';
   articulos = 0
   total = 0
   descuento = 0
-  porcentajeDescuentoAplicar=0
+  porcentajeDescuentoAplicar = 0
   totalLetra = "";
-  totalVenta  =0;
+  totalVenta = 0;
   cambioVenta: number;
   totalMultipleF: number;
   totalMultipleT: number;
   //Busqueda CLIENTES
-   clienteName = 'MOSTRADOR';
+  clienteName = 'MOSTRADOR';
   //resultsClientes:  CatProveedorModel[];
   selectedclienteNameAdvanced: CatClienteModel;
   filteredClients: CatClienteModel[];
@@ -72,12 +73,15 @@ export class VentasComponent implements OnInit {
   cashModel: CajaModel;
   CurrentDate = new Date();
   user: UsuarioAuthModel;
+  //Datos de cancelacion
+  lstCambiosDevoluciones: CambiosDevolucionesModel[] = [];
+  selectedCambio: CambiosDevolucionesModel;
   constructor(
     private toastr: ToastrService,
     private ventasService: VentasService,
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
-    private clientesService: ClientesService,
+    private cambiosDevolucionesService: VentasService
   ) {
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
@@ -109,26 +113,9 @@ export class VentasComponent implements OnInit {
 
     this.loading = false
     this.getCaja();
-    //this.getClientes() se comento porque ya no se utiliza el cliente
     this.user = JSON.parse(localStorage.getItem('usuario'));
   }
 
-  // getClientes() {
-  //   this.clientes = []
-  //   this.clientesService.getClientes().subscribe(response => {
-  //     if (response.exito) {
-  //       this.clientes = response.respuesta;
-  //       console.log(this.clientes);
-  //     } else {
-  //       this.variablesGL.hideLoading();
-
-  //       this.toastr.error(response.mensaje, 'Error!');
-  //     }
-  //   }, err => {
-  //     this.variablesGL.hideLoading();
-  //     this.toastr.error('Hubo un error al buscar cliente', 'Error!');
-  //   });
-  // }
 
   getResultsClients(event) {
     let filtered: any[] = [];
@@ -148,14 +135,15 @@ export class VentasComponent implements OnInit {
   openProductsM() {
     //this.variablesGL.showLoading();
     this.accion = ''
-    // this.accionAdd = ''
+    this.accionCancelacion = '';
     this.accionAdd = ''
     this.openProducts = "Productos"
-     this.articlesSelected = []
-     this.getArticulos()
+    this.articlesSelected = []
+    this.getArticulos()
   }
 
   openCashRegister() {
+    this.accionCancelacion = '';
     this.openProducts = ""
     this.accionAdd = ''
     this.accion = 'Abrir';
@@ -166,11 +154,13 @@ export class VentasComponent implements OnInit {
   closeCashRegister() {
     this.openProducts = ""
     this.accionAdd = ''
+    this.accionCancelacion = '';
     this.accion = 'Cerrar';
     this.getCaja();
   }
 
   statusCashRegister() {
+    this.accionCancelacion = '';
     this.openProducts = ""
     this.accionAdd = ''
     this.accion = 'Status';
@@ -194,7 +184,7 @@ export class VentasComponent implements OnInit {
     this.articlesShell[index].cantidad += 1
     this.articulos += 1
     this.total += product.precio
-    this.totalLetra = this.numeroALetras(this.total-this.descuento, {
+    this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
       plural: 'PESOS MEXICANOS',
       singular: 'PESO MEXICANO',
       centPlural: 'CENTAVOS',
@@ -214,7 +204,7 @@ export class VentasComponent implements OnInit {
     this.articlesShell.push(artc)
     this.articulos += 1
     this.total += product.precio
-    this.totalLetra = this.numeroALetras(this.total-this.descuento, {
+    this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
       plural: 'PESOS MEXICANOS',
       singular: 'PESO MEXICANO',
       centPlural: 'CENTAVOS',
@@ -369,7 +359,7 @@ export class VentasComponent implements OnInit {
       this.toastr.warning('No hay Articulos para vizualizar cotizacion', 'Atención!');
     } else {
       this.displayCotizacion = true;
-      this.totalLetra = this.numeroALetras(this.total-this.descuento, {
+      this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
         plural: 'PESOS MEXICANOS',
         singular: 'PESO MEXICANO',
         centPlural: 'CENTAVOS',
@@ -377,6 +367,27 @@ export class VentasComponent implements OnInit {
       });
     }
 
+  }
+
+  getCambiosyDevoluciones() {
+    this.loading = true;
+    this.cambiosDevolucionesService.getCambiosDevoluciones().subscribe(response => {
+      if (response.exito) {
+        console.log(response.respuesta)
+        this.lstCambiosDevoluciones = response.respuesta
+        this.lstCambiosDevoluciones.forEach(cambio => {
+          cambio.fecha = this.variablesGL.getFormatoFecha(cambio.fecha).toString();
+        });
+        this.loading = false;
+        // console.log('cambios devoluciones --> ', this.lstCambiosDevoluciones);
+
+      } else {
+        this.lstCambiosDevoluciones = [];
+        this.loading = false;
+      }
+    }, err => {
+      this.loading = false;;
+    });
   }
 
   downloadTicket() {
@@ -410,44 +421,45 @@ export class VentasComponent implements OnInit {
 
   async PostVentaRegistro(tipoPago: string) {
     if (tipoPago == "MULTIPLE") {
-      this.totalVenta = this.totalMultipleT + this.totalMultipleF
-      if (this.totalVenta>=this.total-this.descuento) {
+      this.totalVenta = this.totalMultipleT + this.totalMultipleF;
+
+      if (this.totalVenta > this.total) {
+        const sobrante = this.totalVenta - this.total;
+        this.totalMultipleF -= sobrante;
+        this.cambioVenta=sobrante
+        this.RegistraVenta.total = this.totalVenta; // Asignar totalVenta a total si es mayor que total actual
+      }
+
+
         this.changePage();
         this.RegistraVentaValid(tipoPago);
 
-      } else {
-        this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
-
-      }
 
     }
     if (tipoPago == "EFECTIVO") {
-      if (this.totalVenta>=this.total-this.descuento) {
+    //  if (this.totalVenta == this.total - this.descuento) {
         this.changePage();
         this.RegistraVentaValid(tipoPago);
 
-      } else {
-        this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+      // } else {
+      //   this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
-      }
+      // }
 
 
     }
     if (tipoPago == "TARJETA") {
       this.toastr.warning("Recuerda Validar el cobro en terminal la venta se registrara ", 'Atencion!');
-      if (this.totalVenta==this.total-this.descuento) {
+      if (this.totalVenta == this.total - this.descuento) {
         this.changePage();
-        this.RegistraVentaValid(tipoPago);
+        this.RegistraVentaValid(tipoPago);{
 
-      } else {
-        this.toastr.error("Error el importe debe ser exacto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+        }
 
-      }
+     } else {
+         this.toastr.error("Error el importe debe ser exacto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
-
-
-
-
+       }
     }
   }
 
@@ -478,7 +490,7 @@ export class VentasComponent implements OnInit {
       vt.articulo = element;
 
       //Genera Cadena para Impresion Ticket con salto de pagina
-      this.cadenaProductos += element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + "\n".toString()
+      this.cadenaProductos += element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + " " + "$" + element.precio + "MXN" + "\n".toString()
 
       this.ventaArticulo.push(vt);
     });
@@ -494,39 +506,21 @@ export class VentasComponent implements OnInit {
     this.RegistraVenta.subtotal = this.total;
     this.RegistraVenta.tipoPago = tipoPago;
     this.RegistraVenta.tipoVenta = "CONTADO";
-    this.RegistraVenta.total = this.total-this.descuento;
+    this.RegistraVenta.total = this.total - this.descuento;
     this.RegistraVenta.tarjeta = this.totalMultipleT;
     this.RegistraVenta.efectivo = this.totalMultipleF;
     this.RegistraVenta.ventaArticulo = this.ventaArticulo;
-    this.RegistraVenta.descuento=this.porcentajeDescuentoAplicar;
+    this.RegistraVenta.descuento = this.porcentajeDescuentoAplicar;
 
 
 
     console.log(JSON.stringify(this.RegistraVenta));
     this.ventasService.postRegistroVenta(this.RegistraVenta).subscribe(async resp => {
       console.log('data=> ', resp);
-
       if (resp.exito) {
-             //Limpiar objetos al finalizar una compra correcta
-             this.cadenaProductos = ""
-             this.RegistraVenta = new VentaModel();
-             this.ventaArticulo = [];
-             this.articulos = 0
-             this.total = 0
-             this.articlesShell = []
-             this.totalVenta= 0
-             this.totalMultipleF=0;
-             this.totalMultipleT=0;
-             this.activeState=[false];
-        this.toastr.success(resp.mensaje, 'Exito!');
-
-        if(this.selectedclienteNameAdvanced.nombre!=undefined && this.selectedclienteNameAdvanced.nombre!=""){
-
-         this.clienteName=this.selectedclienteNameAdvanced.nombre+this.selectedclienteNameAdvanced.apellidoPaterno+this.selectedclienteNameAdvanced.apellidoMaterno
-        }
-
-       console.log(this.selectedclienteNameAdvanced)
-       console.log(this.clienteName)
+        console.log(this.selectedclienteNameAdvanced)
+        console.log(this.clienteName)
+        console.log(this.RegistraVenta.fecha)
         //code Impresion
         const conector = new ConectorPluginV3();
         conector
@@ -534,35 +528,53 @@ export class VentasComponent implements OnInit {
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
           .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
           .Feed(1)
-          .EscribirTexto("***UniformesHuitzil***")
-          .Feed(1)
+          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
           .EscribirTexto("Caja:" + this.cashModel.idCaja)
           .Feed(1)
-          .EscribirTexto("Cajero:" + this.user.nombre+" "+ this.user.apellidoPaterno+" "+  this.user.apellidoMaterno )
+          .EscribirTexto("Cajero:" + this.user.nombre)
           .Feed(1)
-          .EscribirTexto("Cliente:" +this.clienteName)
+          .EscribirTexto("Fecha:" + this.RegistraVenta.fecha)
           .Feed(1)
           .EscribirTexto("Ticket:" + this.RegistraVenta.noTicket)
           .Feed(1)
           .EscribirTexto("Articulos:" + this.articulos)
           .Feed(1)
+          .EscribirTexto("_____________________________________")
+          .Feed(1)
+          .EscribirTexto("ARTICULO | CANT| P/U|TOTAL")
+          .Feed(1)
+          .EscribirTexto("_____________________________________")
+          .Feed(1)
           .EscribirTexto(this.cadenaProductos)
           .Feed(1)
-          .EscribirTexto("Total:" + this.total + "MXN")
+          .EscribirTexto("_____________________________________")
           .Feed(2)
-          .EscribirTexto(this.totalLetra = this.numeroALetras(this.total-this.descuento, {
+          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
+          .EscribirTexto("Descuento:" +this.descuento + "MXN")
+          .Feed(1)
+          .EscribirTexto("Subtotal:" + this.total + "MXN")
+          .Feed(1)
+          .EscribirTexto("Total:" + this.getDescuentoAplicado(this.total,this.descuento)+ "MXN")
+          .Feed(1)
+          .EscribirTexto("Tipo Pago:" +this.getTotalmontoMultiple(this.RegistraVenta))
+          .Feed(1)
+          .EscribirTexto("Cambio:" + this.cambioVenta + "MXN")
+          .Feed(1)
+          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+          .EscribirTexto(this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
             plural: 'PESOS MEXICANOS',
             singular: 'PESO MEXICANO',
             centPlural: 'CENTAVOS',
             centSingular: 'CENTAVO'
           }))
           .Feed(2)
+          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
           .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
           .Feed(2)
-          .EscribirTexto("***Si requiere factura solo se podra expedir el dia de compra, de lo contrario se contemplara en ventas al Publico en General..***")
+          .EscribirTexto("***Venta publico Gral, Si requiere factura solicitarla durante la venta***")
           .Feed(1)
           .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
-          .Feed(2)
           .Corte(1)
           .Iniciar()
           .Feed(1);
@@ -571,7 +583,19 @@ export class VentasComponent implements OnInit {
           const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
 
           if (respuesta == true) {
-
+            //Limpiar objetos al finalizar una compra correcta
+            this.cadenaProductos = ""
+            this.RegistraVenta = new VentaModel();
+            this.ventaArticulo = [];
+            this.articulos = 0
+            this.total = 0
+            this.articlesShell = []
+            this.totalVenta = 0
+            this.totalMultipleF = 0;
+            this.totalMultipleT = 0;
+            this.activeState = [false];
+            this.totalVenta=0
+            this.toastr.success(resp.mensaje, 'Exito!');
             console.log("Impresión correcta");
             this.display = false;
           } else {
@@ -579,7 +603,8 @@ export class VentasComponent implements OnInit {
           }
 
         } catch (error) {
-          this.toastr.warning("Se Realizo la venta correctamente pero no se encontro la impresora:TicketsZebraSistema", 'Atencion!');
+          console.log(error)
+          this.toastr.warning(error, 'Atencion!');
           //Limpiar objetos al finalizar una compra correcta
           this.cadenaProductos = ""
           this.RegistraVenta = new VentaModel();
@@ -603,173 +628,45 @@ export class VentasComponent implements OnInit {
 
   }
 
+  openModalAddCancel() {
+    this.accion = ''
+    this.openProducts = ''
+    this.accionCancelacion = 'Agregar';
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
+  }
 
 
-  //Funcion Para Generar el Numero en letras del total de la compra
-  Unidades(num) {
-    switch (num) {
-      case 1: return 'UN';
-      case 2: return 'DOS';
-      case 3: return 'TRES';
-      case 4: return 'CUATRO';
-      case 5: return 'CINCO';
-      case 6: return 'SEIS';
-      case 7: return 'SIETE';
-      case 8: return 'OCHO';
-      case 9: return 'NUEVE';
-    }
+//
+getDescuentoAplicado(total: number, descuento: number): number {
+  return total - descuento;
+}
 
-    return '';
-  }//Unidades()
+getTotalmontoMultiple(venta:VentaModel): string {
+  if (venta.tipoPago === 'MULTIPLE') {
+    const montoTarjeta = venta.tarjeta || 0; // Utiliza 0 si el monto de la tarjeta no está definido
+    const montoEfectivo = venta.efectivo || 0; // Utiliza 0 si el monto en efectivo no está definido
+    return `MULTIPLE:Tarjeta: ${montoTarjeta}, Efectivo: ${montoEfectivo}`;
+  } else {
+    return ` ${venta.tipoPago}`;
+  }
+}
 
-  Decenas(num) {
-
-    let decena = Math.floor(num / 10);
-    let unidad = num - (decena * 10);
-
-    switch (decena) {
-      case 1:
-        switch (unidad) {
-          case 0: return 'DIEZ';
-          case 1: return 'ONCE';
-          case 2: return 'DOCE';
-          case 3: return 'TRECE';
-          case 4: return 'CATORCE';
-          case 5: return 'QUINCE';
-          default: return 'DIECI' + this.Unidades(unidad);
-        }
-      case 2:
-        switch (unidad) {
-          case 0: return 'VEINTE';
-          default: return 'VEINTI' + this.Unidades(unidad);
-        }
-      case 3: return this.DecenasY('TREINTA', unidad);
-      case 4: return this.DecenasY('CUARENTA', unidad);
-      case 5: return this.DecenasY('CINCUENTA', unidad);
-      case 6: return this.DecenasY('SESENTA', unidad);
-      case 7: return this.DecenasY('SETENTA', unidad);
-      case 8: return this.DecenasY('OCHENTA', unidad);
-      case 9: return this.DecenasY('NOVENTA', unidad);
-      case 0: return this.Unidades(unidad);
-    }
-  }//Unidades()
-
-  DecenasY(strSin, numUnidades) {
-    if (numUnidades > 0)
-      return strSin + ' Y ' + this.Unidades(numUnidades)
-
-    return strSin;
-  }//DecenasY()
-
-  Centenas(num) {
-    let centenas = Math.floor(num / 100);
-    let decenas = num - (centenas * 100);
-
-    switch (centenas) {
-      case 1:
-        if (decenas > 0)
-          return 'CIENTO ' + this.Decenas(decenas);
-        return 'CIEN';
-      case 2: return 'DOSCIENTOS ' + this.Decenas(decenas);
-      case 3: return 'TRESCIENTOS ' + this.Decenas(decenas);
-      case 4: return 'CUATROCIENTOS ' + this.Decenas(decenas);
-      case 5: return 'QUINIENTOS ' + this.Decenas(decenas);
-      case 6: return 'SEISCIENTOS ' + this.Decenas(decenas);
-      case 7: return 'SETECIENTOS ' + this.Decenas(decenas);
-      case 8: return 'OCHOCIENTOS ' + this.Decenas(decenas);
-      case 9: return 'NOVECIENTOS ' + this.Decenas(decenas);
-    }
-
-    return this.Decenas(decenas);
-  }//Centenas()
-
-  Seccion(num, divisor, strSingular, strPlural) {
-    let cientos = Math.floor(num / divisor)
-    let resto = num - (cientos * divisor)
-
-    let letras = '';
-
-    if (cientos > 0)
-      if (cientos > 1)
-        letras = this.Centenas(cientos) + ' ' + strPlural;
-      else
-        letras = strSingular;
-
-    if (resto > 0)
-      letras += '';
-
-    return letras;
-  }//Seccion()
-
-  Miles(num) {
-    let divisor = 1000;
-    let cientos = Math.floor(num / divisor)
-    let resto = num - (cientos * divisor)
-
-    let strMiles = this.Seccion(num, divisor, 'UN MIL', 'MIL');
-    let strCentenas = this.Centenas(resto);
-
-    if (strMiles == '')
-      return strCentenas;
-
-    return strMiles + ' ' + strCentenas;
-  }//Miles()
-
-  Millones(num) {
-    let divisor = 1000000;
-    let cientos = Math.floor(num / divisor)
-    let resto = num - (cientos * divisor)
-
-    let strMillones = this.Seccion(num, divisor, 'UN MILLON DE', 'MILLONES DE');
-    let strMiles = this.Miles(resto);
-
-    if (strMillones == '')
-      return strMiles;
-
-    return strMillones + ' ' + strMiles;
-  }//Millones()
-
-  numeroALetras(num, currency) {
-    currency = currency || {};
-    let data = {
-      numero: num,
-      enteros: Math.floor(num),
-      centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
-      letrasCentavos: '',
-      letrasMonedaPlural: currency.plural || 'PESOS MEXICANOS',//'PESOS', 'Dólares', 'Bolívares', 'etcs'
-      letrasMonedaSingular: currency.singular || 'PESO MEXICANO', //'PESO', 'Dólar', 'Bolivar', 'etc'
-      letrasMonedaCentavoPlural: currency.centPlural || 'CENTAVO PESOS MEXICANOS',
-      letrasMonedaCentavoSingular: currency.centSingular || 'CENTAVO PESO MEXICANO'
-    };
-
-    if (data.centavos > 0) {
-      let centavos = ''
-      if (data.centavos == 1)
-        centavos = this.Millones(data.centavos) + ' ' + data.letrasMonedaCentavoSingular;
-      else
-        centavos = this.Millones(data.centavos) + ' ' + data.letrasMonedaCentavoPlural;
-      data.letrasCentavos = 'CON ' + centavos
-    };
-
-    if (data.enteros == 0)
-      return 'CERO ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
-    if (data.enteros == 1)
-      return this.Millones(data.enteros) + ' ' + data.letrasMonedaSingular + ' ' + data.letrasCentavos;
-    else
-      return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
-  };
 
   changePage() {
-    console.log(this.totalVenta+":"+this.total)
-    if(this.totalVenta>this.total){
-      this.cambioVenta = Math.abs(this.total - this.totalVenta);
+    // console.log(this.totalVenta + ":" + this.total)
+    // console.log(this.total -this.descuento)
+
+    if (this.totalVenta  > this.total-this.descuento) {
+      this.cambioVenta = Math.abs(this.total - this.totalVenta -this.descuento);
 
 
-      this.toastr.success("Su cambio es :"+     this.cambioVenta , 'Cambio!');
-    }else{
+      this.toastr.success("Su cambio es :" + this.cambioVenta, 'Cambio!');
+    } else {
       console.log("no es igual");
       this.cambioVenta = 0
-     // this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+      // this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
     }
 
@@ -778,41 +675,37 @@ export class VentasComponent implements OnInit {
 
   toggle(index: number) {
     this.activeState[index] = !this.activeState[index];
-}
+  }
 
-onTabClose(event) {
-  alert({severity:'info', summary:'Tab Closed', detail: 'Index: ' + event.index})
-}
+  onTabClose(event) {
+    alert({ severity: 'info', summary: 'Tab Closed', detail: 'Index: ' + event.index })
+  }
 
-onTabOpen(event) {
+  onTabOpen(event) {
 
-  alert({severity:'info', summary:'Tab Expanded', detail: 'Index: ' + event.index})
-}
+    alert({ severity: 'info', summary: 'Tab Expanded', detail: 'Index: ' + event.index })
+  }
 
-onDiscountSelected(selectedDiscount: number) {
-  // Manejar el valor seleccionado aquí
-  console.log("Descuento seleccionado:", selectedDiscount['value']);
+  onDiscountSelected(selectedDiscount: number) {
+    // Manejar el valor seleccionado aquí
+    console.log("Descuento seleccionado:", selectedDiscount['value']);
+    // También puedes realizar otras operaciones según sea necesario
+    const porcentajeDescuento = selectedDiscount['value'];
+    console.log(porcentajeDescuento)
 
-  // También puedes realizar otras operaciones según sea necesario
-  const porcentajeDescuento = selectedDiscount['value'];
-console.log(porcentajeDescuento)
+    this.porcentajeDescuentoAplicar = porcentajeDescuento
+    // Calcular el descuento
+    const descuento = (this.total * porcentajeDescuento) / 100;
+    console.log(descuento)
 
-this.porcentajeDescuentoAplicar=porcentajeDescuento
-  // Calcular el descuento
-  const descuento = (this.total * porcentajeDescuento) / 100;
-  console.log(descuento)
-  // Restar el descuento al total
-  // const totalConDescuento = this.total - descuento;
-  // console.log("Total con Descuento"+totalConDescuento)
-
- this. descuento=descuento
- this.totalLetra = this.numeroALetras(this.total-this.descuento, {
-  plural: 'PESOS MEXICANOS',
-  singular: 'PESO MEXICANO',
-  centPlural: 'CENTAVOS',
-  centSingular: 'CENTAVO'
-});
-}
+    this.descuento = descuento
+    this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
+      plural: 'PESOS MEXICANOS',
+      singular: 'PESO MEXICANO',
+      centPlural: 'CENTAVOS',
+      centSingular: 'CENTAVO'
+    });
+  }
 
 
 }
