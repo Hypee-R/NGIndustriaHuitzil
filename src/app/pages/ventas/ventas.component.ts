@@ -438,12 +438,13 @@ export class VentasComponent implements OnInit {
 
     }
     if (tipoPago == "EFECTIVO") {
-      if (this.totalVenta == this.total - this.descuento) {
+      console.info(this.totalVenta ,this.total - this.descuento)
+      if (this.totalVenta >= (this.total - this.descuento)) {
         this.changePage();
         this.RegistraVentaValid(tipoPago);
 
        } else {
-       this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+       this.toastr.warning("Error el importe debe ser mayor o igual al total de la venta, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
        }
 
@@ -671,7 +672,7 @@ getTotalmontoMultiple(venta:VentaModel): string {
     } else {
       console.log("no es igual");
       this.cambioVenta = 0
-      // this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+     // this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
     }
 
