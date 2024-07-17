@@ -331,6 +331,7 @@ export class ApartadosComponent implements OnInit {
         this.toastr.success(response.mensaje, 'Sucess');
         const respuestaValida = response.respuesta != null && response.respuesta !== '' ? response.respuesta :  this.apartado.noTicket;
         this.geeneraTicketApartado(this.apartado,respuestaValida);
+
         this.getApartados();
       }
       else {
@@ -680,7 +681,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
       .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
       .Feed(1)
-      .EscribirTexto("***APARTADO***")
+      .EscribirTexto("***APARTADO SUCURSAL***")
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto("Fecha:" + fechaFormateada)
@@ -718,9 +719,52 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
-      .Feed(3)
+      .Feed(2)
       .Corte(1)
-
+      .Iniciar()
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+      .Feed(1)
+      .EscribirTexto("***APARTADO CLIENTE***")
+      .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .EscribirTexto("Fecha:" + fechaFormateada)
+      .Feed(1)
+      .EscribirTexto("Cliente:"+data.idCliente)
+      .Feed(1)
+      .EscribirTexto("Tel Cliente:"+data.telefono)
+      .Feed(1)
+      .EscribirTexto("Fecha:" + fechaFormateada)
+      .Feed(1)
+      .EscribirTexto("Ticket Apartado:" + idApartadoCreado)
+      .Feed(1)
+      .EscribirTexto("_____________________________________")
+      .Feed(1)
+      .EscribirTexto("ARTICULO | CANT| P/U|TOTAL")
+      .Feed(1)
+      .EscribirTexto("_____________________________________")
+      .Feed(1)
+      .EscribirTexto(this.cadenaProductos)
+      .Feed(1)
+      .EscribirTexto("_____________________________________")
+      .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
+      .EscribirTexto("Total:" + data.total + "MXN")
+      .Feed(1)
+      .EscribirTexto(this.variablesGL.numeroALetras(data.total, {
+        plural: 'PESOS MEXICANOS',
+        singular: 'PESO MEXICANO',
+        centPlural: 'CENTAVOS',
+        centSingular: 'CENTAVO'
+      }))
+      .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+      .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+      .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
+      .Feed(2)
+      .Corte(1)
     try {
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
 

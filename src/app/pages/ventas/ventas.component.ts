@@ -438,14 +438,14 @@ export class VentasComponent implements OnInit {
 
     }
     if (tipoPago == "EFECTIVO") {
-    //  if (this.totalVenta == this.total - this.descuento) {
+      if (this.totalVenta == this.total - this.descuento) {
         this.changePage();
         this.RegistraVentaValid(tipoPago);
 
-      // } else {
-      //   this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+       } else {
+       this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
-      // }
+       }
 
 
     }
