@@ -184,17 +184,19 @@ export class OpenCashComponent implements OnInit {
       .EscribirTexto("Cerro Caja:" + this.openCashModel.fechaCierre)
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-      .EscribirTexto("____________________________")
+      .EscribirTexto("_____________________________________")
       .Feed(1)
-      .EscribirTexto("Apertura :" + this.openCashModel.monto)
+      .EscribirTexto("Apertura :$ " + this.openCashModel.monto)
       .Feed(1)
-      .EscribirTexto("Total registro:$ " + this.calcularRegistro())
+      .EscribirTexto("Total TAR:$ " + this.totalTarjetadata )
+      .Feed(1)
+      .EscribirTexto("Total EFE:$ " + this.calcularRegistro())
       .Feed(1)
       .EscribirTexto("Total caja:$ " + this.openCashModel.montoCierre)
       .Feed(1)
       .EscribirTexto("Diferencia:" + this.calcularDiferencia())
       .Feed(1)
-      .EscribirTexto("____________________________")
+      .EscribirTexto("_____________________________________")
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto("VENTAS" + "__________" + "$TOTAL:" + this.totalVentas)
@@ -212,8 +214,9 @@ export class OpenCashComponent implements OnInit {
       .Feed(1)
       .EscribirTexto("Abonos TAR:" + this.totalTarjetaAbonos)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-      .Feed(3)
+      .Feed(2)
       .EscribirTexto("*Recuerda conservar este ticket para tu respaldo al cierre de tu caja en buen estado*")
+      .Feed(2)
       .Feed(2)
       .Corte(1)
     try {
@@ -240,6 +243,7 @@ export class OpenCashComponent implements OnInit {
   calcularRegistro(): number {
     return  this.totalEfectivoAbonos+this.totalEfectivo;
   }
+
 
 
   async GetInformacionCaja() {
