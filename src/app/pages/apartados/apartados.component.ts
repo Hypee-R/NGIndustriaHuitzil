@@ -230,6 +230,7 @@ export class ApartadosComponent implements OnInit {
     this.hacerPago = apartado.resto != 0
     this.selectedApartado = apartado;
     this.pagoApartado = new PagoApartado()
+    this.pagoApartado.fecha = new Date() // Asignar la fecha actual en formato YYYY-MM-DD
     if (apartado.status != 'Entregado') {
       this.getCaja();
     }
@@ -306,11 +307,14 @@ export class ApartadosComponent implements OnInit {
       this.toastr.warning('Selecciona al menos un articulo', 'Aviso!');
       return
     }
-    if (this.selectedClient == undefined) {
+    if (this.selectedClient === undefined ) {
       this.toastr.warning('Selecciona un cliente', 'Aviso!');
       return
     }
-
+    if (this.selectedClient.idCliente===undefined || this.selectedClient.idCliente === 0 ) {
+      this.toastr.warning('Selecciona un cliente', 'Aviso!');
+      return
+    }
 
     this.apartado.idCliente = this.selectedClient.idCliente
     this.apartado.articulosApartados = this.articulosApartados
@@ -323,7 +327,7 @@ export class ApartadosComponent implements OnInit {
     const locale = 'en-US';
     const formattedDate = formatDate(new Date, format, locale);
     this.apartado.noTicket = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
-
+    //console.info( "APARTADO CLIENTE",this.apartado)
     await this.apartadoService.agregaApartado(this.apartado).subscribe(response => {
       if (response.exito) {
         console.info(response)
@@ -356,7 +360,7 @@ export class ApartadosComponent implements OnInit {
       this.toastr.warning('El apartado esta liquidado', 'Aviso');
       return
     }
-    if (this.pagoApartado.fecha == undefined || this.pagoApartado.fecha == "") {
+    if (this.pagoApartado.fecha == undefined ) {
       this.toastr.warning('Selecciona una fecha', 'Aviso');
       return
     }

@@ -271,7 +271,7 @@
                         </h5>
                         <div class="field">
                             <label for="fecha">Fecha</label>
-                            <input type="date" pInputText id="fecha" [(ngModel)]="pagoApartado.fecha" [disabled]="false" />
+                            <input type="date" pInputText id="fecha" [(ngModel)]="pagoApartado.fecha" [disabled]="true" />
                             <small class="p-error" *ngIf="submitted && !pagoApartado.fecha">Debe seleccionar una fecha</small>
                         </div>
 
