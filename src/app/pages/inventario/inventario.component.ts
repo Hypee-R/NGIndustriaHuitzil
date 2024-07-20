@@ -60,7 +60,8 @@ export class InventarioComponent implements OnInit {
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();
-console.info(status)
+console.info("STATUS->",status)
+console.info("STATUS pantalla->",this.statusPantalla)
     if(status == 'celular'){
       this.rows = 6;
     }else if(status == 'tablet'){
@@ -68,7 +69,7 @@ console.info(status)
     }else if(status == 'laptop'){
       this.rows = 5;
     }else{
-      this.rows = 11;
+      this.rows = 10;
     }
 
   }
@@ -100,7 +101,7 @@ console.info(status)
     this.loading = true;
     this.inventarioService.getArticulos().subscribe(response => {
       if (response.exito) {
-        console.log(response.respuesta)
+        //console.log(response.respuesta)
         this.listArticulos = response.respuesta;
         this.loading = false;
         for (let art of this.listArticulos) {

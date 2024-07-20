@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CajaModel } from 'src/app/models/caja.model';
 import { productoModel } from 'src/app/models/productos.model';
@@ -81,14 +81,16 @@ export class VentasComponent implements OnInit {
     private ventasService: VentasService,
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
-    private cambiosDevolucionesService: VentasService
+    private cambiosDevolucionesService: VentasService,
+    private cdr: ChangeDetectorRef
   ) {
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
 
-      { field: 'cantidad', header: 'CANTIDAD' },
-      { field: 'descripcion', header: 'PRODUCTO' },
-      { field: 'precio', header: 'PRECIO' },
+      { field: 'cantidad', header: 'Cantidad' },
+      { field: 'imagen', header: 'Imagen' },
+      { field: 'descripcion', header: 'Producto' },
+      { field: 'precio', header: 'Precio' },
       { field: 'sku', header: 'SKU' }
 
     ];
@@ -190,7 +192,7 @@ export class VentasComponent implements OnInit {
       centPlural: 'CENTAVOS',
       centSingular: 'CENTAVO'
     });
-
+ this.cdr.detectChanges(); // Forzar la detección de cambios
   }
 
   addProductVenta(product: productoModel) {
