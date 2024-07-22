@@ -67,9 +67,9 @@ console.info("STATUS pantalla->",this.statusPantalla)
     }else if(status == 'tablet'){
       this.rows = 7;
     }else if(status == 'laptop'){
-      this.rows = 5;
+      this.rows = 7;
     }else{
-      this.rows = 10;
+      this.rows = 11;
     }
 
   }

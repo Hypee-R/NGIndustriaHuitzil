@@ -8,11 +8,11 @@
     border: 1px solid #ccc;
     border-radius: 5px;
   }
-  
+
   .left-column {
     /* Estilos para la primera columna */
   }
-  
+
   .right-column {
     /* Estilos para la segunda columna */
   }
@@ -35,4 +35,44 @@
 
 .button-content {
   padding: 20px; /* Espacio interior */
+}
+
+/* Estilo base para el botón */
+.p-button-rounded {
+  border-radius: 50%; /* Botón redondeado */
+  background-color: var(--color-primary); /* Color de fondo primario */
+  color: var(--color-white); /* Color del texto del ícono */
+  border: none; /* Sin borde */
+  padding: 0.5rem; /* Espaciado interno */
+  font-size: 1.2rem; /* Tamaño del ícono */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
+}
+
+/* Estilo para el botón cuando se pasa el mouse por encima */
+.p-button-rounded:hover {
+  background-color: var(--color-primary);/* Color de fondo en hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra en hover */
+}
+
+/* Estilo para el botón cuando está enfocado */
+.p-button-rounded:focus {
+  outline: none; /* Elimina el contorno predeterminado */
+  box-shadow: 0 0 0 3px rgba(178, 113, 240, 0.452); /* Sombra de enfoque */
+}
+
+/* Estilo adicional específico para la clase 'bs-link-color' */
+.bs-link-color {
+  background-color: var(--color-primary); /* Color de fondo si deseas sobrescribir el color primario */
+  color: var(--color-white); /* Color del texto del ícono */
+}
+
+/* Ajustes de tamaño y espaciado si es necesario */
+.r-2 {
+  width: 3rem; /* Ajusta el ancho del botón */
+  height: 3rem; /* Ajusta la altura del botón */
+}
+
+/* Estilo para el ripple */
+.p-ripple {
+  --ripple-color: rgba(0, 0, 0, 0.3); /* Color del efecto ripple */
 }

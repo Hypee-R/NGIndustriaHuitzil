@@ -9,14 +9,6 @@
           Articulos Agregados a la venta: {{articlesAddSales}}
         </div>
       </div>
-      <!--
-            <div class="col-12 md:col-3">
-                <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
-                    <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras" [(ngModel)]="queryString" (change)="getResults()">
-                    <button type="button" pButton pRipple icon="pi pi-search" styleClass="p-button-warn" (click)="getResults()"></button>
-                </div>
-            </div>-->
 
       <app-loading *ngIf="loading"></app-loading>
       <div class="row" *ngIf="!loading && articles.length > 0">
@@ -50,7 +42,7 @@
           <ng-template pTemplate="body" let-rowData let-columns="columns">
             <tr>
               <td *ngIf="rowData.existencia != 0">
-                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning"
+                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded "
                   (click)="addProduct(rowData)"></button>
               </td>
 

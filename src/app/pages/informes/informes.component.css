@@ -11,7 +11,7 @@
 
 /* Estilo para el botón cuando se pasa el mouse por encima */
 .p-button-rounded:hover {
-  background-color: var(--color-primary-dark); /* Color de fondo en hover */
+  background-color: var(--color-primary);/* Color de fondo en hover */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra en hover */
 }
 
@@ -23,7 +23,7 @@
 
 /* Estilo adicional específico para la clase 'bs-link-color' */
 .bs-link-color {
-  background-color: var(--color-link); /* Color de fondo si deseas sobrescribir el color primario */
+  background-color: var(--color-primary); /* Color de fondo si deseas sobrescribir el color primario */
   color: var(--color-white); /* Color del texto del ícono */
 }
 
@@ -36,4 +36,9 @@
 /* Estilo para el ripple */
 .p-ripple {
   --ripple-color: rgba(0, 0, 0, 0.3); /* Color del efecto ripple */
+}
+/* En styles.css o en el archivo de estilos del componente */
+.custom-button {
+  background-color: #007bff; /* Cambia el color al que prefieras */
+  color: white; /* Asegura que el texto sea visible */
 }

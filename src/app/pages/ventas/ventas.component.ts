@@ -42,7 +42,7 @@ export class VentasComponent implements OnInit {
   articles: productoModel[] = [];
   articlesSelected: productoModel[] = []
   articlesShell: productoVentaModel[] = [];
-
+  isButtonDisabled: boolean = false; //se utiliza para bloquear la venta hasta que se termina
   ventaArticulo: VentaArticuloModel[] = [];
   openCash: Boolean = false
   cols: any[] = [];
@@ -88,7 +88,7 @@ export class VentasComponent implements OnInit {
     this.cols = [
 
       { field: 'cantidad', header: 'Cantidad' },
-      { field: 'imagen', header: 'Imagen' },
+     // { field: 'imagen', header: 'Imagen' },
       { field: 'descripcion', header: 'Producto' },
       { field: 'precio', header: 'Precio' },
       { field: 'sku', header: 'SKU' }
@@ -183,16 +183,18 @@ export class VentasComponent implements OnInit {
 
 
   addArticle(product: productoVentaModel, index: number) {
+    console.log(product,index)
     this.articlesShell[index].cantidad += 1
     this.articulos += 1
     this.total += product.precio
+    console.log( this.total )
     this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
       plural: 'PESOS MEXICANOS',
       singular: 'PESO MEXICANO',
       centPlural: 'CENTAVOS',
       centSingular: 'CENTAVO'
     });
- this.cdr.detectChanges(); // Forzar la detección de cambios
+
   }
 
   addProductVenta(product: productoModel) {
@@ -214,7 +216,7 @@ export class VentasComponent implements OnInit {
     });
   }
   cancelarCompra() {
-    this.toastr.error('Se cancelo la Venta correctamente', 'Atención!');
+    this.toastr.info('Se limpio la Venta correctamente', 'Atención!');
     this.articulos = 0
     this.total = 0
     this.articlesShell = []
@@ -423,6 +425,7 @@ export class VentasComponent implements OnInit {
 
 
   async PostVentaRegistro(tipoPago: string) {
+    this.isButtonDisabled = true;
     if (tipoPago == "MULTIPLE") {
       this.totalVenta = this.totalMultipleT + this.totalMultipleF;
 
@@ -490,11 +493,11 @@ export class VentasComponent implements OnInit {
       vt.idArticulo = element.idArticulo;
       vt.cantidad = element.cantidad;
       vt.precioUnitario = element.precio;
-      vt.subtotal = element.precio;
+      vt.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
       vt.articulo = element;
 
       //Genera Cadena para Impresion Ticket con salto de pagina
-      this.cadenaProductos += element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + " " + "$" + element.precio + "MXN" + "\n".toString()
+      this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN" + "|" + "$" +  vt.subtotal + "MXN" + "\n".toString()
 
       this.ventaArticulo.push(vt);
     });
@@ -504,7 +507,7 @@ export class VentasComponent implements OnInit {
     const formattedDate = formatDate(new Date, format, locale);
 
     this.RegistraVenta.idCaja = this.cashModel.idCaja;
-    this.RegistraVenta.fecha = formattedDate;
+    this.RegistraVenta.fecha = new Date;
     this.RegistraVenta.noArticulos = this.articlesShell.length
     this.RegistraVenta.noTicket = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
     this.RegistraVenta.subtotal = this.total;
@@ -556,7 +559,7 @@ export class VentasComponent implements OnInit {
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
           .EscribirTexto("Descuento:" +this.descuento + "MXN")
           .Feed(1)
-          .EscribirTexto("Subtotal:" + this.total + "MXN")
+          .EscribirTexto("Subtotal:" +  this.RegistraVenta.subtotal+ "MXN")
           .Feed(1)
           .EscribirTexto("Total:" + this.getDescuentoAplicado(this.total,this.descuento)+ "MXN")
           .Feed(1)
@@ -591,6 +594,7 @@ export class VentasComponent implements OnInit {
           const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
 
           if (respuesta == true) {
+            this.isButtonDisabled = false; // Habilitar el botón al finalizar
             //Limpiar objetos al finalizar una compra correcta
             this.cadenaProductos = ""
             this.RegistraVenta = new VentaModel();
@@ -611,6 +615,7 @@ export class VentasComponent implements OnInit {
           }
 
         } catch (error) {
+          this.isButtonDisabled = false; // Habilitar el botón al finalizar
           console.log(error)
           this.toastr.warning(error, 'Atencion!');
           //Limpiar objetos al finalizar una compra correcta
@@ -631,6 +636,7 @@ export class VentasComponent implements OnInit {
       err => {
         console.log('error -> ', err);
         this.toastr.error('Ocurrió un error al hacer la operación', 'Error!');
+        this.isButtonDisabled = false; // Habilitar el botón al finalizar
       });
 
 

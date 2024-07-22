@@ -5,7 +5,7 @@ import { CambiosDevolucionesArticuloModel } from './cambios-devoluciones.model';
 export class VentaModel {
     idVenta: number;
     idCaja: number;
-    fecha: string;
+    fecha: Date;
     noTicket: string;
     tipoPago: string;
     tipoVenta: string;
@@ -20,7 +20,7 @@ export class VentaModel {
     constructor(){
       this.idVenta = 0;
       this.idCaja = 0;
-      this.fecha = "";
+      this.fecha = new Date;
       this.noTicket = "";
       this.tipoPago = "";
       this.tipoVenta = "";

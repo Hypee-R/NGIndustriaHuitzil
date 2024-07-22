@@ -32,7 +32,7 @@
             <p-table rowExpandMode="single" #dt [value]="listArticulos" [columns]="cols" [rows]="rows"
               [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']"
               responsiveLayout="scroll" [(selection)]="selectedArticulos" [rowHover]="true" dataKey="idArticulo"
-              [rowsPerPageOptions]="[10,25,50,500,1000,1500,2000]"
+
               currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Articulos"
               [showCurrentPageReport]="true" styleClass="p-datatable-sm">
               <ng-template pTemplate="caption">

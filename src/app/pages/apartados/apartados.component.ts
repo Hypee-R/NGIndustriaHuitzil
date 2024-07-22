@@ -360,10 +360,10 @@ export class ApartadosComponent implements OnInit {
       this.toastr.warning('El apartado esta liquidado', 'Aviso');
       return
     }
-    if (this.pagoApartado.fecha == undefined ) {
-      this.toastr.warning('Selecciona una fecha', 'Aviso');
-      return
-    }
+    // if (this.pagoApartado.fecha == undefined ) {
+    //   this.toastr.warning('Selecciona una fecha', 'Aviso');
+    //   return
+    // }
     if (this.pagoApartado.tipoPagoValida == "MULTIPLE") {
       this.pagoApartado.cantidad = this.pagoApartado.montoTarjeta + this.pagoApartado.montoEfectivo
     }
@@ -371,10 +371,7 @@ export class ApartadosComponent implements OnInit {
       this.toastr.warning('La cantidad debe ser mayor a 0', 'Aviso');
       return
     }
-    // if (this.pagoApartado.cantidad >= this.selectedApartado.resto) {
-    //   this.toastr.warning('La cantidad debe ser menor o igual  ' + this.selectedApartado.resto, 'Aviso');
-    //   return
-    // }
+
     if (this.pagoApartado.cantidad <= 0) {
       this.toastr.warning('La cantidad debe ser mayor que 0' + this.pagoApartado.cantidad, 'Aviso');
       console.error('La cantidad debe ser mayor que 0');
@@ -386,7 +383,7 @@ export class ApartadosComponent implements OnInit {
       console.error('La cantidad debe ser mayor que 0');
       return
     }
-
+    this.pagoApartado.fecha =new Date
     this.pagoApartado.idApartado = this.selectedApartado.idApartado
     this.selectedApartado.resto -= this.pagoApartado.cantidad
     this.pagoApartado.idCaja = this.cashModel.idCaja
@@ -441,6 +438,7 @@ export class ApartadosComponent implements OnInit {
   }
 
   addArticle(product: productoModel, index: number) {
+
     this.articulosApartados[index].cantidad += 1
     this.articulos += 1
     this.total += product.precio
@@ -664,7 +662,8 @@ export class ApartadosComponent implements OnInit {
   async geeneraTicketApartado(data: CatApartadoModel,idApartadoCreado:number) {
     console.log(data.articulosApartados)
     data.articulosApartados.forEach(element => {
-      this.cadenaProductos += element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + "\n".toString()
+      element.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
+      this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN"  + "|" + "$" +  element.subtotal + "MXN" + "\n".toString()
 
 
     });
@@ -694,19 +693,17 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .Feed(1)
       .EscribirTexto("Tel Cliente:"+data.telefono)
       .Feed(1)
-      .EscribirTexto("Fecha:" + fechaFormateada)
-      .Feed(1)
       .EscribirTexto("Ticket Apartado:" + idApartadoCreado)
       .Feed(1)
-      .EscribirTexto("_____________________________________")
+      .EscribirTexto("_________________________________________")
       .Feed(1)
-      .EscribirTexto("ARTICULO | CANT| P/U|TOTAL")
+      .EscribirTexto("ARTICULO        | CANT |  P/U  |  TOTAL  ")
       .Feed(1)
-      .EscribirTexto("_____________________________________")
+      .EscribirTexto("_________________________________________")
       .Feed(1)
       .EscribirTexto(this.cadenaProductos)
       .Feed(1)
-      .EscribirTexto("_____________________________________")
+      .EscribirTexto("_________________________________________")
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
       .EscribirTexto("Total:" + data.total + "MXN")
@@ -723,7 +720,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
-      .Feed(2)
+      .Feed(3)
       .Corte(1)
       .Iniciar()
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
@@ -738,19 +735,16 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .Feed(1)
       .EscribirTexto("Tel Cliente:"+data.telefono)
       .Feed(1)
-      .EscribirTexto("Fecha:" + fechaFormateada)
-      .Feed(1)
       .EscribirTexto("Ticket Apartado:" + idApartadoCreado)
+      .EscribirTexto("_________________________________________")
       .Feed(1)
-      .EscribirTexto("_____________________________________")
+      .EscribirTexto("ARTICULO        | CANT |  P/U            ")
       .Feed(1)
-      .EscribirTexto("ARTICULO | CANT| P/U|TOTAL")
-      .Feed(1)
-      .EscribirTexto("_____________________________________")
+      .EscribirTexto("_________________________________________")
       .Feed(1)
       .EscribirTexto(this.cadenaProductos)
       .Feed(1)
-      .EscribirTexto("_____________________________________")
+      .EscribirTexto("_________________________________________")
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
       .EscribirTexto("Total:" + data.total + "MXN")
@@ -767,7 +761,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
-      .Feed(2)
+      .Feed(3)
       .Corte(1)
     try {
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);

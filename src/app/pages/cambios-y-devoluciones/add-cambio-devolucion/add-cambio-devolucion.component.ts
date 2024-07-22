@@ -114,7 +114,7 @@ export class AddCambioDevolucionComponent implements OnInit, OnDestroy {
               if(response.exito){
                 this.toastr.success(response.mensaje, 'Success!');
                 this.ventaByNoTicket = response.respuesta;
-                this.ventaByNoTicket[0].fecha = this.variablesGL.getFormatoFecha(this.ventaByNoTicket[0].fecha).toString();
+                this.ventaByNoTicket[0].fecha =this.ventaByNoTicket[0].fecha;
               }else{
                 this.toastr.warning(response.mensaje, 'Error!');
               }

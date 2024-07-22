@@ -31,9 +31,7 @@
             <td>
               <div style="display: inline-flex">
                 <button  (click)="deleteProduct(rowData,i)" type="button" pbutton="" tabindex="-1" class="p-element p-button-icon-only p-button-text text-600 hover:text-primary py-1 px-1 p-inputnumber-button p-inputnumber-button-down p-button p-component ng-star-inserted" aria-hidden="true" data-pc-section="decrementbutton"><span data-pc-section="decrementbuttonicon" class="pi pi-minus ng-star-inserted"></span></button>
-
-                  <button  (click)="addArticle(rowData,i)"  type="button" pbutton="" tabindex="-1" class="p-element p-button-icon-only p-button-text text-600 hover:text-primary py-1 px-1 p-inputnumber-button p-inputnumber-button-up p-button p-component ng-star-inserted" aria-hidden="true" data-pc-section="incrementbutton"><span data-pc-section="incrementbuttonicon" class="pi pi-plus ng-star-inserted"></span><!----><!----></button>
-
+                 <button  (click)="addArticle(rowData,i)"  type="button" pbutton="" tabindex="-1" class="p-element p-button-icon-only p-button-text text-600 hover:text-primary py-1 px-1 p-inputnumber-button p-inputnumber-button-up p-button p-component ng-star-inserted" aria-hidden="true" data-pc-section="incrementbutton"><span data-pc-section="incrementbuttonicon" class="pi pi-plus ng-star-inserted"></span></button>
               </div>
             </td>
             <td *ngFor="let col of columns">
@@ -135,7 +133,7 @@
       <div class="col-sm">
         <button pButton type="button" label="Tarjeta" icon="pi pi-credit-card"
           class="p-button-rounded p-button-warning p-button-lg" badge="8" badgeClass="p-badge-info"
-          (click)="PostVentaRegistro('TARJETA')"></button>
+          (click)="PostVentaRegistro('TARJETA')" [disabled]="isButtonDisabled"></button>
       </div>
       <div class="col-sm">
         <app-discount-selector (discountSelected)="onDiscountSelected($event)"></app-discount-selector>
@@ -149,7 +147,7 @@
       <div class="col-sm">
         <button pButton type="button" label="Efectivo" icon="pi pi-money-bill"
           class="p-button-rounded p-button-secondary p-button-lg" badge="8" badgeClass="p-badge-info"
-          (click)="PostVentaRegistro('EFECTIVO')"></button>
+          (click)="PostVentaRegistro('EFECTIVO')" [disabled]="isButtonDisabled"></button>
       </div>
       <div class="col-sm">
         <h5>Subtotal:<button pButton pRipple icon="pi pi-dollar" type="button" class="p-button-rounded p-button-warning"
@@ -207,7 +205,7 @@
 
           <div class="col-sm-4">
             <br>
-            <button pButton pRipple type="button" icon="pi pi-money-bill" label="Pagar Multiple"
+            <button pButton pRipple type="button" icon="pi pi-money-bill" label="Pagar Multiple"  [disabled]="isButtonDisabled"
               class="p-button-rounded p-button-success" (click)="PostVentaRegistro('MULTIPLE')"></button>
 
 

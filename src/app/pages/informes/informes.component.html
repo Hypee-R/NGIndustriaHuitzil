@@ -32,8 +32,8 @@
                       <div class="col-md-12">
                         <div class="row align-items-center">
                           <div class="col-md-3">
-                            <button pButton pRipple label="Export Excel" icon="pi pi-upload"
-                              style="margin-left: 10px;" (click)="Excel()"></button>
+                            <button pButton pRipple label="Export Excel" icon="pi pi-upload" class="custom-button"
+                              style="margin-left: 10px;" (click)="Excel()"  ></button>
                           </div>
                           <div class="col-md-3">
                             <label for="fechaI">Fecha Inicial :</label>
@@ -104,8 +104,6 @@
 
                       <button pButton pRipple icon="pi pi-book" class="p-button-rounded r-2 bs-link-color"
                       (click)="getVentasBycaja(rowData.idCaja)"></button>
-
-
                     </td>
                   </tr>
                 </ng-template>
