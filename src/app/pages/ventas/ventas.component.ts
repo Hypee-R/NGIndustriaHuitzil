@@ -100,11 +100,11 @@ export class VentasComponent implements OnInit {
     if (status == 'celular') {
       this.rows = 6;
     } else if (status == 'tablet') {
-      this.rows = 7;
-    } else if (status == 'laptop') {
       this.rows = 4;
+    } else if (status == 'laptop') {
+      this.rows = 3;
     } else {
-      this.rows = 7
+      this.rows = 6
     }
 
   }

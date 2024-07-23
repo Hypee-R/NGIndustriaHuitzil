@@ -1,23 +1,29 @@
 <!-- <div [ngClass]="{'container': statusPanubicacion <= 10}">
   <div class="card shadow mb-5 bg-body rounded"> -->
 <!-- <span class="lstick"></span> -->
-<p-card header="Vendedor:{{user.nombre}} ">
+<p-card header="Vendedor:{{user.nombre}} " subheader="Apertura:{{this.cashModel.fecha}} ">
+
   <div class="row">
+
     <div class="col-md-9">
       <div class="col-6">
-        <div class="p-inputgroup">
-          <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+        <div class="p-inputgroup improved-input">
+          <span class="p-inputgroup-addon improved-addon"><i class="pi pi-search"></i></span>
           <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras"
             [(ngModel)]="queryString" autofocus (change)="onchangeShear()">
         </div>
+
+
       </div>
+      <br>
       <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" [columns]="cols" [rows]="rows"
         [paginator]="true" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
         currentPageReportTemplate="Mostrando {first} a {last}  productos">
+
+        <!-- Header template -->
         <ng-template pTemplate="header" let-columns>
           <tr class="header-row">
-            <th style="width: 1rem">
-            </th>
+            <th style="width: 1rem"></th>
             <th *ngFor="let col of columns" [pSortableColumn]="col.field">
               <div class="flex justify-content-center align-items-center"
                 [ngStyle]="{'width': col.field != 'descripcion' ? '3em' : '8em'}">
@@ -26,59 +32,69 @@
             </th>
           </tr>
         </ng-template>
+
+        <!-- Body template -->
         <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
           <tr>
             <td>
               <div style="display: inline-flex">
-                <button  (click)="deleteProduct(rowData,i)" type="button" pbutton="" tabindex="-1" class="p-element p-button-icon-only p-button-text text-600 hover:text-primary py-1 px-1 p-inputnumber-button p-inputnumber-button-down p-button p-component ng-star-inserted" aria-hidden="true" data-pc-section="decrementbutton"><span data-pc-section="decrementbuttonicon" class="pi pi-minus ng-star-inserted"></span></button>
-                 <button  (click)="addArticle(rowData,i)"  type="button" pbutton="" tabindex="-1" class="p-element p-button-icon-only p-button-text text-600 hover:text-primary py-1 px-1 p-inputnumber-button p-inputnumber-button-up p-button p-component ng-star-inserted" aria-hidden="true" data-pc-section="incrementbutton"><span data-pc-section="incrementbuttonicon" class="pi pi-plus ng-star-inserted"></span></button>
+                <button (click)="deleteProduct(rowData,i)" type="button" pButton icon="pi pi-minus"
+                  class="p-button-icon-only p-button-text text-600 hover:text-primary p-inputnumber-button p-inputnumber-button-down">
+                </button>
+                <button (click)="addArticle(rowData,i)" type="button" pButton icon="pi pi-plus"
+                  class="p-button-icon-only p-button-text text-600 hover:text-primary p-inputnumber-button p-inputnumber-button-up">
+                </button>
               </div>
             </td>
             <td *ngFor="let col of columns">
-
-                <ng-container *ngIf="col.field === 'precio'; else otherField">
+              <ng-container *ngIf="col.field === 'precio'; else otherField">
                 {{ rowData[col.field] | currency:'MXN':'symbol':'1.2-2' }}
               </ng-container>
               <ng-template #otherField>
                 {{ rowData[col.field] }}
-
               </ng-template>
-
             </td>
           </tr>
+        </ng-template>
+
+        <!-- Summary template -->
+        <ng-template pTemplate="summary">
+          <div class="p-d-flex p-ai-center p-jc-between">
+            En total hay {{articlesShell ? articlesShell.length : 0}} artículos.
+          </div>
         </ng-template>
       </p-table>
 
     </div>
+
     <div class="col-md-3">
-      <p-card header="Acciones">
-        <h6>Sucursal: {{user.ubicacion}}</h6>
-        <h6>Apertura:{{this.cashModel.fecha}} </h6>
+
         <div class="row">
           <button pButton label="Inventario" icon="pi pi-shopping-cart" (click)="openProductsM()"
-        class="mr-2 custom-button"
-        [ngStyle]="{ padding: '1rem' }"></button>
+            class="mr-2 custom-button-inventario" [ngStyle]="{ padding: '1rem' }"></button>
+        </div>
 
+        <br>
+        <div class="row">
+          <button pButton label="Abrir caja" icon="pi pi-money-bill" (click)="openCashRegister()"
+            class="custom-button-abrir-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
         </div>
         <br>
         <div class="row">
-          <button pButton label="Abrir caja" icon="pi pi-money-bill"  (click)="openCashRegister()" class="custom-button p-button-help mr-2"   [ngStyle]="{  padding: '1rem'}"></button>
+          <button pButton label="Cerrar caja" icon="pi pi-folder" (click)="closeCashRegister()"
+            class="custom-button-cerrar-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
         </div>
         <br>
-          <div class="row">
-            <button pButton label="Cerrar caja" icon="pi pi-folder" (click)="closeCashRegister()"  class="custom-button p-button-help mr-2"   [ngStyle]="{  padding: '1rem'}"></button>
-          </div>
-          <br>
-          <div class="row">
-            <button pButton label="Informacion caja" icon="pi pi-desktop"  (click)="statusCashRegister()" class=" p-button-secondary mr-2"   [ngStyle]="{  padding: '1rem'}"></button>
-          </div>
-          <br>
-          <div class="row">
+        <div class="row">
+          <button pButton label="Informacion caja" icon="pi pi-desktop" (click)="statusCashRegister()"
+            class="custom-button-info-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+        </div>
+        <br>
+        <div class="row">
+          <button pButton label="Cancelar venta" icon="pi pi-trash" (click)="openModalAddCancel()"
+            class="custom-button-cancelar-venta mr-1" [ngStyle]="{  padding: '1rem'}"></button>
+        </div>
 
-            <button pButton label="Cancelar venta" icon="pi pi-trash" (click)="openModalAddCancel()" class="p-button-danger mr-2"  [ngStyle]="{  padding: '1rem'}"></button>
-          </div>
-
-      </p-card>
 
 
 
@@ -86,20 +102,25 @@
     </div>
   </div>
   <div class="container-fluid">
-   <!-- Tercera fila -->
-   <div class="row ">
-    <div class="col-md-6 custom-height d-flex justify-content-center align-items-center " style="background-color: orange; color: white;">
-        <span style="font-size: 3.5rem;">{{total| currency:'MXN' }}</span>
+    <!-- Tercera fila -->
+    <div class="row ">
+      <div class="col-md-6 custom-height d-flex justify-content-center align-items-center ">
+        <span style="font-size: 3.5rem;">{{total | currency:'MXN' }}</span>
+      </div>
+
+      <div class="col-md-4 custom-height d-flex justify-content-center align-items-center button-style"
+        (click)="showDialog()">
+        <i class="pi pi-money-bill" style="font-size: 2.5rem"></i>
+        <span style="font-size: 1.5rem; margin-left: 0.5rem;">PAGAR</span>
+      </div>
+
+      <div class="col-md-2 custom-height d-flex justify-content-center align-items-center button-style-cancel"
+        (click)="cancelarCompra()">
+        <i class="pi pi-file-excel" style="font-size: 2.5rem"></i>
+        <span style="font-size: 1.5rem; margin-left: 0.5rem;">Limpiar</span>
+      </div>
+
     </div>
-    <div class="col-md-4 custom-height d-flex justify-content-center align-items-center tooltip-container" style="background-color: green; color: white;" (click)="showDialog()">
-      <!-- Contenido de la segunda columna -->
-      <i class="pi pi-money-bill" style="font-size: 2.5rem"></i><span style="font-size: 1.5rem;">PAGAR</span>
-      <div class="tooltip">Click para pagar</div>
-    </div>
-    <div class="col-md-2 custom-height d-flex justify-content-center align-items-center" style="background-color: rgb(128, 127, 127); color: white;" (click)="cancelarCompra()">
-      <i class="pi pi-file-excel"  style="font-size: 2.5rem"></i> <span style="font-size: 1.5rem;">Limpiar</span>
-    </div>
-  </div>
 
   </div>
 </p-card>
@@ -120,12 +141,11 @@
 
 
 
-<p-dialog header="Finalizar Venta" [(visible)]="display" [style]="{width: '60vw'}">
+<p-dialog header="Finalizar Venta"  [(visible)]="display" [style]="{width: '60vw'}">
   <div class="container">
+
+
     <div class="row">
-      <div class="col-sm">
-        <h5>Vendedor:{{user.nombre}} {{ user.apellidoPaterno}} {{ user.apellidoMaterno }}</h5>
-      </div>
 
 
       <div class="col-sm">
@@ -163,6 +183,7 @@
     </div>
     <br>
     <div class="row">
+
       <div class="col-sm">
 
         <button pButton type="button" label="Multiple" icon="pi pi-money-bill"
@@ -209,8 +230,9 @@
 
           <div class="col-sm-4">
             <br>
-            <button pButton pRipple type="button" icon="pi pi-money-bill" label="Pagar Multiple"  [disabled]="isButtonDisabled"
-              class="p-button-rounded p-button-success" (click)="PostVentaRegistro('MULTIPLE')"></button>
+            <button pButton pRipple type="button" icon="pi pi-money-bill" label="Pagar Multiple"
+              [disabled]="isButtonDisabled" class="p-button-rounded p-button-success"
+              (click)="PostVentaRegistro('MULTIPLE')"></button>
 
 
           </div>
@@ -244,12 +266,16 @@
 
 
   <ng-template pTemplate="footer">
-    <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+      <div class="progress-dot"></div>
+    </div>
+
+
   </ng-template>
 </p-dialog>
 
 <p-dialog header="Cotización " [(visible)]="displayCotizacion" [style]="{width: '80vw'}">
-
   <div class="row" id="htmlData">
     <div class="row">
       <div class="col-sm-6">

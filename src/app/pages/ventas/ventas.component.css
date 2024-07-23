@@ -1,5 +1,274 @@
-button.custom-button {
-  background-color: var(--color-primary); /* Color de fondo primario */
-  transition: background-color 0.3s ease, transform 0.3s ease;
+
+
+.button-style {
+  background-color: #7380ec;
+  color: white;
+  border: 2px solid #4c5bd4;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.button-style:hover {
+  background-color: #4c5bd4;
+  transform: scale(1.05);
+}
+
+.button-style:active {
+  background-color: #4c5bd4;
+  transform: scale(0.95);
+}
+
+.button-style-cancel {
+  background-color: rgb(128, 127, 127);
+  color: white;
+  border: 2px solid rgb(96, 96, 96);
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.button-style-cancel:hover {
+  background-color: rgb(96, 96, 96);
+  transform: scale(1.05);
+}
+
+.button-style-cancel:active {
+  background-color: rgb(96, 96, 96);
+  transform: scale(0.95);
+}
+
+
+.custom-button-inventario {
+  background-color: #7380ec !important;
+  border: 2px solid #5c67d1 !important;
+  border-radius: 5px;
+  color: white !important;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.custom-button-inventario:hover {
+  background-color: #5c67d1 !important;
+  transform: scale(1.05);
+}
+
+.custom-button-inventario:active {
+  background-color: #5c67d1 !important;
+  transform: scale(0.95);
+}
+
+.custom-button-abrir-caja {
+  background-color: #4c5bd4 !important; /* Custom abrir caja button color */
+  border-color: #4c5bd4 !important;
+  color: white !important;
+}
+
+.custom-button-abrir-caja:hover {
+  background-color: #4c5bd4 !important;
+  transform: scale(1.05);
+}
+
+.custom-button-abrir-caja:active {
+  background-color: #4c5bd4 !important;
+  transform: scale(0.95);
+}
+
+.custom-button-cerrar-caja {
+  background-color: #4c5bd4 !important; /* Custom cerrar caja button color */
+  border-color: #4c5bd4 !important;
+  color: white !important;
+}
+
+.custom-button-cerrar-caja:hover {
+  background-color: #4c5bd4 !important;
+  transform: scale(1.05);
+}
+
+.custom-button-cerrar-caja:active {
+  background-color: #4c5bd4 !important;
+  transform: scale(0.95);
+}
+
+.custom-button-info-caja {
+  background-color: #565e64 !important; /* Custom info caja button color */
+  border-color: #565e64 !important;
+  color: white !important;
+}
+
+.custom-button-info-caja:hover {
+  background-color: #565e64 !important;
+  transform: scale(1.05);
+}
+
+.custom-button-info-caja:active {
+  background-color: #565e64 !important;
+  transform: scale(0.95);
+}
+
+.custom-button-cancelar-venta {
+  background-color: #dc3545 !important; /* Custom cancelar venta button color */
+  border-color: #b02a37 !important;
+  color: white !important;
+}
+
+.custom-button-cancelar-venta:hover {
+  background-color: #b02a37 !important;
+  transform: scale(1.05);
+}
+
+.custom-button-cancelar-venta:active {
+  background-color: #b02a37 !important;
+  transform: scale(0.95);
+}
+
+.mr-2 {
+  margin-right: 0.5rem !important;
+}
+
+
+.improved-input {
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.improved-input:hover, .improved-input:focus-within {
+  border-color: var(--color-secondary);
+}
+
+.improved-addon {
+  background-color: var(--color-primary);
+  color: white;
+  border-right: 2px solid var(--color-secondary);
+  transition: background-color 0.3s ease;
+}
+
+.improved-addon i {
+  font-size: 1.2rem;
+}
+
+.p-inputgroup input {
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.p-inputgroup input:focus {
+  box-shadow: 0 0 5px var(--color-secondary);
+}
+
+.p-inputgroup input::placeholder {
+  color: var(--color-primary);
+}
+
+/* Custom styles for the table */
+
+.header-row th {
+  background-color: var(--color-light);
+  color: var(--color-primary);
+  text-align: center;
+}
+
+.p-table .p-d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.p-table .p-button {
+  margin: 0 0.5rem;
+}
+
+.p-table .p-button-icon-only {
+  padding: 0.5rem;
+}
+
+.p-table .hover\:text-primary:hover {
+  color: var(--color-primary);
+}
+
+.p-table .p-inputnumber-button {
+  border: none;
+  background: none;
+}
+
+.p-table .p-inputnumber-button-down .pi-minus,
+.p-table .p-inputnumber-button-up .pi-plus {
+  color: var(--color-primary);
+}
+
+
+.col-md-3 {
+  box-shadow: 0px 4px 8px rgba(22, 31, 112, 0.2); /* Sombra ligera con color primario */
+  border-radius: 0.5rem; /* Opcional: añade bordes redondeados */
+  padding: 1rem; /* Opcional: añade padding interno para mayor separación */
+  background-color: var(--color-light); /* Opcional: color de fondo claro */
+}
+/* Contenedor de la barra de progreso */
+.progress-container {
+  position: relative;
+  width: 100%;
+  height: 8px; /* Ajusta la altura según tus necesidades */
+  background-color: var(--color-light); /* Fondo de la barra */
+  border-radius: 4px; /* Bordes redondeados para un aspecto moderno */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  overflow: hidden; /* Asegura que el contenido no se desborde */
+}
+
+/* Barra de progreso */
+.progress-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary)); /* Gradiente para un efecto moderno */
+  border-radius: 4px; /* Coincide con el borde redondeado del contenedor */
+  position: absolute;
+  top: 0;
+  left: -100%; /* Comienza fuera del contenedor */
+  animation: moveProgress 2s linear infinite; /* Animación continua */
+}
+
+/* Punto que salta sobre la barra de progreso */
+.progress-dot {
+  position: absolute;
+  top: 50%;
+  left: 0; /* Comienza dentro del contenedor a la izquierda */
+  width: 12px; /* Tamaño del punto */
+  height: 12px; /* Tamaño del punto */
+  background-color: var(--color-primary); /* Color del punto */
+  border-radius: 50%; /* Hace que el punto sea redondo */
+  transform: translateY(-50%); /* Centra el punto verticalmente */
+  animation: jumpDot 2s linear infinite; /* Animación continua para el punto */
+}
+
+/* Animación para mover la barra de progreso */
+@keyframes moveProgress {
+  0% {
+    left: -100%; /* Comienza fuera del contenedor a la izquierda */
+  }
+  100% {
+    left: 100%; /* Termina fuera del contenedor a la derecha */
+  }
+}
+
+/* Animación para hacer que el punto salte */
+@keyframes jumpDot {
+  0% {
+    left: 0; /* Comienza a la izquierda */
+    transform: translateY(-50%) translateY(0); /* En su posición inicial */
+  }
+  50% {
+    left: 50%; /* Se mueve al centro de la barra */
+    transform: translateY(-50%) translateY(-8px); /* Salta hacia arriba */
+  }
+  100% {
+    left: 100%; /* Termina a la derecha */
+    transform: translateY(-50%) translateY(0); /* Regresa a la posición inicial */
+  }
 }
 
