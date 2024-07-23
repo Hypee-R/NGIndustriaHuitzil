@@ -39,6 +39,6 @@
 }
 /* En styles.css o en el archivo de estilos del componente */
 .custom-button {
-  background-color: #007bff; /* Cambia el color al que prefieras */
+  background-color: var(--color-primary); /* Color de fondo primario */
   color: white; /* Asegura que el texto sea visible */
 }

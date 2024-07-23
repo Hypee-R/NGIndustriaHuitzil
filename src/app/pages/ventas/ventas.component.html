@@ -1,7 +1,7 @@
 <!-- <div [ngClass]="{'container': statusPanubicacion <= 10}">
   <div class="card shadow mb-5 bg-body rounded"> -->
 <!-- <span class="lstick"></span> -->
-<p-card header="Ventas">
+<p-card header="Vendedor:{{user.nombre}} ">
   <div class="row">
     <div class="col-md-9">
       <div class="col-6">
@@ -52,21 +52,25 @@
     </div>
     <div class="col-md-3">
       <p-card header="Acciones">
+        <h6>Sucursal: {{user.ubicacion}}</h6>
+        <h6>Apertura:{{this.cashModel.fecha}} </h6>
         <div class="row">
+          <button pButton label="Inventario" icon="pi pi-shopping-cart" (click)="openProductsM()"
+        class="mr-2 custom-button"
+        [ngStyle]="{ padding: '1rem' }"></button>
 
-          <button pButton label="Inventario" icon="pi pi-shopping-cart"   (click)="openProductsM()"  class="p-button-outlined p-button-succes mr-2"  [ngStyle]="{  padding: '1rem'}"></button>
         </div>
         <br>
         <div class="row">
-          <button pButton label="Abrir caja" icon="pi pi-money-bill"  (click)="openCashRegister()" class="p-button-outlined p-button-warning mr-2"   [ngStyle]="{  padding: '1rem'}"></button>
+          <button pButton label="Abrir caja" icon="pi pi-money-bill"  (click)="openCashRegister()" class="custom-button p-button-help mr-2"   [ngStyle]="{  padding: '1rem'}"></button>
         </div>
         <br>
           <div class="row">
-            <button pButton label="Cerrar caja" icon="pi pi-folder" (click)="closeCashRegister()"  class="p-button-outlined  p-button-help mr-2"   [ngStyle]="{  padding: '1rem'}"></button>
+            <button pButton label="Cerrar caja" icon="pi pi-folder" (click)="closeCashRegister()"  class="custom-button p-button-help mr-2"   [ngStyle]="{  padding: '1rem'}"></button>
           </div>
           <br>
           <div class="row">
-            <button pButton label="Informacion caja" icon="pi pi-desktop"  (click)="statusCashRegister()" class="p-button-outlined  p-button-secondary mr-2"   [ngStyle]="{  padding: '1rem'}"></button>
+            <button pButton label="Informacion caja" icon="pi pi-desktop"  (click)="statusCashRegister()" class=" p-button-secondary mr-2"   [ngStyle]="{  padding: '1rem'}"></button>
           </div>
           <br>
           <div class="row">

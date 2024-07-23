@@ -1,0 +1,5 @@
+button.custom-button {
+  background-color: var(--color-primary); /* Color de fondo primario */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
