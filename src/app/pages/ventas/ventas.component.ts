@@ -329,6 +329,7 @@ export class VentasComponent implements OnInit {
   }
 
   showDialog() {
+
     this.ventasService.getCaja().subscribe(resp => {
       console.log('Pagar Valida Caja ', resp);
       if (resp.exito) {
@@ -342,7 +343,7 @@ export class VentasComponent implements OnInit {
             this.toastr.warning('No hay Articulos por pagar', 'Atención!');
           } else {
             this.display = true;
-
+            this.isButtonDisabled = false; // Habilitar el botón al finalizar
           }
         }
 
