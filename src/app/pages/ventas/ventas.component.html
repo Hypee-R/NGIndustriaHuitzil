@@ -3,7 +3,20 @@
 <!-- <span class="lstick"></span> -->
 
 <p-card header="Vendedor:{{user.nombre}} " subheader="Apertura:{{this.cashModel?.fecha}} ">
+  <div class="row">
+    <div class="col-8 md:col-6">
+      <div>
+        <div class="input-container">
+          <span class="label">Selecciona un cliente: </span>
+          <p-dropdown [filter]="true"  [options]="clientes" [(ngModel)]="selectedcliente" placeholder="Cliente" optionLabel="nombre">
 
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+
+</div>
+<br>
   <div class="row">
 
     <div class="col-md-9">

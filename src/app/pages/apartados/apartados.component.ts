@@ -720,7 +720,8 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
-      .Feed(3)
+      .Feed(2)
+      .Feed(2)
       .Corte(1)
       .Iniciar()
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
@@ -761,7 +762,8 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
-      .Feed(3)
+      .Feed(2)
+      .Feed(2)
       .Corte(1)
     try {
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);

@@ -63,10 +63,10 @@ export class VentasComponent implements OnInit {
   totalMultipleT: number;
   //Busqueda CLIENTES
   clienteName = 'MOSTRADOR';
-  //resultsClientes:  CatProveedorModel[];
   selectedclienteNameAdvanced: CatClienteModel;
   filteredClients: CatClienteModel[];
   clientes: CatClienteModel[];
+  selectedcliente: CatClienteModel;
   //Busqueda CLIENTES
   cantidades: number[] = []
   RegistraVenta: VentaModel = new VentaModel();
