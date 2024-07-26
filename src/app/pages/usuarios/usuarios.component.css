@@ -18,7 +18,7 @@
 /* Estilo para el botón cuando está enfocado */
 .p-button-rounded:focus {
   outline: none; /* Elimina el contorno predeterminado */
-  box-shadow: 0 0 0 3px rgba(178, 113, 240, 0.452); /* Sombra de enfoque */
+  box-shadow: 0 0 0 3px var(--color-primary); /* Sombra de enfoque */
 }
 
 /* Estilo adicional específico para la clase 'bs-link-color' */

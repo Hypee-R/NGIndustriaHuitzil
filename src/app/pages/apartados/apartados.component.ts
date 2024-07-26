@@ -14,6 +14,7 @@ import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { formatDate } from '@angular/common';
 import ConectorPluginV3 from "src/app/services/ConectorPluginV3";
+import Swal from 'sweetalert2'
 @Component({
   selector: 'app-apartados',
   templateUrl: './apartados.component.html',
@@ -104,8 +105,8 @@ export class ApartadosComponent implements OnInit {
         { field: 'montotarjeta', header: 'TARJETA' },
         { field: 'montoefectivo', header: 'EFECTIVO' },
         { field: 'fecha', header: 'FECHA PAGO' },
-        { field: 'cantidad', header: 'CANTIDAD' }
-
+        { field: 'cantidad', header: 'MONTO' },
+        { field: '', header: '' }
       ];
     this.colsApartados =
 
@@ -656,6 +657,30 @@ export class ApartadosComponent implements OnInit {
       //Limpiar objetos al finalizar una compra correct
 
     }
+  }
+  deletePagoApartado(viewPago: PagoApartado){
+    Swal.fire({
+      title: `Eliminar el abono ${viewPago.noTicketPago} al por la cantidad ${viewPago.cantidad}?`,
+      icon: 'warning',
+      showDenyButton: true,
+      confirmButtonText: 'Guardar',
+      denyButtonText: `Cancelar`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+
+
+        this.apartadoService.deletePago(viewPago).subscribe(response => {
+          if(response.exito){
+            this.getPagos(this.selectedApartado)
+            this.selectedApartado.resto += viewPago.cantidad
+            Swal.fire(response.mensaje, '', 'success');
+          }
+        });
+      } else if (result.isDenied) {
+
+      }
+    })
   }
 
 
