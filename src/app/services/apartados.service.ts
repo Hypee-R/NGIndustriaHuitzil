@@ -26,15 +26,6 @@ export class ApartadosService {
   }
 
   getApartadosByUbicacion(): Observable<ResponseModel>{
-    // let sucursal ;
-    // if(this.variablesGL.getSucursal()== null || this.variablesGL.getSucursal()== "null" ||this.variablesGL.getSucursal()== undefined){
-    //   return this.http.get<ResponseModel>(environment.apiService + 'Apartados/ConsultaAll')
-    // .pipe(
-    //   map (res => res)
-    // );
-    // }else{
-    //   sucursal=this.variablesGL.getSucursal()
-    // }
 
     let sucursal ;
 
@@ -71,7 +62,6 @@ export class ApartadosService {
   }
 
   getPagoByApartado(idApartado : number): Observable<ResponseModel>{
-    // let sucursal = this.variablesGL.getSucursal() ?? "all";
      return this.http.get<ResponseModel>(environment.apiService + `PagosApartados/Consulta/Apartado?idApartado=${idApartado}`)
      .pipe(
        map (res => res)
@@ -79,7 +69,6 @@ export class ApartadosService {
    }
 
    getPagoByCaja(idCaja : number): Observable<ResponseModel>{
-    // let sucursal = this.variablesGL.getSucursal() ?? "all";
      return this.http.get<ResponseModel>(environment.apiService + `PagosApartados/Consulta/Caja?idCaja=${idCaja}`)
      .pipe(
        map (res => res)
@@ -101,4 +90,14 @@ export class ApartadosService {
        map (res => res)
      );
    }
+
+   deletePago(request: PagoApartado): Observable<ResponseModel>{
+    console.log(request)
+     return this.http.delete<ResponseModel>(environment.apiService + 'PagosApartados/EliminaPago',  { body: request })
+     .pipe(
+       map (res => res)
+     );
+   }
+
+
 }
