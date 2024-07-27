@@ -65,6 +65,7 @@ export class ApartadosComponent implements OnInit {
   totalLetra = "";
   cashModel: CajaModel;
   accion = '';
+  accionAdd = '';
   openCaja = true;
   sucursal = ''
   impresoraSeleccionada: string = "Caja";
@@ -160,6 +161,27 @@ export class ApartadosComponent implements OnInit {
     this.getClientes()
     this.getApartados()
     this.getExistencias();
+
+  }
+  getResultsClients(event) {
+    let filtered: CatClienteModel[] = [];
+  let query = event.query.toLowerCase(); // Asegúrate de que la consulta está en minúsculas
+
+  for (let i = 0; i < this.clientes.length; i++) {
+    let cliente = this.clientes[i];
+
+    // Verifica si 'nombreCompleto' o 'nombre' están definidos antes de llamar a 'toLowerCase'
+    let nombreCompleto = (cliente.nombreCompleto || (cliente.nombre || '') + ' ' + (cliente.apellidoPaterno || '') + ' ' + (cliente.apellidoMaterno || '')).toLowerCase();
+
+
+    if (nombreCompleto.indexOf(query) === 0) {
+      filtered.push(cliente);
+    }
+  }
+
+    this.filteredClients = filtered;
+
+    console.log('Filtered clients:', this.filteredClients);
   }
   onTipoPagoChange(event) {
     console.log(event.value.value)
@@ -192,6 +214,29 @@ export class ApartadosComponent implements OnInit {
     }, error => {
       this.toastr.error('Hubo un error al buscar cliente', 'Error!');
     })
+  }
+
+  onClienteSaved(cliente: CatClienteModel) {
+    console.log('Cliente guardado:', cliente);
+    cliente.nombreCompleto= (cliente.nombreCompleto || (cliente.nombre || '') + ' ' + (cliente.apellidoPaterno || '') + ' ' + (cliente.apellidoMaterno || '')).toLowerCase();
+    this.selectedClient = cliente;
+
+  // Asegúrate de que el cliente esté en la lista de clientes
+  if (!this.clientes.find(c => c.idCliente === cliente.idCliente)) {
+    this.clientes.push(cliente);
+  }
+  // Actualiza filteredClients para incluir el cliente guardado
+  this.filteredClients = [...this.clientes];
+  // Filtra los clientes para incluir el cliente guardado
+  this.filteredClients = this.filteredClients.filter(c => {
+    // Forma el nombre completo del cliente c
+    const nombreCompletoCliente = `${c.nombre || ''} ${c.apellidoPaterno || ''} ${c.apellidoMaterno || ''}`.toLowerCase();
+    // Forma el nombre completo del cliente guardado
+    const nombreCompletoGuardado = cliente.nombreCompleto?.toLowerCase() || '';
+    // Asegúrate de que nombreCompletoCliente esté definido antes de llamar a toLowerCase
+    return nombreCompletoCliente.includes(nombreCompletoGuardado);
+  });
+
   }
 
   getClientes() {
@@ -283,25 +328,7 @@ export class ApartadosComponent implements OnInit {
 
   }
 
-  getResultsClients(event) {
-    this.nameCliente = event.query
-    if (event.query) {
-      this.filteredClients
-        = this.clientes.filter(cliente => {
-          let name = cliente.nombre.toLocaleLowerCase() + " " +
-            cliente.apellidoPaterno.toLocaleLowerCase() + " " +
-            cliente.apellidoPaterno.toLocaleLowerCase()
-          cliente.nombreCompleto = name
-          if (name.includes(event.query.toLocaleLowerCase())) {
-            return cliente
-          }
-        }
-        )
-    }
-    else {
-      this.filteredClients = this.clientes
-    }
-  }
+
 
   async addApartado() {
     if (this.articulosApartados.length == 0) {
@@ -598,11 +625,19 @@ export class ApartadosComponent implements OnInit {
   }
 
   openCashRegister() {
-    //this.openProducts = ""
-    //this.accionAdd = ''
+    this.accionAdd = ''
     this.accion = 'Abrir';
     this.getCaja();
 
+  }
+
+  openModalAdd(){
+    this.accion = ''
+    this.accionAdd = "Agregar"
+
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
   }
 
   async geeneraTicketPago(data: PagoApartado) {

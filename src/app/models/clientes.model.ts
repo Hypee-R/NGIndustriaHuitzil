@@ -17,7 +17,6 @@ export class CatClienteModel{
       this.telefono2 = '';
       this.direccion = '';
       this.visible = true
-      this.nombreCompleto = this.nombre + "dsadsasd"
+      this.nombreCompleto = this.nombre
     }
   }
-  

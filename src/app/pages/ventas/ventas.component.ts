@@ -15,6 +15,7 @@ import ConectorPluginV3 from "src/app/services/ConectorPluginV3";
 import { CatClienteModel } from 'src/app/models/clientes.model';
 import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 import { CambiosDevolucionesModel } from 'src/app/models/cambios-devoluciones.model';
+import { ClientesService } from 'src/app/services/clientes.service';
 
 @Component({
   selector: 'app-ventas',
@@ -82,7 +83,7 @@ export class VentasComponent implements OnInit {
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
     private cambiosDevolucionesService: VentasService,
-    private cdr: ChangeDetectorRef
+    private clientesService : ClientesService
   ) {
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
@@ -115,9 +116,24 @@ export class VentasComponent implements OnInit {
 
     this.loading = false
     this.getCaja();
+    this.getClientes()
     this.user = JSON.parse(localStorage.getItem('usuario'));
   }
+  getClientes() {
+    this.clientes = []
+    this.clientesService.getClientesBySucursal().subscribe(response => {
+      if (response.exito) {
+       this.clientes = response.respuesta;
+      } else {
+        this.variablesGL.hideLoading();
 
+        this.toastr.error(response.mensaje, 'Error!');
+      }
+    }, err => {
+      this.variablesGL.hideLoading();
+     this.toastr.error('Hubo un error al buscar cliente', 'Error!');
+   });
+}
 
   getResultsClients(event) {
     let filtered: any[] = [];

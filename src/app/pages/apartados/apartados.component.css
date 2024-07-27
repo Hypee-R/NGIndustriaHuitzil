@@ -76,3 +76,39 @@
 .p-ripple {
   --ripple-color: rgba(0, 0, 0, 0.3); /* Color del efecto ripple */
 }
+
+/* Custom styles for the table */
+
+.header-row th {
+  background-color: var(--color-light);
+  color: var(--color-primary);
+  text-align: center;
+}
+
+.p-table .p-d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.p-table .p-button {
+  margin: 0 0.5rem;
+}
+
+.p-table .p-button-icon-only {
+  padding: 0.5rem;
+}
+
+.p-table .hover\:text-primary:hover {
+  color: var(--color-primary);
+}
+
+.p-table .p-inputnumber-button {
+  border: none;
+  background: none;
+}
+
+.p-table .p-inputnumber-button-down .pi-minus,
+.p-table .p-inputnumber-button-up .pi-plus {
+  color: var(--color-primary);
+}
