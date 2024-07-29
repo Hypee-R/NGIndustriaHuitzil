@@ -84,7 +84,7 @@ export class ApartadosService {
 
    agregaPago(request: PagoApartado): Observable<ResponseModel>{
 
-    console.log(request)
+
      return this.http.post<ResponseModel>(environment.apiService + 'PagosApartados/Agrega', request)
      .pipe(
        map (res => res)
@@ -92,12 +92,19 @@ export class ApartadosService {
    }
 
    deletePago(request: PagoApartado): Observable<ResponseModel>{
-    console.log(request)
+
      return this.http.delete<ResponseModel>(environment.apiService + 'PagosApartados/EliminaPago',  { body: request })
      .pipe(
        map (res => res)
      );
    }
+
+   cancelaApartado(request: CatApartadoModel): Observable<ResponseModel>{
+    return this.http.delete<ResponseModel>(environment.apiService + 'Apartados/CancelaApartado', { body: request })
+    .pipe(
+      map (res => res)
+    );
+  }
 
 
 }

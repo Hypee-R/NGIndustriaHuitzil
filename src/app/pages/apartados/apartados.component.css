@@ -112,3 +112,23 @@
 .p-table .p-inputnumber-button-up .pi-plus {
   color: var(--color-primary);
 }
+
+.custom-table .p-datatable-tbody > tr {
+  height: 1em; /* Altura de las filas */
+}
+.custom-table .p-datatable-tbody > tr > td {
+  font-size: 0.1em; /* Tamaño del texto */
+  padding: 0.5em; /* Espaciado dentro de las celdas */
+}
+.custom-table .p-datatable-thead > tr > th {
+  font-size: 0.5em; /* Tamaño del texto en el encabezado */
+  padding: 0.5em; /* Espaciado dentro de las celdas del encabezado */
+}
+.custom-table .p-datatable-thead > tr > th > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.p-button-rounded {
+  font-size: 0.3em; /* Ajuste del tamaño del texto en los botones */
+}

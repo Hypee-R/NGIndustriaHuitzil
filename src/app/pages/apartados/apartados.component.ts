@@ -363,7 +363,6 @@ export class ApartadosComponent implements OnInit {
         this.toastr.success(response.mensaje, 'Sucess');
         const respuestaValida = response.respuesta != null && response.respuesta !== '' ? response.respuesta :  this.apartado.noTicket;
         this.geeneraTicketApartado(this.apartado,respuestaValida);
-
         this.getApartados();
       }
       else {
@@ -718,6 +717,29 @@ export class ApartadosComponent implements OnInit {
     })
   }
 
+  deleteApartado(viewPago: CatApartadoModel){
+    Swal.fire({
+      title: `Cancelar el Apartado: ${viewPago.idApartado} ?`,
+      icon: 'warning',
+      showDenyButton: true,
+      confirmButtonText: 'cancelar Apartado',
+      denyButtonText: `Cerrar`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.apartadoService.cancelaApartado(viewPago).subscribe(response => {
+          if(response.exito){
+            this.getApartados()
+
+            Swal.fire(response.mensaje, '', 'success');
+          }
+        });
+      } else if (result.isDenied) {
+        //Swal.fire('No se cancelo el ap', '', 'success');
+      }
+    })
+  }
+
 
   async geeneraTicketApartado(data: CatApartadoModel,idApartadoCreado:number) {
     console.log(data.articulosApartados)
@@ -830,7 +852,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
 
       if (respuesta == true) {
         this.toastr.success( 'Exito!');
-
+   this.cadenaProductos = ""
       } else {
         console.log("Error: " + respuesta);
       }
@@ -839,7 +861,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       console.log(error)
       this.toastr.warning(error, 'Atencion!');
       //Limpiar objetos al finalizar una compra correct
-
+   this.cadenaProductos = ""
     }
   }
 
