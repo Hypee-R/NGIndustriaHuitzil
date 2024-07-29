@@ -45,13 +45,13 @@ export class InformesComponent implements OnInit {
     this.statusPantalla = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();
     if(status == 'celular'){
-      this.rows = 10;
+      this.rows = 6;
     }else if(status == 'tablet'){
-      this.rows = 10;
+      this.rows = 7;
     }else if(status == 'laptop'){
-      this.rows = 10;
+      this.rows = 7;
     }else{
-      this.rows = 10;
+      this.rows = 11;
     }
 
   }

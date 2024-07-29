@@ -104,8 +104,8 @@ export class CancelacionComponent implements OnInit, OnDestroy {
     if(event?.key == 'Enter' || event == null){
       if(this.ventaByNoTicket.length == 0){
 
-   
-   
+
+
           this.loadResultVenta = true;
 
           this.ventasService.searchVentaByNoTicket(this.noTicketVenta).subscribe(response => {
@@ -113,7 +113,7 @@ export class CancelacionComponent implements OnInit, OnDestroy {
               if(response.exito){
                 this.toastr.success(response.mensaje, 'Success!');
                 this.ventaByNoTicket = response.respuesta;
-                this.ventaByNoTicket[0].fecha = this.variablesGL.getFormatoFecha(this.ventaByNoTicket[0].fecha).toString();
+                this.ventaByNoTicket[0].fecha =this.ventaByNoTicket[0].fecha;
               }else{
                 this.toastr.warning(response.mensaje, 'Error!');
               }
@@ -128,7 +128,7 @@ export class CancelacionComponent implements OnInit, OnDestroy {
           //   this.loadResultVenta = false;
           // }, 800);
 
-      
+
       }else{
         this.toastr.error('Ya se han cargado los datos de la venta...', 'Error!');
       }
@@ -157,7 +157,7 @@ export class CancelacionComponent implements OnInit, OnDestroy {
 
       this.overlayProductos.show(event);
 
- 
+
   }
 
 
@@ -169,7 +169,7 @@ export class CancelacionComponent implements OnInit, OnDestroy {
 
 
       console.log('CambiosDevolucionModel --> ',cambioDevolucionRequest);
-      this.ventaByNoTicket[0].fecha=this.variablesGL.setFormatoFecha(this.ventaByNoTicket[0].fecha)
+      this.ventaByNoTicket[0].fecha=this.ventaByNoTicket[0].fecha
       this.cambioDevolucionService.postCancelacion(this.ventaByNoTicket[0]).subscribe(response => {
         console.log('data respuesta cambio devolucion ', response);
         if(response.exito){

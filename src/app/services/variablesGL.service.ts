@@ -32,6 +32,7 @@ export class VariablesService {
 
   getPantalla(): string {
     let width = window.screen.width;
+
     if (width < 768) return 'celular';
     else if (width > 768 && width <= 1200) return 'tablet';
     else if (width > 1200 && width < 1920 ) return 'laptop';

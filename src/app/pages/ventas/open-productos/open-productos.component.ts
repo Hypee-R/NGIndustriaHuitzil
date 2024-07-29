@@ -17,7 +17,7 @@ export class OpenProductosComponent implements OnInit {
     @Input() _articles: productoModel[];
     @Input() _articlesSelected: productoModel[];
     @Input() _nArticles : number;
-    @Output() _articulosS = new EventEmitter<productoModel>();  
+    @Output() _articulosS = new EventEmitter<productoModel>();
     loading: boolean = false;
     rows = 0;
     accion = '';
@@ -32,7 +32,6 @@ export class OpenProductosComponent implements OnInit {
     constructor(
       private toastr: ToastrService,
       private variablesGL: VariablesService,
-      private ventasService: VentasService,
       private inventarioService: InventarioService,
     ) {
       this.colsProducts = [
@@ -41,22 +40,22 @@ export class OpenProductosComponent implements OnInit {
         { field: 'talla',header: 'Talla'},
         // { field: 'precio',header:'Precio'},
         { field: 'existencia',header:'Existencia'}
-        
+
       ];
       this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
         this.visibleDialog = estado;
-  
+
         if(this.visibleDialog){
           if(this._accion){
             this.accion = this._accion;
           }
-          
+
           this.articles = this._articles
           this.articlesSelected = this._articlesSelected
          this.articlesAddSales = this._nArticles
         }
       });
-  
+
       let status = this.variablesGL.getPantalla();
       if(status == 'celular'){
         this.rows = 4;
@@ -68,20 +67,20 @@ export class OpenProductosComponent implements OnInit {
         this.rows = 11;
       }
     }
-  
+
     ngOnInit(): void {
-        
-      
+
+
     }
-  
+
     ngOnDestroy(): void {
       if(this.dialogSubscription){
         this.dialogSubscription.unsubscribe();
         this.articlesSelected=[]
       }
-      
+
     }
-  
+
     hideDialog() {
       this.submitted = false;
       this.articlesSelected = []
@@ -117,9 +116,9 @@ export class OpenProductosComponent implements OnInit {
   }
 
   closeModal(){
- 
+
     this.variablesGL.showDialog.next(false);
-  
+
   }
 
   reduceList(){
@@ -130,5 +129,5 @@ export class OpenProductosComponent implements OnInit {
       return acc;
     },[])
   }
-                 
+
 }

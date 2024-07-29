@@ -1,109 +1,274 @@
-/* Estilos para los contenedores */
-.producto, .caja, .acciones,.cajaclose {
-  margin-bottom: 20px; /* Agrega un margen inferior de 20px */
-  cursor: pointer; /* Cambia el cursor al pasar sobre los elementos */
+
+
+.button-style {
+  background-color: #7380ec;
+  color: white;
+  border: 2px solid #4c5bd4;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
-/* Estilos compartidos para los botones */
-.button-container {
-  border-radius: 8px; /* Borde redondeado */
-  overflow: hidden; /* Oculta cualquier contenido que se desborde */
-  transition: background-color 0.3s ease; /* Transición suave del color de fondo */
+.button-style:hover {
+  background-color: #4c5bd4;
+  transform: scale(1.05);
 }
 
-.button-container:hover {
-  background-color: rgba(0, 0, 0, 0.1); /* Cambia el color de fondo al pasar el cursor */
+.button-style:active {
+  background-color: #4c5bd4;
+  transform: scale(0.95);
 }
 
-.button-content {
-  padding: 20px; /* Espacio interior */
+.button-style-cancel {
+  background-color: rgb(128, 127, 127);
+  color: white;
+  border: 2px solid rgb(96, 96, 96);
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
-.font-bold {
-  font-weight: bold; /* Texto en negrita */
+.button-style-cancel:hover {
+  background-color: rgb(96, 96, 96);
+  transform: scale(1.05);
 }
 
-.text-white {
-  color: #fff; /* Color de texto blanco */
+.button-style-cancel:active {
+  background-color: rgb(96, 96, 96);
+  transform: scale(0.95);
 }
 
-/* Estilos específicos para cada tipo de contenedor */
-.producto .bg-purple-200 {
-  background-color: #7885f3; /* Color morado */
-}
-.caja .bg-blue-200 {
-  background-color: #4891cd; /* Color azul */
-}
-.cajaclose .bg-blue-250 {
-  background-color: #73b9f3; /* Color azul */
+
+.custom-button-inventario {
+  background-color: #7380ec !important;
+  border: 2px solid #5c67d1 !important;
+  border-radius: 5px;
+  color: white !important;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
-.acciones .bg-green-200 {
-  background-color: #5bd261; /* Color verde */
-}
-.acciones .bg-red-200 {
-  background-color: #ec6161; /* Color verde */
-}
-/* Estilos compartidos entre los contenedores */
-.p-3 {
-  padding: 0.75rem; /* 12px de relleno en todos los lados */
+.custom-button-inventario:hover {
+  background-color: #5c67d1 !important;
+  transform: scale(1.05);
 }
 
-.text-white {
-  color: #fff; /* Color de texto blanco */
+.custom-button-inventario:active {
+  background-color: #5c67d1 !important;
+  transform: scale(0.95);
 }
 
-.h-6rem {
-  height: 6rem; /* Altura de 6rem */
+.custom-button-abrir-caja {
+  background-color: #4c5bd4 !important; /* Custom abrir caja button color */
+  border-color: #4c5bd4 !important;
+  color: white !important;
 }
 
-.border-round {
-  border-radius: 8px; /* Borde redondeado con un radio de 8px */
+.custom-button-abrir-caja:hover {
+  background-color: #4c5bd4 !important;
+  transform: scale(1.05);
 }
 
-.m-0 {
-  margin: 0; /* Sin margen */
+.custom-button-abrir-caja:active {
+  background-color: #4c5bd4 !important;
+  transform: scale(0.95);
 }
-.custom-height {
-  height: 100px; /* Define la altura deseada en píxeles o cualquier otra unidad de medida */
+
+.custom-button-cerrar-caja {
+  background-color: #4c5bd4 !important; /* Custom cerrar caja button color */
+  border-color: #4c5bd4 !important;
+  color: white !important;
 }
-.tooltip-container {
+
+.custom-button-cerrar-caja:hover {
+  background-color: #4c5bd4 !important;
+  transform: scale(1.05);
+}
+
+.custom-button-cerrar-caja:active {
+  background-color: #4c5bd4 !important;
+  transform: scale(0.95);
+}
+
+.custom-button-info-caja {
+  background-color: #565e64 !important; /* Custom info caja button color */
+  border-color: #565e64 !important;
+  color: white !important;
+}
+
+.custom-button-info-caja:hover {
+  background-color: #565e64 !important;
+  transform: scale(1.05);
+}
+
+.custom-button-info-caja:active {
+  background-color: #565e64 !important;
+  transform: scale(0.95);
+}
+
+.custom-button-cancelar-venta {
+  background-color: #dc3545 !important; /* Custom cancelar venta button color */
+  border-color: #b02a37 !important;
+  color: white !important;
+}
+
+.custom-button-cancelar-venta:hover {
+  background-color: #b02a37 !important;
+  transform: scale(1.05);
+}
+
+.custom-button-cancelar-venta:active {
+  background-color: #b02a37 !important;
+  transform: scale(0.95);
+}
+
+.mr-2 {
+  margin-right: 0.5rem !important;
+}
+
+
+.improved-input {
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.improved-input:hover, .improved-input:focus-within {
+  border-color: var(--color-secondary);
+}
+
+.improved-addon {
+  background-color: var(--color-primary);
+  color: white;
+  border-right: 2px solid var(--color-secondary);
+  transition: background-color 0.3s ease;
+}
+
+.improved-addon i {
+  font-size: 1.2rem;
+}
+
+.p-inputgroup input {
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.p-inputgroup input:focus {
+  box-shadow: 0 0 5px var(--color-secondary);
+}
+
+.p-inputgroup input::placeholder {
+  color: var(--color-primary);
+}
+
+/* Custom styles for the table */
+
+.header-row th {
+  background-color: var(--color-light);
+  color: var(--color-primary);
+  text-align: center;
+}
+
+.p-table .p-d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.p-table .p-button {
+  margin: 0 0.5rem;
+}
+
+.p-table .p-button-icon-only {
+  padding: 0.5rem;
+}
+
+.p-table .hover\:text-primary:hover {
+  color: var(--color-primary);
+}
+
+.p-table .p-inputnumber-button {
+  border: none;
+  background: none;
+}
+
+.p-table .p-inputnumber-button-down .pi-minus,
+.p-table .p-inputnumber-button-up .pi-plus {
+  color: var(--color-primary);
+}
+
+
+.col-md-3 {
+  box-shadow: 0px 4px 8px rgba(22, 31, 112, 0.2); /* Sombra ligera con color primario */
+  border-radius: 0.5rem; /* Opcional: añade bordes redondeados */
+  padding: 1rem; /* Opcional: añade padding interno para mayor separación */
+  background-color: var(--color-light); /* Opcional: color de fondo claro */
+}
+/* Contenedor de la barra de progreso */
+.progress-container {
   position: relative;
+  width: 100%;
+  height: 8px; /* Ajusta la altura según tus necesidades */
+  background-color: var(--color-light); /* Fondo de la barra */
+  border-radius: 4px; /* Bordes redondeados para un aspecto moderno */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  overflow: hidden; /* Asegura que el contenido no se desborde */
 }
 
-.tooltip {
+/* Barra de progreso */
+.progress-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary)); /* Gradiente para un efecto moderno */
+  border-radius: 4px; /* Coincide con el borde redondeado del contenedor */
   position: absolute;
-  top: -60px; /* Ajusta según sea necesario para la posición vertical */
-  left: 50%; /* Ajusta según sea necesario para la posición horizontal */
-  background-color: rgba(0, 0, 0, 0.5); /* Color de fondo con más transparencia */
-  color: white; /* Color del texto */
-  font-size: 1rem; /* Tamaño de fuente */
-  padding: 8px 12px; /* Espaciado interno */
-  border-radius: 4px; /* Borde redondeado */
-  opacity: 1; /* Mantener siempre visible */
-  transform: translateX(-50%) translateY(-20px); /* Posición inicial */
-  animation: bounce 2s infinite; /* Animación de salto con un tiempo más largo */
+  top: 0;
+  left: -100%; /* Comienza fuera del contenedor */
+  animation: moveProgress 2s linear infinite; /* Animación continua */
 }
 
-.tooltip::after {
-  content: '';
+/* Punto que salta sobre la barra de progreso */
+.progress-dot {
   position: absolute;
-  top: 100%; /* Se alinea con el borde superior del tooltip */
-  left: 50%; /* Se alinea con el centro del tooltip */
-  margin-left: -8px; /* Ajusta según sea necesario para la posición horizontal */
-  border-width: 8px; /* Tamaño de la flecha */
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent; /* Color de la flecha con más transparencia */
+  top: 50%;
+  left: 0; /* Comienza dentro del contenedor a la izquierda */
+  width: 12px; /* Tamaño del punto */
+  height: 12px; /* Tamaño del punto */
+  background-color: var(--color-primary); /* Color del punto */
+  border-radius: 50%; /* Hace que el punto sea redondo */
+  transform: translateY(-50%); /* Centra el punto verticalmente */
+  animation: jumpDot 2s linear infinite; /* Animación continua para el punto */
 }
 
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateX(-50%) translateY(-20px); /* Posición inicial */
+/* Animación para mover la barra de progreso */
+@keyframes moveProgress {
+  0% {
+    left: -100%; /* Comienza fuera del contenedor a la izquierda */
   }
-  40% {
-    transform: translateX(-50%) translateY(-30px); /* Posición de rebote */
-  }
-  60% {
-    transform: translateX(-50%) translateY(-25px); /* Posición de rebote */
+  100% {
+    left: 100%; /* Termina fuera del contenedor a la derecha */
   }
 }
+
+/* Animación para hacer que el punto salte */
+@keyframes jumpDot {
+  0% {
+    left: 0; /* Comienza a la izquierda */
+    transform: translateY(-50%) translateY(0); /* En su posición inicial */
+  }
+  50% {
+    left: 50%; /* Se mueve al centro de la barra */
+    transform: translateY(-50%) translateY(-8px); /* Salta hacia arriba */
+  }
+  100% {
+    left: 100%; /* Termina a la derecha */
+    transform: translateY(-50%) translateY(0); /* Regresa a la posición inicial */
+  }
+}
+
