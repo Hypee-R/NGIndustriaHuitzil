@@ -25,7 +25,7 @@ export class VentasService {
     }else{
       sucursal=this.variablesGL.getSucursal()
     }
-    return this.http.get<ResponseModel>(environment.apiService + 'Ventas/Cash/Cajas?sucursal=${sucursal}')
+    return this.http.get<ResponseModel>(environment.apiService + `Ventas/Cash/Cajas?sucursal=${sucursal}`)
     .pipe(
       map (res => res)
     );
