@@ -6,26 +6,33 @@ import { ResponseModel } from '../models/response.model';
 import { CajaModel } from '../models/caja.model';
 import { CambiosDevolucionesModel } from '../models/cambios-devoluciones.model';
 import { VentaModel } from '../models/venta.model';
+import { VariablesService } from './variablesGL.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VentasService {
   user = JSON.parse(localStorage.getItem('usuario'));
-  constructor(
+  constructor(   private variablesGL: VariablesService,
     private http: HttpClient
   ){}
-  
+
   getallCajas():Observable<ResponseModel>{
- 
-    return this.http.get<ResponseModel>(environment.apiService + 'Ventas/Cash/Cajas')
+    console.log(this.variablesGL.getRol)
+    let sucursal ;
+    if(this.variablesGL.getRol()=== 'Administrador' ){
+      sucursal="all"
+    }else{
+      sucursal=this.variablesGL.getSucursal()
+    }
+    return this.http.get<ResponseModel>(environment.apiService + 'Ventas/Cash/Cajas?sucursal=${sucursal}')
     .pipe(
       map (res => res)
     );
   }
 
   getallVentasCajasDate(dateI:String,dateF : String):Observable<ResponseModel>{
- 
+
     return this.http.get<ResponseModel>(environment.apiService + `Ventas/Cash/CajasDate?dateI=${dateI}&dateF=${dateF}`)
     .pipe(
       map (res => res)

@@ -663,10 +663,20 @@ export class ApartadosComponent implements OnInit {
       .Feed(1)
       .EscribirTexto("Tipo Pago:" + data.tipoPagoValida)
       .Feed(1)
-      .EscribirTexto("Total:" + data.cantidad + "MXN")
+
+      .EscribirTexto("Total:$" + data.cantidad + "MXN")
       .Feed(2)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto(this.variablesGL.numeroALetras(data.cantidad, {
+        plural: 'PESOS MEXICANOS',
+        singular: 'PESO MEXICANO',
+        centPlural: 'CENTAVOS',
+        centSingular: 'CENTAVO'
+      }))
+      .Feed(2)
+      .EscribirTexto("Restante:$" + this.selectedApartado.resto)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .EscribirTexto(this.variablesGL.numeroALetras( this.selectedApartado.resto, {
         plural: 'PESOS MEXICANOS',
         singular: 'PESO MEXICANO',
         centPlural: 'CENTAVOS',
