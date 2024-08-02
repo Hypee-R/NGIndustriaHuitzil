@@ -8,7 +8,8 @@ import { jsPDF } from "jspdf";
 import html2canvas from 'html2canvas';
 import { productoModel } from 'src/app/models/productos.model';
 import { CajaModel } from 'src/app/models/caja.model';
-
+import autoTable from 'jspdf-autotable';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-informes',
   templateUrl: './informes.component.html',
@@ -24,11 +25,13 @@ export class InformesComponent implements OnInit {
   cols: any[] = [];
   fechaI;
   fechaF;
+  dateFormat: string = 'dd/mm/yy'; // Ajusta el formato de fecha según sea necesario
   openModal = ''
   constructor(
     public variablesGL: VariablesService,
     private toastr: ToastrService,
-    private ventasService : VentasService
+    private ventasService : VentasService,
+    private http: HttpClient
   ) {
 
     this.cols = [
@@ -57,10 +60,21 @@ export class InformesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.getVentas();
+    this.setDefaultDates();
     this.getCajas()
   }
+  setDefaultDates() {
+    const today = new Date();
+    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
+    this.fechaI = this.formatDate(lastMonth);
+    this.fechaF = this.formatDate(endOfMonth);
+  }
+
+  formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
   getVentas() {
     this.loading = true;
     this.ventasService.getVentas().subscribe(response => {
@@ -77,7 +91,15 @@ export class InformesComponent implements OnInit {
 
   getCajas() {
     this.loading = true;
-    this.ventasService.getallCajas().subscribe(response => {
+    if(this.fechaF != undefined && this.fechaI != undefined){
+      if(this.fechaI > this.fechaF){
+        this.toastr.error('La fecha inicial debe ser menor a la final!!', 'Fechas incorrectas');
+      }
+      else{
+
+
+        this.ventasService.getallVentasCajasDate(this.fechaI,this.fechaF).subscribe(response =>{
+    // this.ventasService.getallCajas().subscribe(response => {
       if(response.exito){
         console.log(response.respuesta)
         this.cajas = response.respuesta
@@ -86,7 +108,7 @@ export class InformesComponent implements OnInit {
     }, err =>{
       this.loading = false
     })
-
+  }}
   }
 
   SearchByDates(){
@@ -95,12 +117,11 @@ export class InformesComponent implements OnInit {
         this.toastr.error('La fecha inicial debe ser menor a la final!!', 'Fechas incorrectas');
       }
       else{
-       /// this.cajas = []
+
 
         this.ventasService.getallVentasCajasDate(this.fechaI,this.fechaF).subscribe(response =>{
           if(response.exito){
 
-           // console.log(response.respuesta)
             if(response.respuesta.length != 0){
               this.cajas = response.respuesta
               this.toastr.warning('Ventas Consultadas...', '!!!');
@@ -122,38 +143,8 @@ export class InformesComponent implements OnInit {
   }
 
   Excel() {
-
-    /*if(this.fechaF != undefined && this.fechaI != undefined){
-        console.log(this.fechaI)
-        console.log(this.fechaF)
-        if(this.fechaI > this.fechaF){
-          this.toastr.error('La fecha inicial debe ser menor a la final!!', 'Fechas incorrectas');
-        }
-        else{
-        this.cajas = []
-
-        this.ventasService.getallVentasCajasDate(this.fechaI,this.fechaF).subscribe(response =>{
-          if(response.exito){
-            this.cajas = response.respuesta
-            console.log(response.respuesta)
-            if(this.cajas.length != 0){
-              this.GenerateExcel()
-            }
-            else{
-              this.toastr.warning('No hay ventas esas fechas',"Error");
-              this.getVentas()
-            }
-
-        }
-      })
-    }
-    }*/
-    //else{
       this.toastr.warning('Descargando reporte de  ventas...', '!!!');
       this.GenerateExcel()
-      //console.log(this.cajas)
-    //}
-
    }
 
    getArticulosVenta(ticket : string){
@@ -193,40 +184,143 @@ export class InformesComponent implements OnInit {
    }
 
 
-   GenerateExcel(){
-    let total = 0
-    let subtotal = 0
-    let articulos = 0
-    this.cajas.forEach(venta => {
-      /*total += venta.total
-      subtotal += venta.subtotal
-      articulos += venta.noArticulos*/
-    });
-    let ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.cajas.map(row => ({
-    Caja:row.idCaja,
-    Usuario:row.idEmpleadoNavigation.nombre,
-    Ubicacion:row.idEmpleadoNavigation.ubicacion,
-    Fecha:row.fecha,
-    FechaCierre : row.fechaCierre,
-    MontoApertura : row.monto,
-    MontoCierre : row.montoCierre
-    //Nticket:row.noTicket,
-    //Ubicacion : row.u,
-    /*TipoVenta : row.tipoVenta,
-    NoArticulos : row.noArticulos,
-    Subtotal : row.subtotal,
-    Total: row.total,*/
+   GenerateReport() {
+    let totalMontoCierre = 0;
 
-   })), { header: ['Caja','Usuario','Ubicacion','Fecha','FechaCierre','MontoApertura','MontoCierre'] })
+    // Mapea las filas de las cajas
+    const rows = this.cajas.map(row => ({
+      Caja: row.idCaja,
+      Usuario: row.idEmpleadoNavigation.nombre,
+      Ubicacion: row.idEmpleadoNavigation.ubicacion,
+      Fecha: row.fecha,
+      FechaCierre: row.fechaCierre,
+      MontoApertura: "$" + row.monto + "MXN",
+      MontoCierre: "$" + row.montoCierre + "MXN",
+      TotalVentas: ''
+    }));
+
+    // Calcula el total de MontoCierre
+    this.cajas.forEach(venta => {
+      totalMontoCierre += venta.montoCierre - 1000;
+    });
+
+    // Añade una fila adicional con la suma de MontoCierre
+    rows.push({
+      Caja: 0,
+      Usuario: '',
+      Ubicacion: '',
+      Fecha: '',
+      FechaCierre: '',
+      MontoApertura: '',
+      MontoCierre: '',
+      TotalVentas: "$" + totalMontoCierre.toString() + "MXN"
+    });
+
+    // Crear el documento PDF
+    const doc = new jsPDF();
+
+    // Convertir el logo a Base64 y añadirlo al PDF
+    this.getBase64ImageFromUrl('assets/img/logo_huitzil.png').then(base64Image => {
+      doc.addImage(base64Image, 'PNG', 10, 10, 50, 20); // Ajusta la posición y tamaño según sea necesario
+
+      // Añadir el título
+      const title = `Reporte de Cajas\nDesde: ${this.fechaI ? new Date(this.fechaI).toLocaleDateString() : 'N/A'} Hasta: ${this.fechaF ? new Date(this.fechaF).toLocaleDateString() : 'N/A'}`;
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text(title, 70, 20); // Ajusta la posición según sea necesario
+
+      // Añadir la tabla
+      autoTable(doc, {
+        startY: 40, // Ajusta la posición de inicio de la tabla
+        head: [['Caja', 'Usuario', 'Ubicacion', 'Fecha', 'FechaCierre', 'MontoApertura', 'MontoCierre', 'TotalVentas']],
+        body: rows.map(row => [
+          row.Caja,
+          row.Usuario,
+          row.Ubicacion,
+          row.Fecha ? new Date(row.Fecha).toLocaleString() : '',
+          row.FechaCierre ? new Date(row.FechaCierre).toLocaleString() : '',
+          row.MontoApertura,
+          row.MontoCierre,
+          row.TotalVentas
+        ]),
+        margin: { top: 30 },
+        styles: { cellPadding: 2 },
+        headStyles: {
+          fillColor:  [115, 128, 236], // Usa la variable del color
+          textColor: [255, 255, 255], // Color del texto de los encabezados
+          fontStyle: 'bold'
+        }
+      });
+
+      // Guardar el PDF
+      doc.save('Informe_General_Ventas_' + new Date().toISOString() + '.pdf');
+
+      return this.toastr.success('Exportado con éxito!!', 'Éxito');
+    }).catch(error => {
+      console.error('Error al cargar la imagen:', error);
+      this.toastr.error('Error al cargar el logo', 'Error');
+    });
+  }
+
+
+
+   GenerateExcel() {
+    let totalMontoCierre = 0;
+
+    // Mapea las filas de las cajas
+    const rows = this.cajas.map(row => ({
+      Caja: row.idCaja,
+      Usuario: row.idEmpleadoNavigation.nombre,
+      Ubicacion: row.idEmpleadoNavigation.ubicacion,
+      Fecha: row.fecha,
+      FechaCierre: row.fechaCierre,
+      MontoApertura: row.monto,
+      MontoCierre: row.montoCierre,
+      TotalVentas: ''
+    }));
+
+    // Calcula el total de MontoCierre
+    this.cajas.forEach(venta => {
+      totalMontoCierre += venta.montoCierre-1000;
+
+    });
+
+    // Añade una fila adicional con la suma de MontoCierre
+    rows.push({
+      Caja: 0,
+      Usuario: '',
+      Ubicacion: '',
+      Fecha: '',
+      FechaCierre: '',
+      MontoApertura: 0,
+      MontoCierre: 0,
+      TotalVentas:"$"+totalMontoCierre.toString()+"MXN"
+    });
+
+    let ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(rows, { header: ['Caja', 'Usuario', 'Ubicacion', 'Fecha', 'FechaCierre', 'MontoApertura', 'MontoCierre','TotalVentas'] });
+
+    // Estilo de los encabezados
+    const headerRange = XLSX.utils.decode_range(ws['!ref']);
+    for (let C = headerRange.s.c; C <= headerRange.e.c; ++C) {
+      const address = XLSX.utils.encode_col(C) + '1';
+      if (!ws[address]) continue;
+      ws[address].s = {
+        font: {
+          bold: true,
+          color: { rgb: "FFFFFF" }
+        },
+        fill: {
+          fgColor: { rgb: "4F81BD" } // Color de fondo
+        }
+      };
+    }
+
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Informe de ventas');
-   /* XLSX.utils.sheet_add_json(ws, [
-      { Tola:"Totales " ,articulos : articulos,sub:subtotal,total: total}
-    ], {header: ["Total"], skipHeader: true, origin:  { r: this.cajas.length+1, c: 3 }});*/
-    XLSX.writeFile(wb, 'Informe_General_Ventas_'+new Date().toISOString()+'.csv',{compression : true})
-    return this.toastr.success('Exportado con exito!!', 'Exito');
-   }
+    XLSX.writeFile(wb, 'Informe_General_Ventas_' + new Date().toISOString() + '.xlsx', { compression: true });
 
+    return this.toastr.success('Exportado con éxito!!', 'Éxito');
+  }
 
    ExcelIndividual(articulos: productoModel[],ticket: String){
 
@@ -272,5 +366,22 @@ export class InformesComponent implements OnInit {
     }).then((docResult) => {
       docResult.save(`${new Date().toISOString()}_CotizaciónHuitzil.pdf`);
     })
+  }
+
+  getBase64ImageFromUrl(url: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.http.get(url, { responseType: 'blob' }).subscribe(
+        (data: Blob) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const base64 = reader.result as string;
+            resolve(base64);
+          };
+          reader.onerror = error => reject(error);
+          reader.readAsDataURL(data); // Convierte Blob a Base64
+        },
+        error => reject(error)
+      );
+    });
   }
 }

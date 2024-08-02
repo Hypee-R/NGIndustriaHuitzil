@@ -334,7 +334,7 @@
                   </div>
 
                   <br>
-                  <button pButton type="button" label="Hacer pago" class="p-button-info" (click)="addPago()"
+                  <button pButton type="button" label="Hacer pago" class="p-button-info" (click)="addPago()" *ngIf="this.selectedApartado.status!='CANCELADO'"
                     [disabled]="!hacerPago "></button>
                 </div>
 

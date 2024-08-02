@@ -32,8 +32,13 @@ export class VentasService {
   }
 
   getallVentasCajasDate(dateI:String,dateF : String):Observable<ResponseModel>{
-
-    return this.http.get<ResponseModel>(environment.apiService + `Ventas/Cash/CajasDate?dateI=${dateI}&dateF=${dateF}`)
+    let sucursal ;
+    if(this.variablesGL.getRol()=== 'Administrador' ){
+      sucursal="all"
+    }else{
+      sucursal=this.variablesGL.getSucursal()
+    }
+    return this.http.get<ResponseModel>(environment.apiService + `Ventas/Cash/CajasDate?dateI=${dateI}&dateF=${dateF}&sucursal=${sucursal}`)
     .pipe(
       map (res => res)
     );

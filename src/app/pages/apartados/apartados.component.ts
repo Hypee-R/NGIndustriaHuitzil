@@ -387,10 +387,6 @@ export class ApartadosComponent implements OnInit {
       this.toastr.warning('El apartado esta liquidado', 'Aviso');
       return
     }
-    // if (this.pagoApartado.fecha == undefined ) {
-    //   this.toastr.warning('Selecciona una fecha', 'Aviso');
-    //   return
-    // }
     if (this.pagoApartado.tipoPagoValida == "MULTIPLE") {
       this.pagoApartado.cantidad = this.pagoApartado.montoTarjeta + this.pagoApartado.montoEfectivo
     }
@@ -757,7 +753,6 @@ export class ApartadosComponent implements OnInit {
       element.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
       this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN"  + "|" + "$" +  element.subtotal + "MXN" + "\n".toString()
 
-
     });
 
 // Convertir la cadena de fecha a un objeto Date
@@ -782,6 +777,8 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .EscribirTexto("Fecha:" + fechaFormateada)
       .Feed(1)
       .EscribirTexto("Cliente:"+data.idCliente)
+      .Feed(1)
+      .EscribirTexto("Cliente Nombre:"+this.selectedClient.nombreCompleto)
       .Feed(1)
       .EscribirTexto("Tel Cliente:"+data.telefono)
       .Feed(1)
