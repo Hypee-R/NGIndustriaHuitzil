@@ -122,14 +122,14 @@
           <div class="col-5">
             <div class="field">
               <p-autoComplete [(ngModel)]="selectedClient" [suggestions]="filteredClients" placeholder="Selecciona cliente"
-                (completeMethod)="getResultsClients($event)" field="nombreCompleto" [dropdown]="true">
+                (completeMethod)="getResultsClients($event)" field="nombre" [dropdown]="true">
                 <ng-template let-cliente pTemplate="item">
                   <div class="cliente-item ">
                     <div>{{cliente.nombre }} {{cliente.apellidoPaterno}} {{cliente.apellidoMaterno}}</div>
                   </div>
                 </ng-template>
               </p-autoComplete>
-              <p *ngIf="filteredClients.length == 0 && nameCliente != undefined"> No hay un cliente con ese nombre</p>
+
             </div>
           </div>
           <div class="col-1">
