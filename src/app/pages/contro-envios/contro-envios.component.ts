@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { PrimeNGConfig } from 'primeng/api';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { MovimientosService } from 'src/app/services/movimientos.service';
 import { MovimientosInventarioModel } from 'src/app/models/movimientos-inventario.model';
