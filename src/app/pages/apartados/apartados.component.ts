@@ -331,6 +331,8 @@ export class ApartadosComponent implements OnInit {
 
 
   async addApartado() {
+
+    console.log(this.selectedClient)
     if (this.articulosApartados.length == 0) {
       this.toastr.warning('Selecciona al menos un articulo', 'Aviso!');
       return
