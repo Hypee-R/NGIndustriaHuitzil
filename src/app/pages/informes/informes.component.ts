@@ -220,9 +220,8 @@ export class InformesComponent implements OnInit {
     const doc = new jsPDF();
 
     // Convertir el logo a Base64 y añadirlo al PDF
-    this.getBase64ImageFromUrl('assets/img/logo_huitzil.png').then(base64Image => {
-      doc.addImage(base64Image, 'PNG', 10, 10, 50, 20); // Ajusta la posición y tamaño según sea necesario
-
+    this.getBase64ImageFromUrl('assets/img/only_logo_huitzil.png').then(base64Image => {
+      doc.addImage(base64Image, 'PNG', 10, 10, 25, 20); // Ajusta la posición y tamaño según sea necesario
       // Añadir el título
       const title = `Reporte de Cajas\nDesde: ${this.fechaI ? new Date(this.fechaI).toLocaleDateString() : 'N/A'} Hasta: ${this.fechaF ? new Date(this.fechaF).toLocaleDateString() : 'N/A'}`;
       doc.setFontSize(16);
