@@ -83,13 +83,13 @@ export class VentasComponent implements OnInit {
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
     private cambiosDevolucionesService: VentasService,
-    private clientesService : ClientesService
+    private clientesService: ClientesService
   ) {
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
 
       { field: 'cantidad', header: 'Cantidad' },
-     // { field: 'imagen', header: 'Imagen' },
+      // { field: 'imagen', header: 'Imagen' },
       { field: 'descripcion', header: 'Producto' },
       { field: 'precio', header: 'Precio' },
       { field: 'sku', header: 'SKU' }
@@ -123,7 +123,7 @@ export class VentasComponent implements OnInit {
     this.clientes = []
     this.clientesService.getClientesBySucursal().subscribe(response => {
       if (response.exito) {
-       this.clientes = response.respuesta;
+        this.clientes = response.respuesta;
       } else {
         this.variablesGL.hideLoading();
 
@@ -131,9 +131,9 @@ export class VentasComponent implements OnInit {
       }
     }, err => {
       this.variablesGL.hideLoading();
-     this.toastr.error('Hubo un error al buscar cliente', 'Error!');
-   });
-}
+      this.toastr.error('Hubo un error al buscar cliente', 'Error!');
+    });
+  }
 
   getResultsClients(event) {
     let filtered: any[] = [];
@@ -199,11 +199,11 @@ export class VentasComponent implements OnInit {
 
 
   addArticle(product: productoVentaModel, index: number) {
-    console.log(product,index)
+    console.log(product, index)
     this.articlesShell[index].cantidad += 1
     this.articulos += 1
     this.total += product.precio
-    console.log( this.total )
+    console.log(this.total)
     this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
       plural: 'PESOS MEXICANOS',
       singular: 'PESO MEXICANO',
@@ -449,26 +449,27 @@ export class VentasComponent implements OnInit {
       if (this.totalVenta > this.total) {
         const sobrante = this.totalVenta - this.total;
         this.totalMultipleF -= sobrante;
-        this.cambioVenta=sobrante
+        this.cambioVenta = sobrante
         this.RegistraVenta.total = this.totalVenta; // Asignar totalVenta a total si es mayor que total actual
       }
 
 
-        this.changePage();
-        this.RegistraVentaValid(tipoPago);
+      this.changePage();
+      this.RegistraVentaValid(tipoPago);
 
 
     }
     if (tipoPago == "EFECTIVO") {
-      console.info(this.totalVenta ,this.total - this.descuento)
+      console.info(this.totalVenta, this.total - this.descuento)
       if (this.totalVenta >= (this.total - this.descuento)) {
         this.changePage();
         this.RegistraVentaValid(tipoPago);
 
-       } else {
-       this.toastr.warning("Error el importe debe ser mayor o igual al total de la venta, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+      } else {
+        this.isButtonDisabled=false
+        this.toastr.warning("Error el importe debe ser mayor o igual al total de la venta, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
-       }
+      }
 
 
     }
@@ -476,14 +477,14 @@ export class VentasComponent implements OnInit {
       this.toastr.warning("Recuerda Validar el cobro en terminal la venta se registrara ", 'Atencion!');
       if (this.totalVenta == this.total - this.descuento) {
         this.changePage();
-        this.RegistraVentaValid(tipoPago);{
+        this.RegistraVentaValid(tipoPago); {
 
         }
 
-     } else {
-         this.toastr.error("Error el importe debe ser exacto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+      } else {
+        this.toastr.error("Error el importe debe ser exacto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
-       }
+      }
     }
   }
 
@@ -514,7 +515,7 @@ export class VentasComponent implements OnInit {
       vt.articulo = element;
 
       //Genera Cadena para Impresion Ticket con salto de pagina
-      this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN" + "|" + "$" +  vt.subtotal + "MXN" + "\n".toString()
+      this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN" + "|" + "$" + vt.subtotal + "MXN" + "\n".toString()
 
       this.ventaArticulo.push(vt);
     });
@@ -522,11 +523,25 @@ export class VentasComponent implements OnInit {
     const format = 'yyyy-MM-dd';
     const locale = 'en-US';
     const formattedDate = formatDate(new Date, format, locale);
+    // Obtener la fecha y hora actual
+    const currentDate = new Date();
+
+    // Obtener los últimos 2 dígitos del año (e.g., '24' para 2024)
+    const year = currentDate.getFullYear().toString().slice(-2);
+
+    // Obtener el mes en formato de 2 dígitos (e.g., '08' para agosto)
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+
+    // Obtener el día en formato de 2 dígitos (e.g., '26' para el día 26)
+    const day = currentDate.getDate().toString().padStart(2, '0');
+
+    // Generar un número aleatorio de 2 dígitos (entre 10 y 99)
+    const randomTwoDigits = Math.floor(Math.random() * 90 + 10).toString();
 
     this.RegistraVenta.idCaja = this.cashModel.idCaja;
     this.RegistraVenta.fecha = new Date;
     this.RegistraVenta.noArticulos = this.articlesShell.length
-    this.RegistraVenta.noTicket = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
+    this.RegistraVenta.noTicket = year + month + day + randomTwoDigits;
     this.RegistraVenta.subtotal = this.total;
     this.RegistraVenta.tipoPago = tipoPago;
     this.RegistraVenta.tipoVenta = "CONTADO";
@@ -574,13 +589,13 @@ export class VentasComponent implements OnInit {
           .EscribirTexto("_________________________________________")
           .Feed(1)
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
-          .EscribirTexto("Descuento:" +this.descuento + "MXN")
+          .EscribirTexto("Descuento:" + this.descuento + "MXN")
           .Feed(1)
-          .EscribirTexto("Subtotal:" +  this.RegistraVenta.subtotal+ "MXN")
+          .EscribirTexto("Subtotal:" + this.RegistraVenta.subtotal + "MXN")
           .Feed(1)
-          .EscribirTexto("Total:" + this.getDescuentoAplicado(this.total,this.descuento)+ "MXN")
+          .EscribirTexto("Total:" + this.getDescuentoAplicado(this.total, this.descuento) + "MXN")
           .Feed(1)
-          .EscribirTexto("Tipo Pago:" +this.getTotalmontoMultiple(this.RegistraVenta))
+          .EscribirTexto("Tipo Pago:" + this.getTotalmontoMultiple(this.RegistraVenta))
           .Feed(1)
           .EscribirTexto("Cambio:" + this.cambioVenta + "MXN")
           .Feed(1)
@@ -601,7 +616,7 @@ export class VentasComponent implements OnInit {
           .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
           // .Feed(2)
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-          .ImprimirCodigoDeBarrasCodabar( this.RegistraVenta.noTicket,100,2,12)
+          .ImprimirCodigoDeBarrasCodabar(this.RegistraVenta.noTicket, 100, 2, 12)
           // .Feed(2)
           .Feed(3)
           .Corte(1)
@@ -614,7 +629,7 @@ export class VentasComponent implements OnInit {
             this.isButtonDisabled = false; // Habilitar el botón al finalizar
             //Limpiar objetos al finalizar una compra correcta
             this.cadenaProductos = ""
-            this.RegistraVenta = new VentaModel();
+            this.RegistraVenta = null;
             this.ventaArticulo = [];
             this.articulos = 0
             this.total = 0
@@ -623,7 +638,7 @@ export class VentasComponent implements OnInit {
             this.totalMultipleF = 0;
             this.totalMultipleT = 0;
             this.activeState = [false];
-            this.totalVenta=0
+            this.totalVenta = 0
             this.toastr.success(resp.mensaje, 'Exito!');
             console.log("Impresión correcta");
             this.display = false;
@@ -637,7 +652,7 @@ export class VentasComponent implements OnInit {
           this.toastr.warning(error, 'Atencion!');
           //Limpiar objetos al finalizar una compra correcta
           this.cadenaProductos = ""
-          this.RegistraVenta = new VentaModel();
+          this.RegistraVenta = null;
           this.ventaArticulo = [];
           this.articulos = 0
           this.total = 0
@@ -669,35 +684,35 @@ export class VentasComponent implements OnInit {
   }
 
 
-//
-getDescuentoAplicado(total: number, descuento: number): number {
-  return total - descuento;
-}
-
-getTotalmontoMultiple(venta:VentaModel): string {
-  if (venta.tipoPago === 'MULTIPLE') {
-    const montoTarjeta = venta.tarjeta || 0; // Utiliza 0 si el monto de la tarjeta no está definido
-    const montoEfectivo = venta.efectivo || 0; // Utiliza 0 si el monto en efectivo no está definido
-    return `MULTIPLE:Tarjeta: ${montoTarjeta}, Efectivo: ${montoEfectivo}`;
-  } else {
-    return ` ${venta.tipoPago}`;
+  //
+  getDescuentoAplicado(total: number, descuento: number): number {
+    return total - descuento;
   }
-}
+
+  getTotalmontoMultiple(venta: VentaModel): string {
+    if (venta.tipoPago === 'MULTIPLE') {
+      const montoTarjeta = venta.tarjeta || 0; // Utiliza 0 si el monto de la tarjeta no está definido
+      const montoEfectivo = venta.efectivo || 0; // Utiliza 0 si el monto en efectivo no está definido
+      return `MULTIPLE:Tarjeta: ${montoTarjeta}, Efectivo: ${montoEfectivo}`;
+    } else {
+      return ` ${venta.tipoPago}`;
+    }
+  }
 
 
   changePage() {
     // console.log(this.totalVenta + ":" + this.total)
     // console.log(this.total -this.descuento)
 
-    if (this.totalVenta  > this.total-this.descuento) {
-      this.cambioVenta = Math.abs(this.total - this.totalVenta -this.descuento);
+    if (this.totalVenta > this.total - this.descuento) {
+      this.cambioVenta = Math.abs(this.total - this.totalVenta - this.descuento);
 
 
       this.toastr.success("Su cambio es :" + this.cambioVenta, 'Cambio!');
     } else {
       console.log("no es igual");
       this.cambioVenta = 0
-     // this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+      // this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
     }
 
