@@ -629,7 +629,7 @@ export class VentasComponent implements OnInit {
             this.isButtonDisabled = false; // Habilitar el botón al finalizar
             //Limpiar objetos al finalizar una compra correcta
             this.cadenaProductos = ""
-            this.RegistraVenta = null;
+            this.RegistraVenta = new VentaModel();
             this.ventaArticulo = [];
             this.articulos = 0
             this.total = 0
@@ -652,7 +652,7 @@ export class VentasComponent implements OnInit {
           this.toastr.warning(error, 'Atencion!');
           //Limpiar objetos al finalizar una compra correcta
           this.cadenaProductos = ""
-          this.RegistraVenta = null;
+          this.RegistraVenta = new VentaModel();
           this.ventaArticulo = [];
           this.articulos = 0
           this.total = 0
