@@ -150,6 +150,8 @@
 <!-- <app-add-cliente [_accion]="accionAdd" *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente> ya no se ocupa aqui la busqueda del cliente-->
 <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected"
   [_nArticles]="articulos" *ngIf="openProducts != ''" (_articulosS)="addProductVenta($event)"></app-open-productos>
+
+  
 <app-cancelacion [_accion]="accionCancelacion" [(_details)]="selectedCambio"
   [_allCambiosDevoluciones]="lstCambiosDevoluciones" (saveCambioDevolucion)="getCambiosyDevoluciones()"
   *ngIf="accionCancelacion != ''"></app-cancelacion>

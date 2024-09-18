@@ -238,19 +238,45 @@ export class VentasComponent implements OnInit {
     this.articlesShell = []
 
   }
+
   getArticulos() {
+    // Define los filtros iniciales
+    const initialFilters = {
+      queryString: '', // Puedes dejar esto vacío o proporcionar un valor predeterminado si lo deseas
+    //  sucursal: this.variablesGL.getSucursal(), // Obtiene la sucursal actual
+      sku: '', // Filtro inicial vacío
+      descripcion: '', // Filtro inicial vacío
+      talla: '', // Filtro inicial vacío
+      ubicacion: this.variablesGL.getSucursal(), // Filtro inicial vacío
+      page: 0, // Página inicial
+      size: 100 // Número de artículos por página
+    };
+  
+    // Muestra la carga mientras se hace la solicitud
     this.variablesGL.showLoading();
-    this.inventarioService.getArticulos().subscribe(response => {
+  
+    // Llama al servicio con los filtros iniciales
+    this.inventarioService.searchProductDemanda(initialFilters).subscribe(response => {
       if (response.exito) {
-        console.log(response.respuesta)
+        // Actualiza los artículos con la respuesta del servicio
         this.articles = response.respuesta;
+        console.log('Artículos iniciales:', this.articles);
         this.variablesGL.hideLoading();
+  
+        // Muestra el diálogo después de un breve retraso
         setTimeout(() => {
           this.variablesGL.showDialog.next(true);
         }, 100);
+      } else {
+        // Manejo de errores
+        this.variablesGL.hideLoading();
+        this.toastr.error(response.mensaje, 'Error!');
       }
     }, err => {
-      console.log(err)
+      // Manejo de errores en la solicitud
+      this.variablesGL.hideLoading();
+      this.toastr.error('Hubo un error al obtener los artículos', 'Error!');
+      console.log(err);
     });
   }
 

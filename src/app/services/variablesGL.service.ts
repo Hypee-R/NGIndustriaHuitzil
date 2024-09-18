@@ -85,6 +85,7 @@ export class VariablesService {
     return localStorage.getItem('sucursal');
   }
 
+  
   setSucursal(value: string){
     localStorage.removeItem('sucursal');
     localStorage.setItem('sucursal', value);

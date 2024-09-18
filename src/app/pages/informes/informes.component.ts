@@ -65,11 +65,17 @@ export class InformesComponent implements OnInit {
   }
   setDefaultDates() {
     const today = new Date();
-    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    //ultimo mes
+    // const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    // const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
-    this.fechaI = this.formatDate(lastMonth);
-    this.fechaF = this.formatDate(endOfMonth);
+    // this.fechaI = this.formatDate(lastMonth);
+    // this.fechaF = this.formatDate(endOfMonth);
+   //ultima semana
+const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7); // Hace 7 días
+
+this.fechaI = this.formatDate(lastWeek); // Fecha inicial: hace 7 días
+this.fechaF = this.formatDate(today);    // Fecha final: hoy
   }
 
   formatDate(date: Date): string {
