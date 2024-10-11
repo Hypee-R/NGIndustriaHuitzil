@@ -1,11 +1,14 @@
-<div [ngClass]="{'container': statusPantalla <= 10}">
+<!-- <div [ngClass]="{'container': statusPantalla <= 10}">
   <div class="card shadow mb-5 bg-body rounded">
     <div class="card-header text-uppercase">Inventario</div>
     <span class="lstick"></span>
     <div class="card-body">
       <div class="row">
-        <div class="col-12">
+        <div class="col-12"> -->
+
+
           <app-loading *ngIf="loading"></app-loading>
+
           <div *ngIf="!loading && listArticulos.length == 0">
             <p-toolbar styleClass="mb-4">
               <ng-template pTemplate="left">
@@ -26,15 +29,16 @@
           </div>
 
           <div *ngIf="!loading && listArticulos.length > 0">
-            <p-table #dt [value]="listArticulos" [columns]="cols" [rows]="rows" [paginator]="true"
-              [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true"
+            <p-table rowExpandMode="single" #dt [value]="listArticulos" [columns]="cols" [rows]="rows"
+              [paginator]="true" [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']"
               responsiveLayout="scroll" [(selection)]="selectedArticulos" [rowHover]="true" dataKey="idArticulo"
+
               currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Articulos"
               [showCurrentPageReport]="true" styleClass="p-datatable-sm">
               <ng-template pTemplate="caption">
                 <div class="flex align-items-center justify-content-between">
-                  <!-- <h5 class="m-0">Inventario de Articulos</h5>
-                                    <br> -->
+               <h5 class="m-0">Inventario </h5>
+                                    <br>
                   <div class="row">
                     <div class="col col-md-7">
                       <div class="row">
@@ -50,7 +54,6 @@
                           <input class="form-control " type="file" id="formFileDisabled" #fileImportInput
                             name="File Upload" id="txtFileUpload" (change)="fileChangeListener($event)" accept=".csv" />
 
-                          <!-- <p-fileUpload mode="basic" ccept=".csv"  id="formFileDisabled"   #fileImportInput name="File Upload"  id="txtFileUpload"   label="Importar" chooseLabel="Import" class="mr-2 inline-block"  (change)="fileChangeListener($event)"></p-fileUpload> -->
 
                         </div>
                         <div class="col">
@@ -77,7 +80,7 @@
                   <th style="width: 3em;"></th>
                   <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                     <div class="flex justify-content-center align-items-center"
-                      [ngStyle]="{'width': col.field != 'descripcion' ? '7em' : '13em'}">
+                      [ngStyle]="{'width': col.field != 'descripcion' ? '3em' : '12em'}">
                       {{col.header}}
                       <p-sortIcon [field]="col.field"></p-sortIcon>
                     </div>
@@ -97,14 +100,12 @@
                         (click)="deleteArticulo(rowData)" style="margin-left: 3px;"></button>
                     </div>
                   </td>
-                  <td *ngIf="rowData.imagen==''">
-                    <img src="https://huitzil.netlify.app/assets/img/only_logo_huitzil.png" width="40" height="40%"
-                      class="shadow-1" />
+                  <td *ngIf="rowData.imagen=='NA'  || rowData.imagen =='' ">
+                    <img src="../../../assets/img/iconNoImage.jpg" width="40" height="40%" class="shadow-1" />
 
                   </td>
 
-                  <td *ngIf="rowData.imagen!=''">
-
+                  <td *ngIf="rowData.imagen && rowData.imagen !== 'NA' && rowData.imagen !== ''">
                     <img [src]=rowData.imagen width="40" height="40%" class="shadow-1" />
                   </td>
 
@@ -117,15 +118,7 @@
                   <td>
                     {{rowData['existencia']}}
                   </td>
-                  <!-- <td>
-                                    {{rowData['fechaIngreso']}}
-                                  </td>
-                                  <td>
-                                    {{rowData['categoria']}}
-                                  </td>
-                                  <td>
-                                    {{rowData['unidad']}}
-                                  </td>-->
+
                   <td>
                     {{rowData['talla']}}
                   </td>
@@ -140,28 +133,17 @@
                     <button pButton pRipple icon="pi pi-tags" class="p-button-rounded p-button-rounded"
                       style="margin-left: 3px;" (click)="viewCodebar(rowData)"></button>
                   </td>
-                  <!-- <td>
-                                        <button pButton pRipple icon="pi pi-tags"
-                                            class="p-button-rounded p-button-rounded" style="margin-left: 3px;"
-                                            (click)="viewCodebar(rowData)"></button>
-                                    </td> -->
-                  <!-- <td>
-                                        <button pButton pRipple icon="pi pi-qrcode" class="p-button-rounded p-button-rounded"  style="margin-left: 3px;" (click)="imprimir()"></button>
-                                    </td> -->
+
                 </tr>
               </ng-template>
-              <!-- <ng-template pTemplate="summary">
-                            <div class="flex align-items-center justify-content-between">
-                                En total hay {{listUsuarios ? listUsuarios.length : 0 }} usuarios.
-                            </div>
-                        </ng-template> -->
+
             </p-table>
           </div>
           <app-add-articulo [_accion]="accion" [(_editproducto)]="selectedArticulo" (saveProducto)="getArticulos()"
             *ngIf="accion != ''"></app-add-articulo>
-        </div>
+  <!-- </div>
       </div>
     </div>
   </div>
 
-</div>
+</div> -->

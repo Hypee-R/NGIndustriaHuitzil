@@ -15,7 +15,7 @@ export class AddClienteComponent implements OnInit {
 
   @Input() _accion: string;
   @Input() _editCliente : CatClienteModel;
-  @Output() saveCliente: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() saveCliente: EventEmitter<CatClienteModel> = new EventEmitter<CatClienteModel>();
 
   submitted = false;
   visibleDialog: boolean;
@@ -69,7 +69,8 @@ export class AddClienteComponent implements OnInit {
 
   addCliente(){
     this.submitted = true;
-    if(this.cliente.nombre?.length > 2 ){
+
+    if(this.cliente.nombre?.length > 2 &&this.cliente.direccion !=''){
       console.log('datos validos!!');
       console.log('cliente ', this.cliente);
 
@@ -89,7 +90,9 @@ export class AddClienteComponent implements OnInit {
           this.toastr.success(response.mensaje, 'Exito!!');
           this.hideDialog();
           setTimeout(() => {
-            this.saveCliente.emit(true);
+            let clienteSave = new CatClienteModel();
+            clienteSave=response.respuesta
+            this.saveCliente.emit(clienteSave);
           }, 100);
       }else{
           this.toastr.error(response.mensaje, 'Ups!!');
@@ -103,10 +106,13 @@ export class AddClienteComponent implements OnInit {
   actualizarCliente(){
    this.clientesService.actualizaCliente(this.cliente).subscribe(response => {
       if(response.exito){
+        console.info(response.respuesta.idCliente)
           this.toastr.success(response.mensaje, 'Exito!!');
           this.hideDialog();
           setTimeout(() => {
-            this.saveCliente.emit(true);
+            let clienteSave = new CatClienteModel();
+            clienteSave=response.respuesta
+            this.saveCliente.emit(clienteSave);
           }, 100);
       }else{
           this.toastr.error(response.mensaje, 'Ups!!');

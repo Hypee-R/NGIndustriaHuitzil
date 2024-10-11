@@ -8,11 +8,11 @@
     border: 1px solid #ccc;
     border-radius: 5px;
   }
-  
+
   .left-column {
     /* Estilos para la primera columna */
   }
-  
+
   .right-column {
     /* Estilos para la segunda columna */
   }
@@ -35,4 +35,100 @@
 
 .button-content {
   padding: 20px; /* Espacio interior */
+}
+
+/* Estilo base para el botón */
+.p-button-rounded {
+  border-radius: 50%; /* Botón redondeado */
+  background-color: var(--color-primary); /* Color de fondo primario */
+  color: var(--color-white); /* Color del texto del ícono */
+  border: none; /* Sin borde */
+  padding: 0.5rem; /* Espaciado interno */
+  font-size: 1.2rem; /* Tamaño del ícono */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
+}
+
+/* Estilo para el botón cuando se pasa el mouse por encima */
+.p-button-rounded:hover {
+  background-color: var(--color-primary);/* Color de fondo en hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra en hover */
+}
+
+/* Estilo para el botón cuando está enfocado */
+.p-button-rounded:focus {
+  outline: none; /* Elimina el contorno predeterminado */
+  box-shadow: 0 0 0 3px rgba(178, 113, 240, 0.452); /* Sombra de enfoque */
+}
+
+/* Estilo adicional específico para la clase 'bs-link-color' */
+.bs-link-color {
+  background-color: var(--color-primary); /* Color de fondo si deseas sobrescribir el color primario */
+  color: var(--color-white); /* Color del texto del ícono */
+}
+
+/* Ajustes de tamaño y espaciado si es necesario */
+.r-2 {
+  width: 3rem; /* Ajusta el ancho del botón */
+  height: 3rem; /* Ajusta la altura del botón */
+}
+
+/* Estilo para el ripple */
+.p-ripple {
+  --ripple-color: rgba(0, 0, 0, 0.3); /* Color del efecto ripple */
+}
+
+/* Custom styles for the table */
+
+.header-row th {
+  background-color: var(--color-light);
+  color: var(--color-primary);
+  text-align: center;
+}
+
+.p-table .p-d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.p-table .p-button {
+  margin: 0 0.5rem;
+}
+
+.p-table .p-button-icon-only {
+  padding: 0.5rem;
+}
+
+.p-table .hover\:text-primary:hover {
+  color: var(--color-primary);
+}
+
+.p-table .p-inputnumber-button {
+  border: none;
+  background: none;
+}
+
+.p-table .p-inputnumber-button-down .pi-minus,
+.p-table .p-inputnumber-button-up .pi-plus {
+  color: var(--color-primary);
+}
+
+.custom-table .p-datatable-tbody > tr {
+  height: 1em; /* Altura de las filas */
+}
+.custom-table .p-datatable-tbody > tr > td {
+  font-size: 0.1em; /* Tamaño del texto */
+  padding: 0.5em; /* Espaciado dentro de las celdas */
+}
+.custom-table .p-datatable-thead > tr > th {
+  font-size: 0.5em; /* Tamaño del texto en el encabezado */
+  padding: 0.5em; /* Espaciado dentro de las celdas del encabezado */
+}
+.custom-table .p-datatable-thead > tr > th > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.p-button-rounded {
+  font-size: 0.3em; /* Ajuste del tamaño del texto en los botones */
 }

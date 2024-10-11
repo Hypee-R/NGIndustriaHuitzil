@@ -129,6 +129,7 @@ import { CancelacionComponent } from './ventas/cancelacion/cancelacion.component
         ConfirmPopupModule,
         AccordionModule,
         ChipModule,
+        DataViewModule,
         //NgxBarcode6Module,
         TabViewModule,
         PickListModule,

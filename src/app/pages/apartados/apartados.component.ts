@@ -14,6 +14,7 @@ import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { formatDate } from '@angular/common';
 import ConectorPluginV3 from "src/app/services/ConectorPluginV3";
+import Swal from 'sweetalert2'
 @Component({
   selector: 'app-apartados',
   templateUrl: './apartados.component.html',
@@ -64,6 +65,7 @@ export class ApartadosComponent implements OnInit {
   totalLetra = "";
   cashModel: CajaModel;
   accion = '';
+  accionAdd = '';
   openCaja = true;
   sucursal = ''
   impresoraSeleccionada: string = "Caja";
@@ -104,8 +106,8 @@ export class ApartadosComponent implements OnInit {
         { field: 'montotarjeta', header: 'TARJETA' },
         { field: 'montoefectivo', header: 'EFECTIVO' },
         { field: 'fecha', header: 'FECHA PAGO' },
-        { field: 'cantidad', header: 'CANTIDAD' }
-
+        { field: 'cantidad', header: 'MONTO' },
+        { field: '', header: '' }
       ];
     this.colsApartados =
 
@@ -159,6 +161,27 @@ export class ApartadosComponent implements OnInit {
     this.getClientes()
     this.getApartados()
     this.getExistencias();
+
+  }
+  getResultsClients(event) {
+    let filtered: CatClienteModel[] = [];
+  let query = event.query.toLowerCase(); // Asegúrate de que la consulta está en minúsculas
+
+  for (let i = 0; i < this.clientes.length; i++) {
+    let cliente = this.clientes[i];
+
+    // Verifica si 'nombreCompleto' o 'nombre' están definidos antes de llamar a 'toLowerCase'
+    let nombreCompleto = (cliente.nombreCompleto || (cliente.nombre || '') + ' ' + (cliente.apellidoPaterno || '') + ' ' + (cliente.apellidoMaterno || '')).toLowerCase();
+
+
+    if (nombreCompleto.indexOf(query) === 0) {
+      filtered.push(cliente);
+    }
+  }
+
+    this.filteredClients = filtered;
+
+    console.log('Filtered clients:', this.filteredClients);
   }
   onTipoPagoChange(event) {
     console.log(event.value.value)
@@ -191,6 +214,29 @@ export class ApartadosComponent implements OnInit {
     }, error => {
       this.toastr.error('Hubo un error al buscar cliente', 'Error!');
     })
+  }
+
+  onClienteSaved(cliente: CatClienteModel) {
+    console.log('Cliente guardado:', cliente);
+    cliente.nombreCompleto= (cliente.nombreCompleto || (cliente.nombre || '') + ' ' + (cliente.apellidoPaterno || '') + ' ' + (cliente.apellidoMaterno || '')).toLowerCase();
+    this.selectedClient = cliente;
+
+  // Asegúrate de que el cliente esté en la lista de clientes
+  if (!this.clientes.find(c => c.idCliente === cliente.idCliente)) {
+    this.clientes.push(cliente);
+  }
+  // Actualiza filteredClients para incluir el cliente guardado
+  this.filteredClients = [...this.clientes];
+  // Filtra los clientes para incluir el cliente guardado
+  this.filteredClients = this.filteredClients.filter(c => {
+    // Forma el nombre completo del cliente c
+    const nombreCompletoCliente = `${c.nombre || ''} ${c.apellidoPaterno || ''} ${c.apellidoMaterno || ''}`.toLowerCase();
+    // Forma el nombre completo del cliente guardado
+    const nombreCompletoGuardado = cliente.nombreCompleto?.toLowerCase() || '';
+    // Asegúrate de que nombreCompletoCliente esté definido antes de llamar a toLowerCase
+    return nombreCompletoCliente.includes(nombreCompletoGuardado);
+  });
+
   }
 
   getClientes() {
@@ -230,6 +276,7 @@ export class ApartadosComponent implements OnInit {
     this.hacerPago = apartado.resto != 0
     this.selectedApartado = apartado;
     this.pagoApartado = new PagoApartado()
+    this.pagoApartado.fecha = new Date() // Asignar la fecha actual en formato YYYY-MM-DD
     if (apartado.status != 'Entregado') {
       this.getCaja();
     }
@@ -281,36 +328,23 @@ export class ApartadosComponent implements OnInit {
 
   }
 
-  getResultsClients(event) {
-    this.nameCliente = event.query
-    if (event.query) {
-      this.filteredClients
-        = this.clientes.filter(cliente => {
-          let name = cliente.nombre.toLocaleLowerCase() + " " +
-            cliente.apellidoPaterno.toLocaleLowerCase() + " " +
-            cliente.apellidoPaterno.toLocaleLowerCase()
-          cliente.nombreCompleto = name
-          if (name.includes(event.query.toLocaleLowerCase())) {
-            return cliente
-          }
-        }
-        )
-    }
-    else {
-      this.filteredClients = this.clientes
-    }
-  }
+
 
   async addApartado() {
+
+    console.log(this.selectedClient)
     if (this.articulosApartados.length == 0) {
       this.toastr.warning('Selecciona al menos un articulo', 'Aviso!');
       return
     }
-    if (this.selectedClient == undefined) {
+    if (this.selectedClient === undefined ) {
       this.toastr.warning('Selecciona un cliente', 'Aviso!');
       return
     }
-
+    if (this.selectedClient.idCliente===undefined || this.selectedClient.idCliente === 0 ) {
+      this.toastr.warning('Selecciona un cliente', 'Aviso!');
+      return
+    }
 
     this.apartado.idCliente = this.selectedClient.idCliente
     this.apartado.articulosApartados = this.articulosApartados
@@ -323,7 +357,7 @@ export class ApartadosComponent implements OnInit {
     const locale = 'en-US';
     const formattedDate = formatDate(new Date, format, locale);
     this.apartado.noTicket = Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + Math.floor((Math.random() * (9 - 6 + 1)) + 6).toString() + formattedDate.replace(/(-)+/g, "").trim();;
-
+    //console.info( "APARTADO CLIENTE",this.apartado)
     await this.apartadoService.agregaApartado(this.apartado).subscribe(response => {
       if (response.exito) {
         console.info(response)
@@ -355,10 +389,6 @@ export class ApartadosComponent implements OnInit {
       this.toastr.warning('El apartado esta liquidado', 'Aviso');
       return
     }
-    if (this.pagoApartado.fecha == undefined || this.pagoApartado.fecha == "") {
-      this.toastr.warning('Selecciona una fecha', 'Aviso');
-      return
-    }
     if (this.pagoApartado.tipoPagoValida == "MULTIPLE") {
       this.pagoApartado.cantidad = this.pagoApartado.montoTarjeta + this.pagoApartado.montoEfectivo
     }
@@ -366,10 +396,7 @@ export class ApartadosComponent implements OnInit {
       this.toastr.warning('La cantidad debe ser mayor a 0', 'Aviso');
       return
     }
-    // if (this.pagoApartado.cantidad >= this.selectedApartado.resto) {
-    //   this.toastr.warning('La cantidad debe ser menor o igual  ' + this.selectedApartado.resto, 'Aviso');
-    //   return
-    // }
+
     if (this.pagoApartado.cantidad <= 0) {
       this.toastr.warning('La cantidad debe ser mayor que 0' + this.pagoApartado.cantidad, 'Aviso');
       console.error('La cantidad debe ser mayor que 0');
@@ -381,7 +408,7 @@ export class ApartadosComponent implements OnInit {
       console.error('La cantidad debe ser mayor que 0');
       return
     }
-
+    this.pagoApartado.fecha =new Date
     this.pagoApartado.idApartado = this.selectedApartado.idApartado
     this.selectedApartado.resto -= this.pagoApartado.cantidad
     this.pagoApartado.idCaja = this.cashModel.idCaja
@@ -436,6 +463,7 @@ export class ApartadosComponent implements OnInit {
   }
 
   addArticle(product: productoModel, index: number) {
+
     this.articulosApartados[index].cantidad += 1
     this.articulos += 1
     this.total += product.precio
@@ -594,11 +622,19 @@ export class ApartadosComponent implements OnInit {
   }
 
   openCashRegister() {
-    //this.openProducts = ""
-    //this.accionAdd = ''
+    this.accionAdd = ''
     this.accion = 'Abrir';
     this.getCaja();
 
+  }
+
+  openModalAdd(){
+    this.accion = ''
+    this.accionAdd = "Agregar"
+
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(true);
+    }, 100);
   }
 
   async geeneraTicketPago(data: PagoApartado) {
@@ -625,10 +661,20 @@ export class ApartadosComponent implements OnInit {
       .Feed(1)
       .EscribirTexto("Tipo Pago:" + data.tipoPagoValida)
       .Feed(1)
-      .EscribirTexto("Total:" + data.cantidad + "MXN")
+
+      .EscribirTexto("Total:$" + data.cantidad + "MXN")
       .Feed(2)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto(this.variablesGL.numeroALetras(data.cantidad, {
+        plural: 'PESOS MEXICANOS',
+        singular: 'PESO MEXICANO',
+        centPlural: 'CENTAVOS',
+        centSingular: 'CENTAVO'
+      }))
+      .Feed(2)
+      .EscribirTexto("Restante:$" + this.selectedApartado.resto)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .EscribirTexto(this.variablesGL.numeroALetras( this.selectedApartado.resto, {
         plural: 'PESOS MEXICANOS',
         singular: 'PESO MEXICANO',
         centPlural: 'CENTAVOS',
@@ -641,7 +687,7 @@ export class ApartadosComponent implements OnInit {
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
 
       if (respuesta == true) {
-        this.toastr.success(respuesta.mensaje, 'Exito!');
+        this.toastr.success( 'Exito!');
 
       } else {
         console.log("Error: " + respuesta);
@@ -654,13 +700,60 @@ export class ApartadosComponent implements OnInit {
 
     }
   }
+  deletePagoApartado(viewPago: PagoApartado){
+    Swal.fire({
+      title: `Eliminar el abono ${viewPago.noTicketPago} al por la cantidad ${viewPago.cantidad}?`,
+      icon: 'warning',
+      showDenyButton: true,
+      confirmButtonText: 'Guardar',
+      denyButtonText: `Cancelar`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+
+
+        this.apartadoService.deletePago(viewPago).subscribe(response => {
+          if(response.exito){
+            this.getPagos(this.selectedApartado)
+            this.selectedApartado.resto += viewPago.cantidad
+            Swal.fire(response.mensaje, '', 'success');
+          }
+        });
+      } else if (result.isDenied) {
+
+      }
+    })
+  }
+
+  deleteApartado(viewPago: CatApartadoModel){
+    Swal.fire({
+      title: `Cancelar el Apartado: ${viewPago.idApartado} ?`,
+      icon: 'warning',
+      showDenyButton: true,
+      confirmButtonText: 'cancelar Apartado',
+      denyButtonText: `Cerrar`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.apartadoService.cancelaApartado(viewPago).subscribe(response => {
+          if(response.exito){
+            this.getApartados()
+
+            Swal.fire(response.mensaje, '', 'success');
+          }
+        });
+      } else if (result.isDenied) {
+        //Swal.fire('No se cancelo el ap', '', 'success');
+      }
+    })
+  }
 
 
   async geeneraTicketApartado(data: CatApartadoModel,idApartadoCreado:number) {
     console.log(data.articulosApartados)
     data.articulosApartados.forEach(element => {
-      this.cadenaProductos += element.descripcion + " " + element.cantidad + " " + "$" + element.precio + "MXN" + "\n".toString()
-
+      element.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
+      this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN"  + "|" + "$" +  element.subtotal + "MXN" + "\n".toString()
 
     });
 
@@ -680,28 +773,28 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
       .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
       .Feed(1)
-      .EscribirTexto("***APARTADO***")
+      .EscribirTexto("***APARTADO SUCURSAL***")
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto("Fecha:" + fechaFormateada)
       .Feed(1)
       .EscribirTexto("Cliente:"+data.idCliente)
       .Feed(1)
-      .EscribirTexto("Tel Cliente:"+data.telefono)
+      .EscribirTexto("Cliente Nombre:"+this.selectedClient.nombreCompleto)
       .Feed(1)
-      .EscribirTexto("Fecha:" + fechaFormateada)
+      .EscribirTexto("Tel Cliente:"+data.telefono)
       .Feed(1)
       .EscribirTexto("Ticket Apartado:" + idApartadoCreado)
       .Feed(1)
-      .EscribirTexto("_____________________________________")
+      .EscribirTexto("_________________________________________")
       .Feed(1)
-      .EscribirTexto("ARTICULO | CANT| P/U|TOTAL")
+      .EscribirTexto("ARTICULO        | CANT |  P/U  |  TOTAL  ")
       .Feed(1)
-      .EscribirTexto("_____________________________________")
+      .EscribirTexto("_________________________________________")
       .Feed(1)
       .EscribirTexto(this.cadenaProductos)
       .Feed(1)
-      .EscribirTexto("_____________________________________")
+      .EscribirTexto("_________________________________________")
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
       .EscribirTexto("Total:" + data.total + "MXN")
@@ -718,15 +811,57 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .Feed(1)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
       .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
-      .Feed(3)
+      .Feed(2)
+      .Feed(2)
       .Corte(1)
-
+      .Iniciar()
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+      .Feed(1)
+      .EscribirTexto("***APARTADO CLIENTE***")
+      .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .EscribirTexto("Fecha:" + fechaFormateada)
+      .Feed(1)
+      .EscribirTexto("Cliente:"+data.idCliente)
+      .Feed(1)
+      .EscribirTexto("Tel Cliente:"+data.telefono)
+      .Feed(1)
+      .EscribirTexto("Ticket Apartado:" + idApartadoCreado)
+      .EscribirTexto("_________________________________________")
+      .Feed(1)
+      .EscribirTexto("ARTICULO        | CANT |  P/U            ")
+      .Feed(1)
+      .EscribirTexto("_________________________________________")
+      .Feed(1)
+      .EscribirTexto(this.cadenaProductos)
+      .Feed(1)
+      .EscribirTexto("_________________________________________")
+      .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
+      .EscribirTexto("Total:" + data.total + "MXN")
+      .Feed(1)
+      .EscribirTexto(this.variablesGL.numeroALetras(data.total, {
+        plural: 'PESOS MEXICANOS',
+        singular: 'PESO MEXICANO',
+        centPlural: 'CENTAVOS',
+        centSingular: 'CENTAVO'
+      }))
+      .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+      .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+      .Feed(1)
+      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+      .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
+      .Feed(2)
+      .Feed(2)
+      .Corte(1)
     try {
       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
 
       if (respuesta == true) {
-        this.toastr.success(respuesta.mensaje, 'Exito!');
-
+        this.toastr.success( 'Exito!');
+   this.cadenaProductos = ""
       } else {
         console.log("Error: " + respuesta);
       }
@@ -735,7 +870,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       console.log(error)
       this.toastr.warning(error, 'Atencion!');
       //Limpiar objetos al finalizar una compra correct
-
+   this.cadenaProductos = ""
     }
   }
 
