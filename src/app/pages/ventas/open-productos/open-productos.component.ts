@@ -137,7 +137,7 @@ export class OpenProductosComponent implements OnInit {
     });
   }
 
-  
+
   getUbicaciones() {
     this.loading = true;
     this.UbicacionesService.getUbicaciones().subscribe(response => {
@@ -245,7 +245,7 @@ export class OpenProductosComponent implements OnInit {
 
   filterByField(field: string, value: string) {
     // Actualiza el valor del filtro correspondiente
-    
+
 
     // Llama al método para obtener los resultados filtrados
     console.log(field,value)

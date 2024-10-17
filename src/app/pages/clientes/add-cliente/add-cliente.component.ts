@@ -6,6 +6,7 @@ import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
+import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 @Component({
   selector: 'app-add-cliente',
   templateUrl: './add-cliente.component.html',
@@ -24,6 +25,7 @@ export class AddClienteComponent implements OnInit {
   pattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
   listSucursales: UbicacionModel = new UbicacionModel();
   dialogSubscription: Subscription = new Subscription();
+  user: UsuarioAuthModel;
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -44,6 +46,10 @@ export class AddClienteComponent implements OnInit {
   ngOnInit(): void {
     //this.proveedor = this._editProveedor;
     this.getSucursales();
+
+    this.user = JSON.parse(localStorage.getItem('usuario'));
+    this.cliente.direccion=this.user.ubicacion
+    console.log(this.user)
   }
 
   ngOnDestroy(): void {

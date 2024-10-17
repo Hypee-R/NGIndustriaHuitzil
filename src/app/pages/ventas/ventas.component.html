@@ -17,7 +17,6 @@
     </div>
 
 </div> -->
-<br>
   <div class="row">
 
     <div class="col-md-9">
@@ -107,7 +106,7 @@
         <br>
         <div class="row">
           <button pButton label="Cancelar venta" icon="pi pi-trash" (click)="openModalAddCancel()"
-            class="custom-button-cancelar-venta mr-1" [ngStyle]="{  padding: '1rem'}"></button>
+            class="custom-button-cancelar-venta mr-2" [ngStyle]="{  padding: '1rem'}"></button>
         </div>
 
 
@@ -151,7 +150,7 @@
 <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected"
   [_nArticles]="articulos" *ngIf="openProducts != ''" (_articulosS)="addProductVenta($event)"></app-open-productos>
 
-  
+
 <app-cancelacion [_accion]="accionCancelacion" [(_details)]="selectedCambio"
   [_allCambiosDevoluciones]="lstCambiosDevoluciones" (saveCambioDevolucion)="getCambiosyDevoluciones()"
   *ngIf="accionCancelacion != ''"></app-cancelacion>
