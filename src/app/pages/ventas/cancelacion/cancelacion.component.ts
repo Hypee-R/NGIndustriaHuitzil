@@ -9,6 +9,7 @@ import { productoModel } from '../../../models/productos.model';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { ToastrService } from 'ngx-toastr';
 import { VentasService } from '../../../services/ventas.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cancelacion',
@@ -38,7 +39,7 @@ export class CancelacionComponent implements OnInit, OnDestroy {
   noTicketVenta: string = '';
   visibleDialog: boolean;
   dialogSubscription: Subscription;
-
+  selectedVenta: VentaModel | null = null; // Solo se permite una selección
   loadResultVenta: boolean;
   ventaArticleSelected: VentaArticuloModel;
   overlayProductos: OverlayPanel;
@@ -92,6 +93,7 @@ export class CancelacionComponent implements OnInit, OnDestroy {
   }
 
   initVariables(){
+    this.selectedVenta=null
     this.noTicketVenta = '';
     this.ventaByNoTicket = [];
     this.cambioDevolucion = null;
@@ -104,8 +106,8 @@ export class CancelacionComponent implements OnInit, OnDestroy {
     if(event?.key == 'Enter' || event == null){
       if(this.ventaByNoTicket.length == 0){
 
-   
-   
+
+
           this.loadResultVenta = true;
 
           this.ventasService.searchVentaByNoTicket(this.noTicketVenta).subscribe(response => {
@@ -113,7 +115,7 @@ export class CancelacionComponent implements OnInit, OnDestroy {
               if(response.exito){
                 this.toastr.success(response.mensaje, 'Success!');
                 this.ventaByNoTicket = response.respuesta;
-                this.ventaByNoTicket[0].fecha = this.variablesGL.getFormatoFecha(this.ventaByNoTicket[0].fecha).toString();
+               // this.ventaByNoTicket[0].fecha =this.ventaByNoTicket[0].fecha;
               }else{
                 this.toastr.warning(response.mensaje, 'Error!');
               }
@@ -128,7 +130,7 @@ export class CancelacionComponent implements OnInit, OnDestroy {
           //   this.loadResultVenta = false;
           // }, 800);
 
-      
+
       }else{
         this.toastr.error('Ya se han cargado los datos de la venta...', 'Error!');
       }
@@ -157,33 +159,69 @@ export class CancelacionComponent implements OnInit, OnDestroy {
 
       this.overlayProductos.show(event);
 
- 
+
   }
 
 
   onSaveCambioDevolucion(){
-    console.log('CambiosDevolucionModel --> ',this.ventaByNoTicket);
-    let cambioDevolucionRequest = {...this.cambioDevolucion};
-    cambioDevolucionRequest.fecha = this.variablesGL.setFormatoFecha(cambioDevolucionRequest.fecha);
 
 
+      console.log('CambiosDevolucionModel --> ',this.selectedVenta);
 
-      console.log('CambiosDevolucionModel --> ',cambioDevolucionRequest);
-      this.ventaByNoTicket[0].fecha=this.variablesGL.setFormatoFecha(this.ventaByNoTicket[0].fecha)
-      this.cambioDevolucionService.postCancelacion(this.ventaByNoTicket[0]).subscribe(response => {
-        console.log('data respuesta cambio devolucion ', response);
+      if (this.selectedVenta) {
+        // Mostrar alerta de confirmación antes de guardar
+        Swal.fire({
+          title: '¿Está seguro?',
+          text: "¡Desea cancelar esta venta!: "+this.selectedVenta.idVenta+ ' Con ticket: ' +this.selectedVenta.noTicket ,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, cancelar',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Implementa la lógica para guardar los cambios en el registro seleccionado
+            console.log(this.selectedVenta);
+                 this.cambioDevolucionService.postCancelacion(this.selectedVenta).subscribe(response => {
+
         if(response.exito){
-          this.toastr.success(response.mensaje, 'Exito!');
+          Swal.fire(
+            'Cancelada!',
+            'Los cambios han sido guardados.',
+            'success'
+          );
           this.variablesGL.showDialog.next(false);
           this.initVariables();
           this.saveCambioDevolucion.emit(true);
         }else{
-          this.toastr.error(response.mensaje, 'Error!');
+          Swal.fire(
+            'Cancelada!',
+            response.mensaje,
+            'success'
+          );
+
           this.initVariables();
         }
       })
 
+          }
+        });
+      } else {
+        // Manejo de caso cuando no hay ninguna venta seleccionada
+        console.error('No hay ninguna venta seleccionada.');
+        Swal.fire(
+          'Error',
+          'No hay ninguna venta seleccionada.',
+          'error'
+        );
+      }
+
+
+
+
   }
+
 
   setArticulosCambioDevolucion(newArticulo: productoModel){
       //Si el articulo no existe lo agrega, si existe aumenta la cantidad

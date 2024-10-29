@@ -3,9 +3,22 @@
     <ng-template pTemplate="content">
       <div class="field">
         <label for="usuario">Sucursal</label>
-        <p-dropdown class="p-background" [options]="listSucursales" [(ngModel)]="cliente.direccion" optionLabel="direccion" optionValue="direccion" [style]="{'width': '100%'}" placeholder="Selecciona una ubicacion"></p-dropdown>
-        <small class="p-error" *ngIf="submitted && !cliente.direccion">La Ubicacion es requerida.</small>
+        <p-dropdown
+
+        class="p-background"
+        [options]="listSucursales"
+        [(ngModel)]="cliente.direccion"
+        optionLabel="direccion"
+        optionValue="direccion"
+        [style]="{'width': '100%'}"
+        placeholder="Selecciona una ubicacion"
+        [required]="true"
+        name="direccion"
+        #direccion="ngModel"
+      ></p-dropdown>
+      <small class="p-error" *ngIf="submitted && cliente.direccion==''">La Ubicacion es requerida.</small>
     </div>
+
     <br>
         <div class="field">
             <label for="nombre">Nombre</label>

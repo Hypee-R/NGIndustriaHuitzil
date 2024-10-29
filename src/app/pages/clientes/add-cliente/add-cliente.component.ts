@@ -6,6 +6,7 @@ import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
+import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 @Component({
   selector: 'app-add-cliente',
   templateUrl: './add-cliente.component.html',
@@ -15,7 +16,7 @@ export class AddClienteComponent implements OnInit {
 
   @Input() _accion: string;
   @Input() _editCliente : CatClienteModel;
-  @Output() saveCliente: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() saveCliente: EventEmitter<CatClienteModel> = new EventEmitter<CatClienteModel>();
 
   submitted = false;
   visibleDialog: boolean;
@@ -24,6 +25,7 @@ export class AddClienteComponent implements OnInit {
   pattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
   listSucursales: UbicacionModel = new UbicacionModel();
   dialogSubscription: Subscription = new Subscription();
+  user: UsuarioAuthModel;
   constructor(
     private toastr: ToastrService,
     private variablesGL: VariablesService,
@@ -44,6 +46,10 @@ export class AddClienteComponent implements OnInit {
   ngOnInit(): void {
     //this.proveedor = this._editProveedor;
     this.getSucursales();
+
+    this.user = JSON.parse(localStorage.getItem('usuario'));
+    this.cliente.direccion=this.user.ubicacion
+    console.log(this.user)
   }
 
   ngOnDestroy(): void {
@@ -69,7 +75,8 @@ export class AddClienteComponent implements OnInit {
 
   addCliente(){
     this.submitted = true;
-    if(this.cliente.nombre?.length > 2 ){
+
+    if(this.cliente.nombre?.length > 2 &&this.cliente.direccion !=''){
       console.log('datos validos!!');
       console.log('cliente ', this.cliente);
 
@@ -89,7 +96,9 @@ export class AddClienteComponent implements OnInit {
           this.toastr.success(response.mensaje, 'Exito!!');
           this.hideDialog();
           setTimeout(() => {
-            this.saveCliente.emit(true);
+            let clienteSave = new CatClienteModel();
+            clienteSave=response.respuesta
+            this.saveCliente.emit(clienteSave);
           }, 100);
       }else{
           this.toastr.error(response.mensaje, 'Ups!!');
@@ -103,10 +112,13 @@ export class AddClienteComponent implements OnInit {
   actualizarCliente(){
    this.clientesService.actualizaCliente(this.cliente).subscribe(response => {
       if(response.exito){
+        console.info(response.respuesta.idCliente)
           this.toastr.success(response.mensaje, 'Exito!!');
           this.hideDialog();
           setTimeout(() => {
-            this.saveCliente.emit(true);
+            let clienteSave = new CatClienteModel();
+            clienteSave=response.respuesta
+            this.saveCliente.emit(clienteSave);
           }, 100);
       }else{
           this.toastr.error(response.mensaje, 'Ups!!');

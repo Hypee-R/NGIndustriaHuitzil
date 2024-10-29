@@ -1,4 +1,5 @@
 import { UsuarioModel } from "./usuarios.model";
+import { VentaModel } from "./venta.model";
 
 export class CajaModel{
   idCaja: number;
@@ -8,6 +9,7 @@ export class CajaModel{
   fechaCierre: string;
   montoCierre: number;
   idEmpleadoNavigation : UsuarioModel
+  venta: VentaModel[];
   constructor(){
     this.idCaja = 0;
     this.idEmpleado = 0;

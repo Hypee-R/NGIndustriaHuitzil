@@ -24,6 +24,15 @@
     --card-padding: 1.8rem;
     --padding-1: 1.2rem;
     --box-shadow: 0 2rem 3rem var(--color-light);
+    --color-secondary: #4c5bd4;
+    --color-tertiary: #a5b3fc;
+    --color-quaternary: #d4d7ff;
+    --color-light: #f4f5ff;
+    --color-accent-1: #fcf4d9;
+    --color-accent-2: #e7fcd4;
+    --color-accent-3: #fcd4ec;
+    --color-danger: #ec7373;
+    --color-success: #73ec9f;
 }
 
 
@@ -235,7 +244,7 @@ body {
 }
 
 .p-datatable .p-datatable-thead>th {
-    background: var(--color-white) !important;
+    background: var(--color-dark) !important;
     color: var(--color-dark) !important;
 }
 

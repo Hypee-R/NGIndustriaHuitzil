@@ -60,18 +60,21 @@ export class InventarioComponent implements OnInit {
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();
+console.info("STATUS->",status)
+console.info("STATUS pantalla->",this.statusPantalla)
     if(status == 'celular'){
       this.rows = 6;
     }else if(status == 'tablet'){
       this.rows = 7;
     }else if(status == 'laptop'){
-      this.rows = 4;
+      this.rows = 7;
     }else{
       this.rows = 11;
     }
 
   }
   ngOnInit() {
+
     this.getArticulos();
 
   }
@@ -98,7 +101,7 @@ export class InventarioComponent implements OnInit {
     this.loading = true;
     this.inventarioService.getArticulos().subscribe(response => {
       if (response.exito) {
-        console.log(response.respuesta)
+        //console.log(response.respuesta)
         this.listArticulos = response.respuesta;
         this.loading = false;
         for (let art of this.listArticulos) {

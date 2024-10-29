@@ -107,10 +107,12 @@
     .contenidoNormal {
         width: calc(100vw - 10.5vw);
         margin-left: 10.5vw;
+        overflow: scroll;
     }
     .contenido-chico {
         width: calc(100vw - 3.4vw);
         margin-left: 3.4vw;
+        overflow: scroll;
     }
 }
 
@@ -128,10 +130,12 @@
     .contenidoNormal {
         width: calc(100vw - 15.5vw);
         margin-left: 15.5vw;
+        overflow: scroll;
     }
     .contenido-chico {
         width: calc(100vw - 4.5vw);
         margin-left: 4.5vw;
+        overflow: scroll;
     }
 }
 

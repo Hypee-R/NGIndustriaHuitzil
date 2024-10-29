@@ -1,417 +1,406 @@
-<div [ngClass]="{'container': statusPanubicacion <= 10}">
-  <div class="card shadow mb-5 bg-body rounded">
-    <div class="card-header text-uppercase">Ventas</div>
-    <!-- <span class="lstick"></span> -->
-    <div class="card-body position-relative">
-      <div class="row">
-        <div class="col-md-8">
-          <div class="row">
-            <div class="row">
-              <div class="col-8 md:col-6">
-                <div class="p-inputgroup">
-                  <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
-                  <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras"
-                    [(ngModel)]="queryString" autofocus (change)="onchangeShear()">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" [columns]="cols" [rows]="rows"
-                [paginator]="true" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
-                currentPageReportTemplate="Mostrando {first} a {last}  productos" [showCurrentPageReport]="true">
-                <ng-template pTemplate="header" let-columns>
-                  <tr class="header-row">
-                    <th style="width: 1rem">
-                    </th>
-                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                      <div class="flex justify-content-center align-items-center"
-                        [ngStyle]="{'width': col.field == 'nombre' ? '6em' : '6em'}">
-                        {{col.header}}
-                      </div>
-                    </th>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
-                  <tr>
-                    <td>
-                      <div style="display: inline-flex">
-                        <button pButton pRipple icon="pi pi-minus" class="p-button-rounded p-button-danger"
-                          (click)="deleteProduct(rowData,i)"></button>
-                        <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success"
-                          (click)="addArticle(rowData,i)" style="margin-left: 3px;"></button>
-                      </div>
-                    </td>
-                    <td *ngFor="let col of columns">
-                      <ng-container *ngIf="col.field === 'precio'; else otherField">
-                        {{ rowData[col.field] | currency:'MXN':'symbol':'1.2-2' }}
-                      </ng-container>
-                      <ng-template #otherField>
-                        {{ rowData[col.field] }}
-                      </ng-template>
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-            </div>
+<!-- <div [ngClass]="{'container': statusPanubicacion <= 10}">
+  <div class="card shadow mb-5 bg-body rounded"> -->
+<!-- <span class="lstick"></span> -->
 
-            <!-- Tercera fila -->
-            <div class="row position-absolute fixed-bottom mb-0 w-100">
-              <div class="col-md-6 custom-height d-flex justify-content-center align-items-center" style="background-color: orange; color: white;">
-                <!-- <i class="pi pi-dollar" style="font-size: 2.5rem"> -->
+<p-card header="Vendedor:{{user.nombre}} " subheader="Apertura:{{this.cashModel?.fecha}} ">
+  <!-- TODO:DESCOMENTAR CUANDO ESTE LISTO -->
+  <!-- <div class="row">
+    <div class="col-8 md:col-6">
+      <div>
+        <div class="input-container">
+          <span class="label">Selecciona un cliente: </span>
+          <p-dropdown [filter]="true"  [options]="clientes" [(ngModel)]="selectedcliente" placeholder="Cliente" optionLabel="nombre">
 
-                  <span style="font-size: 2.5rem;">{{total| currency:'MXN' }}</span>
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
 
-                  <!-- <span style="font-size: 1.0rem;">{{totalLetra }}</span> -->
+</div> -->
+  <div class="row">
 
-                <!-- Contenido de la primera columna -->
+    <div class="col-md-9">
+      <div class="col-6">
+        <div class="p-inputgroup improved-input">
+          <span class="p-inputgroup-addon improved-addon"><i class="pi pi-search"></i></span>
+          <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras"
+            [(ngModel)]="queryString" autofocus (change)="onchangeShear()">
+        </div>
+
+
+      </div>
+      <br>
+      <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" [columns]="cols" [rows]="rows"
+        [paginator]="true" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
+        currentPageReportTemplate="Mostrando {first} a {last}  productos">
+
+        <!-- Header template -->
+        <ng-template pTemplate="header" let-columns>
+          <tr class="header-row">
+            <th style="width: 1rem"></th>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+              <div class="flex justify-content-center align-items-center"
+                [ngStyle]="{'width': col.field != 'descripcion' ? '3em' : '8em'}">
+                {{col.header}}
               </div>
-              <div class="col-md-3 custom-height d-flex justify-content-center align-items-center tooltip-container" style="background-color: green; color: white;" (click)="showDialog()">
-                <!-- Contenido de la segunda columna -->
-                <i class="pi pi-money-bill" style="font-size: 2.5rem"></i><span style="font-size: 1.5rem;">PAGAR</span>
-                <div class="tooltip">Click para pagar</div>
+            </th>
+          </tr>
+        </ng-template>
+
+        <!-- Body template -->
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
+          <tr>
+            <td>
+              <div style="display: inline-flex">
+                <button (click)="deleteProduct(rowData,i)" type="button" pButton icon="pi pi-minus"
+                  class="p-button-icon-only p-button-text text-600 hover:text-primary p-inputnumber-button p-inputnumber-button-down">
+                </button>
+                <button (click)="addArticle(rowData,i)" type="button" pButton icon="pi pi-plus"
+                  class="p-button-icon-only p-button-text text-600 hover:text-primary p-inputnumber-button p-inputnumber-button-up">
+                </button>
               </div>
-              <div class="col-md-3 custom-height d-flex justify-content-center align-items-center" style="background-color: red; color: white;" (click)="cancelarCompra()">
-                <i class="pi pi-trash"  style="font-size: 2.5rem"></i> <span style="font-size: 1.5rem;">CANCELAR</span>
-              </div>
-            </div>
+            </td>
+            <td *ngFor="let col of columns">
+              <ng-container *ngIf="col.field === 'precio'; else otherField">
+                {{ rowData[col.field] | currency:'MXN':'symbol':'1.2-2' }}
+              </ng-container>
+              <ng-template #otherField>
+                {{ rowData[col.field] }}
+              </ng-template>
+            </td>
+          </tr>
+        </ng-template>
+
+        <!-- Summary template -->
+        <ng-template pTemplate="summary">
+          <div class="p-d-flex p-ai-center p-jc-between">
+            En total hay {{articlesShell ? articlesShell.length : 0}} artículos.
+          </div>
+        </ng-template>
+      </p-table>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="row">
+          <button pButton label="Inventario" icon="pi pi-shopping-cart" (click)="openProductsM()"
+            class="mr-2 custom-button-inventario" [ngStyle]="{ padding: '1rem' }"></button>
+        </div>
+
+        <br>
+        <div class="row">
+          <button pButton label="Abrir caja" icon="pi pi-money-bill" (click)="openCashRegister()"
+            class="custom-button-abrir-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+        </div>
+        <br>
+        <div class="row">
+          <button pButton label="Cerrar caja" icon="pi pi-folder" (click)="closeCashRegister()"
+            class="custom-button-cerrar-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+        </div>
+        <br>
+        <div class="row">
+          <button pButton label="Informacion caja" icon="pi pi-desktop" (click)="statusCashRegister()"
+            class="custom-button-info-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+        </div>
+        <br>
+        <div class="row">
+          <button pButton label="Cancelar venta" icon="pi pi-trash" (click)="openModalAddCancel()"
+            class="custom-button-cancelar-venta mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+        </div>
+
+
+
+
+
+    </div>
+  </div>
+  <div class="container-fluid">
+    <!-- Tercera fila -->
+    <div class="row ">
+      <div class="col-md-6 custom-height d-flex justify-content-center align-items-center ">
+        <span style="font-size: 3.5rem;">{{total | currency:'MXN' }}</span>
+      </div>
+
+      <div class="col-md-4 custom-height d-flex justify-content-center align-items-center button-style"
+        (click)="showDialog()">
+        <i class="pi pi-money-bill" style="font-size: 2.5rem"></i>
+        <span style="font-size: 1.5rem; margin-left: 0.5rem;">PAGAR</span>
+      </div>
+
+      <div class="col-md-2 custom-height d-flex justify-content-center align-items-center button-style-cancel"
+        (click)="cancelarCompra()">
+        <i class="pi pi-file-excel" style="font-size: 2.5rem"></i>
+        <span style="font-size: 1.5rem; margin-left: 0.5rem;">Limpiar</span>
+      </div>
+
+    </div>
+
+  </div>
+</p-card>
+
+
+
+
+<!-- </div>
+
+</div> -->
+<app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
+<!-- <app-add-cliente [_accion]="accionAdd" *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente> ya no se ocupa aqui la busqueda del cliente-->
+<app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected"
+  [_nArticles]="articulos" *ngIf="openProducts != ''" (_articulosS)="addProductVenta($event)"></app-open-productos>
+
+
+<app-cancelacion [_accion]="accionCancelacion" [(_details)]="selectedCambio"
+  [_allCambiosDevoluciones]="lstCambiosDevoluciones" (saveCambioDevolucion)="getCambiosyDevoluciones()"
+  *ngIf="accionCancelacion != ''"></app-cancelacion>
+
+
+
+<p-dialog header="Finalizar Venta"  [(visible)]="display" [style]="{width: '60vw'}">
+  <div class="container">
+
+
+    <div class="row">
+
+
+      <div class="col-sm">
+        <h5>Total de articulos: {{articulos}}</h5>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+        <button pButton type="button" label="Tarjeta" icon="pi pi-credit-card"
+          class="p-button-rounded p-button-warning p-button-lg" badge="8" badgeClass="p-badge-info"
+          (click)="PostVentaRegistro('TARJETA')" [disabled]="isButtonDisabled"></button>
+      </div>
+      <div class="col-sm">
+        <app-discount-selector (discountSelected)="onDiscountSelected($event)"></app-discount-selector>
+
+      </div>
+
+    </div>
+
+    <br>
+    <div class="row">
+      <div class="col-sm">
+        <button pButton type="button" label="Efectivo" icon="pi pi-money-bill"
+          class="p-button-rounded p-button-secondary p-button-lg" badge="8" badgeClass="p-badge-info"
+          (click)="PostVentaRegistro('EFECTIVO')" [disabled]="isButtonDisabled"></button>
+      </div>
+      <div class="col-sm">
+        <h5>Subtotal:<button pButton pRipple icon="pi pi-dollar" type="button" class="p-button-rounded p-button-warning"
+            label="{{this.total}}"></button> </h5>
+
+
+      </div>
+
+    </div>
+    <br>
+    <div class="row">
+
+      <div class="col-sm">
+
+        <button pButton type="button" label="Multiple" icon="pi pi-money-bill"
+          class="p-button-rounded p-button-success  p-button-lg" badge="8" badgeClass="p-badge-info"
+          [icon]="activeState[0] ? 'pi pi-minus' : 'pi pi-plus'" (click)="toggle(0)"
+          styleClass="p-button-text"></button>
+
+
+      </div>
+      <div class="col-sm">
+
+        <h3>TOTAL: <button pButton pRipple icon="pi pi-dollar" type="button" class="p-button-rounded p-button-danger"
+            label="{{this.total-this.descuento}}"></button> </h3>
+        <span style="font-size: 1rem;">{{totalLetra }}</span>
+      </div>
+
+    </div>
+    <p-accordion>
+      <p-accordionTab header="Datos de Pago Multiple" [(selected)]="activeState[0]">
+
+        <div class="row">
+
+          <div class="col-sm-4">
+            <br>
+            <span class="p-float-label">
+
+              <p-inputNumber [(ngModel)]="totalMultipleT" id="float-input1" (change)="changePage()"></p-inputNumber>
+              <label for="float-input1">Tarjeta</label>
+            </span>
 
 
           </div>
 
+          <div class="col-sm-4">
+
+            <br>
+            <span class="p-float-label">
+
+              <p-inputNumber [(ngModel)]="totalMultipleF" id="float-input2" (change)="changePage()"></p-inputNumber>
+              <label for="float-input2">Efectivo</label>
+            </span>
+
+          </div>
+
+          <div class="col-sm-4">
+            <br>
+            <button pButton pRipple type="button" icon="pi pi-money-bill" label="Pagar Multiple"
+              [disabled]="isButtonDisabled" class="p-button-rounded p-button-success"
+              (click)="PostVentaRegistro('MULTIPLE')"></button>
 
 
+          </div>
         </div>
-        <div class="col-md-4">
-          <p-panel>
-            <ng-template pTemplate="header">
-              <span class="text-primary font-semibold text-xl">Acciones</span>
-            </ng-template>
-            <div class="row">
-              <div class="col-md-6"> <!-- Dos columnas en una fila -->
-                <!-- Producto -->
-                <div class="producto" (click)="openProductsM()">
-                  <div class="button-container bg-purple-200">
-                    <div class="button-content">
-                      <div class="font-bold w-full mb-1"><span>Inventario</span></div>
-                      <div class="text-white font-bold w-full flex align-items-center py-1"><i
-                          class="pi pi-shopping-cart" style="font-size: 24px;"></i></div>
-                    </div>
-                  </div>
-                </div>
+      </p-accordionTab>
 
-                <!-- Caja -->
-                <div class="caja" (click)="openCashRegister()">
-                  <div class="button-container bg-blue-200">
-                    <div class="button-content">
-                      <div class="font-bold w-full mb-1"><span>Abrir Caja</span></div>
-                      <div class="text-white font-bold w-full flex align-items-center py-1"><i class="pi pi-inbox"
-                          style="font-size: 24px;"></i></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    </p-accordion>
+    <br>
 
-              <div class="col-md-6"> <!-- Dos columnas en una fila -->
-                <!-- Cerrar Caja -->
-                <div class="cajaclose" (click)="closeCashRegister()">
-                  <div class="button-container bg-blue-250">
-                    <div class="button-content">
-                      <div class="font-bold w-full mb-1"><span>Cerrar Caja</span></div>
-                      <div class="text-white font-bold w-full flex align-items-center py-1"><i class="pi pi-credit-card"
-                          style="font-size: 24px;"></i></div>
-                    </div>
-                  </div>
-                </div>
+    <div class="row">
+      <div class="col-sm">
+        <h5>SU PAGO : </h5>
+        <div class="p-inputgroup">
+          <span class="p-inputgroup-addon">$</span>
+          <input type="number" pInputText placeholder="Ingresar monto" [(ngModel)]="this.totalVenta"
+            (change)="changePage()">
 
-                <!-- Acciones -->
-                <div class="acciones" (click)="statusCashRegister()">
-                  <div class="button-container bg-green-200">
-                    <div class="button-content">
-                      <div class="font-bold w-full mb-1"><span>Estado Caja</span></div>
-                      <div class="text-white font-bold w-full flex align-items-center py-1">
-                        <i class="pi pi-desktop" style="font-size: 24px; margin-right: 10px;"></i>
-                        <!-- Icono de cotización -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="acciones" (click)="openModalAddCancel()">
-                  <div class="button-container bg-red-200">
-                    <div class="button-content">
-                      <div class="font-bold w-full mb-1"><span>Cancelar Venta</span></div>
-                      <div class="text-white font-bold w-full flex align-items-center py-1">
-                        <i class="pi pi-ticket" style="font-size: 24px; margin-right: 10px;"></i>
-                        <!-- Icono de cotización -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
+          <span class="p-inputgroup-addon">.00</span>
+        </div>
+      </div>
+      <div class="col-sm">
+
+        <h5>SU CAMBIO: </h5>
+        <button pButton pRipple icon="pi pi-sync" type="button" label="Success"
+          class="p-button-rounded p-button-success p-button-lg" label=" {{this.cambioVenta}}"></button>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <ng-template pTemplate="footer">
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+      <div class="progress-dot"></div>
+    </div>
+
+
+  </ng-template>
+</p-dialog>
+
+<p-dialog header="Cotización " [(visible)]="displayCotizacion" [style]="{width: '80vw'}">
+  <div class="row" id="htmlData">
+    <div class="row">
+      <div class="col-sm-6">
+        <img src="assets/img/logo_huitzil.png" alt="" height="100" width="200">
+      </div>
+      <div class="col-sm-6">
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-sm-6">
+
+        <p>Documento de Cotización sin valor</p>
+      </div>
+      <div class="col-sm-6">
+        <p>FECHA:<span id="fecha">{{CurrentDate | date:'dd/MM/yyyy'}}</span></p>
+      </div>
+
+    </div>
+    <hr>
+    <div class="row">
+
+      <div class="col-sm-6">
+        <p *ngIf=" this.selectedclienteNameAdvanced.nombre!=undefined">Cliente:
+          {{this.selectedclienteNameAdvanced.nombre+" "+this.selectedclienteNameAdvanced.apellidoPaterno}}
+        </p>
+        <p *ngIf=" this.selectedclienteNameAdvanced.nombre==undefined">Cliente: {{this.clienteName}}</p>
+        <p *ngIf=" this.selectedclienteNameAdvanced.direccion!=undefined">Calle:
+          {{this.selectedclienteNameAdvanced.direccion}}</p>
+        <p *ngIf=" this.selectedclienteNameAdvanced.direccion==undefined">Calle: "N/A"</p>
+        <p *ngIf=" this.selectedclienteNameAdvanced.telefono1!=undefined">Teléfono:
+          {{this.selectedclienteNameAdvanced.telefono1}}</p>
+        <p *ngIf=" this.selectedclienteNameAdvanced.telefono2==undefined">Teléfono: "N/A"</p>
+      </div>
+      <div class="col-sm-6">
+        <p>Vendedor</p>{{user.nombre}} {{ user.apellidoPaterno}} {{ user.apellidoMaterno }}
+
+      </div>
+    </div>
+    <hr>
+    <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" [columns]="cols" [rows]="rows"
+      styleClass="p-datatable-sm">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th style="width: 2rem">
+          </th>
+          <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+            <div class="flex justify-content-center align-items-center"
+              [ngStyle]="{'width': col.field == 'nombre' ? '7em' : '15em'}">
+              {{col.header}}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
             </div>
+          </th>
 
 
-          </p-panel>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
 
+        <tr>
+
+          <td></td>
+
+          <td *ngFor="let col of columns">
+            {{rowData[col.field]}}
+          </td>
+
+
+        </tr>
+      </ng-template>
+    </p-table>
+    <hr>
+    <div class="row">
+      <div class="container">
+        <div class="row">
+          <div class="col-4">
+            <label>Articulos: {{articulos}}</label>
+          </div>
+          <div class="col-4">
+            <label>Totales:$ {{total}} MXN</label>
+          </div>
+          <div class="col-4">
+            <label>{{totalLetra}} </label>
+          </div>
 
         </div>
       </div>
     </div>
 
   </div>
-
-</div>
-  <app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
-  <!-- <app-add-cliente [_accion]="accionAdd" *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente> ya no se ocupa aqui la busqueda del cliente-->
-  <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected"
-    [_nArticles]="articulos" *ngIf="openProducts != ''" (_articulosS)="addProductVenta($event)"></app-open-productos>
- <app-cancelacion [_accion]="accionCancelacion" [(_details)]="selectedCambio" [_allCambiosDevoluciones]="lstCambiosDevoluciones" (saveCambioDevolucion)="getCambiosyDevoluciones()" *ngIf="accionCancelacion != ''"></app-cancelacion>
-
-
-
-
-  <p-dialog header="Finalizar Venta" [(visible)]="display" [style]="{width: '60vw'}">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm">
-          <h5>Vendedor:{{user.nombre}} {{ user.apellidoPaterno}} {{ user.apellidoMaterno }}</h5>
-        </div>
-
-
-        <div class="col-sm">
-          <h5>Total de articulos: {{articulos}}</h5>
-
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm">
-          <button pButton type="button" label="Tarjeta" icon="pi pi-credit-card"
-            class="p-button-rounded p-button-warning p-button-lg" badge="8" badgeClass="p-badge-info"
-            (click)="PostVentaRegistro('TARJETA')"></button>
-        </div>
-        <div class="col-sm">
-          <app-discount-selector (discountSelected)="onDiscountSelected($event)"></app-discount-selector>
-
-        </div>
-
-      </div>
-
-      <br>
-      <div class="row">
-        <div class="col-sm">
-          <button pButton type="button" label="Efectivo" icon="pi pi-money-bill"
-            class="p-button-rounded p-button-secondary p-button-lg" badge="8" badgeClass="p-badge-info"
-            (click)="PostVentaRegistro('EFECTIVO')"></button>
-        </div>
-        <div class="col-sm">
-          <h5>Subtotal:<button pButton pRipple icon="pi pi-dollar" type="button"
-            class="p-button-rounded p-button-warning" label="{{this.total}}"></button> </h5>
-
-
-        </div>
-
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-sm">
-
-          <button pButton type="button" label="Multiple" icon="pi pi-money-bill"
-            class="p-button-rounded p-button-success  p-button-lg" badge="8" badgeClass="p-badge-info"
-            [icon]="activeState[0] ? 'pi pi-minus' : 'pi pi-plus'" (click)="toggle(0)"
-            styleClass="p-button-text"></button>
-
-
-        </div>
-        <div class="col-sm">
-
-          <h3>TOTAL: <button pButton pRipple icon="pi pi-dollar" type="button" class="p-button-rounded p-button-danger"   label="{{this.total-this.descuento}}"></button> </h3>
-          <span style="font-size: 1rem;">{{totalLetra }}</span>
-        </div>
-
-      </div>
-      <p-accordion>
-        <p-accordionTab header="Datos de Pago Multiple" [(selected)]="activeState[0]">
-
-          <div class="row">
-
-            <div class="col-sm-4">
-              <br>
-              <span class="p-float-label">
-
-                <p-inputNumber [(ngModel)]="totalMultipleT" id="float-input1" (change)="changePage()"></p-inputNumber>
-                <label for="float-input1">Tarjeta</label>
-              </span>
-
-
-            </div>
-
-            <div class="col-sm-4">
-
-              <br>
-              <span class="p-float-label">
-
-                <p-inputNumber [(ngModel)]="totalMultipleF" id="float-input2" (change)="changePage()"></p-inputNumber>
-                <label for="float-input2">Efectivo</label>
-              </span>
-
-            </div>
-
-            <div class="col-sm-4">
-              <br>
-              <button pButton pRipple type="button" icon="pi pi-money-bill" label="Pagar Multiple"
-                class="p-button-rounded p-button-success" (click)="PostVentaRegistro('MULTIPLE')"></button>
-
-
-            </div>
+  <ng-template pTemplate="footer">
+    <br>
+    <div class="row">
+      <div class="container">
+        <div class="row">
+          <div class="col-4" align="center">
+            <button pButton pRipple label="Ticket" icon="pi pi-print" (click)="downloadTicket()"></button>
           </div>
-        </p-accordionTab>
+          <div class="col-4">
 
-      </p-accordion>
-      <br>
-
-      <div class="row">
-        <div class="col-sm">
-          <h5>SU PAGO : </h5>
-          <div class="p-inputgroup">
-            <span class="p-inputgroup-addon">$</span>
-            <input type="number" pInputText placeholder="Ingresar monto" [(ngModel)]="this.totalVenta"
-              (change)="changePage()">
-
-            <span class="p-inputgroup-addon">.00</span>
           </div>
-        </div>
-        <div class="col-sm">
-
-          <h5>SU CAMBIO: </h5>
-          <button pButton pRipple icon="pi pi-sync" type="button" label="Success"
-            class="p-button-rounded p-button-success p-button-lg" label=" {{this.cambioVenta}}"></button>
+          <div class="col-4" align="center">
+            <button pButton pRipple label="PDF" icon="pi pi-print" (click)="downloadPDF()"></button>
+          </div>
 
         </div>
-
       </div>
     </div>
 
-
-    <ng-template pTemplate="footer">
-      <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
-    </ng-template>
-  </p-dialog>
-
-
-
-  <p-dialog header="Cotización " [(visible)]="displayCotizacion" [style]="{width: '80vw'}">
-
-    <div class="row" id="htmlData">
-      <div class="row">
-        <div class="col-sm-6">
-          <img src="assets/img/logo_huitzil.png" alt="" height="100" width="200">
-        </div>
-        <div class="col-sm-6">
-        </div>
-      </div>
-
-
-      <div class="row">
-        <div class="col-sm-6">
-
-          <p>Documento de Cotización sin valor</p>
-        </div>
-        <div class="col-sm-6">
-          <p>FECHA:<span id="fecha">{{CurrentDate | date:'dd/MM/yyyy'}}</span></p>
-        </div>
-
-      </div>
-      <hr>
-      <div class="row">
-
-        <div class="col-sm-6">
-          <p *ngIf=" this.selectedclienteNameAdvanced.nombre!=undefined">Cliente:
-            {{this.selectedclienteNameAdvanced.nombre+" "+this.selectedclienteNameAdvanced.apellidoPaterno}}
-          </p>
-          <p *ngIf=" this.selectedclienteNameAdvanced.nombre==undefined">Cliente: {{this.clienteName}}</p>
-          <p *ngIf=" this.selectedclienteNameAdvanced.direccion!=undefined">Calle:
-            {{this.selectedclienteNameAdvanced.direccion}}</p>
-          <p *ngIf=" this.selectedclienteNameAdvanced.direccion==undefined">Calle: "N/A"</p>
-          <p *ngIf=" this.selectedclienteNameAdvanced.telefono1!=undefined">Teléfono:
-            {{this.selectedclienteNameAdvanced.telefono1}}</p>
-          <p *ngIf=" this.selectedclienteNameAdvanced.telefono2==undefined">Teléfono: "N/A"</p>
-        </div>
-        <div class="col-sm-6">
-          <p>Vendedor</p>{{user.nombre}} {{ user.apellidoPaterno}} {{ user.apellidoMaterno }}
-
-        </div>
-      </div>
-      <hr>
-      <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" [columns]="cols" [rows]="rows"
-        styleClass="p-datatable-sm">
-        <ng-template pTemplate="header" let-columns>
-          <tr>
-            <th style="width: 2rem">
-            </th>
-            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-              <div class="flex justify-content-center align-items-center"
-                [ngStyle]="{'width': col.field == 'nombre' ? '7em' : '15em'}">
-                {{col.header}}
-                <p-sortIcon [field]="col.field"></p-sortIcon>
-              </div>
-            </th>
-
-
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
-
-          <tr>
-
-            <td></td>
-
-            <td *ngFor="let col of columns">
-              {{rowData[col.field]}}
-            </td>
-
-
-          </tr>
-        </ng-template>
-      </p-table>
-      <hr>
-      <div class="row">
-        <div class="container">
-          <div class="row">
-            <div class="col-4">
-              <label>Articulos: {{articulos}}</label>
-            </div>
-            <div class="col-4">
-              <label>Totales:$ {{total}} MXN</label>
-            </div>
-            <div class="col-4">
-              <label>{{totalLetra}} </label>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <ng-template pTemplate="footer">
-      <br>
-      <div class="row">
-        <div class="container">
-          <div class="row">
-            <div class="col-4" align="center">
-              <button pButton pRipple label="Ticket" icon="pi pi-print" (click)="downloadTicket()"></button>
-            </div>
-            <div class="col-4">
-
-            </div>
-            <div class="col-4" align="center">
-              <button pButton pRipple label="PDF" icon="pi pi-print" (click)="downloadPDF()"></button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-    </ng-template>
-  </p-dialog>
-
+  </ng-template>
+</p-dialog>

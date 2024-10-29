@@ -96,6 +96,34 @@ export class InventarioService {
 
     return this.http.get<ResponseModel>(environment.apiService + `Inventario/SearchProductFilterUbicacion?sucursal=${sucursal}`);
   }
+//filtros a demanda
+  searchProductDemanda(filters: any): Observable<ResponseModel> {
+    let sucursal: string;
+
+    // if (this.variablesGL.getRol() === 'Administrador') {
+    //   sucursal = 'all';
+    // } else {
+    //   sucursal = this.variablesGL.getSucursal();
+    // }
+
+    // Descomponemos los filtros
+    const { sku, categoria, talla, ubicacion, page, size } = filters;
+
+    // Construimos la URL con los parámetros
+    const params = new URLSearchParams();
+    // params.set('sucursal', sucursal);
+    // if (sku) params.set('sku', sku);
+    // if (descripcion) params.set('descripcion', descripcion);
+    if (categoria) params.set('categoria', categoria);
+    if (talla) params.set('talla', talla);
+    if (ubicacion) params.set('ubicacion', ubicacion);
+    params.set('page', String(page));
+    params.set('size', String(size));
+
+    // Hacemos la petición HTTP
+    return this.http.get<ResponseModel>(`${environment.apiService}Inventario/SearchProductDemanda?${params.toString()}`);
+  }
+
 }
 
 
