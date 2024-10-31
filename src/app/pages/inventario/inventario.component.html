@@ -71,9 +71,9 @@
         </div>
         <hr>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-4" *ngIf="this.variablesGL.getRol() == 'Administrador'">
             <p-dropdown [options]="ubicacionOptions" [(ngModel)]="filterModel.ubicacion"
-              (onChange)="filterByDropdown('categoria', $event.value)" placeholder="Filtrar Categoría" [filter]="true"
+              (onChange)="filterByDropdown('categoria', $event.value)" placeholder="Filtrar Ubicacion" [filter]="true"
               [showClear]="true" [appendTo]="'body'">
             </p-dropdown>
           </div>
