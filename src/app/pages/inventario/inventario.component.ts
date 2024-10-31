@@ -8,6 +8,10 @@ import Swal from 'sweetalert2';
 import { CatTallaModel } from 'src/app/models/tallas.model';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { CategoriaModel } from 'src/app/models/categoria.model';
+import { TallasService } from 'src/app/services/tallas.service';
+import { CategoriasService } from 'src/app/services/categorias.service';
+import { UbicacionesService } from 'src/app/services/ubicaciones.service';
+
 
 export interface imagen64 {
   id: number,
@@ -35,6 +39,21 @@ export class InventarioComponent implements OnInit {
   selectedArticulo: productoModel = new productoModel();
   selectedArticulos: productoModel[];
   imagenes: imagen64[] = []
+  //variables de filtros
+
+  tallaOptions: any[] = [];
+  categoriaOptions: any[] = [];
+  ubicacionOptions: any[] = [];
+
+   // Modelo de filtros
+   filterModel = {
+    sku: '',
+    descripcion: '',
+    talla: null, // Aquí será el id de la talla seleccionada
+    categoria: null, // Aquí será el id de la categoría seleccionada
+    ubicacion: this.variablesGL.getSucursal()
+  };
+    // Modelo de filtros
   public csvRecords: any[] = [];
   accion = '';
   rows = 0;
@@ -44,6 +63,9 @@ export class InventarioComponent implements OnInit {
     private inventarioService: InventarioService,
     private toastr: ToastrService,
     private articuloService: InventarioService,
+    private tallasService: TallasService,
+    private categoriasService: CategoriasService,
+    private UbicacionesService: UbicacionesService,
 
   ) {
 
@@ -54,7 +76,7 @@ export class InventarioComponent implements OnInit {
       { field: 'existencia', header: 'Existencia' },
       { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
-      { field: 'precio', header: 'precio' },
+      // { field: 'precio', header: 'precio' },
       { field: '', header: 'Etiqueta'}
 
     ];
@@ -65,9 +87,9 @@ console.info("STATUS pantalla->",this.statusPantalla)
     if(status == 'celular'){
       this.rows = 6;
     }else if(status == 'tablet'){
-      this.rows = 7;
+      this.rows = 6;
     }else if(status == 'laptop'){
-      this.rows = 7;
+      this.rows = 6;
     }else{
       this.rows = 11;
     }
@@ -76,6 +98,9 @@ console.info("STATUS pantalla->",this.statusPantalla)
   ngOnInit() {
 
     this.getArticulos();
+       this.getUbicaciones();
+      this.getCategorias();
+      this.getTallas();
 
   }
   //Impresion
@@ -98,19 +123,20 @@ console.info("STATUS pantalla->",this.statusPantalla)
 
 
   getArticulos() {
-    this.loading = true;
-    this.inventarioService.getArticulos().subscribe(response => {
-      if (response.exito) {
-        //console.log(response.respuesta)
-        this.listArticulos = response.respuesta;
-        this.loading = false;
-        for (let art of this.listArticulos) {
-          this.imagenes.push({ id: art.idArticulo, imagen64c: art.imagen })
-        }
-      }
-    }, err => {
-      this.loading = false;
-    });
+    this.getFilteredResults();
+    // this.loading = true;
+    // this.inventarioService.getArticulos().subscribe(response => {
+    //   if (response.exito) {
+    //     //console.log(response.respuesta)
+    //     this.listArticulos = response.respuesta;
+    //     this.loading = false;
+    //     for (let art of this.listArticulos) {
+    //       this.imagenes.push({ id: art.idArticulo, imagen64c: art.imagen })
+    //     }
+    //   }
+    // }, err => {
+    //   this.loading = false;
+    // });
   }
 
   editProduct() {
@@ -377,6 +403,122 @@ this.toastr.success('Registro Guardado  con exito!!', 'Exito');
 this.getArticulos()
 
   }
+
+  filterByDropdown(field: string, value: any) {
+    this.filterByField(field, value);
+  }
+
+  filterByField(field: string, value: string) {
+    // Actualiza el valor del filtro correspondiente
+
+
+    // Llama al método para obtener los resultados filtrados
+    console.log(field,value)
+    this.getFilteredResults();
+  }
+
+  getFilteredResults() {
+    console.log('getFilteredResults llamado');
+
+    const filters = {
+      queryString: '',
+     // sucursal: this.variablesGL.getSucursal(),
+      // sku: this.filterModel.sku ? this.filterModel.sku.trim() : '',
+      // descripcion: this.filterModel.descripcion ? this.filterModel.descripcion.trim() : '',
+      talla: this.filterModel.talla ? this.filterModel.talla : null,
+      categoria: this.filterModel.categoria ? this.filterModel.categoria : null,
+      ubicacion: this.filterModel.ubicacion ? this.filterModel.ubicacion : null,
+      page: 0,
+      size: 100
+    };
+
+    this.variablesGL.showLoading();
+    this.inventarioService.searchProductDemanda(filters).subscribe(response => {
+      if (response.exito) {
+        this.listArticulos = response.respuesta;
+        this.loading = false;
+        for (let art of this.listArticulos) {
+          this.imagenes.push({ id: art.idArticulo, imagen64c: art.imagen })
+        }
+       // this.articles = response.respuesta;
+       // console.log('resultados filtrados: ', this.articles);
+        this.variablesGL.hideLoading();
+      } else {
+       this.variablesGL.hideLoading();
+        this.toastr.error(response.mensaje, 'Error!');
+      }
+    }, err => {
+     // this.variablesGL.hideLoading();
+      this.toastr.error('Hubo un error al buscar los productos', 'Error!');
+      console.log(err);
+    });
+  }
+
+   getUbicaciones() {
+    this.loading = true;
+    this.UbicacionesService.getUbicaciones().subscribe(response => {
+      if (response.exito) {
+        this.listUbicaciones = response.respuesta;
+
+        this.ubicacionOptions = this.listUbicaciones.map(ubicacion => ({
+          label: ubicacion.direccion,
+          value: ubicacion.direccion
+        }));
+        console.log(this.ubicacionOptions);
+        this.loading = false;
+      } else {
+        this.loading = false;
+
+      }
+    }, err => {
+      this.loading = false;
+
+    });
+  }
+
+  getCategorias() {
+    this.loading = true;
+    this.categoriasService.getCategorias().subscribe(response => {
+      if (response.exito) {
+        this.listCategorias = response.respuesta;
+
+        this.categoriaOptions = this.listCategorias.map(categoria => ({
+          label: categoria.descripcion,
+          value: categoria.idCategoria
+        }));
+        console.log(this.categoriaOptions);
+        this.loading = false;
+      } else {
+        this.loading = false;
+
+      }
+    }, err => {
+      this.loading = false;
+
+    });
+  }
+  getTallas() {
+    this.loading = true;
+    this.tallasService.getTallas().subscribe(response => {
+      if (response.exito) {
+        this.listTallas = response.respuesta;
+
+        this.tallaOptions = this.listTallas.map(talla => ({
+          label: talla.nombre,
+          value: talla.idTalla
+        }));
+        console.log(this.tallaOptions);
+        this.loading = false;
+      } else {
+        this.loading = false;
+
+      }
+    }, err => {
+      this.loading = false;
+
+    });
+  }
+
 
 }
 

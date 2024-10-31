@@ -251,10 +251,10 @@ export class VentasComponent implements OnInit {
       page: 0, // Página inicial
       size: 100 // Número de artículos por página
     };
-  
+
     // Muestra la carga mientras se hace la solicitud
     this.variablesGL.showLoading();
-  
+
     // Llama al servicio con los filtros iniciales
     this.inventarioService.searchProductDemanda(initialFilters).subscribe(response => {
       if (response.exito) {
@@ -262,7 +262,7 @@ export class VentasComponent implements OnInit {
         this.articles = response.respuesta;
         console.log('Artículos iniciales:', this.articles);
         this.variablesGL.hideLoading();
-  
+
         // Muestra el diálogo después de un breve retraso
         setTimeout(() => {
           this.variablesGL.showDialog.next(true);
@@ -586,6 +586,14 @@ export class VentasComponent implements OnInit {
         console.log(this.selectedclienteNameAdvanced)
         console.log(this.clienteName)
         console.log(this.RegistraVenta.fecha)
+        const fecha = this.RegistraVenta.fecha;
+
+
+const dia = String(fecha.getDate()).padStart(2, '0');
+const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+const anio = fecha.getFullYear();
+
+const fechaFormateada = `${dia}/${mes}/${anio}`;
         //code Impresion
         const conector = new ConectorPluginV3();
         conector
@@ -598,7 +606,7 @@ export class VentasComponent implements OnInit {
           .Feed(1)
           .EscribirTexto("Cajero:" + this.user.nombre)
           .Feed(1)
-          .EscribirTexto("Fecha:" + this.RegistraVenta.fecha)
+          .EscribirTexto("Fecha:" + fechaFormateada)
           .Feed(1)
           .EscribirTexto("Ticket:" + this.RegistraVenta.noTicket)
           .Feed(1)

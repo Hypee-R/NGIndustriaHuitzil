@@ -54,7 +54,7 @@ export class OpenProductosComponent implements OnInit {
     descripcion: '',
     talla: null, // Aquí será el id de la talla seleccionada
     categoria: null, // Aquí será el id de la categoría seleccionada
-    ubicacion: null // Aquí será el id de la ubicación seleccionada
+    ubicacion: this.variablesGL.getSucursal()
   };
   constructor(
     private toastr: ToastrService,
@@ -99,7 +99,7 @@ export class OpenProductosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getUbicaciones();
+    // this.getUbicaciones();
     this.getCategorias();
     this.getTallas();
 
@@ -115,7 +115,7 @@ export class OpenProductosComponent implements OnInit {
       // descripcion: this.filterModel.descripcion ? this.filterModel.descripcion.trim() : '',
       talla: this.filterModel.talla ? this.filterModel.talla : null,
       categoria: this.filterModel.categoria ? this.filterModel.categoria : null,
-      ubicacion: this.filterModel.ubicacion ? this.filterModel.ubicacion : null,
+      ubicacion: this.variablesGL.getSucursal(),
       page: 0,
       size: 100
     };
@@ -138,27 +138,27 @@ export class OpenProductosComponent implements OnInit {
   }
 
 
-  getUbicaciones() {
-    this.loading = true;
-    this.UbicacionesService.getUbicaciones().subscribe(response => {
-      if (response.exito) {
-        this.listUbicaciones = response.respuesta;
-        // Transformar los datos en un formato adecuado para el p-dropdown
-        this.ubicacionOptions = this.listUbicaciones.map(ubicacion => ({
-          label: ubicacion.direccion, // O usa `ubicacion.nombre` si prefieres mostrar el nombre
-          value: ubicacion.direccion
-        }));
-        console.log(this.ubicacionOptions);
-        this.loading = false;
-      } else {
-        this.loading = false;
-        // Manejo de error si es necesario
-      }
-    }, err => {
-      this.loading = false;
-      // Manejo de error si es necesario
-    });
-  }
+  // getUbicaciones() {
+  //   this.loading = true;
+  //   this.UbicacionesService.getUbicaciones().subscribe(response => {
+  //     if (response.exito) {
+  //       this.listUbicaciones = response.respuesta;
+  //       // Transformar los datos en un formato adecuado para el p-dropdown
+  //       this.ubicacionOptions = this.listUbicaciones.map(ubicacion => ({
+  //         label: ubicacion.direccion, // O usa `ubicacion.nombre` si prefieres mostrar el nombre
+  //         value: ubicacion.direccion
+  //       }));
+  //       console.log(this.ubicacionOptions);
+  //       this.loading = false;
+  //     } else {
+  //       this.loading = false;
+  //       // Manejo de error si es necesario
+  //     }
+  //   }, err => {
+  //     this.loading = false;
+  //     // Manejo de error si es necesario
+  //   });
+  // }
 
   getCategorias() {
     this.loading = true;
