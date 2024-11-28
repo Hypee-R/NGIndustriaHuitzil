@@ -107,7 +107,7 @@ export class InventarioService {
   searchProductDemanda(filters: any): Observable<ResponseModel> {
     let sucursal: string;
 
-    if (this.variablesGL.getRol() === 'Administrador') {
+    if (this.variablesGL.getRol() === 'Administrador'||this.variablesGL.getRol() == 'Gestion') {
       sucursal = 'all';
     }
     else {
@@ -124,8 +124,10 @@ export class InventarioService {
     // if (descripcion) params.set('descripcion', descripcion);
     if (categoria) params.set('categoria', categoria);
     if (talla) params.set('talla', talla);
-    if(this.variablesGL.getRol() === 'Administrador'){
-      if (ubicacion) params.set('ubicacion', ubicacion);
+
+    if(this.variablesGL.getRol() === 'Administrador'||this.variablesGL.getRol() == 'Gestion'){
+   
+     //   params.set('ubicacion', null);
 
     }else{
      params.set('ubicacion', this.variablesGL.getSucursal());

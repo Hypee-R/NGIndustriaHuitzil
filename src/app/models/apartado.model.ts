@@ -3,6 +3,7 @@ import { ApartadoArticuloModel } from "./apartadoArticulo.model";
 export class CatApartadoModel{
     idApartado: number;
     idCliente:number;
+    idApartadoNuevo:number;
     idParent: number;
     fecha: Date;
     fechaEntrega: string;

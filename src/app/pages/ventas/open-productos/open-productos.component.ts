@@ -65,12 +65,13 @@ export class OpenProductosComponent implements OnInit {
     private UbicacionesService: UbicacionesService
   ) {
     this.colsProducts = [
-      { field: 'imagen', header: 'Imagen' },
+     // { field: 'imagen', header: 'Imagen' },
       { field: 'sku', header: 'SKU' },
       { field: 'descripcion', header: 'Producto' },
       { field: 'talla', header: 'Talla' },
+      { field: 'existencia', header: 'Cantidad' },
       { field: 'precio', header: 'Precio' },
-      { field: 'existencia', header: 'Existencia' }
+    
     ];
 
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {

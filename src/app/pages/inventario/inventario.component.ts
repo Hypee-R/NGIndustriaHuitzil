@@ -429,7 +429,7 @@ this.getArticulos()
       categoria: this.filterModel.categoria ? this.filterModel.categoria : null,
       ubicacion: this.filterModel.ubicacion ? this.filterModel.ubicacion : null,
       page: 0,
-      size: 100
+      size: 1000
     };
 
     this.variablesGL.showLoading();

@@ -1,6 +1,7 @@
 export class PagoApartado{
     IdPagoApartado : number
     idApartado : number
+    idApartadoNuevo:number
     idCaja: number
     fecha:  Date;
     fechaEntrega: string;
