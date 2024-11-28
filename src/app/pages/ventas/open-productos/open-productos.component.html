@@ -78,13 +78,13 @@
               <td *ngIf="rowData.existencia == 0">
                 <label>Sin stock</label>
               </td>
-              <td *ngIf="rowData.imagen=='NA'  || rowData.imagen =='' ">
+              <!-- <td *ngIf="rowData.imagen=='NA'  || rowData.imagen =='' ">
                 <img src="../../../assets/img/iconNoImage.jpg" width="40" height="40%" class="shadow-1" />
 
               </td>
               <td *ngIf="rowData.imagen && rowData.imagen !== 'NA' && rowData.imagen !== ''">
                 <img [src]=rowData.imagen width="40" height="40%" class="shadow-1" />
-              </td>
+              </td> -->
               <td>
                 {{rowData['sku']}}
               </td>
@@ -92,14 +92,14 @@
                 {{rowData['descripcion']}}
               </td>
               <td>
-                {{rowData['existencia']}}
+                {{rowData['talla']}}
               </td>
 
               <td>
-                {{rowData['talla']}}
+                {{rowData['existencia']}}
               </td>
               <td>
-                {{rowData['ubicacion']}}
+                {{rowData['precio']}}
               </td>
 
             </tr>
