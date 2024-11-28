@@ -62,6 +62,13 @@ export class InventarioService {
     );
   }
 
+  agregaArticuloCarga(request:any): Observable<ResponseModel>{
+    return this.http.post<ResponseModel>(environment.apiService + 'Inventario/AgregaCarga', request)
+    .pipe(
+      map (res => res)
+    );
+  }
+
   actualizaArticulo(request: productoModel): Observable<ResponseModel>{
     console.log(request)
     return this.http.put<ResponseModel>(environment.apiService + 'Inventario/Actualiza', request)
