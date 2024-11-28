@@ -16,7 +16,7 @@ import { InformesComponent } from './informes/informes.component';
 import { UbicacionesComponent } from './ubicaciones/ubicaciones.component';
 import { CategoriasComponent } from './categorias/categorias.component';
 import { ProveedoresComponent } from './proveedores/proveedores.component';
-import { TallasComponent } from './tallas/tallas.component';
+// import { TallasComponent } from './tallas/tallas.component';
 import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { RolesComponent } from './roles/roles.component';
@@ -54,7 +54,7 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
 import { ChipModule } from 'primeng/chip';
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
-import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
+// import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
 import { AddubicacionComponent } from './ubicaciones/add-ubicacion/add-ubicacion.component';
 import { AddcategoriaComponent } from './categorias/add-categoria/add-categoria.component';
 import { AddRolComponent } from './roles/add-rol/add-rol.component';
@@ -147,13 +147,13 @@ import { CancelacionComponent } from './ventas/cancelacion/cancelacion.component
         UbicacionesComponent,
         CategoriasComponent,
         ProveedoresComponent,
-        TallasComponent,
+
         MiPerfilComponent,
         UsuariosComponent,
         RolesComponent,
         AddUsuarioComponent,
         AddProveedorComponent,
-        AddTallaComponent,
+
         AddRolComponent,
         MaterialesComponent,
         AddcategoriaComponent,

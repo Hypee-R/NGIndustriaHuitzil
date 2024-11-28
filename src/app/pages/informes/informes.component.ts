@@ -226,7 +226,7 @@ this.fechaF = this.formatDate(today);    // Fecha final: hoy
     const doc = new jsPDF();
 
     // Convertir el logo a Base64 y añadirlo al PDF
-    this.getBase64ImageFromUrl('assets/img/only_logo_huitzil.png').then(base64Image => {
+    this.getBase64ImageFromUrl('assets/img/LogoSole.jpeg').then(base64Image => {
       doc.addImage(base64Image, 'PNG', 10, 10, 25, 20); // Ajusta la posición y tamaño según sea necesario
       // Añadir el título
       const title = `Reporte de Cajas\nDesde: ${this.fechaI ? new Date(this.fechaI).toLocaleDateString() : 'N/A'} Hasta: ${this.fechaF ? new Date(this.fechaF).toLocaleDateString() : 'N/A'}`;
@@ -334,7 +334,7 @@ this.fechaF = this.formatDate(today);    // Fecha final: hoy
       Descripcion : row.descripcion,
       SKU : row.sku,
       Precio : row.precio,
-      Talla : row.talla,
+      // Talla : row.talla,
       Status : row.status,
       Ubicacion : row.ubicacion,
       FechaIngreso : row.fechaIngreso
@@ -358,7 +358,7 @@ this.fechaF = this.formatDate(today);    // Fecha final: hoy
     };
     html2canvas(DATA, options).then((canvas) => {
 
-      const img = canvas.toDataURL('assets/img/logo_huitzil.png');
+      const img = canvas.toDataURL('assets/img/LogoSole.jpeg');
 
       // Add image Canvas to PDF
       const bufferX = 15;

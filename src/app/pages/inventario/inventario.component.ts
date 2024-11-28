@@ -5,7 +5,7 @@ import { VariablesService } from 'src/app/services/variablesGL.service';
 import * as XLSX from 'xlsx';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { CatTallaModel } from 'src/app/models/tallas.model';
+// import { CatTallaModel } from 'src/app/models/tallas.model';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { CategoriaModel } from 'src/app/models/categoria.model';
 import { TallasService } from 'src/app/services/tallas.service';
@@ -33,7 +33,7 @@ export class InventarioComponent implements OnInit {
   statusPantalla: number;
   loading: boolean = false;
   listArticulos: productoModel[] = [];
-  listTallas: CatTallaModel[] = [];
+  // listTallas: CatTallaModel[] = [];
   listUbicaciones: UbicacionModel[] = [];
   listCategorias: CategoriaModel[] = [];
   selectedArticulo: productoModel = new productoModel();
@@ -74,7 +74,7 @@ export class InventarioComponent implements OnInit {
       { field: 'sku', header: 'SKU' },
       { field: 'descripcion', header: 'Descripcion' },
       { field: 'existencia', header: 'Existencia' },
-      { field: 'talla', header: 'Talla' },
+      // { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
       // { field: 'precio', header: 'precio' },
       { field: '', header: 'Etiqueta'}
@@ -100,7 +100,7 @@ console.info("STATUS pantalla->",this.statusPantalla)
     this.getArticulos();
        this.getUbicaciones();
       this.getCategorias();
-      this.getTallas();
+      // this.getTallas();
 
   }
   //Impresion
@@ -124,19 +124,7 @@ console.info("STATUS pantalla->",this.statusPantalla)
 
   getArticulos() {
     this.getFilteredResults();
-    // this.loading = true;
-    // this.inventarioService.getArticulos().subscribe(response => {
-    //   if (response.exito) {
-    //     //console.log(response.respuesta)
-    //     this.listArticulos = response.respuesta;
-    //     this.loading = false;
-    //     for (let art of this.listArticulos) {
-    //       this.imagenes.push({ id: art.idArticulo, imagen64c: art.imagen })
-    //     }
-    //   }
-    // }, err => {
-    //   this.loading = false;
-    // });
+
   }
 
   editProduct() {
@@ -241,11 +229,11 @@ console.info("STATUS pantalla->",this.statusPantalla)
     fecha_ingreso: row.fechaIngreso,
     id_ubicacion: row.idUbicacion,
     id_categoria: row.idCategoria,
-    id_talla: row.idTalla,
+    // id_talla: row.idTalla,
     imagen: "",
     sku: row.sku,
     precio: row.precio,
-  })), { header: ['id_articulo','status','existencia','descripcion','fecha_ingreso','id_ubicacion','id_categoria','id_talla','imagen','sku','precio'] })
+  })), { header: ['id_articulo','status','existencia','descripcion','fecha_ingreso','id_ubicacion','id_categoria',,'imagen','sku','precio'] })
    const wb: XLSX.WorkBook = XLSX.utils.book_new();
    XLSX.utils.book_append_sheet(wb, ws, 'InventarioProductos');
    XLSX.writeFile(wb, 'Inventario'+new Date().toISOString()+'.csv')
@@ -334,7 +322,7 @@ console.info("STATUS pantalla->",this.statusPantalla)
         csvRecord.fechaIngreso = data[4].trim();
         csvRecord.idUbicacion = data[5].trim();
         csvRecord.idCategoria = data[6].trim();
-        csvRecord.idTalla = data[7].trim();
+        // csvRecord.idTalla = data[7].trim();
         csvRecord.imagen = data[8].trim();
         csvRecord.sku = data[9].trim();
         csvRecord.precio = data[10].trim();
@@ -363,8 +351,8 @@ console.info("STATUS pantalla->",this.statusPantalla)
         this.productoFile.fechaIngreso=arr[i].fechaIngreso,
         this.productoFile. idUbicacion=  parseInt( arr[i].idUbicacion),
         this.productoFile. idCategoria= parseInt(  arr[i].idCategoria),
-        this.productoFile.  idTalla= parseInt(  arr[i].idTalla),
-        this.productoFile.  talla= "",
+        // this.productoFile.  idTalla= parseInt(  arr[i].idTalla),
+        // this.productoFile.  talla= "",
         this.productoFile. ubicacion="",
         this.productoFile.  categoria="",
         this.productoFile.  imagen= arr[i].imagen,
@@ -425,7 +413,7 @@ this.getArticulos()
      // sucursal: this.variablesGL.getSucursal(),
       // sku: this.filterModel.sku ? this.filterModel.sku.trim() : '',
       // descripcion: this.filterModel.descripcion ? this.filterModel.descripcion.trim() : '',
-      talla: this.filterModel.talla ? this.filterModel.talla : null,
+      // talla: this.filterModel.talla ? this.filterModel.talla : null,
       categoria: this.filterModel.categoria ? this.filterModel.categoria : null,
       ubicacion: this.filterModel.ubicacion ? this.filterModel.ubicacion : null,
       page: 0,
@@ -497,27 +485,27 @@ this.getArticulos()
 
     });
   }
-  getTallas() {
-    this.loading = true;
-    this.tallasService.getTallas().subscribe(response => {
-      if (response.exito) {
-        this.listTallas = response.respuesta;
+  // getTallas() {
+  //   this.loading = true;
+  //   this.tallasService.getTallas().subscribe(response => {
+  //     if (response.exito) {
+  //       this.listTallas = response.respuesta;
 
-        this.tallaOptions = this.listTallas.map(talla => ({
-          label: talla.nombre,
-          value: talla.idTalla
-        }));
-        console.log(this.tallaOptions);
-        this.loading = false;
-      } else {
-        this.loading = false;
+  //       this.tallaOptions = this.listTallas.map(talla => ({
+  //         label: talla.nombre,
+  //         value: talla.idTalla
+  //       }));
+  //       console.log(this.tallaOptions);
+  //       this.loading = false;
+  //     } else {
+  //       this.loading = false;
 
-      }
-    }, err => {
-      this.loading = false;
+  //     }
+  //   }, err => {
+  //     this.loading = false;
 
-    });
-  }
+  //   });
+  // }
 
 
 }
@@ -533,8 +521,8 @@ export class CSVRecord {
   public fechaIngreso: string;
   public idUbicacion: any;
   public idCategoria: any;
-  public idTalla: any;
-  public talla:string;
+  // public idTalla: any;
+  // public talla:string;
    public ubicacion:string;
   public categoria:string;
   public imagen: string;

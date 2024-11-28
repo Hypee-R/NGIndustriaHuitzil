@@ -1,9 +1,9 @@
 
 
 .button-style {
-  background-color: #7380ec;
+  background-color: var(--color-secondary);
   color: white;
-  border: 2px solid #4c5bd4;
+  border: 2px solid var(--color-secondary);
   border-radius: 5px;
   padding: 10px 20px;
   cursor: pointer;
@@ -11,12 +11,12 @@
 }
 
 .button-style:hover {
-  background-color: #4c5bd4;
+  background-color: var(--color-secondary);;
   transform: scale(1.05);
 }
 
 .button-style:active {
-  background-color: #4c5bd4;
+  background-color: var(--color-secondary);;
   transform: scale(0.95);
 }
 
@@ -42,8 +42,8 @@
 
 
 .custom-button-inventario {
-  background-color: #7380ec !important;
-  border: 2px solid #5c67d1 !important;
+  background-color:var(--color-secondary);
+  border: 2px solidvar(--color-secondary);
   border-radius: 5px;
   color: white !important;
   padding: 10px 20px;
@@ -52,44 +52,44 @@
 }
 
 .custom-button-inventario:hover {
-  background-color: #5c67d1 !important;
+  background-color:var(--color-secondary);
   transform: scale(1.05);
 }
 
 .custom-button-inventario:active {
-  background-color: #5c67d1 !important;
+  background-color:var(--color-secondary);
   transform: scale(0.95);
 }
 
 .custom-button-abrir-caja {
-  background-color: #4c5bd4 !important; /* Custom abrir caja button color */
-  border-color: #4c5bd4 !important;
+  background-color:var(--color-secondary); /* Custom abrir caja button color */
+  border-color:var(--color-secondary);
   color: white !important;
 }
 
 .custom-button-abrir-caja:hover {
-  background-color: #4c5bd4 !important;
+  background-color:var(--color-secondary);
   transform: scale(1.05);
 }
 
 .custom-button-abrir-caja:active {
-  background-color: #4c5bd4 !important;
+  background-color:var(--color-secondary);
   transform: scale(0.95);
 }
 
 .custom-button-cerrar-caja {
-  background-color: #4c5bd4 !important; /* Custom cerrar caja button color */
-  border-color: #4c5bd4 !important;
+  background-color:var(--color-secondary); /* Custom cerrar caja button color */
+  border-color:var(--color-secondary);
   color: white !important;
 }
 
 .custom-button-cerrar-caja:hover {
-  background-color: #4c5bd4 !important;
+  background-color:var(--color-secondary);
   transform: scale(1.05);
 }
 
 .custom-button-cerrar-caja:active {
-  background-color: #4c5bd4 !important;
+  background-color: var(--color-secondary);
   transform: scale(0.95);
 }
 

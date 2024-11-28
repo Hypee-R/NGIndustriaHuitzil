@@ -6,7 +6,7 @@ import { InformesComponent } from '../pages/informes/informes.component';
 import { InventarioComponent } from '../pages/inventario/inventario.component';
 import { ProveedoresComponent } from '../pages/proveedores/proveedores.component';
 import { SolicitudesComponent } from '../pages/solicitudes/solicitudes.component';
-import { TallasComponent } from '../pages/tallas/tallas.component';
+// import { TallasComponent } from '../pages/tallas/tallas.component';
 import { UbicacionesComponent } from '../pages/ubicaciones/ubicaciones.component';
 import { VentasComponent } from '../pages/ventas/ventas.component';
 import { MiPerfilComponent } from '../pages/mi-perfil/mi-perfil.component';
@@ -30,7 +30,7 @@ export const contentRoutes: Routes = [
     { path: 'categories', component: CategoriasComponent },
     { path: 'materials', component: MaterialesComponent },
     { path: 'providers', component: ProveedoresComponent },
-    { path: 'sizes', component: TallasComponent },
+    // { path: 'sizes', component: TallasComponent },
     { path: 'my-profile', component: MiPerfilComponent },
     { path: 'users', component: UsuariosComponent },
     { path: 'roles', component:  RolesComponent},

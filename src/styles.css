@@ -5,7 +5,7 @@
 /* ROOT VARIABLES */
 
 :root {
-    --color-primary: #7380ec;
+    --color-primary: #5fa2b2;
     --color-danger: #ff7782;
     --color-success: #41f1b6;
     --color-warning: #ffbb55;
@@ -24,7 +24,7 @@
     --card-padding: 1.8rem;
     --padding-1: 1.2rem;
     --box-shadow: 0 2rem 3rem var(--color-light);
-    --color-secondary: #4c5bd4;
+    --color-secondary: #941D81;
     --color-tertiary: #a5b3fc;
     --color-quaternary: #d4d7ff;
     --color-light: #f4f5ff;

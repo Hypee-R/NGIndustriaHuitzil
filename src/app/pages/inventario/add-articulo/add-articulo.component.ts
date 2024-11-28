@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { productoModel } from 'src/app/models/productos.model';
-import { CatTallaModel } from 'src/app/models/tallas.model';
+// import { CatTallaModel } from 'src/app/models/tallas.model';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { CategoriasService } from 'src/app/services/categorias.service';
@@ -36,12 +36,12 @@ export class AddArticuloComponent implements OnInit {
 
   lstEstatus: string[] = ['TRANSITO', 'UBICACION'];
   listCategorias: CategoriaModel[] = [];
-  listTallas: CatTallaModel[] = [];
+  // listTallas: CatTallaModel[] = [];
   listUbicaciones: UbicacionModel[] = [];
 
 
   selectedCategoria: CategoriaModel;
-  selectedTalla: CatTallaModel;
+  // selectedTalla: CatTallaModel;
   selectedUbicacion: UbicacionModel;
 
 
@@ -144,15 +144,15 @@ getCampos(){
   });
 
 
-  this.tallasService.getTallas().subscribe(response => {
-    if(response.exito){
-      for(let talla of response.respuesta){
-        this.listTallas.push(talla)
-      }
-    }
-  }, err => {
+  // this.tallasService.getTallas().subscribe(response => {
+  //   if(response.exito){
+  //     for(let talla of response.respuesta){
+  //       this.listTallas.push(talla)
+  //     }
+  //   }
+  // }, err => {
 
-  });
+  // });
 
 
   this.ubicacionesService.getUbicaciones().subscribe(response => {

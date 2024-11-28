@@ -509,7 +509,7 @@ export class ApartadosComponent implements OnInit {
             let artc = new productoModel()
             artc.descripcion = response.respuesta[0].descripcion
             artc.precio = response.respuesta[0].precio
-            artc.talla = response.respuesta[0].talla
+            // artc.talla = response.respuesta[0].talla
             artc.sku = response.respuesta[0].sku
             artc.idArticulo = response.respuesta[0].idArticulo
             artc.fechaIngreso = response.respuesta[0].fechaIngreso
@@ -645,7 +645,7 @@ export class ApartadosComponent implements OnInit {
     conector
       .Iniciar()
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
       .Feed(1)
       .EscribirTexto("***ABONO***")
       .Feed(1)
@@ -771,7 +771,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     conector
       .Iniciar()
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
       .Feed(1)
       .EscribirTexto("***APARTADO SUCURSAL***")
       .Feed(1)
@@ -816,7 +816,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       .Corte(1)
       .Iniciar()
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
       .Feed(1)
       .EscribirTexto("***APARTADO CLIENTE***")
       .Feed(1)

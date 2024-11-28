@@ -217,7 +217,7 @@ export class VentasComponent implements OnInit {
     let artc = new productoVentaModel()
     artc.descripcion = product.descripcion
     artc.precio = product.precio
-    artc.talla = product.talla
+    // artc.talla = product.talla
     artc.sku = product.sku
     artc.idArticulo = product.idArticulo
     artc.fechaIngreso = product.fechaIngreso
@@ -348,7 +348,7 @@ export class VentasComponent implements OnInit {
             let artc = new productoModel()
             artc.descripcion = response.respuesta[0].descripcion
             artc.precio = response.respuesta[0].precio
-            artc.talla = response.respuesta[0].talla
+            // artc.talla = response.respuesta[0].talla
             artc.sku = response.respuesta[0].sku
             artc.idArticulo = response.respuesta[0].idArticulo
             artc.fechaIngreso = response.respuesta[0].fechaIngreso
@@ -451,7 +451,7 @@ export class VentasComponent implements OnInit {
       scale: 3
     };
     html2canvas(DATA, options).then((canvas) => {
-      const img = canvas.toDataURL('assets/img/logo_huitzil.png');
+      const img = canvas.toDataURL('assets/img/LogoSole.jpeg');
       // Add image Canvas to PDF
       const bufferX = 15;
       const bufferY = 15;
@@ -599,7 +599,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
         conector
           .Iniciar()
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-          .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/logo_huitzil.png", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+          .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
           .Feed(1)
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
           .EscribirTexto("Caja:" + this.cashModel.idCaja)

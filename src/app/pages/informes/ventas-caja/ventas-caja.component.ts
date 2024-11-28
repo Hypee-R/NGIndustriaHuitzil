@@ -125,7 +125,7 @@ PdfIndividual() {
             const doc = new jsPDF();
 
             // Convertir el logo a Base64 y añadirlo al PDF
-            this.getBase64ImageFromUrl('assets/img/only_logo_huitzil.png').then(base64Image => {
+            this.getBase64ImageFromUrl('assets/img/LogoSole.jpeg').then(base64Image => {
                 doc.addImage(base64Image, 'PNG', 10, 10, 25, 20); // Ajusta la posición y tamaño según sea necesario
 
                 // Añadir el título

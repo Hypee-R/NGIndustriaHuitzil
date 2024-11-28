@@ -24,7 +24,7 @@
                         [appendTo]="'body'">
             </p-dropdown>
           </div>
-          <div class="col-md-4">
+          <!-- <div class="col-md-4">
             <p-dropdown [options]="tallaOptions"
                         [(ngModel)]="filterModel.talla"
                         (onChange)="filterByDropdown('talla', $event.value)"
@@ -33,7 +33,7 @@
                         [showClear]="true"
                         [appendTo]="'body'">
             </p-dropdown>
-          </div>
+          </div> -->
 
 
         </div>
@@ -42,7 +42,7 @@
       <div class="row" *ngIf="!loading && articles.length > 0">
 
         <p-table #dt [value]="articles" [columns]="colsProducts" [rows]="rows" [paginator]="true"
-          [globalFilterFields]="['sku', 'descripcion', 'talla', 'ubicacion', 'precio']" [responsive]="true"
+          [globalFilterFields]="['sku', 'descripcion', 'ubicacion', 'precio']" [responsive]="true"
           responsiveLayout="scroll" [rowHover]="true" dataKey="idProducto"
           currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
           [showCurrentPageReport]="true" styleClass="p-datatable-sm">
@@ -91,9 +91,7 @@
               <td>
                 {{rowData['descripcion']}}
               </td>
-              <td>
-                {{rowData['talla']}}
-              </td>
+
 
               <td>
                 {{rowData['existencia']}}

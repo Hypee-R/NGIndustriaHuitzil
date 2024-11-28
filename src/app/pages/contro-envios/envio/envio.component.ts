@@ -197,7 +197,7 @@ export class EnvioComponent implements OnInit {
            this.movimiento= new MovimientosInventarioModel();
            this.tipoPaquete=''
            this.conteo=null
-           
+
             this.messageService.add({ severity: 'success', summary: 'Confirmado', detail: 'has validado el recibo' });
 
             setTimeout(() => {
@@ -275,7 +275,7 @@ export class EnvioComponent implements OnInit {
       return;
     }
 
-    //TODO:se debe de descomentar para pruebas daniel 
+    //TODO:se debe de descomentar para pruebas daniel
     if (this.ubicacionDeSeleccionada.idUbicacion == this.ubicacionDestinoSeleccionada.idUbicacion) {
       this.toastr.error("Error", "la  dirección de envio y la dirección de destino no pueden ser la misma");
       return;
@@ -361,8 +361,8 @@ export class EnvioComponent implements OnInit {
       newMovimientoArticulo.fechaIngreso = articulo.fechaIngreso;
       newMovimientoArticulo.idUbicacion = articulo.idUbicacion;
       newMovimientoArticulo.idCategoria = articulo.idCategoria;
-      newMovimientoArticulo.idTalla = articulo.idTalla;
-      newMovimientoArticulo.talla = articulo.talla;
+      // newMovimientoArticulo.idTalla = articulo.idTalla;
+      // newMovimientoArticulo.talla = articulo.talla;
       newMovimientoArticulo.ubicacion = articulo.ubicacion;
       newMovimientoArticulo.categoria = articulo.categoria;
       newMovimientoArticulo.imagen = articulo.imagen;

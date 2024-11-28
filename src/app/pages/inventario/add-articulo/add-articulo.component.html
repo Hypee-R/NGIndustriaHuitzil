@@ -75,11 +75,11 @@
             <label for="idUbicacion">Ubicación</label>
             <p-dropdown [options]="listUbicaciones" [(ngModel)]="producto.idUbicacion" optionValue="idUbicacion" placeholder="Selecciona una ubicacion" optionLabel="direccion" [style]="{'width': '100%'}"></p-dropdown>
         </div>
-        <br>
+        <!-- <br>
          <div class="field">
             <label for="idTalla">Talla</label>
             <p-dropdown [options]="listTallas" [(ngModel)]="producto.idTalla" optionValue="idTalla" placeholder="Selecciona una talla" optionLabel="nombre" [style]="{'width': '100%'}"></p-dropdown>
-        </div>
+        </div> -->
     </div>
     <div  *ngIf="accion === 'Codigo de Barras'">
             <p>{{_editproducto.descripcion}}</p>

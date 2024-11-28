@@ -52,7 +52,7 @@ export class OpenProductosComponent implements OnInit {
    filterModel = {
     sku: '',
     descripcion: '',
-    talla: null, // Aquí será el id de la talla seleccionada
+    // talla: null, // Aquí será el id de la talla seleccionada
     categoria: null, // Aquí será el id de la categoría seleccionada
     ubicacion: this.variablesGL.getSucursal()
   };
@@ -60,7 +60,7 @@ export class OpenProductosComponent implements OnInit {
     private toastr: ToastrService,
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
-    private tallasService: TallasService,
+    // private tallasService: TallasService,
     private categoriasService: CategoriasService,
     private UbicacionesService: UbicacionesService
   ) {
@@ -68,10 +68,10 @@ export class OpenProductosComponent implements OnInit {
      // { field: 'imagen', header: 'Imagen' },
       { field: 'sku', header: 'SKU' },
       { field: 'descripcion', header: 'Producto' },
-      { field: 'talla', header: 'Talla' },
+      // { field: 'talla', header: 'Talla' },
       { field: 'existencia', header: 'Cantidad' },
       { field: 'precio', header: 'Precio' },
-    
+
     ];
 
     this.dialogSubscription = this.variablesGL.showDialog.subscribe(estado => {
@@ -102,7 +102,7 @@ export class OpenProductosComponent implements OnInit {
   ngOnInit(): void {
     // this.getUbicaciones();
     this.getCategorias();
-    this.getTallas();
+
 
   }
 
@@ -114,7 +114,7 @@ export class OpenProductosComponent implements OnInit {
      // sucursal: this.variablesGL.getSucursal(),
       // sku: this.filterModel.sku ? this.filterModel.sku.trim() : '',
       // descripcion: this.filterModel.descripcion ? this.filterModel.descripcion.trim() : '',
-      talla: this.filterModel.talla ? this.filterModel.talla : null,
+      // talla: this.filterModel.talla ? this.filterModel.talla : null,
       categoria: this.filterModel.categoria ? this.filterModel.categoria : null,
       ubicacion: this.variablesGL.getSucursal(),
       page: 0,
@@ -172,27 +172,6 @@ export class OpenProductosComponent implements OnInit {
           value: categoria.idCategoria
         }));
         console.log(this.categoriaOptions);
-        this.loading = false;
-      } else {
-        this.loading = false;
-        // Manejo de error si es necesario
-      }
-    }, err => {
-      this.loading = false;
-      // Manejo de error si es necesario
-    });
-  }
-  getTallas() {
-    this.loading = true;
-    this.tallasService.getTallas().subscribe(response => {
-      if (response.exito) {
-        this.listTallas = response.respuesta;
-        // Transformar los datos en un formato adecuado para el p-dropdown
-        this.tallaOptions = this.listTallas.map(talla => ({
-          label: talla.nombre, // O usa `talla.descripcion` si prefieres mostrar la descripción
-          value: talla.idTalla
-        }));
-        console.log(this.tallaOptions);
         this.loading = false;
       } else {
         this.loading = false;
