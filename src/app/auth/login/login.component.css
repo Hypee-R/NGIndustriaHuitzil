@@ -1,61 +1,47 @@
+/* General */
 .contenedor {
-    top: 10;
-    margin: 800;
-    padding: 600;
-    width: 100vw;
-    height: 100vh;
-    display: block;
-    background-color: #5fa2b2;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    overflow: hidden;
-    /*height: auto;
-  width: 60em;
-  margin: 3em auto;
-  border-radius: 10px;
-  justify-content: space-between;
-  overflow: hidden;*/
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #5fa2b2;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
 }
 
 .logo {
-    margin: 100;
-    padding: 100;
-    width: 100%;
+  max-width: 150px;
+  margin: 0 auto 20px;
+  display: block;
 }
 
 .card {
-    margin-top: 35px;
-    border: #cdb2ec;
-    width: 500px;
-    height: auto;
-    padding: 50px;
-    position: center;
-    top: 6%;
-    left: 28%;
-    transform: translate(10%, 0%);
-    background-color: rgb(153, 102, 153);
-    color: rgb(236, 236, 34);
-}
-
-.card label h1 h6 {
-    color: rgb(14, 9, 9);
+  width: 90%; /* Se ajusta al tamaño de la pantalla */
+  max-width: 500px; /* Ancho máximo */
+  padding: 30px;
+  background-color: rgb(153, 102, 153);
+  color: rgb(236, 236, 34);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  text-align: center;
 }
 
 label {
-    color: rgb(14, 10, 10);
+  color: rgb(14, 10, 10);
 }
 
+/* Responsividad */
+@media (min-width: 768px) {
+  .card {
+      padding: 40px;
+  }
+}
 
-/* MONITOR */
-
-@media only screen and (min-width: 1920px) {
-    .card {
-        margin-top: 7em;
-        width: 600px;
-        height: auto;
-        padding: 80px;
-        margin-top: 13em;
-        left: 32%;
-    }
+@media (min-width: 1920px) {
+  .card {
+      padding: 50px;
+  }
 }
