@@ -27,8 +27,8 @@ export class AddMaterialComponent implements OnInit {
   listProveedoresAux: CatProveedorModel[] = [];
   listUbicaciones: UbicacionModel[] = [];
   listUbicacionesAux: UbicacionModel[] = [];
-  lstTipoMedicion: string[] = ['BULTO', 'CAJA', 'KILO', 'ROLLO'];
-  lstEstatus: string[] = ['DISPONIBLE', 'EXISTENCIA', 'SOLICITADO', 'RECIBIDO'];
+  lstTipoMedicion: string[] = ['BULTO', 'CAJA', 'KILO', 'ROLLO','LITRO','BULTO 50kg', 'BULTO 25Kg','BULTO 10kg'];
+  lstEstatus: string[] = ['DISPONIBLE', 'EXISTENCIA', 'SOLICITADO', 'TRANSITO'];
   material: MaterialesModel = new MaterialesModel();
 
   dialogSubscription: Subscription = new Subscription();
@@ -82,7 +82,7 @@ export class AddMaterialComponent implements OnInit {
 
   searchProveedor(event){
     console.log('event search ', event);
-    this.listProveedoresAux = this.listProveedores.filter(x => x.encargadoNombre.toLowerCase().includes(event.query.toLowerCase()));
+    this.listProveedoresAux = this.listProveedores.filter(x => x.nombre.toLowerCase().includes(event.query.toLowerCase()));
     console.log('results search ', this.listProveedoresAux);
   }
 

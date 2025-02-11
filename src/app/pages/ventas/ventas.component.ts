@@ -26,7 +26,7 @@ import { ClientesService } from 'src/app/services/clientes.service';
 
 
 export class VentasComponent implements OnInit {
-
+  esVentaPlataforma: boolean = false;
   activeState: boolean[] = [false];
   cadenaProductos: string = "\n";
   impresoras = [];
@@ -787,5 +787,13 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     });
   }
 
+  // calcularPrecio(precio: number): number {
+  //   return this.esVentaPlataforma ? precio * 1.25 : precio;
+  // }
+
+  actualizarPrecios(): void {
+    console.info(this.total);
+    this.total = this.esVentaPlataforma ? this.total * 1.25 : this.total / 1.25;
+  }
 
 }

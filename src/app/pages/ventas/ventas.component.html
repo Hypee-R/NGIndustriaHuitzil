@@ -28,7 +28,10 @@
         </div>
 
 
+
+
       </div>
+
       <br>
       <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" [columns]="cols" [rows]="rows"
         [paginator]="true" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
@@ -82,7 +85,18 @@
     </div>
 
     <div class="col-md-3">
+      <div class="row">
 
+          <p-checkbox
+            [(ngModel)]="esVentaPlataforma"
+            binary="true"
+            (ngModelChange)="actualizarPrecios()">
+
+          </p-checkbox>
+          <label for="ventaPlataforma">Plataforma</label>
+
+        <br>
+      </div>
         <div class="row">
           <button pButton label="Inventario" icon="pi pi-shopping-cart" (click)="openProductsM()"
             class="mr-2 custom-button-inventario" [ngStyle]="{ padding: '1rem' }"></button>
@@ -168,6 +182,7 @@
         <h5>Total de articulos: {{articulos}}</h5>
 
       </div>
+
     </div>
     <div class="row">
       <div class="col-sm">
