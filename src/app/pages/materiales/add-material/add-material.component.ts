@@ -27,7 +27,7 @@ export class AddMaterialComponent implements OnInit {
   listProveedoresAux: CatProveedorModel[] = [];
   listUbicaciones: UbicacionModel[] = [];
   listUbicacionesAux: UbicacionModel[] = [];
-  lstTipoMedicion: string[] = ['BULTO', 'CAJA', 'KILO', 'ROLLO','LITRO','BULTO 50kg', 'BULTO 25Kg','BULTO 10kg'];
+  lstTipoMedicion: string[] = ['BULTO', 'CAJA', 'KILO', 'ROLLO','LITRO','BULTO 50kg', 'BULTO 25Kg','BULTO 10kg','PIEZA','METROS','GRAMOS'];
   lstEstatus: string[] = ['DISPONIBLE', 'EXISTENCIA', 'SOLICITADO', 'TRANSITO'];
   material: MaterialesModel = new MaterialesModel();
 
