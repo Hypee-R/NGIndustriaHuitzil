@@ -593,13 +593,17 @@ const dia = String(fecha.getDate()).padStart(2, '0');
 const mes = String(fecha.getMonth() + 1).padStart(2, '0');
 const anio = fecha.getFullYear();
 
+
+this.downloadNewPdf("VENTA");
+
+
 const fechaFormateada = `${dia}/${mes}/${anio}`;
         //code Impresion
         const conector = new ConectorPluginV3();
         conector
           .Iniciar()
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-          .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+          //.DescargarImagenDeInternetEImprimir("/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
           .Feed(1)
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
           .EscribirTexto("Caja:" + this.cashModel.idCaja)
@@ -645,13 +649,8 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
           .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
           .Feed(1)
-          .EscribirTexto("***Venta publico Gral, Si requiere factura solicitarla durante la venta***")
-          .Feed(1)
-          .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
-          // .Feed(2)
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
           .ImprimirCodigoDeBarrasCodabar(this.RegistraVenta.noTicket, 100, 2, 12)
-          // .Feed(2)
           .Feed(3)
           .Corte(1)
 
@@ -796,4 +795,129 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     this.total = this.esVentaPlataforma ? this.total * 1.25 : this.total / 1.25;
   }
 
+  downloadNewPdf(tipo: String) {
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: [80, 200 + this.articlesShell.length * 12],
+    });
+
+    const margenIzquierdo = 5;
+    const espaciado = 5;
+    const margenSuperior = 10;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    const logoUrl = '/assets/img/LogoSole.jpeg';
+    doc.addImage(logoUrl, 'PNG', margenIzquierdo, margenSuperior, 70, 30);
+    let posicionY = margenSuperior + 25;
+    const espaciadoDeSeccion = 10;
+    // doc.setFontSize(12);
+    // doc.setFont('helvetica', 'bold');
+   
+    posicionY += espaciadoDeSeccion;
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${tipo}`, 30, posicionY);
+    // doc.text(`RFC:RSF170220PNA`, margenIzquierdo, posicionY);
+    // posicionY += espaciado;
+    // doc.text(
+    //   `NEZAHUALCÓYOTL 145 INTERIOR 101 COLONIA`,
+    //   margenIzquierdo,
+    //   posicionY
+    // );
+    // posicionY += espaciado - 2;
+    // doc.text(
+    //   `CENTRO ALCALDÍA CUAUHTÉMOC CDMX, CP 06080`,
+    //   margenIzquierdo,
+    //   posicionY
+    // );
+    posicionY += espaciado;
+    doc.text(`Caja: ${this.cashModel.idCaja}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(`Cajero: ${this.user.nombre}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(`Fecha: ${this.RegistraVenta.fecha}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(
+      `Ticket: ${this.RegistraVenta.noTicket}`,
+      margenIzquierdo,
+      posicionY
+    );
+    posicionY += espaciado;
+    doc.text(`Artículos: ${this.articulos}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.setLineWidth(0.3);
+    doc.line(margenIzquierdo, posicionY, 75, posicionY);
+    posicionY += espaciado;
+    doc.setFontSize(7);
+    doc.text('ARTÍCULO', margenIzquierdo, posicionY);
+    doc.text('CANT', 45, posicionY, { align: 'center' });
+    doc.text('P/U', 60, posicionY, { align: 'center' });
+    doc.text('TOTAL', 70, posicionY, { align: 'right' });
+
+    posicionY += espaciado;
+    doc.line(margenIzquierdo, posicionY, 75, posicionY);
+    posicionY += espaciado;
+    this.articlesShell.forEach((producto) => {
+      const nombreDividido = doc.splitTextToSize(producto.descripcion, 35);
+      doc.setFontSize(6);
+      doc.text(nombreDividido, margenIzquierdo, posicionY);
+      doc.text(producto.cantidad.toString(), 45, posicionY, {
+        align: 'center',
+      });
+      doc.text('$' + producto.precio.toFixed(2), 60, posicionY, {
+        align: 'center',
+      });
+      posicionY += nombreDividido.length * 3;
+    });
+    doc.line(margenIzquierdo, posicionY, 75, posicionY);
+    posicionY += espaciado;
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Descuento: ${this.descuento} MXN`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(
+      `Subtotal: ${this.RegistraVenta.subtotal} MXN`,
+      margenIzquierdo,
+      posicionY
+    );
+    posicionY += espaciado;
+    doc.text(
+      `Total: ${this.getDescuentoAplicado(this.total, this.descuento)} MXN`,
+      margenIzquierdo,
+      posicionY
+    );
+    posicionY += espaciado;
+    doc.text(
+      `Tipo Pago: ${this.getTotalmontoMultiple(this.RegistraVenta)}`,
+      margenIzquierdo,
+      posicionY
+    );
+    posicionY += espaciado;
+    doc.text(`Cambio: ${this.cambioVenta} MXN`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.line(margenIzquierdo, posicionY, 75, posicionY);
+    posicionY += espaciado;
+    doc.setFontSize(7);
+    doc.text(
+      '*** Venta pública Gral, si requiere factura solicitarla durante la venta ***',
+      margenIzquierdo,
+      posicionY,
+      { maxWidth: 70 }
+    );
+    posicionY += espaciado * 2;
+
+    const totalEnLetras = this.variablesGL.numeroALetras(
+      this.total - this.descuento,
+      {
+        plural: 'PESOS MEXICANOS',
+        singular: 'PESO MEXICANO',
+        centPlural: 'CENTAVOS',
+        centSingular: 'CENTAVO',
+      }
+    );
+    doc.text(totalEnLetras, margenIzquierdo, posicionY, { maxWidth: 70 });
+   // doc.save('ticket.pdf');
+    doc.autoPrint();
+    window.open(doc.output('bloburl'), '_blank');
+  }
 }
