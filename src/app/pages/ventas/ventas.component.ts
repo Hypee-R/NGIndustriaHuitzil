@@ -795,11 +795,26 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     this.total = this.esVentaPlataforma ? this.total * 1.25 : this.total / 1.25;
   }
 
+
+
+
   downloadNewPdf(tipo: String) {
+
+    const fecha = this.RegistraVenta.fecha;
+
+
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const anio = fecha.getFullYear();
+    
+
+    const fechaFormateada = `${dia}/${mes}/${anio}`;
+
+
     const doc = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
-      format: [80, 200 + this.articlesShell.length * 12],
+      format: [58, 200 + this.articlesShell.length * 12], // Ajuste para 58mm de ancho
     });
 
     const margenIzquierdo = 5;
@@ -808,78 +823,65 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
     const logoUrl = '/assets/img/LogoSole.jpeg';
-    doc.addImage(logoUrl, 'PNG', margenIzquierdo, margenSuperior, 70, 30);
+
+    // Reducción del tamaño del logo para que se ajuste al ancho de 58 mm
+    doc.addImage(logoUrl, 'PNG', margenIzquierdo, margenSuperior, 50, 20); // Ajustar el tamaño del logo
+
     let posicionY = margenSuperior + 25;
-    const espaciadoDeSeccion = 10;
-    // doc.setFontSize(12);
-    // doc.setFont('helvetica', 'bold');
-   
+    const espaciadoDeSeccion = 5;
+
     posicionY += espaciadoDeSeccion;
     doc.setFontSize(8);
     doc.setFont('helvetica', 'bold');
     doc.text(`${tipo}`, 30, posicionY);
-    // doc.text(`RFC:RSF170220PNA`, margenIzquierdo, posicionY);
-    // posicionY += espaciado;
-    // doc.text(
-    //   `NEZAHUALCÓYOTL 145 INTERIOR 101 COLONIA`,
-    //   margenIzquierdo,
-    //   posicionY
-    // );
-    // posicionY += espaciado - 2;
-    // doc.text(
-    //   `CENTRO ALCALDÍA CUAUHTÉMOC CDMX, CP 06080`,
-    //   margenIzquierdo,
-    //   posicionY
-    // );
+
+    // Información de la venta
     posicionY += espaciado;
     doc.text(`Caja: ${this.cashModel.idCaja}`, margenIzquierdo, posicionY);
     posicionY += espaciado;
     doc.text(`Cajero: ${this.user.nombre}`, margenIzquierdo, posicionY);
     posicionY += espaciado;
-    doc.text(`Fecha: ${this.RegistraVenta.fecha}`, margenIzquierdo, posicionY);
+    doc.text(`Fecha: ${fechaFormateada}`, margenIzquierdo, posicionY);
     posicionY += espaciado;
-    doc.text(
-      `Ticket: ${this.RegistraVenta.noTicket}`,
-      margenIzquierdo,
-      posicionY
-    );
+    doc.text(`Ticket: ${this.RegistraVenta.noTicket}`, margenIzquierdo, posicionY);
     posicionY += espaciado;
     doc.text(`Artículos: ${this.articulos}`, margenIzquierdo, posicionY);
     posicionY += espaciado;
+
     doc.setLineWidth(0.3);
-    doc.line(margenIzquierdo, posicionY, 75, posicionY);
+    doc.line(margenIzquierdo, posicionY, 53, posicionY); // Ajuste de línea a 53 mm para el ancho de 58 mm
     posicionY += espaciado;
+
+    // Encabezado de los artículos
     doc.setFontSize(7);
     doc.text('ARTÍCULO', margenIzquierdo, posicionY);
-    doc.text('CANT', 45, posicionY, { align: 'center' });
-    doc.text('P/U', 60, posicionY, { align: 'center' });
-    doc.text('TOTAL', 70, posicionY, { align: 'right' });
+    doc.text('CANT', 40, posicionY, { align: 'center' });
+    doc.text('P/U', 50, posicionY, { align: 'center' });
+    // doc.text('TOTAL', 55, posicionY, { align: 'right' });
 
     posicionY += espaciado;
-    doc.line(margenIzquierdo, posicionY, 75, posicionY);
-    posicionY += espaciado;
+    doc.line(margenIzquierdo, posicionY, 53, posicionY); // Línea de separación ajustada
+
+    // Listado de artículos
     this.articlesShell.forEach((producto) => {
       const nombreDividido = doc.splitTextToSize(producto.descripcion, 35);
       doc.setFontSize(6);
       doc.text(nombreDividido, margenIzquierdo, posicionY);
-      doc.text(producto.cantidad.toString(), 45, posicionY, {
-        align: 'center',
-      });
-      doc.text('$' + producto.precio.toFixed(2), 60, posicionY, {
+      doc.text(producto.cantidad.toString(), 40, posicionY, { align: 'center', });
+      doc.text('$' + producto.precio.toFixed(2), 50, posicionY, {
         align: 'center',
       });
       posicionY += nombreDividido.length * 3;
     });
-    doc.line(margenIzquierdo, posicionY, 75, posicionY);
+
+    doc.line(margenIzquierdo, posicionY, 53, posicionY);
     posicionY += espaciado;
+
+    // Resumen de la venta
     doc.setFont('helvetica', 'bold');
     doc.text(`Descuento: ${this.descuento} MXN`, margenIzquierdo, posicionY);
     posicionY += espaciado;
-    doc.text(
-      `Subtotal: ${this.RegistraVenta.subtotal} MXN`,
-      margenIzquierdo,
-      posicionY
-    );
+    doc.text(`Subtotal: ${this.RegistraVenta.subtotal} MXN`, margenIzquierdo, posicionY);
     posicionY += espaciado;
     doc.text(
       `Total: ${this.getDescuentoAplicado(this.total, this.descuento)} MXN`,
@@ -887,37 +889,32 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       posicionY
     );
     posicionY += espaciado;
-    doc.text(
-      `Tipo Pago: ${this.getTotalmontoMultiple(this.RegistraVenta)}`,
-      margenIzquierdo,
-      posicionY
-    );
-    posicionY += espaciado;
     doc.text(`Cambio: ${this.cambioVenta} MXN`, margenIzquierdo, posicionY);
     posicionY += espaciado;
-    doc.line(margenIzquierdo, posicionY, 75, posicionY);
-    posicionY += espaciado;
+
+    // Advertencia de la venta pública
     doc.setFontSize(7);
     doc.text(
-      '*** Venta pública Gral, si requiere factura solicitarla durante la venta ***',
+      '***Gracias por su preferencia***',
       margenIzquierdo,
       posicionY,
-      { maxWidth: 70 }
+      { maxWidth: 53 }
     );
-    posicionY += espaciado * 2;
+  //  // posicionY += espaciado;
+  //   // Total en letras
+  //   const totalEnLetras = this.variablesGL.numeroALetras(
+  //     this.total - this.descuento,
+  //     {
+  //       plural: 'PESOS MEXICANOS',
+  //       singular: 'PESO MEXICANO',
+  //       centPlural: 'CENTAVOS',
+  //       centSingular: 'CENTAVO',
+  //     }
+  //   );
+  //   doc.text(totalEnLetras, margenIzquierdo, posicionY, { maxWidth: 53 });
+  //   posicionY += espaciado;
+    doc.autoPrint(); // Para impresión automática
 
-    const totalEnLetras = this.variablesGL.numeroALetras(
-      this.total - this.descuento,
-      {
-        plural: 'PESOS MEXICANOS',
-        singular: 'PESO MEXICANO',
-        centPlural: 'CENTAVOS',
-        centSingular: 'CENTAVO',
-      }
-    );
-    doc.text(totalEnLetras, margenIzquierdo, posicionY, { maxWidth: 70 });
-   // doc.save('ticket.pdf');
-    doc.autoPrint();
     window.open(doc.output('bloburl'), '_blank');
   }
 }
