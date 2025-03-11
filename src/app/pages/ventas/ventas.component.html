@@ -147,7 +147,6 @@
         <i class="pi pi-file-excel" style="font-size: 2.5rem"></i>
         <span style="font-size: 1.5rem; margin-left: 0.5rem;">Limpiar</span>
       </div>
-
     </div>
 
   </div>
@@ -194,9 +193,17 @@
         <app-discount-selector (discountSelected)="onDiscountSelected($event)"></app-discount-selector>
 
       </div>
-
+      <br>
     </div>
-
+    <br>
+    <div class="row">
+      <div class="col-sm">
+        <button pButton type="button" label="TRANSFERENCIA" icon="pi pi-credit-card"
+          class="p-button-rounded p-button-success p-button-lg" badge="8" badgeClass="p-badge-info"
+          (click)="PostVentaRegistro('TRANSFERENCIA')" [disabled]="isButtonDisabled"></button>
+      </div>
+    
+    </div>
     <br>
     <div class="row">
       <div class="col-sm">
@@ -247,7 +254,8 @@
 
 
           </div>
-
+          
+          
           <div class="col-sm-4">
 
             <br>

@@ -512,6 +512,19 @@ export class VentasComponent implements OnInit {
 
       }
     }
+    if (tipoPago == "TRANSFERENCIA") {
+      this.toastr.warning("Recuerda Validar el cobro la venta se registrara ", 'Atencion!');
+      if (this.totalVenta == this.total - this.descuento) {
+        this.changePage();
+        this.RegistraVentaValid(tipoPago); {
+
+        }
+
+      } else {
+        this.toastr.error("Error el importe debe ser exacto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
+
+      }
+    }
   }
 
 
