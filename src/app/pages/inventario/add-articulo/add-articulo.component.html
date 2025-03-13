@@ -1,4 +1,4 @@
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '450px'}" header="{{accion}} producto" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '380px'}" header="{{accion}} producto" [modal]="true" styleClass="p-fluid" [responsive]="true" >
 
 <ng-template pTemplate="content">
     <div *ngIf="accion != 'Codigo de Barras'">
@@ -21,11 +21,10 @@
         <br>
         <div class="field">
             <label for="descripcion">Estatus</label>
-            <!-- <input type="text" pInputText id="status" [(ngModel)]="producto.status" required/> -->
+            
             <p-dropdown [options]="lstEstatus" [(ngModel)]="producto.status" placeholder="Selecciona una opción" [style]="{'width': '100%'}" required="true" appendTo="body"></p-dropdown>
-
             <small class="p-error" *ngIf="submitted && !producto.status">La descripción es requerida.</small>
-            <!-- <small class="p-error" *ngIf="submitted && producto.status?.length > 0 && producto.status?.length <= 2">Esl estatus debe contener minimo 3 caracteres</small> -->
+           
         </div>
 
         <br>
@@ -40,7 +39,7 @@
         <div class="field">
             <label for="precio">Precio</label>
             <p-inputNumber [(ngModel)]="producto.precio" id="precio" inputId="minmaxfraction" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="5" required> </p-inputNumber>
-            <!-- <input type="text" pInputText id="precio" [(ngModel)]="producto.precio" required/> -->
+        
             <small class="p-error" *ngIf="submitted && !producto.precio">El precio es requerido.</small>
         </div>
         <br>
@@ -75,11 +74,7 @@
             <label for="idUbicacion">Ubicación</label>
             <p-dropdown [options]="listUbicaciones" [(ngModel)]="producto.idUbicacion" optionValue="idUbicacion" placeholder="Selecciona una ubicacion" optionLabel="direccion" [style]="{'width': '100%'}"  appendTo="body"></p-dropdown>
         </div>
-        <!-- <br>
-         <div class="field">
-            <label for="idTalla">Talla</label>
-            <p-dropdown [options]="listTallas" [(ngModel)]="producto.idTalla" optionValue="idTalla" placeholder="Selecciona una talla" optionLabel="nombre" [style]="{'width': '100%'}"></p-dropdown>
-        </div> -->
+
     </div>
     <div  *ngIf="accion === 'Codigo de Barras'">
             <p>{{_editproducto.descripcion}}</p>

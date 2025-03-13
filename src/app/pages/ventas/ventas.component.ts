@@ -790,7 +790,8 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     const descuento = (this.total * porcentajeDescuento) / 100;
     console.log(descuento)
 
-    this.descuento = descuento
+    // this.descuento = descuento
+    this.descuento = Math.ceil(descuento);  // Redondea hacia arriba
     this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
       plural: 'PESOS MEXICANOS',
       singular: 'PESO MEXICANO',
