@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CajaModel } from 'src/app/models/caja.model';
 import { productoModel } from 'src/app/models/productos.model';
@@ -16,6 +16,7 @@ import { CatClienteModel } from 'src/app/models/clientes.model';
 import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 import { CambiosDevolucionesModel } from 'src/app/models/cambios-devoluciones.model';
 import { ClientesService } from 'src/app/services/clientes.service';
+import { CatTiposPago } from 'src/app/models/tipoPago';
 
 @Component({
   selector: 'app-ventas',
@@ -77,6 +78,35 @@ export class VentasComponent implements OnInit {
   //Datos de cancelacion
   lstCambiosDevoluciones: CambiosDevolucionesModel[] = [];
   selectedCambio: CambiosDevolucionesModel;
+  selectedOption: any = { value: 'SAL', label: 'SALIDA' };
+  options = [
+    // { value: 'VEN', label: 'VENTA' },
+    // { value: 'ABN', label: 'ABONO' },
+    { value: 'SAL', label: 'SALIDA' },
+    { value: 'ENT', label: 'ENTRADA' },
+   
+    // { value: 'DEV', label: 'DEVOLUCION' },
+  ];
+  title = 'VENTA';
+  titlePay = 'PAGAR';
+
+  cardStyle: any = {
+    background: '#ffffff ', // Valor predeterminado
+  };
+
+  checked: boolean = false;
+  iconPay = 'pi pi-money-bill';
+  tiposDePago: CatTiposPago[];
+  
+  cashOpen = false;
+  @ViewChild('fileInput', { static: false }) myInput!: any;
+  showMultiples = false;
+  pagando: boolean = false;
+  focusPay = true;
+  listaSelected = 'Precio - PRECIO ETIQUETA';
+  tipoPago1: CatTiposPago;
+  tipoPago2: CatTiposPago;
+  selectedLista: any;
   constructor(
     private toastr: ToastrService,
     private ventasService: VentasService,
@@ -85,6 +115,20 @@ export class VentasComponent implements OnInit {
     private cambiosDevolucionesService: VentasService,
     private clientesService: ClientesService
   ) {
+    this.tiposDePago = [
+      {
+        id: 1,
+        nombre: 'MOVIMIENTOS',
+        descripcion: 'momientos de articulos',
+        icon: 'pi pi-money-bill',}
+     
+    ];
+    this.title = 'SALIDA DE PRODUCTO';
+    this.titlePay = 'SALIDA';
+    this.iconPay = 'pi pi-download';
+    this.cardStyle = {
+      background: '#e2f6fd', // Valor predeterminado
+    };
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
 
@@ -110,7 +154,31 @@ export class VentasComponent implements OnInit {
 
   }
 
+ 
   selectedValues: string[] = [];
+  handleVisibilityChange() {
+    if (document.hidden) {
+      if (this.selectedOption.value == 'SAL') {
+        this.myInput.nativeElement.focus();
+      }
+    } else {
+      if (this.selectedOption.value == 'SAL') {
+        this.myInput.nativeElement.focus();
+      }
+    }
+  }
+
+  async ngAfterViewInit() {
+    document.addEventListener(
+      'visibilitychange',
+      this.handleVisibilityChange.bind(this)
+    );
+    setTimeout(() => {
+      if (this.selectedOption.value === 'SAL') {
+        this.myInput.nativeElement.focus();
+      }
+    });
+  }
 
   async ngOnInit() {
 
@@ -166,6 +234,7 @@ export class VentasComponent implements OnInit {
     this.accionAdd = ''
     this.accion = 'Abrir';
     this.getCaja();
+    this.cashOpen = true;
 
   }
 
@@ -442,32 +511,33 @@ export class VentasComponent implements OnInit {
 
   }
 
-  downloadPDF() {
-    // Extraemos el
-    const DATA = document.getElementById('htmlData');
-    const doc = new jsPDF('p', 'pt', 'a4');
-    const options = {
-      background: 'white',
-      scale: 3
-    };
-    html2canvas(DATA, options).then((canvas) => {
-      const img = canvas.toDataURL('assets/img/LogoSole.jpeg');
-      // Add image Canvas to PDF
-      const bufferX = 15;
-      const bufferY = 15;
-      const imgProps = (doc as any).getImageProperties(img);
-      const pdfWidth = doc.internal.pageSize.getWidth() - 2 * bufferX;
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      doc.addImage(img, 'PNG', bufferX, bufferY, pdfWidth, pdfHeight, undefined, 'FAST');
-      return doc;
-    }).then((docResult) => {
-      docResult.save(`${new Date().toISOString()}_CotizaciónHuitzil.pdf`);
-    });
-  }
+  // downloadPDF() {
+  //   // Extraemos el
+  //   const DATA = document.getElementById('htmlData');
+  //   const doc = new jsPDF('p', 'pt', 'a4');
+  //   const options = {
+  //     background: 'white',
+  //     scale: 3
+  //   };
+  //   html2canvas(DATA, options).then((canvas) => {
+  //     const img = canvas.toDataURL('assets/img/LogoSole.jpeg');
+  //     // Add image Canvas to PDF
+  //     const bufferX = 15;
+  //     const bufferY = 15;
+  //     const imgProps = (doc as any).getImageProperties(img);
+  //     const pdfWidth = doc.internal.pageSize.getWidth() - 2 * bufferX;
+  //     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  //     doc.addImage(img, 'PNG', bufferX, bufferY, pdfWidth, pdfHeight, undefined, 'FAST');
+  //     return doc;
+  //   }).then((docResult) => {
+  //     docResult.save(`${new Date().toISOString()}_CotizaciónHuitzil.pdf`);
+  //   });
+  // }
 
 
 
   async PostVentaRegistro(tipoPago: string) {
+    console.log('TIPO PAGO===>',tipoPago)
     this.isButtonDisabled = true;
     if (tipoPago == "MULTIPLE") {
       this.totalVenta = this.totalMultipleT + this.totalMultipleF;
@@ -512,6 +582,14 @@ export class VentasComponent implements OnInit {
 
       }
     }
+
+  if (this.selectedOption.value == 'ENT') {
+    this.changePage();
+    this.RegistraVentaValid(tipoPago);
+  } else {
+    this.changePage();
+    this.RegistraVentaValid(tipoPago);
+  }
   }
 
 
@@ -538,7 +616,7 @@ export class VentasComponent implements OnInit {
       vt.cantidad = element.cantidad;
       vt.precioUnitario = element.precio;
       vt.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
-      vt.articulo = element;
+      //vt.articulo = element;
 
       //Genera Cadena para Impresion Ticket con salto de pagina
       this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN" + "|" + "$" + vt.subtotal + "MXN" + "\n".toString()
@@ -564,13 +642,14 @@ export class VentasComponent implements OnInit {
     // Generar un número aleatorio de 2 dígitos (entre 10 y 99)
     const randomTwoDigits = Math.floor(Math.random() * 90 + 10).toString();
 
+  
     this.RegistraVenta.idCaja = this.cashModel.idCaja;
-    this.RegistraVenta.fecha = new Date;
+   // this.RegistraVenta.fecha = new Date;
     this.RegistraVenta.noArticulos = this.articlesShell.length
     this.RegistraVenta.noTicket = year + month + day + randomTwoDigits;
     this.RegistraVenta.subtotal = this.total;
     this.RegistraVenta.tipoPago = tipoPago;
-    this.RegistraVenta.tipoVenta = "CONTADO";
+    this.RegistraVenta.tipoVenta = this.selectedOption.value 
     this.RegistraVenta.total = this.total - this.descuento;
     this.RegistraVenta.tarjeta = this.totalMultipleT;
     this.RegistraVenta.efectivo = this.totalMultipleF;
@@ -787,5 +866,215 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     });
   }
 
+
+  onOptionChange(value: any): void {
+ 
+    // setTimeout(() => {
+    //   if (this.selectedOption.value === 'SAL') {
+    //     this.title = 'SALIDA DE PRODUCTO';
+    //   this.titlePay = 'SALIDA';
+    //   this.iconPay = 'pi pi-download';
+    //   this.cardStyle = {
+    //     background: '#e2f6fd', // Valor predeterminado
+    //   };
+    //   }
+    // });
+
+    this.total = 0;
+    this.articlesShell = [];
+    const option = localStorage.getItem('opcion');
+    const op = JSON.parse(option);
+    this.checked = false;
+    this.articulos = 0;
+ 
+    //console.log()
+    if (op == value) {
+      const ticket = localStorage.getItem('ticket');
+      const articles = JSON.parse(ticket);
+      this.articlesShell = articles;
+      this.articlesShell.forEach((a) => {
+        this.total += a.precio * a.cantidad;
+        this.articulos += a.cantidad;
+      });
+    }
+    
+    //localStorage.setItem('ticket', JSON.stringify(this.articlesShell));
+    // if (value == 'VEN') {
+    //   this.titlePay = 'PAGAR';
+    //   this.iconPay = 'pi pi-money-bill';
+    //   this.title = 'VENTA';
+    //   this.cardStyle = {
+    //     background: '#ffffff ', // Valor predeterminado
+    //   };
+    //   this.getTiposPago();
+    // } else 
+    // if (value == 'ABN') {
+    //   this.titlePay = 'ABONO';
+    //   this.title = 'ABONO';
+    //   this.iconPay = 'pi pi-wallet';
+    //   this.cardStyle = {
+    //     background: '#e1d9f1',
+    //   };
+    // } else 
+    if (value == 'ENT') {
+      this.titlePay = 'ENTRADA';
+      this.title = 'ENTRADA DE PRODUCTO';
+      this.iconPay = 'pi pi-upload';
+      this.cardStyle = {
+        background: '#fdfddc', // Valor predeterminado
+      };
+    // } else 
+    // if (value == 'DEV') {
+    //   this.title = 'DEVOLUCION DE PRODUCTO';
+    //   this.titlePay = 'DEVOLUCION';
+    //   this.iconPay = 'pi pi-download';
+    //   this.cardStyle = {
+    //     background: '#d9d2e9', // Valor predeterminado
+    //   };
+    } else {
+      this.title = 'SALIDA DE PRODUCTO';
+      this.titlePay = 'SALIDA';
+      this.iconPay = 'pi pi-download';
+      this.cardStyle = {
+        background: '#e2f6fd', // Valor predeterminado
+      };
+    }
+    if (this.cashOpen == false) {
+      this.toastr.warning(
+        'Abre una caja para realizar movimientos',
+        'Atencion!'
+      );
+    }
+    //localStorage.setItem('opcion', JSON.stringify(value));
+  }
+
+    getTiposPago() {
+    this.tiposDePago = [];
+    this.ventasService.getTipoVenta().subscribe(
+      (response) => {
+        if (response.exito) {
+          this.tiposDePago = response.respuesta;
+        } else {
+          //this.variablesGL.hideLoading();
+          this.toastr.error(response.mensaje, 'Error!');
+        }
+      },
+      (err) => {
+        this.variablesGL.hideLoading();
+        // this.toastr.error('Hubo un error al buscar cliente', 'Error!');
+      }
+    );
+  }
+  downloadPDF(tipo: String) {
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: [80, 150],
+    });
+
+    const margenIzquierdo = 5;
+    const espaciado = 5;
+
+    const logoUrl = '/assets/img/logo_large_red.png';
+    doc.addImage(logoUrl, 'PNG', margenIzquierdo, 5, 70, 20);
+
+    doc.setFontSize(8);
+    let posicionY = 30;
+    doc.text(`${tipo}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(`Caja: ${this.cashModel.idCaja}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(`Cajero: ${this.user.nombre}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(`Fecha: ${this.RegistraVenta.fecha}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(
+      `Ticket: ${this.RegistraVenta.noTicket}`,
+      margenIzquierdo,
+      posicionY
+    );
+    posicionY += espaciado;
+    doc.text(`Artículos: ${this.articulos}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+
+    doc.text('______________________________', margenIzquierdo, posicionY);
+    posicionY += espaciado;
+
+    doc.text('ARTICULO | CANT | P/U | TOTAL', margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text('______________________________', margenIzquierdo, posicionY);
+    posicionY += espaciado;
+
+    doc.text(this.cadenaProductos, margenIzquierdo, posicionY);
+    posicionY += espaciado * 3;
+
+    doc.text(`Descuento: ${this.descuento} MXN`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(
+      `Subtotal: ${this.RegistraVenta.subtotal} MXN`,
+      margenIzquierdo,
+      posicionY
+    );
+    posicionY += espaciado;
+    doc.text(
+      `Total: ${this.getDescuentoAplicado(this.total, this.descuento)} MXN`,
+      margenIzquierdo,
+      posicionY
+    );
+    posicionY += espaciado;
+    doc.text(
+      `Tipo Pago: ${this.getTotalmontoMultiple(this.RegistraVenta)}`,
+      margenIzquierdo,
+      posicionY
+    );
+    posicionY += espaciado;
+    doc.text(`Cambio: ${this.cambioVenta} MXN`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+
+    doc.setFontSize(7);
+    posicionY += espaciado;
+    posicionY += espaciado * 2;
+    doc.text(
+      '***Venta público Gral, si requiere factura solicitarla durante la venta***',
+      margenIzquierdo,
+      posicionY,
+      { maxWidth: 70 }
+    );
+
+    posicionY += espaciado * 2;
+    posicionY += espaciado * 2;
+    const totalEnLetras = this.variablesGL.numeroALetras(
+      this.total - this.descuento,
+      {
+        plural: 'PESOS MEXICANOS',
+        singular: 'PESO MEXICANO',
+        centPlural: 'CENTAVOS',
+        centSingular: 'CENTAVO',
+      }
+    );
+    doc.text(totalEnLetras, margenIzquierdo, posicionY, { maxWidth: 70 });
+
+    doc.save('ticket.pdf');
+  }
+
+  cancelMultiple() {
+    //@ViewChild('myInput') myInput!: ElementRef;
+    this.showMultiples = false;
+    if (this.myInput != undefined) {
+      this.myInput.nativeElement.focus();
+    }
+    this.getTiposPago();
+  }
+
+  
+  addedInventario(precio: any) {
+    this.selectedLista = precio;
+    this.listaSelected = this.selectedLista.descripcion;
+    localStorage.setItem('precios', JSON.stringify(precio));
+
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(false);
+    }, 100);
+  }
 
 }

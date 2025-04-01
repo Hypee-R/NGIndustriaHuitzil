@@ -40,7 +40,7 @@ export class EnvioComponent implements OnInit {
   ubicacionDeSeleccionada: UbicacionModel;
   ubicacionDestinoSeleccionada: UbicacionModel;
   idUbicacionde: string;
-  listArticulos: productoModel[];
+  listArticulos: any[];
   imagenes: imagen64[] = [];
   cols: any[] = [];
   accion = '';
@@ -340,7 +340,7 @@ export class EnvioComponent implements OnInit {
   addMovimiento() {
     let date = formatDate(new Date(), 'dd/MM/yyyy, hh:mm a', 'en').toString();
     let newMovimiento = new MovimientosInventarioModel();
-    let movimientosArticulos: MovimientoArticuloModel[] = [];
+    let movimientosArticulos: any[] = [];
     newMovimiento.fecha = date;
     newMovimiento.ubicacion = this.ubicacionDeSeleccionada.idUbicacion;
     newMovimiento.status = "ENVIO";

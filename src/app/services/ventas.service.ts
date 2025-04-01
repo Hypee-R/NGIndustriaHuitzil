@@ -12,6 +12,14 @@ import { VariablesService } from './variablesGL.service';
   providedIn: 'root'
 })
 export class VentasService {
+
+  getTipoVenta(): Observable<ResponseModel> {
+    return this.http
+      .get<ResponseModel>(environment.apiService + 'Ventas/ConsultaTipo')
+      .pipe(map((res) => res));
+  }
+
+
   user = JSON.parse(localStorage.getItem('usuario'));
   constructor(   private variablesGL: VariablesService,
     private http: HttpClient

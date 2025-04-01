@@ -10,6 +10,7 @@ export class CajaModel{
   montoCierre: number;
   idEmpleadoNavigation : UsuarioModel
   venta: VentaModel[];
+  estatus: any;
   constructor(){
     this.idCaja = 0;
     this.idEmpleado = 0;

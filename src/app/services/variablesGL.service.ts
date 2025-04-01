@@ -5,11 +5,18 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { UsuarioAuthModel } from '../models/usuario-auth.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VariablesService {
+
+  getIdUbicacion(){
+    let userLogged: UsuarioAuthModel
+    = JSON.parse(localStorage.getItem('usuario'));
+    return userLogged.idUbicacion;
+  }
 
   showSideUser = new Subject<boolean>();
   showSideBar = new Subject<boolean>();

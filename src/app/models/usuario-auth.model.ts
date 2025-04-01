@@ -17,4 +17,5 @@ export class UsuarioAuthModel{
   pc: string;
   ubicacion: string;
   impresora: string;
+  idUbicacion:number;
 }

@@ -17,6 +17,9 @@ export class productoModel{
   precio:number;
   sku: string;
   CantMovimiento? : number
+  seguimiento:Boolean
+  min?: string;
+  nombre: any;
     constructor(){
     this.idArticulo = 0;
     this.status = '';
@@ -24,6 +27,7 @@ export class productoModel{
     this.existencia = '';
     this.fechaIngreso= '';
     this.idCategoria = 0;
+    this.min = '0';
     // this.idTalla =  0;
     this.categoria='';
     // this.talla='';

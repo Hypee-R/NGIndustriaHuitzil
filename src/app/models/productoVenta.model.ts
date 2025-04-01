@@ -14,6 +14,9 @@ export class productoVentaModel{
     precio:number;
     sku: string;
     cantidad : number
+    devolucion
+  nombre: any;
+  comentario: any;
       constructor(){
       this.idArticulo = 0;
       this.status = '';
@@ -28,6 +31,7 @@ export class productoVentaModel{
       this.imagen='';
       this.precio = 0;
       this.sku = '';
+      this.devolucion = false
       this.cantidad = 1
     }
   }

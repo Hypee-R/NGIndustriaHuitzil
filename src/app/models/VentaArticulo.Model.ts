@@ -13,4 +13,7 @@ export class VentaArticuloModel {
     venta?: VentaModel;
     expanded?: boolean;
     cambiosArticulo?: CambiosDevolucionesArticuloModel[];
+    devolucion: any;
+    comentario: any;
+
 }

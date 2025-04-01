@@ -141,6 +141,29 @@ export class InventarioService {
     return this.http.get<ResponseModel>(`${environment.apiService}Inventario/SearchProductDemanda?${params.toString()}`);
   }
 
+  searchProductByCode(sku: string,idUbicacion): Observable<ResponseModel> {
+    return this.http.get<ResponseModel>(
+      environment.apiService +
+        `Inventario/SearchProductByCode?sku=${sku}&idUbicacion=${idUbicacion}`
+    );
+  }
+
+  getInventariosByUbicacion(): Observable<ResponseModel> {
+    // console.log(this.variablesGL.getRol)
+    let iduUbicacion;
+    if (this.variablesGL.getRol() === 'Administrador') {
+      iduUbicacion = 'all';
+    } else {
+      iduUbicacion = this.variablesGL.getIdUbicacion();
+    }
+
+    return this.http
+      .get<ResponseModel>(
+        environment.apiService +
+          `Inventario/ConsultaByUbicacion?idUbicacion=${iduUbicacion}`
+      )
+      .pipe(map((res) => res));
+  }
 }
 
 

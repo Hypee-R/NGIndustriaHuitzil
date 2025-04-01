@@ -17,6 +17,10 @@ export class VentaModel {
     caja?: CajaModel;
     descuento?: number;
     ventaArticulo: VentaArticuloModel[];
+  idCliente: number;
+  multipleTipo1: string;
+  idUbicacion: number;
+  comentario: string;
     constructor(){
       this.idVenta = 0;
       this.idCaja = 0;
