@@ -14,6 +14,7 @@ export class productoVentaModel{
     precio:number;
     sku: string;
     cantidad : number
+  precioConDescuento: number;
       constructor(){
       this.idArticulo = 0;
       this.status = '';
@@ -29,6 +30,7 @@ export class productoVentaModel{
       this.precio = 0;
       this.sku = '';
       this.cantidad = 1
+      this.precioConDescuento= 0;
     }
   }
   

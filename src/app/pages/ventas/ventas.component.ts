@@ -77,6 +77,8 @@ export class VentasComponent implements OnInit {
   //Datos de cancelacion
   lstCambiosDevoluciones: CambiosDevolucionesModel[] = [];
   selectedCambio: CambiosDevolucionesModel;
+  discountOptions: any[] = [];   // Opciones del dropdown para el descuento
+
   constructor(
     private toastr: ToastrService,
     private ventasService: VentasService,
@@ -87,15 +89,27 @@ export class VentasComponent implements OnInit {
   ) {
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
-
+     
       { field: 'cantidad', header: 'Cantidad' },
       // { field: 'imagen', header: 'Imagen' },
       { field: 'descripcion', header: 'Producto' },
       { field: 'precio', header: 'Precio' },
-      { field: 'sku', header: 'SKU' }
+      { field: 'sku', header: 'SKU' },
+       
 
     ];
-
+    this.discountOptions = [
+      { label: '0%', value: 0 },
+      { label: '5%', value: 5 },
+      { label: '10%', value: 10 },
+      { label: '15%', value: 15 },
+      { label: '20%', value: 20 },
+      { label: '25%', value: 25 },
+      { label: '30%', value: 30 },
+      { label: '50%', value: 50 },
+      { label: '75%', value: 75 },
+      { label: '100%', value: 100 }
+    ];
     this.statusPanubicacion = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();
     if (status == 'celular') {
@@ -199,17 +213,21 @@ export class VentasComponent implements OnInit {
 
 
   addArticle(product: productoVentaModel, index: number) {
+    this.articlesShell.forEach(product => {
+      // Inicializar con el precio original al principio
+      product.precioConDescuento = product.precio;  
+    });
     console.log(product, index)
     this.articlesShell[index].cantidad += 1
     this.articulos += 1
     this.total += product.precio
     console.log(this.total)
-    this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
-      plural: 'PESOS MEXICANOS',
-      singular: 'PESO MEXICANO',
-      centPlural: 'CENTAVOS',
-      centSingular: 'CENTAVO'
-    });
+    // this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
+    //   plural: 'PESOS MEXICANOS',
+    //   singular: 'PESO MEXICANO',
+    //   centPlural: 'CENTAVOS',
+    //   centSingular: 'CENTAVO'
+    // });
 
   }
 
@@ -549,7 +567,8 @@ export class VentasComponent implements OnInit {
 
       vt.idArticulo = element.idArticulo;
       vt.cantidad = element.cantidad;
-      vt.precioUnitario = element.precio;
+      // vt.precioUnitario = element.precio;
+      vt.precioUnitario = element.precioConDescuento !== 0 ? element.precioConDescuento : element.precio;
       vt.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
       vt.articulo = element;
 
@@ -882,9 +901,13 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       doc.setFontSize(6);
       doc.text(nombreDividido, margenIzquierdo, posicionY);
       doc.text(producto.cantidad.toString(), 40, posicionY, { align: 'center', });
-      doc.text('$' + producto.precio.toFixed(2), 50, posicionY, {
+      doc.text('$' + (producto.precioConDescuento !== 0 ? producto.precioConDescuento : producto.precio).toFixed(2), 50, posicionY, {
         align: 'center',
       });
+      
+      // doc.text('$' + producto.precio.toFixed(2), 50, posicionY, {
+      //   align: 'center',
+      // });
       posicionY += nombreDividido.length * 3;
     });
 
@@ -931,4 +954,43 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
 
     window.open(doc.output('bloburl'), '_blank');
   }
+
+
+    // Actualizar el descuento de un producto
+    onDiscountChange(discount: number, index: number) {
+      console.info("DISCOUNT---->", discount);
+    
+      // Acceder al producto de la lista `articlesShell` en el índice dado
+      const product = this.articlesShell[index];
+    
+      // Aplicar el descuento al precio del producto
+      
+      const precioConDescuento = discount > 0
+      ? product.precio - (product.precio * discount / 100)
+      : product.precio;  // Si no hay descuento, mantener el precio original
+      // Guardar el precio con descuento en el producto
+      product.precioConDescuento = precioConDescuento;
+    
+      // Actualizar el precio con descuento en el objeto
+      this.articlesShell[index].precioConDescuento = precioConDescuento;
+    
+      // Llamar a una función para actualizar el total y el número de productos
+      this.updateTotals();
+    }
+    
+    updateTotals() {
+      // Recalcular el total y la cantidad
+      this.total = 0;
+      this.articulos = 0;
+    
+      // Iterar sobre todos los productos para recalcular el total y la cantidad
+      this.articlesShell.forEach(item => {
+        this.total += item.precioConDescuento * item.cantidad;  // Sumar el total
+        this.articulos += item.cantidad;  // Contar la cantidad total de artículos
+      });
+    
+    
+    }
+ 
+    
 }

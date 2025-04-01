@@ -269,6 +269,10 @@ export class OpenProductosComponent implements OnInit {
   // }
 
   addProduct(product: productoModel) {
+   
+      // Inicializar con el precio original al principio
+
+    
     this.articlesAddSales += 1;
     this._articulosS.emit(product);
   }

@@ -40,6 +40,7 @@
         <!-- Header template -->
         <ng-template pTemplate="header" let-columns>
           <tr class="header-row">
+          
             <th style="width: 1rem"></th>
             <th *ngFor="let col of columns" [pSortableColumn]="col.field">
               <div class="flex justify-content-center align-items-center"
@@ -47,14 +48,18 @@
                 {{col.header}}
               </div>
             </th>
+            <th style="width: 1rem">Descuento</th>
           </tr>
         </ng-template>
 
         <!-- Body template -->
         <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
           <tr>
+            <!-- Descuento por producto -->
+         
             <td>
               <div style="display: inline-flex">
+                
                 <button (click)="deleteProduct(rowData,i)" type="button" pButton icon="pi pi-minus"
                   class="p-button-icon-only p-button-text text-600 hover:text-primary p-inputnumber-button p-inputnumber-button-down">
                 </button>
@@ -70,6 +75,16 @@
               <ng-template #otherField>
                 {{ rowData[col.field] }}
               </ng-template>
+            </td>
+            <td>
+              <p-dropdown 
+                [options]="discountOptions" 
+                [(ngModel)]="rowData.descuento" 
+                (onChange)="onDiscountChange( rowData.descuento,i)" 
+                placeholder="Selecciona un descuento" 
+                [style]="{'width':'120px'}"
+                [appendTo]="'body'">
+              </p-dropdown>
             </td>
           </tr>
         </ng-template>
@@ -87,41 +102,38 @@
     <div class="col-md-3">
       <div class="row">
 
-          <p-checkbox
-            [(ngModel)]="esVentaPlataforma"
-            binary="true"
-            (ngModelChange)="actualizarPrecios()">
+        <p-checkbox [(ngModel)]="esVentaPlataforma" binary="true" (ngModelChange)="actualizarPrecios()">
 
-          </p-checkbox>
-          <label for="ventaPlataforma">Plataforma</label>
+        </p-checkbox>
+        <label for="ventaPlataforma">Plataforma</label>
 
         <br>
       </div>
-        <div class="row">
-          <button pButton label="Inventario" icon="pi pi-shopping-cart" (click)="openProductsM()"
-            class="mr-2 custom-button-inventario" [ngStyle]="{ padding: '1rem' }"></button>
-        </div>
+      <div class="row">
+        <button pButton label="Inventario" icon="pi pi-shopping-cart" (click)="openProductsM()"
+          class="mr-2 custom-button-inventario" [ngStyle]="{ padding: '1rem' }"></button>
+      </div>
 
-        <br>
-        <div class="row">
-          <button pButton label="Abrir caja" icon="pi pi-money-bill" (click)="openCashRegister()"
-            class="custom-button-abrir-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
-        </div>
-        <br>
-        <div class="row">
-          <button pButton label="Cerrar caja" icon="pi pi-folder" (click)="closeCashRegister()"
-            class="custom-button-cerrar-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
-        </div>
-        <br>
-        <div class="row">
-          <button pButton label="Informacion caja" icon="pi pi-desktop" (click)="statusCashRegister()"
-            class="custom-button-info-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
-        </div>
-        <br>
-        <div class="row">
-          <button pButton label="Cancelar venta" icon="pi pi-trash" (click)="openModalAddCancel()"
-            class="custom-button-cancelar-venta mr-2" [ngStyle]="{  padding: '1rem'}"></button>
-        </div>
+      <br>
+      <div class="row">
+        <button pButton label="Abrir caja" icon="pi pi-money-bill" (click)="openCashRegister()"
+          class="custom-button-abrir-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+      </div>
+      <br>
+      <div class="row">
+        <button pButton label="Cerrar caja" icon="pi pi-folder" (click)="closeCashRegister()"
+          class="custom-button-cerrar-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+      </div>
+      <br>
+      <div class="row">
+        <button pButton label="Informacion caja" icon="pi pi-desktop" (click)="statusCashRegister()"
+          class="custom-button-info-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+      </div>
+      <br>
+      <div class="row">
+        <button pButton label="Cancelar venta" icon="pi pi-trash" (click)="openModalAddCancel()"
+          class="custom-button-cancelar-venta mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+      </div>
 
 
 
@@ -170,7 +182,7 @@
 
 
 
-<p-dialog header="Finalizar Venta"  [(visible)]="display" [style]="{width: '60vw'}">
+<p-dialog header="Finalizar Venta" [(visible)]="display" [style]="{width: '60vw'}">
   <div class="container">
 
 
@@ -202,7 +214,7 @@
           class="p-button-rounded p-button-success p-button-lg" badge="8" badgeClass="p-badge-info"
           (click)="PostVentaRegistro('TRANSFERENCIA')" [disabled]="isButtonDisabled"></button>
       </div>
-    
+
     </div>
     <br>
     <div class="row">
@@ -254,8 +266,8 @@
 
 
           </div>
-          
-          
+
+
           <div class="col-sm-4">
 
             <br>
