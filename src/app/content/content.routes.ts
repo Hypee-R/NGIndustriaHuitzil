@@ -17,6 +17,7 @@ import { CambiosYDevolucionesComponent } from '../pages/cambios-y-devoluciones/c
 import { ClientesComponent } from '../pages/clientes/clientes.component';
 import { ApartadosComponent } from '../pages/apartados/apartados.component';
 import { ControEnviosComponent } from '../pages/contro-envios/contro-envios.component';
+import { ProduccionComponent } from '../pages/produccion/produccion.component';
 
 export const contentRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
@@ -28,6 +29,7 @@ export const contentRoutes: Routes = [
     { path: 'reports', component: InformesComponent},
     { path: 'locations', component: UbicacionesComponent },
     { path: 'categories', component: CategoriasComponent },
+    { path: 'produccion', component: ProduccionComponent },
     { path: 'materials', component: MaterialesComponent },
     { path: 'providers', component: ProveedoresComponent },
     // { path: 'sizes', component: TallasComponent },
