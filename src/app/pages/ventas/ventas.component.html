@@ -2,21 +2,24 @@
   <div class="card shadow mb-5 bg-body rounded"> -->
 <!-- <span class="lstick"></span> -->
 
-<p-card header="Vendedor:{{user.nombre}} " subheader="Apertura:{{this.cashModel?.fecha}} ">
+<p-card header="Vendedor : {{user.nombre }}  ({{title}})" [style]="cardStyle">
   <!-- TODO:DESCOMENTAR CUANDO ESTE LISTO -->
-  <!-- <div class="row">
-    <div class="col-8 md:col-6">
-      <div>
-        <div class="input-container">
-          <span class="label">Selecciona un cliente: </span>
-          <p-dropdown [filter]="true"  [options]="clientes" [(ngModel)]="selectedcliente" placeholder="Cliente" optionLabel="nombre">
+  <div class="row">
+    <div class="col-8 md:col-6 d-flex align-items-center">
+      <!-- <div class="input-container" style="flex: 1; margin-right: 20px;">
+        <span class="label">Selecciona un cliente: </span>
+        <p-dropdown [filter]="true" [options]="clientes" [(ngModel)]="selectedcliente"
+          optionLabel="nombre" (onChange)="onClienteChange($event)"></p-dropdown>
+      </div> -->
 
-          </p-dropdown>
-        </div>
+
+      <div class="radio-group">
+        <p-radioButton *ngFor="let option of options" [value]="option.value" (ngModelChange)="onOptionChange($event)"
+          [(ngModel)]="selectedOption.value" [label]="option.label"></p-radioButton>
       </div>
     </div>
-
-</div> -->
+  </div>
+  <br>
   <div class="row">
 
     <div class="col-md-9">
@@ -28,10 +31,7 @@
         </div>
 
 
-
-
       </div>
-
       <br>
       <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" [columns]="cols" [rows]="rows"
         [paginator]="true" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
@@ -40,7 +40,6 @@
         <!-- Header template -->
         <ng-template pTemplate="header" let-columns>
           <tr class="header-row">
-          
             <th style="width: 1rem"></th>
             <th *ngFor="let col of columns" [pSortableColumn]="col.field">
               <div class="flex justify-content-center align-items-center"
@@ -48,18 +47,14 @@
                 {{col.header}}
               </div>
             </th>
-            <th style="width: 1rem">Descuento</th>
           </tr>
         </ng-template>
 
         <!-- Body template -->
         <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
           <tr>
-            <!-- Descuento por producto -->
-         
             <td>
               <div style="display: inline-flex">
-                
                 <button (click)="deleteProduct(rowData,i)" type="button" pButton icon="pi pi-minus"
                   class="p-button-icon-only p-button-text text-600 hover:text-primary p-inputnumber-button p-inputnumber-button-down">
                 </button>
@@ -76,16 +71,6 @@
                 {{ rowData[col.field] }}
               </ng-template>
             </td>
-            <td>
-              <p-dropdown 
-                [options]="discountOptions" 
-                [(ngModel)]="rowData.descuento" 
-                (onChange)="onDiscountChange( rowData.descuento,i)" 
-                placeholder="Selecciona un descuento" 
-                [style]="{'width':'120px'}"
-                [appendTo]="'body'">
-              </p-dropdown>
-            </td>
           </tr>
         </ng-template>
 
@@ -100,40 +85,32 @@
     </div>
 
     <div class="col-md-3">
-      <div class="row">
 
-        <p-checkbox [(ngModel)]="esVentaPlataforma" binary="true" (ngModelChange)="actualizarPrecios()">
-
-        </p-checkbox>
-        <label for="ventaPlataforma">Plataforma</label>
+        <div class="row">
+          <button pButton label="Inventario" icon="pi pi-shopping-cart" (click)="openProductsM()"
+            class="mr-2 custom-button-inventario" [ngStyle]="{ padding: '1rem' }"></button>
+        </div>
 
         <br>
-      </div>
-      <div class="row">
-        <button pButton label="Inventario" icon="pi pi-shopping-cart" (click)="openProductsM()"
-          class="mr-2 custom-button-inventario" [ngStyle]="{ padding: '1rem' }"></button>
-      </div>
-
-      <br>
-      <div class="row">
-        <button pButton label="Abrir caja" icon="pi pi-money-bill" (click)="openCashRegister()"
-          class="custom-button-abrir-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
-      </div>
-      <br>
-      <div class="row">
-        <button pButton label="Cerrar caja" icon="pi pi-folder" (click)="closeCashRegister()"
-          class="custom-button-cerrar-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
-      </div>
-      <br>
-      <div class="row">
-        <button pButton label="Informacion caja" icon="pi pi-desktop" (click)="statusCashRegister()"
-          class="custom-button-info-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
-      </div>
-      <br>
-      <div class="row">
-        <button pButton label="Cancelar venta" icon="pi pi-trash" (click)="openModalAddCancel()"
-          class="custom-button-cancelar-venta mr-2" [ngStyle]="{  padding: '1rem'}"></button>
-      </div>
+        <div class="row">
+          <button pButton label="Abrir caja" icon="pi pi-money-bill" (click)="openCashRegister()"
+            class="custom-button-abrir-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+        </div>
+        <br>
+        <div class="row">
+          <button pButton label="Cerrar caja" icon="pi pi-folder" (click)="closeCashRegister()"
+            class="custom-button-cerrar-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+        </div>
+        <br>
+        <div class="row">
+          <button pButton label="Informacion caja" icon="pi pi-desktop" (click)="statusCashRegister()"
+            class="custom-button-info-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+        </div>
+        <br>
+        <div class="row">
+          <button pButton label="Cancelar venta" icon="pi pi-trash" (click)="openModalAddCancel()"
+            class="custom-button-cancelar-venta mr-2" [ngStyle]="{  padding: '1rem'}"></button>
+        </div>
 
 
 
@@ -144,14 +121,33 @@
   <div class="container-fluid">
     <!-- Tercera fila -->
     <div class="row ">
-      <div class="col-md-6 custom-height d-flex justify-content-center align-items-center ">
+      <div *ngIf="selectedOption.value == 'VEN'"
+        class="col-md-6 custom-height d-flex justify-content-center align-items-center ">
         <span style="font-size: 3.5rem;">{{total | currency:'MXN' }}</span>
+      </div>
+      <div *ngIf="selectedOption.value == 'ABN'" class="col-md-6 custom-height d-flex justify-content-start align-items-center">
+
+
+
+
+                <div class="p-inputgroup">
+                  <span class="p-inputgroup-addon improved-addon"><i class="pi pi-money-bill"></i></span>
+                  <input type="number" #myInput [autofocus]="focusPay" pInputText placeholder="Ingrese el monto del abono"
+                    [(ngModel)]="this.total" (change)="changePage()" [disabled]="!cashOpen"   [min]="0">
+                  <span class="p-inputgroup-addon">.00</span>
+                </div>
+
+      </div>
+
+      <div *ngIf="selectedOption.value != 'VEN' && selectedOption.value != 'ABN'"
+        class="col-md-6 custom-height d-flex justify-content-center align-items-center ">
+        <span style="font-size: 1.5rem;">{{articulos}} artículos seleccionados</span>
       </div>
 
       <div class="col-md-4 custom-height d-flex justify-content-center align-items-center button-style"
         (click)="showDialog()">
-        <i class="pi pi-money-bill" style="font-size: 2.5rem"></i>
-        <span style="font-size: 1.5rem; margin-left: 0.5rem;">PAGAR</span>
+        <i class="{{iconPay}}" style="font-size: 2.5rem"></i>
+        <span style="font-size: 1.5rem; margin-left: 0.5rem;">{{titlePay}}</span>
       </div>
 
       <div class="col-md-2 custom-height d-flex justify-content-center align-items-center button-style-cancel"
@@ -159,6 +155,8 @@
         <i class="pi pi-file-excel" style="font-size: 2.5rem"></i>
         <span style="font-size: 1.5rem; margin-left: 0.5rem;">Limpiar</span>
       </div>
+
+
     </div>
 
   </div>
@@ -180,9 +178,170 @@
   [_allCambiosDevoluciones]="lstCambiosDevoluciones" (saveCambioDevolucion)="getCambiosyDevoluciones()"
   *ngIf="accionCancelacion != ''"></app-cancelacion>
 
+  <p-dialog header="{{ selectedOption.value == 'VEN' ? 'FINALIZAR VENTA' :
+  selectedOption.value == 'ENT' ? 'FINALIZAR ENTRADA' :
+  selectedOption.value == 'ABN' ? 'FINALIZAR ABONO' :'FINALIZAR SALIDA' }}" [style]="{width: selectedOption.value == 'VEN' || selectedOption.value == 'ABN' ? '60vw' : '20vw'}" [(visible)]="display">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm" *ngIf="selectedOption.value != 'ABN'">
+          <h5>Total de articulos: {{articulos}}</h5>
+        </div>
+      </div>
+  
+      <div *ngFor="let tipo  of tiposDePago; let i = index">
+        <div class="row">
+          <div class="col-sm" *ngIf="!showMultiples">
+            <button pButton type="button" [label]="tipo.nombre" [icon]="tipo.icon" class=" p-button " badge="8"
+              badgeClass="p-badge-info" (click)="PostVentaRegistro(tipo.nombre)" [disabled]="pagando"></button>
+          </div>
+  
+          <div class="col-sm" *ngIf="i == 0 && selectedOption.value=='VEN'">
+            <app-discount-selector (discountSelected)="onDiscountSelected($event)"></app-discount-selector>
+          </div>
+          <div class="col-sm" *ngIf="i == 1 && selectedOption.value=='VEN'">
+            <h5>Subtotal:<button pButton pRipple icon="pi pi-dollar" type="button" class="p-button  p-button-warning"
+                label="{{this.total}}"></button> </h5>
+          </div>
+          <div class="col-sm" *ngIf="i == 2 ">
+            <h3>TOTAL: <button pButton pRipple icon="pi pi-dollar" type="button" class="p-button p-button-danger"
+                label="{{this.total-this.descuento}}"></button> </h3>
+            <span style="font-size: 1rem;">{{totalLetra }}</span>
+          </div>
+        </div>
+        <br>
+      </div>
+  
+      <p-accordion [activeIndex]="0" *ngIf="showMultiples">
+        <p-accordionTab header="Datos de Pago Multiple">
+  
+          <div class="row">
+  
+            <div class="col-sm-4">
+              <div class="col col-md-2">
+                <p-dropdown [options]="tiposDePago" [filter]="true" placeholder="Selecciona un Tipo de Pago"
+                  appendTo="body" filterBy="nombre" [(ngModel)]="tipoPago1" placeholder="Selecciona un Tipo de pago"
+                  optionLabel="nombre" [showClear]="true">
+                  <ng-template let-option pTemplate="item">
+                    <span *ngIf="option != null">{{
+                      option.nombre
+                      }}</span>
+                    <span *ngIf="option == null" class="clear-selection">Limpiar selección</span>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <br>
+              <span class="p-float-label">
+                <p-inputNumber mode="decimal" [maxFractionDigits]="2" autofocus="true" [(ngModel)]="totalMultipleT"
+                  id="float-input1" (change)="changePage()"></p-inputNumber>
+                <label for="float-input1">Monto 1</label>
+              </span>
+            </div>
+            <div class="col-sm-4">
+              <div class="col col-md-2">
+                <p-dropdown [options]="tiposDePago" [filter]="true" placeholder="Selecciona un Tipo de Pago"
+                  appendTo="body" filterBy="nombre" [(ngModel)]="tipoPago2" placeholder="Selecciona un Tipo de pago"
+                  optionLabel="nombre" [showClear]="true">
+                  <ng-template let-option pTemplate="item">
+                    <span *ngIf="option != null">{{
+                      option.nombre
+                      }}</span>
+                    <span *ngIf="option == null" class="clear-selection">Limpiar selección</span>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <br>
+              <span class="p-float-label">
+                <p-inputNumber mode="decimal" [maxFractionDigits]="2" [(ngModel)]="totalMultipleF" id="float-input2"
+                  (change)="changePage()"></p-inputNumber>
+                <label for="float-input2">Monto 2</label>
+              </span>
+            </div>
+            <div class="col-sm-4">
+  
+  
+              <!--<p *ngIf = "(this.total - (totalMultipleT ?? 0) - (totalMultipleF ?? 0)) > 0">
+            Restante : {{this.total - (totalMultipleT ?? 0) - (totalMultipleF ?? 0)}}</p>-->
+              <div>
+                <p-button *ngIf="(this.total - (totalMultipleT ?? 0) - (totalMultipleF ?? 0)) == 0" label="Pago Completo!"
+                  styleClass="mr-2" styleClass="p-button-sucess"></p-button>
+              </div>
+  
+              <div>
+                <p-button *ngIf="(this.total - (totalMultipleT ?? 0) - (totalMultipleF ?? 0)) > 0" label="Restante:"
+                  [badge]="(this.total - (totalMultipleT ?? 0) - (totalMultipleF ?? 0))" styleClass="mr-2"
+                  styleClass="p-button-danger"></p-button>
+              </div>
+              <div>
+                <p-button *ngIf="(this.total - (totalMultipleT ?? 0) - (totalMultipleF ?? 0)) < 0" label="Su cambio:"
+                  [badge]="(this.total - (totalMultipleT ?? 0) - (totalMultipleF ?? 0) * -1)" styleClass="mr-2"
+                  styleClass="p-button-warning"></p-button>
+              </div>
+              <br>
+              <div class="col-sm-8">
+                <button pButton pRipple type="button" icon="pi pi-money-bill" label="Pagar Multiple"
+                  [disabled]="isButtonDisabled" (click)="PostVentaRegistro('MUL')"></button>
+              </div>
+  
+              <div class="col-sm-4">
+                <br>
+                <button pButton label="Cancelar" [disabled]="isButtonDisabled" (click)="cancelMultiple()"></button>
+              </div>
+            </div>
+          </div>
+        </p-accordionTab>
+      </p-accordion>
+      <br>
+      <div class="row"
+        *ngIf="selectedOption.value == 'VEN' && !showMultiples  && !showMultiples">
+        <div class="col-sm"  >
+          <h5>SU PAGO : </h5>
+          <div class="p-inputgroup">
+            <span class="p-inputgroup-addon">$</span>
+            <input type="number" #myInput [autofocus]="focusPay" pInputText placeholder="Ingresar monto"
+              [(ngModel)]="this.totalVenta" (change)="changePage()">
+            <span class="p-inputgroup-addon">.00</span>
+          </div>
+        </div>
+  
+        <div class="col-sm">
+          <h5>SU CAMBIO: </h5>
+          <button pButton pRipple icon="pi pi-sync" type="button" label="Success"
+            class="p-button-rounded p-button-success p-button-lg" label=" {{this.cambioVenta}}"></button>
+        </div>
+      </div>
+      <div class="row"
+      *ngIf="selectedOption.value == 'ABN' && !showMultiples  && !showMultiples">
+      <div class="col-sm">
+        <h5>SU ABONO : </h5>
+        <div class="p-inputgroup">
+          <span class="p-inputgroup-addon">$</span>
+          <input type="number" #myInput [autofocus]="focusPay" pInputText placeholder="Ingresar monto"
+            [(ngModel)]="this.totalVenta" (change)="changePage()">
+          <span class="p-inputgroup-addon">.00</span>
+        </div>
+      </div>
+  
+      <div class="col-sm">
+        <h5>SU CAMBIO: </h5>
+        <button pButton pRipple icon="pi pi-sync" type="button" label="Success"
+          class="p-button-rounded p-button-success p-button-lg" label=" {{this.cambioVenta}}"></button>
+      </div>
+    </div>
+  
+  
+    </div>
+  
+  
+    <ng-template pTemplate="footer">
+      <div class="progress-container" *ngIf="pagando">
+        <div class="progress-bar"></div>
+        <div class="progress-dot"></div>
+      </div>
+  
+    </ng-template>
+  </p-dialog>
 
-
-<p-dialog header="Finalizar Venta" [(visible)]="display" [style]="{width: '60vw'}">
+<!-- <p-dialog header="Finalizar Venta"  [(visible)]="display" [style]="{width: '60vw'}">
   <div class="container">
 
 
@@ -193,7 +352,6 @@
         <h5>Total de articulos: {{articulos}}</h5>
 
       </div>
-
     </div>
     <div class="row">
       <div class="col-sm">
@@ -205,17 +363,9 @@
         <app-discount-selector (discountSelected)="onDiscountSelected($event)"></app-discount-selector>
 
       </div>
-      <br>
-    </div>
-    <br>
-    <div class="row">
-      <div class="col-sm">
-        <button pButton type="button" label="TRANSFERENCIA" icon="pi pi-credit-card"
-          class="p-button-rounded p-button-success p-button-lg" badge="8" badgeClass="p-badge-info"
-          (click)="PostVentaRegistro('TRANSFERENCIA')" [disabled]="isButtonDisabled"></button>
-      </div>
 
     </div>
+
     <br>
     <div class="row">
       <div class="col-sm">
@@ -266,7 +416,6 @@
 
 
           </div>
-
 
           <div class="col-sm-4">
 
@@ -324,7 +473,7 @@
 
 
   </ng-template>
-</p-dialog>
+</p-dialog> -->
 
 <p-dialog header="Cotización " [(visible)]="displayCotizacion" [style]="{width: '80vw'}">
   <div class="row" id="htmlData">
@@ -430,7 +579,7 @@
 
           </div>
           <div class="col-4" align="center">
-            <button pButton pRipple label="PDF" icon="pi pi-print" (click)="downloadPDF()"></button>
+            <button pButton pRipple label="PDF" icon="pi pi-print" (click)="downloadPDF('')"></button>
           </div>
 
         </div>
