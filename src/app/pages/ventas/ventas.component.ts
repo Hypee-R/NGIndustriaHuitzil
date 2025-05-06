@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CajaModel } from 'src/app/models/caja.model';
 import { productoModel } from 'src/app/models/productos.model';
@@ -16,6 +16,7 @@ import { CatClienteModel } from 'src/app/models/clientes.model';
 import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 import { CambiosDevolucionesModel } from 'src/app/models/cambios-devoluciones.model';
 import { ClientesService } from 'src/app/services/clientes.service';
+import { CatTiposPago } from 'src/app/models/tipoPago';
 
 @Component({
   selector: 'app-ventas',
@@ -26,7 +27,7 @@ import { ClientesService } from 'src/app/services/clientes.service';
 
 
 export class VentasComponent implements OnInit {
-  esVentaPlataforma: boolean = false;
+
   activeState: boolean[] = [false];
   cadenaProductos: string = "\n";
   impresoras = [];
@@ -77,8 +78,35 @@ export class VentasComponent implements OnInit {
   //Datos de cancelacion
   lstCambiosDevoluciones: CambiosDevolucionesModel[] = [];
   selectedCambio: CambiosDevolucionesModel;
-  discountOptions: any[] = [];   // Opciones del dropdown para el descuento
+  selectedOption: any = { value: 'SAL', label: 'SALIDA' };
+  options = [
+    // { value: 'VEN', label: 'VENTA' },
+    // { value: 'ABN', label: 'ABONO' },
+    { value: 'SAL', label: 'SALIDA' },
+    { value: 'ENT', label: 'ENTRADA' },
+   
+    // { value: 'DEV', label: 'DEVOLUCION' },
+  ];
+  title = 'VENTA';
+  titlePay = 'PAGAR';
 
+  cardStyle: any = {
+    background: '#ffffff ', // Valor predeterminado
+  };
+
+  checked: boolean = false;
+  iconPay = 'pi pi-money-bill';
+  tiposDePago: CatTiposPago[];
+  
+  cashOpen = false;
+  @ViewChild('fileInput', { static: false }) myInput!: any;
+  showMultiples = false;
+  pagando: boolean = false;
+  focusPay = true;
+  listaSelected = 'Precio - PRECIO ETIQUETA';
+  tipoPago1: CatTiposPago;
+  tipoPago2: CatTiposPago;
+  selectedLista: any;
   constructor(
     private toastr: ToastrService,
     private ventasService: VentasService,
@@ -87,29 +115,31 @@ export class VentasComponent implements OnInit {
     private cambiosDevolucionesService: VentasService,
     private clientesService: ClientesService
   ) {
+    this.tiposDePago = [
+      {
+        id: 1,
+        nombre: 'MOVIMIENTOS',
+        descripcion: 'momientos de articulos',
+        icon: 'pi pi-money-bill',}
+     
+    ];
+    this.title = 'SALIDA DE PRODUCTO';
+    this.titlePay = 'SALIDA';
+    this.iconPay = 'pi pi-download';
+    this.cardStyle = {
+      background: '#e2f6fd', // Valor predeterminado
+    };
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
-     
+
       { field: 'cantidad', header: 'Cantidad' },
       // { field: 'imagen', header: 'Imagen' },
       { field: 'descripcion', header: 'Producto' },
       { field: 'precio', header: 'Precio' },
-      { field: 'sku', header: 'SKU' },
-       
+      { field: 'sku', header: 'SKU' }
 
     ];
-    this.discountOptions = [
-      { label: '0%', value: 0 },
-      { label: '5%', value: 5 },
-      { label: '10%', value: 10 },
-      { label: '15%', value: 15 },
-      { label: '20%', value: 20 },
-      { label: '25%', value: 25 },
-      { label: '30%', value: 30 },
-      { label: '50%', value: 50 },
-      { label: '75%', value: 75 },
-      { label: '100%', value: 100 }
-    ];
+
     this.statusPanubicacion = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();
     if (status == 'celular') {
@@ -124,7 +154,31 @@ export class VentasComponent implements OnInit {
 
   }
 
+ 
   selectedValues: string[] = [];
+  handleVisibilityChange() {
+    if (document.hidden) {
+      if (this.selectedOption.value == 'SAL') {
+        this.myInput.nativeElement.focus();
+      }
+    } else {
+      if (this.selectedOption.value == 'SAL') {
+        this.myInput.nativeElement.focus();
+      }
+    }
+  }
+
+  async ngAfterViewInit() {
+    document.addEventListener(
+      'visibilitychange',
+      this.handleVisibilityChange.bind(this)
+    );
+    setTimeout(() => {
+      if (this.selectedOption.value === 'SAL') {
+        this.myInput.nativeElement.focus();
+      }
+    });
+  }
 
   async ngOnInit() {
 
@@ -180,6 +234,7 @@ export class VentasComponent implements OnInit {
     this.accionAdd = ''
     this.accion = 'Abrir';
     this.getCaja();
+    this.cashOpen = true;
 
   }
 
@@ -213,21 +268,17 @@ export class VentasComponent implements OnInit {
 
 
   addArticle(product: productoVentaModel, index: number) {
-    this.articlesShell.forEach(product => {
-      // Inicializar con el precio original al principio
-      product.precioConDescuento = product.precio;  
-    });
     console.log(product, index)
     this.articlesShell[index].cantidad += 1
     this.articulos += 1
     this.total += product.precio
     console.log(this.total)
-    // this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
-    //   plural: 'PESOS MEXICANOS',
-    //   singular: 'PESO MEXICANO',
-    //   centPlural: 'CENTAVOS',
-    //   centSingular: 'CENTAVO'
-    // });
+    this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
+      plural: 'PESOS MEXICANOS',
+      singular: 'PESO MEXICANO',
+      centPlural: 'CENTAVOS',
+      centSingular: 'CENTAVO'
+    });
 
   }
 
@@ -460,32 +511,33 @@ export class VentasComponent implements OnInit {
 
   }
 
-  downloadPDF() {
-    // Extraemos el
-    const DATA = document.getElementById('htmlData');
-    const doc = new jsPDF('p', 'pt', 'a4');
-    const options = {
-      background: 'white',
-      scale: 3
-    };
-    html2canvas(DATA, options).then((canvas) => {
-      const img = canvas.toDataURL('assets/img/LogoSole.jpeg');
-      // Add image Canvas to PDF
-      const bufferX = 15;
-      const bufferY = 15;
-      const imgProps = (doc as any).getImageProperties(img);
-      const pdfWidth = doc.internal.pageSize.getWidth() - 2 * bufferX;
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      doc.addImage(img, 'PNG', bufferX, bufferY, pdfWidth, pdfHeight, undefined, 'FAST');
-      return doc;
-    }).then((docResult) => {
-      docResult.save(`${new Date().toISOString()}_CotizaciónHuitzil.pdf`);
-    });
-  }
+  // downloadPDF() {
+  //   // Extraemos el
+  //   const DATA = document.getElementById('htmlData');
+  //   const doc = new jsPDF('p', 'pt', 'a4');
+  //   const options = {
+  //     background: 'white',
+  //     scale: 3
+  //   };
+  //   html2canvas(DATA, options).then((canvas) => {
+  //     const img = canvas.toDataURL('assets/img/LogoSole.jpeg');
+  //     // Add image Canvas to PDF
+  //     const bufferX = 15;
+  //     const bufferY = 15;
+  //     const imgProps = (doc as any).getImageProperties(img);
+  //     const pdfWidth = doc.internal.pageSize.getWidth() - 2 * bufferX;
+  //     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  //     doc.addImage(img, 'PNG', bufferX, bufferY, pdfWidth, pdfHeight, undefined, 'FAST');
+  //     return doc;
+  //   }).then((docResult) => {
+  //     docResult.save(`${new Date().toISOString()}_CotizaciónHuitzil.pdf`);
+  //   });
+  // }
 
 
 
   async PostVentaRegistro(tipoPago: string) {
+    console.log('TIPO PAGO===>',tipoPago)
     this.isButtonDisabled = true;
     if (tipoPago == "MULTIPLE") {
       this.totalVenta = this.totalMultipleT + this.totalMultipleF;
@@ -530,19 +582,14 @@ export class VentasComponent implements OnInit {
 
       }
     }
-    if (tipoPago == "TRANSFERENCIA") {
-      this.toastr.warning("Recuerda Validar el cobro la venta se registrara ", 'Atencion!');
-      if (this.totalVenta == this.total - this.descuento) {
-        this.changePage();
-        this.RegistraVentaValid(tipoPago); {
 
-        }
-
-      } else {
-        this.toastr.error("Error el importe debe ser exacto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
-
-      }
-    }
+  if (this.selectedOption.value == 'ENT') {
+    this.changePage();
+    this.RegistraVentaValid(tipoPago);
+  } else {
+    this.changePage();
+    this.RegistraVentaValid(tipoPago);
+  }
   }
 
 
@@ -567,10 +614,9 @@ export class VentasComponent implements OnInit {
 
       vt.idArticulo = element.idArticulo;
       vt.cantidad = element.cantidad;
-      // vt.precioUnitario = element.precio;
-      vt.precioUnitario = element.precioConDescuento !== 0 ? element.precioConDescuento : element.precio;
+      vt.precioUnitario = element.precio;
       vt.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
-      vt.articulo = element;
+      //vt.articulo = element;
 
       //Genera Cadena para Impresion Ticket con salto de pagina
       this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN" + "|" + "$" + vt.subtotal + "MXN" + "\n".toString()
@@ -596,13 +642,14 @@ export class VentasComponent implements OnInit {
     // Generar un número aleatorio de 2 dígitos (entre 10 y 99)
     const randomTwoDigits = Math.floor(Math.random() * 90 + 10).toString();
 
+  
     this.RegistraVenta.idCaja = this.cashModel.idCaja;
-    this.RegistraVenta.fecha = new Date;
+   // this.RegistraVenta.fecha = new Date;
     this.RegistraVenta.noArticulos = this.articlesShell.length
     this.RegistraVenta.noTicket = year + month + day + randomTwoDigits;
     this.RegistraVenta.subtotal = this.total;
     this.RegistraVenta.tipoPago = tipoPago;
-    this.RegistraVenta.tipoVenta = "CONTADO";
+    this.RegistraVenta.tipoVenta = this.selectedOption.value 
     this.RegistraVenta.total = this.total - this.descuento;
     this.RegistraVenta.tarjeta = this.totalMultipleT;
     this.RegistraVenta.efectivo = this.totalMultipleF;
@@ -625,17 +672,13 @@ const dia = String(fecha.getDate()).padStart(2, '0');
 const mes = String(fecha.getMonth() + 1).padStart(2, '0');
 const anio = fecha.getFullYear();
 
-
-this.downloadNewPdf("VENTA");
-
-
 const fechaFormateada = `${dia}/${mes}/${anio}`;
         //code Impresion
         const conector = new ConectorPluginV3();
         conector
           .Iniciar()
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-          //.DescargarImagenDeInternetEImprimir("/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+          .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
           .Feed(1)
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
           .EscribirTexto("Caja:" + this.cashModel.idCaja)
@@ -681,8 +724,13 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
           .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
           .Feed(1)
+          .EscribirTexto("***Venta publico Gral, Si requiere factura solicitarla durante la venta***")
+          .Feed(1)
+          .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
+          // .Feed(2)
           .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
           .ImprimirCodigoDeBarrasCodabar(this.RegistraVenta.noTicket, 100, 2, 12)
+          // .Feed(2)
           .Feed(3)
           .Corte(1)
 
@@ -708,14 +756,13 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
             console.log("Impresión correcta");
             this.display = false;
           } else {
-            this.totalVenta=0
             console.log("Error: " + respuesta);
           }
 
         } catch (error) {
           this.isButtonDisabled = false; // Habilitar el botón al finalizar
           console.log(error)
-        //  this.toastr.warning(error, 'Atencion!');
+          this.toastr.warning(error, 'Atencion!');
           //Limpiar objetos al finalizar una compra correcta
           this.cadenaProductos = ""
           this.RegistraVenta = new VentaModel();
@@ -724,7 +771,6 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
           this.total = 0
           this.articlesShell = []
           this.display = false;
-          this.totalVenta=0
         }
 
 
@@ -811,8 +857,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     const descuento = (this.total * porcentajeDescuento) / 100;
     console.log(descuento)
 
-    // this.descuento = descuento
-    this.descuento = Math.ceil(descuento);  // Redondea hacia arriba
+    this.descuento = descuento
     this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
       plural: 'PESOS MEXICANOS',
       singular: 'PESO MEXICANO',
@@ -821,103 +866,155 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     });
   }
 
-  // calcularPrecio(precio: number): number {
-  //   return this.esVentaPlataforma ? precio * 1.25 : precio;
-  // }
 
-  actualizarPrecios(): void {
-    console.info(this.total);
-    this.total = this.esVentaPlataforma ? this.total * 1.25 : this.total / 1.25;
+  onOptionChange(value: any): void {
+ 
+    // setTimeout(() => {
+    //   if (this.selectedOption.value === 'SAL') {
+    //     this.title = 'SALIDA DE PRODUCTO';
+    //   this.titlePay = 'SALIDA';
+    //   this.iconPay = 'pi pi-download';
+    //   this.cardStyle = {
+    //     background: '#e2f6fd', // Valor predeterminado
+    //   };
+    //   }
+    // });
+
+    this.total = 0;
+    this.articlesShell = [];
+    const option = localStorage.getItem('opcion');
+    const op = JSON.parse(option);
+    this.checked = false;
+    this.articulos = 0;
+ 
+    //console.log()
+    if (op == value) {
+      const ticket = localStorage.getItem('ticket');
+      const articles = JSON.parse(ticket);
+      this.articlesShell = articles;
+      this.articlesShell.forEach((a) => {
+        this.total += a.precio * a.cantidad;
+        this.articulos += a.cantidad;
+      });
+    }
+    
+    //localStorage.setItem('ticket', JSON.stringify(this.articlesShell));
+    // if (value == 'VEN') {
+    //   this.titlePay = 'PAGAR';
+    //   this.iconPay = 'pi pi-money-bill';
+    //   this.title = 'VENTA';
+    //   this.cardStyle = {
+    //     background: '#ffffff ', // Valor predeterminado
+    //   };
+    //   this.getTiposPago();
+    // } else 
+    // if (value == 'ABN') {
+    //   this.titlePay = 'ABONO';
+    //   this.title = 'ABONO';
+    //   this.iconPay = 'pi pi-wallet';
+    //   this.cardStyle = {
+    //     background: '#e1d9f1',
+    //   };
+    // } else 
+    if (value == 'ENT') {
+      this.titlePay = 'ENTRADA';
+      this.title = 'ENTRADA DE PRODUCTO';
+      this.iconPay = 'pi pi-upload';
+      this.cardStyle = {
+        background: '#fdfddc', // Valor predeterminado
+      };
+    // } else 
+    // if (value == 'DEV') {
+    //   this.title = 'DEVOLUCION DE PRODUCTO';
+    //   this.titlePay = 'DEVOLUCION';
+    //   this.iconPay = 'pi pi-download';
+    //   this.cardStyle = {
+    //     background: '#d9d2e9', // Valor predeterminado
+    //   };
+    } else {
+      this.title = 'SALIDA DE PRODUCTO';
+      this.titlePay = 'SALIDA';
+      this.iconPay = 'pi pi-download';
+      this.cardStyle = {
+        background: '#e2f6fd', // Valor predeterminado
+      };
+    }
+    if (this.cashOpen == false) {
+      this.toastr.warning(
+        'Abre una caja para realizar movimientos',
+        'Atencion!'
+      );
+    }
+    //localStorage.setItem('opcion', JSON.stringify(value));
   }
 
-
-
-
-  downloadNewPdf(tipo: String) {
-
-    const fecha = this.RegistraVenta.fecha;
-
-
-    const dia = String(fecha.getDate()).padStart(2, '0');
-    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-    const anio = fecha.getFullYear();
-    
-
-    const fechaFormateada = `${dia}/${mes}/${anio}`;
-
-
+    getTiposPago() {
+    this.tiposDePago = [];
+    this.ventasService.getTipoVenta().subscribe(
+      (response) => {
+        if (response.exito) {
+          this.tiposDePago = response.respuesta;
+        } else {
+          //this.variablesGL.hideLoading();
+          this.toastr.error(response.mensaje, 'Error!');
+        }
+      },
+      (err) => {
+        this.variablesGL.hideLoading();
+        // this.toastr.error('Hubo un error al buscar cliente', 'Error!');
+      }
+    );
+  }
+  downloadPDF(tipo: String) {
     const doc = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
-      format: [58, 200 + this.articlesShell.length * 12], // Ajuste para 58mm de ancho
+      format: [80, 150],
     });
 
     const margenIzquierdo = 5;
     const espaciado = 5;
-    const margenSuperior = 10;
-    doc.setFont('helvetica', 'normal');
+
+    const logoUrl = '/assets/img/logo_large_red.png';
+    doc.addImage(logoUrl, 'PNG', margenIzquierdo, 5, 70, 20);
+
     doc.setFontSize(8);
-    const logoUrl = '/assets/img/LogoSole.jpeg';
-
-    // Reducción del tamaño del logo para que se ajuste al ancho de 58 mm
-    doc.addImage(logoUrl, 'PNG', margenIzquierdo, margenSuperior, 50, 20); // Ajustar el tamaño del logo
-
-    let posicionY = margenSuperior + 25;
-    const espaciadoDeSeccion = 5;
-
-    posicionY += espaciadoDeSeccion;
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'bold');
-    doc.text(`${tipo}`, 30, posicionY);
-
-    // Información de la venta
+    let posicionY = 30;
+    doc.text(`${tipo}`, margenIzquierdo, posicionY);
     posicionY += espaciado;
     doc.text(`Caja: ${this.cashModel.idCaja}`, margenIzquierdo, posicionY);
     posicionY += espaciado;
     doc.text(`Cajero: ${this.user.nombre}`, margenIzquierdo, posicionY);
     posicionY += espaciado;
-    doc.text(`Fecha: ${fechaFormateada}`, margenIzquierdo, posicionY);
+    doc.text(`Fecha: ${this.RegistraVenta.fecha}`, margenIzquierdo, posicionY);
     posicionY += espaciado;
-    doc.text(`Ticket: ${this.RegistraVenta.noTicket}`, margenIzquierdo, posicionY);
+    doc.text(
+      `Ticket: ${this.RegistraVenta.noTicket}`,
+      margenIzquierdo,
+      posicionY
+    );
     posicionY += espaciado;
     doc.text(`Artículos: ${this.articulos}`, margenIzquierdo, posicionY);
     posicionY += espaciado;
 
-    doc.setLineWidth(0.3);
-    doc.line(margenIzquierdo, posicionY, 53, posicionY); // Ajuste de línea a 53 mm para el ancho de 58 mm
+    doc.text('______________________________', margenIzquierdo, posicionY);
     posicionY += espaciado;
 
-    // Encabezado de los artículos
-    doc.setFontSize(7);
-    doc.text('ARTÍCULO', margenIzquierdo, posicionY);
-    doc.text('CANT', 40, posicionY, { align: 'center' });
-    doc.text('P/U', 50, posicionY, { align: 'center' });
-    // doc.text('TOTAL', 55, posicionY, { align: 'right' });
-
+    doc.text('ARTICULO | CANT | P/U | TOTAL', margenIzquierdo, posicionY);
     posicionY += espaciado;
-    doc.line(margenIzquierdo, posicionY, 53, posicionY); // Línea de separación ajustada
-
-    // Listado de artículos
-    this.articlesShell.forEach((producto) => {
-      const nombreDividido = doc.splitTextToSize(producto.descripcion, 35);
-      doc.setFontSize(6);
-      doc.text(nombreDividido, margenIzquierdo, posicionY);
-      doc.text(producto.cantidad.toString(), 40, posicionY, { align: 'center', });
-      doc.text('$' + (producto.precioConDescuento !== 0 ? producto.precioConDescuento : producto.precio).toFixed(2), 50, posicionY, {
-        align: 'center',
-      });
-      
-      posicionY += nombreDividido.length * 3;
-    });
-
-    doc.line(margenIzquierdo, posicionY, 53, posicionY);
+    doc.text('______________________________', margenIzquierdo, posicionY);
     posicionY += espaciado;
 
-    // Resumen de la venta
-    doc.setFont('helvetica', 'bold');
+    doc.text(this.cadenaProductos, margenIzquierdo, posicionY);
+    posicionY += espaciado * 3;
+
     doc.text(`Descuento: ${this.descuento} MXN`, margenIzquierdo, posicionY);
     posicionY += espaciado;
-    doc.text(`Subtotal: ${this.RegistraVenta.subtotal} MXN`, margenIzquierdo, posicionY);
+    doc.text(
+      `Subtotal: ${this.RegistraVenta.subtotal} MXN`,
+      margenIzquierdo,
+      posicionY
+    );
     posicionY += espaciado;
     doc.text(
       `Total: ${this.getDescuentoAplicado(this.total, this.descuento)} MXN`,
@@ -925,60 +1022,59 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       posicionY
     );
     posicionY += espaciado;
+    doc.text(
+      `Tipo Pago: ${this.getTotalmontoMultiple(this.RegistraVenta)}`,
+      margenIzquierdo,
+      posicionY
+    );
+    posicionY += espaciado;
     doc.text(`Cambio: ${this.cambioVenta} MXN`, margenIzquierdo, posicionY);
     posicionY += espaciado;
 
-    // Advertencia de la venta pública
     doc.setFontSize(7);
+    posicionY += espaciado;
+    posicionY += espaciado * 2;
     doc.text(
-      '***Gracias por su preferencia***',
+      '***Venta público Gral, si requiere factura solicitarla durante la venta***',
       margenIzquierdo,
       posicionY,
-      { maxWidth: 53 }
+      { maxWidth: 70 }
     );
 
-  this.totalVenta=0
-    doc.autoPrint(); // Para impresión automática
+    posicionY += espaciado * 2;
+    posicionY += espaciado * 2;
+    const totalEnLetras = this.variablesGL.numeroALetras(
+      this.total - this.descuento,
+      {
+        plural: 'PESOS MEXICANOS',
+        singular: 'PESO MEXICANO',
+        centPlural: 'CENTAVOS',
+        centSingular: 'CENTAVO',
+      }
+    );
+    doc.text(totalEnLetras, margenIzquierdo, posicionY, { maxWidth: 70 });
 
-    window.open(doc.output('bloburl'), '_blank');
+    doc.save('ticket.pdf');
   }
 
+  cancelMultiple() {
+    //@ViewChild('myInput') myInput!: ElementRef;
+    this.showMultiples = false;
+    if (this.myInput != undefined) {
+      this.myInput.nativeElement.focus();
+    }
+    this.getTiposPago();
+  }
 
-    // Actualizar el descuento de un producto
-    onDiscountChange(discount: number, index: number) {
-      console.info("DISCOUNT---->", discount);
-    
-      // Acceder al producto de la lista `articlesShell` en el índice dado
-      const product = this.articlesShell[index];
-    
-      // Aplicar el descuento al precio del producto
-      
-      const precioConDescuento = discount > 0
-      ? product.precio - (product.precio * discount / 100)
-      : product.precio;  // Si no hay descuento, mantener el precio original
-      // Guardar el precio con descuento en el producto
-      product.precioConDescuento = precioConDescuento;
-    
-      // Actualizar el precio con descuento en el objeto
-      this.articlesShell[index].precioConDescuento = precioConDescuento;
-    
-      // Llamar a una función para actualizar el total y el número de productos
-      this.updateTotals();
-    }
-    
-    updateTotals() {
-      // Recalcular el total y la cantidad
-      this.total = 0;
-      this.articulos = 0;
-    
-      // Iterar sobre todos los productos para recalcular el total y la cantidad
-      this.articlesShell.forEach(item => {
-        this.total += item.precioConDescuento * item.cantidad;  // Sumar el total
-        this.articulos += item.cantidad;  // Contar la cantidad total de artículos
-      });
-    
-    
-    }
- 
-    
+  
+  addedInventario(precio: any) {
+    this.selectedLista = precio;
+    this.listaSelected = this.selectedLista.descripcion;
+    localStorage.setItem('precios', JSON.stringify(precio));
+
+    setTimeout(() => {
+      this.variablesGL.showDialog.next(false);
+    }, 100);
+  }
+
 }

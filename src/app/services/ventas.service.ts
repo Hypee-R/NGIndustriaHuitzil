@@ -12,6 +12,24 @@ import { VariablesService } from './variablesGL.service';
   providedIn: 'root'
 })
 export class VentasService {
+
+
+  getTipoVenta():Observable<ResponseModel>{ 
+    console.log(this.variablesGL.getRol)
+    let sucursal ;
+    if(this.variablesGL.getRol()=== 'Administrador' ){
+      sucursal="all"
+    }else{
+      sucursal=this.variablesGL.getSucursal()
+    }
+    return this.http.get<ResponseModel>(environment.apiService + `Ventas/Cash/Cajas?sucursal=${sucursal}`)
+    .pipe(
+      map (res => res)
+    );
+  }
+
+
+
   user = JSON.parse(localStorage.getItem('usuario'));
   constructor(   private variablesGL: VariablesService,
     private http: HttpClient
