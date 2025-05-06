@@ -15,6 +15,8 @@ import { VentasService } from 'src/app/services/ventas.service';
 import { formatDate } from '@angular/common';
 import ConectorPluginV3 from "src/app/services/ConectorPluginV3";
 import Swal from 'sweetalert2'
+import { PrimeNGConfig } from 'primeng/api';
+import { jsPDF } from "jspdf";
 @Component({
   selector: 'app-apartados',
   templateUrl: './apartados.component.html',
@@ -76,6 +78,7 @@ export class ApartadosComponent implements OnInit {
     { label: 'Múltiple', value: 'MULTIPLE' }
   ];
   constructor(
+    private primengConfig: PrimeNGConfig,
     private toastr: ToastrService,
     private variablesGL: VariablesService,
     private clientesService: ClientesService,
@@ -115,7 +118,8 @@ export class ApartadosComponent implements OnInit {
         { field: 'idApartado', header: 'ID PEDIDO' },
         { field: 'cliente', header: 'TELEFONO' },
         { field: 'cliente', header: 'CLIENTE' },
-        { field: 'fecha', header: 'FECHA APARTADO' },
+        { field: 'fecha', header: 'FECHA LEVANTAMIENTO' },
+        { field: 'fechaEntrega', header: 'Fecha Entrega' },
         { field: 'status', header: 'STATUS' }
 
       ];
@@ -155,9 +159,21 @@ export class ApartadosComponent implements OnInit {
     this.sucursal = this.variablesGL.getSucursal()
 
   }
-
+  es: any;
   ngOnInit(): void {
-
+    this.primengConfig.setTranslation({
+      dayNames: ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
+      dayNamesShort: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
+      dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
+      monthNames: ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+                   "agosto", "septiembre", "octubre", "noviembre", "diciembre"],
+      monthNamesShort: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago",
+                        "sep", "oct", "nov", "dic"],
+      today: 'Hoy',
+      clear: 'Limpiar',
+      // otros textos opcionales
+    });
+  
     this.getClientes()
     this.getApartados()
     this.getExistencias();
@@ -325,7 +341,7 @@ export class ApartadosComponent implements OnInit {
     this.total = 0
     this.articulos = 0
     this.selectedClient = undefined
-
+    this.apartado.fecha = new Date()
   }
 
 
@@ -346,6 +362,13 @@ export class ApartadosComponent implements OnInit {
       return
     }
 
+    if(this.apartado.fechaEntrega===undefined || this.apartado.fechaEntrega===null|| this.apartado.fechaEntrega===''){
+
+      this.toastr.warning('Selecciona fecha de entrega', 'Aviso!');
+      return
+    }
+
+
     this.apartado.idCliente = this.selectedClient.idCliente
     this.apartado.articulosApartados = this.articulosApartados
     this.apartado.total = this.total
@@ -364,7 +387,7 @@ export class ApartadosComponent implements OnInit {
         this.hideDialog()
         this.toastr.success(response.mensaje, 'Sucess');
         const respuestaValida = response.respuesta != null && response.respuesta !== '' ? response.respuesta :  this.apartado.noTicket;
-        this.geeneraTicketApartado(this.apartado,respuestaValida);
+        this.generaTicketApartadoPDF(this.apartado,respuestaValida);
         this.getApartados();
       }
       else {
@@ -639,66 +662,145 @@ export class ApartadosComponent implements OnInit {
 
   async geeneraTicketPago(data: PagoApartado) {
     console.log(data)
+   
+    const lineCount =
+  15 + // líneas fijas (fecha, cajero, etc.)
+  2 +  // total y letras (pueden ser multilínea)
+  2 +  // restante y letras
+  2;   // mensaje final
 
+const height = 10 + lineCount * 5; // margen + 5mm por línea aprox.
+
+const doc = new jsPDF({
+  orientation: 'portrait',
+  unit: 'mm',
+  format: [58, height],
+});
+    const marginLeft = 5;
+    let cursorY = 10;
+  
+    const fecha = new Date(data.fecha);
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const anio = fecha.getFullYear();
+    const fechaFormateada = `${dia}/${mes}/${anio}`;
+  
+    const textoEnLetras = this.variablesGL.numeroALetras(data.cantidad, {
+      plural: 'PESOS MEXICANOS',
+      singular: 'PESO MEXICANO',
+      centPlural: 'CENTAVOS',
+      centSingular: 'CENTAVO',
+    });
+  
+    const textoRestanteLetras = this.variablesGL.numeroALetras(this.selectedApartado.resto, {
+      plural: 'PESOS MEXICANOS',
+      singular: 'PESO MEXICANO',
+      centPlural: 'CENTAVOS',
+      centSingular: 'CENTAVO',
+    });
+  
+    // Logo
+    const margenIzquierdo = 5;
+ 
+    const margenSuperior = 10;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    const logoUrl = '/assets/img/LogoSole.jpeg';
+
+     // Reducción del tamaño del logo para que se ajuste al ancho de 58 mm
+     doc.addImage(logoUrl, 'PNG', margenIzquierdo, margenSuperior, 50, 20); // Ajustar el tamaño del logo
+      // Título
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text("***ABONO***", 29, cursorY, { align: 'center' });
+      cursorY += 8;
+  
+      // Información
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Fecha: ${fechaFormateada}`, marginLeft, cursorY); cursorY += 4;
+      doc.text(`Caja: ${data.idCaja}`, marginLeft, cursorY); cursorY += 4;
+      
+      doc.text(`Ticket Abono: ${data.idApartado}-${data.noTicketPago}`, marginLeft, cursorY); cursorY += 4;
+      doc.text(`Tipo de Pago: ${data.tipoPagoValida}`, marginLeft, cursorY); cursorY += 6;
+  
+      // Total y letras
+      doc.text(`Total: $${Number(data.cantidad).toFixed(2)} MXN`, marginLeft, cursorY); cursorY += 4;
+      doc.text(doc.splitTextToSize(textoEnLetras, 50), marginLeft, cursorY); cursorY += 8;
+  
+      // Restante y letras
+      doc.text(`Restante: $${Number(this.selectedApartado.resto).toFixed(2)} MXN`, marginLeft, cursorY); cursorY += 4;
+      doc.text(doc.splitTextToSize(textoRestanteLetras, 50), marginLeft, cursorY); cursorY += 10;
+  
+      // Mensaje final
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.text("***Gracias por su preferencia***", 29, cursorY, { align: 'center' });
+  
+      // Descargar
+      doc.autoPrint(); // Para impresión automática
+
+      window.open(doc.output('bloburl'), '_blank');
+   
     //code Impresion
-    const conector = new ConectorPluginV3();
-    conector
-      .Iniciar()
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-      .Feed(1)
-      .EscribirTexto("***ABONO***")
-      .Feed(1)
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-      .Feed(1)
-      .EscribirTexto("Fecha:" + data.fecha)
-      .Feed(1)
-      .EscribirTexto("Caja:" + data.idCaja)
-      .Feed(1)
-      .EscribirTexto("Ticket Abono:" + data.idApartado+'-'+data.noTicketPago)
-      .Feed(1)
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-      .Feed(1)
-      .EscribirTexto("Tipo Pago:" + data.tipoPagoValida)
-      .Feed(1)
+    // const conector = new ConectorPluginV3();
+    // conector
+    //   .Iniciar()
+    //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+    //   .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+    //   .Feed(1)
+    //   .EscribirTexto("***ABONO***")
+    //   .Feed(1)
+    //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+    //   .Feed(1)
+    //   .EscribirTexto("Fecha:" + data.fecha)
+    //   .Feed(1)
+    //   .EscribirTexto("Caja:" + data.idCaja)
+    //   .Feed(1)
+    //   .EscribirTexto("Ticket Abono:" + data.idApartado+'-'+data.noTicketPago)
+    //   .Feed(1)
+    //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+    //   .Feed(1)
+    //   .EscribirTexto("Tipo Pago:" + data.tipoPagoValida)
+    //   .Feed(1)
 
-      .EscribirTexto("Total:$" + data.cantidad + "MXN")
-      .Feed(2)
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-      .EscribirTexto(this.variablesGL.numeroALetras(data.cantidad, {
-        plural: 'PESOS MEXICANOS',
-        singular: 'PESO MEXICANO',
-        centPlural: 'CENTAVOS',
-        centSingular: 'CENTAVO'
-      }))
-      .Feed(2)
-      .EscribirTexto("Restante:$" + this.selectedApartado.resto)
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-      .EscribirTexto(this.variablesGL.numeroALetras( this.selectedApartado.resto, {
-        plural: 'PESOS MEXICANOS',
-        singular: 'PESO MEXICANO',
-        centPlural: 'CENTAVOS',
-        centSingular: 'CENTAVO'
-      }))
-      .Feed(3)
-      .Corte(1)
+    //   .EscribirTexto("Total:$" + data.cantidad + "MXN")
+    //   .Feed(2)
+    //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+    //   .EscribirTexto(this.variablesGL.numeroALetras(data.cantidad, {
+    //     plural: 'PESOS MEXICANOS',
+    //     singular: 'PESO MEXICANO',
+    //     centPlural: 'CENTAVOS',
+    //     centSingular: 'CENTAVO'
+    //   }))
+    //   .Feed(2)
+    //   .EscribirTexto("Restante:$" + this.selectedApartado.resto)
+    //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+    //   .EscribirTexto(this.variablesGL.numeroALetras( this.selectedApartado.resto, {
+    //     plural: 'PESOS MEXICANOS',
+    //     singular: 'PESO MEXICANO',
+    //     centPlural: 'CENTAVOS',
+    //     centSingular: 'CENTAVO'
+    //   }))
+    //   .Feed(3)
+    //   .Corte(1)
 
-    try {
-      const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+    // try {
+    //   const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
 
-      if (respuesta == true) {
-        this.toastr.success( 'Exito!');
+    //   if (respuesta == true) {
+    //     this.toastr.success( 'Exito!');
 
-      } else {
-        console.log("Error: " + respuesta);
-      }
+    //   } else {
+    //     console.log("Error: " + respuesta);
+    //   }
 
-    } catch (error) {
-      console.log(error)
-      this.toastr.warning(error, 'Atencion!');
-      //Limpiar objetos al finalizar una compra correct
+    // } catch (error) {
+    //   console.log(error)
+    //   this.toastr.warning(error, 'Atencion!');
+    //   //Limpiar objetos al finalizar una compra correct
 
-    }
+    // }
   }
   deletePagoApartado(viewPago: PagoApartado){
     Swal.fire({
@@ -749,129 +851,226 @@ export class ApartadosComponent implements OnInit {
   }
 
 
-  async geeneraTicketApartado(data: CatApartadoModel,idApartadoCreado:number) {
-    console.log(data.articulosApartados)
-    data.articulosApartados.forEach(element => {
-      element.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
-      this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN"  + "|" + "$" +  element.subtotal + "MXN" + "\n".toString()
+  async generaTicketApartadoPDF(data: CatApartadoModel, idApartadoCreado: number) {
 
+    const fecha = new Date(data.fecha);
+const dia = String(fecha.getDate()).padStart(2, '0');
+const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+const anio = fecha.getFullYear();
+const horas = String(fecha.getHours()).padStart(2, '0');
+const minutos = String(fecha.getMinutes()).padStart(2, '0');
+const fechaFormateada = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
+
+const fecha1 = new Date(data.fechaEntrega);
+const dia1 = String(fecha1.getDate()).padStart(2, '0');
+const mes1 = String(fecha1.getMonth() + 1).padStart(2, '0');
+const anio1 = fecha1.getFullYear();
+const horas1 = String(fecha1.getHours()).padStart(2, '0');
+const minutos1 = String(fecha1.getMinutes()).padStart(2, '0');
+const fechaFormateadaEntrega = `${dia1}/${mes1}/${anio1} ${horas1}:${minutos1}`;
+  
+    const productos = data.articulosApartados.map(el => ({
+      ...el,
+      subtotal: el.precio * el.cantidad
+    }));
+  
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: [58, 200 + productos.length * 12],
     });
+  
+    const margen = 5;
+    let y = 10;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+  
+    const logoUrl = '/assets/img/LogoSole.jpeg'; // Usa ruta relativa o absoluta válida
+    doc.addImage(logoUrl, 'JPEG', margen, y, 48, 15);
+    y += 18;
+  
+    doc.setFont('helvetica', 'bold');
+    doc.text('***APARTADO SUCURSAL***', 29, y, { align: 'center' });
+    y += 6;
+  
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.text(`Fecha Apartado: ${fechaFormateada}`, margen, y); y += 4;
+    doc.text(`Fecha Entrega: ${fechaFormateadaEntrega}`, margen, y); y += 4;
+    doc.text(`Cliente: ${data.idCliente}`, margen, y); y += 4;
+    
+    doc.text(`Nombre: ${this.selectedClient.nombre+this.selectedClient.apellidoPaterno+this.selectedClient.apellidoMaterno}`, margen, y); y += 4;
+    doc.text(`Teléfono: ${data.telefono}`, margen, y); y += 4;
+    doc.text(`Ticket: ${idApartadoCreado}`, margen, y); y += 4;
+  
+    doc.line(margen, y, 53, y); y += 3;
+    doc.setFont('helvetica', 'bold');
+    doc.text('ARTÍCULO', margen, y);
+    doc.text('CANT', 30, y);
+    doc.text('P/U', 40, y);
+    doc.text('TOTAL', 50, y);
+    y += 3;
+    doc.line(margen, y, 53, y); y += 3;
+  
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(6);
+    productos.forEach(prod => {
+      const nombre = doc.splitTextToSize(prod.descripcion, 28);
+      doc.text(nombre, margen, y);
+      doc.text(prod.cantidad.toString(), 30, y);
+      doc.text(`$${prod.precio}`, 40, y);
+      doc.text(`$${prod.subtotal}`, 50, y);
+      y += nombre.length * 3;
+    });
+  
+    doc.line(margen, y, 53, y); y += 4;
+  
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Total: $${data.total} MXN`, 53, y, { align: 'right' }); y += 4;
+  
+    const totalEnLetras = this.variablesGL.numeroALetras(data.total, {
+      plural: 'PESOS MEXICANOS',
+      singular: 'PESO MEXICANO',
+      centPlural: 'CENTAVOS',
+      centSingular: 'CENTAVO'
+    });
+    const letras = doc.splitTextToSize(totalEnLetras, 48);
+    doc.text(letras, margen, y);
+    y += letras.length * 3;
+  
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.text('***GRACIAS POR SU PREFERENCIA***', 29, y, { align: 'center' }); y += 4;
+    doc.text('***Conserva este comprobante para la entrega de tu pedido***', margen, y);
+  
+    doc.autoPrint(); // Para impresión automática
 
-// Convertir la cadena de fecha a un objeto Date
-const fecha = new Date(data.fecha);
-// Formatear la fecha
-const dia = String(fecha.getDate()).padStart(2, '0'); // Día con dos dígitos
-const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Mes con dos dígitos (Enero es 0)
-const anio = fecha.getFullYear(); // Año con cuatro dígitos
-
-// Construir la fecha formateada
-const fechaFormateada = `${dia}/${mes}/${anio}`;
-    //code Impresion
-    const conector = new ConectorPluginV3();
-    conector
-      .Iniciar()
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-      .Feed(1)
-      .EscribirTexto("***APARTADO SUCURSAL***")
-      .Feed(1)
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-      .EscribirTexto("Fecha:" + fechaFormateada)
-      .Feed(1)
-      .EscribirTexto("Cliente:"+data.idCliente)
-      .Feed(1)
-      .EscribirTexto("Cliente Nombre:"+this.selectedClient.nombreCompleto)
-      .Feed(1)
-      .EscribirTexto("Tel Cliente:"+data.telefono)
-      .Feed(1)
-      .EscribirTexto("Ticket Apartado:" + idApartadoCreado)
-      .Feed(1)
-      .EscribirTexto("_________________________________________")
-      .Feed(1)
-      .EscribirTexto("ARTICULO        | CANT |  P/U  |  TOTAL  ")
-      .Feed(1)
-      .EscribirTexto("_________________________________________")
-      .Feed(1)
-      .EscribirTexto(this.cadenaProductos)
-      .Feed(1)
-      .EscribirTexto("_________________________________________")
-      .Feed(1)
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
-      .EscribirTexto("Total:" + data.total + "MXN")
-      .Feed(1)
-      .EscribirTexto(this.variablesGL.numeroALetras(data.total, {
-        plural: 'PESOS MEXICANOS',
-        singular: 'PESO MEXICANO',
-        centPlural: 'CENTAVOS',
-        centSingular: 'CENTAVO'
-      }))
-      .Feed(1)
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-      .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
-      .Feed(1)
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-      .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
-      .Feed(2)
-      .Feed(2)
-      .Corte(1)
-      .Iniciar()
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-      .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-      .Feed(1)
-      .EscribirTexto("***APARTADO CLIENTE***")
-      .Feed(1)
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-      .EscribirTexto("Fecha:" + fechaFormateada)
-      .Feed(1)
-      .EscribirTexto("Cliente:"+data.idCliente)
-      .Feed(1)
-      .EscribirTexto("Tel Cliente:"+data.telefono)
-      .Feed(1)
-      .EscribirTexto("Ticket Apartado:" + idApartadoCreado)
-      .EscribirTexto("_________________________________________")
-      .Feed(1)
-      .EscribirTexto("ARTICULO        | CANT |  P/U            ")
-      .Feed(1)
-      .EscribirTexto("_________________________________________")
-      .Feed(1)
-      .EscribirTexto(this.cadenaProductos)
-      .Feed(1)
-      .EscribirTexto("_________________________________________")
-      .Feed(1)
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
-      .EscribirTexto("Total:" + data.total + "MXN")
-      .Feed(1)
-      .EscribirTexto(this.variablesGL.numeroALetras(data.total, {
-        plural: 'PESOS MEXICANOS',
-        singular: 'PESO MEXICANO',
-        centPlural: 'CENTAVOS',
-        centSingular: 'CENTAVO'
-      }))
-      .Feed(1)
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-      .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
-      .Feed(1)
-      .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-      .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
-      .Feed(2)
-      .Feed(2)
-      .Corte(1)
-    try {
-      const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
-
-      if (respuesta == true) {
-        this.toastr.success( 'Exito!');
-   this.cadenaProductos = ""
-      } else {
-        console.log("Error: " + respuesta);
-      }
-
-    } catch (error) {
-      console.log(error)
-      this.toastr.warning(error, 'Atencion!');
-      //Limpiar objetos al finalizar una compra correct
-   this.cadenaProductos = ""
-    }
+    window.open(doc.output('bloburl'), '_blank');
   }
+
+//   async geeneraTicketApartado(data: CatApartadoModel,idApartadoCreado:number) {
+//     console.log(data.articulosApartados)
+//     data.articulosApartados.forEach(element => {
+//       element.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
+//       this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN"  + "|" + "$" +  element.subtotal + "MXN" + "\n".toString()
+
+//     });
+
+// // Convertir la cadena de fecha a un objeto Date
+// const fecha = new Date(data.fecha);
+// // Formatear la fecha
+// const dia = String(fecha.getDate()).padStart(2, '0'); // Día con dos dígitos
+// const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Mes con dos dígitos (Enero es 0)
+// const anio = fecha.getFullYear(); // Año con cuatro dígitos
+
+// // Construir la fecha formateada
+// const fechaFormateada = `${dia}/${mes}/${anio}`;
+//     //code Impresion
+//     const conector = new ConectorPluginV3();
+//     conector
+//       .Iniciar()
+//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+//       .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+//       .Feed(1)
+//       .EscribirTexto("***APARTADO SUCURSAL***")
+//       .Feed(1)
+//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+//       .EscribirTexto("Fecha:" + fechaFormateada)
+//       .Feed(1)
+//       .EscribirTexto("Cliente:"+data.idCliente)
+//       .Feed(1)
+//       .EscribirTexto("Cliente Nombre:"+this.selectedClient.nombreCompleto)
+//       .Feed(1)
+//       .EscribirTexto("Tel Cliente:"+data.telefono)
+//       .Feed(1)
+//       .EscribirTexto("Ticket Apartado:" + idApartadoCreado)
+//       .Feed(1)
+//       .EscribirTexto("_________________________________________")
+//       .Feed(1)
+//       .EscribirTexto("ARTICULO        | CANT |  P/U  |  TOTAL  ")
+//       .Feed(1)
+//       .EscribirTexto("_________________________________________")
+//       .Feed(1)
+//       .EscribirTexto(this.cadenaProductos)
+//       .Feed(1)
+//       .EscribirTexto("_________________________________________")
+//       .Feed(1)
+//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
+//       .EscribirTexto("Total:" + data.total + "MXN")
+//       .Feed(1)
+//       .EscribirTexto(this.variablesGL.numeroALetras(data.total, {
+//         plural: 'PESOS MEXICANOS',
+//         singular: 'PESO MEXICANO',
+//         centPlural: 'CENTAVOS',
+//         centSingular: 'CENTAVO'
+//       }))
+//       .Feed(1)
+//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+//       .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+//       .Feed(1)
+//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+//       .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
+//       .Feed(2)
+//       .Feed(2)
+//       .Corte(1)
+//       .Iniciar()
+//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+//       .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+//       .Feed(1)
+//       .EscribirTexto("***APARTADO CLIENTE***")
+//       .Feed(1)
+//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+//       .EscribirTexto("Fecha:" + fechaFormateada)
+//       .Feed(1)
+//       .EscribirTexto("Cliente:"+data.idCliente)
+//       .Feed(1)
+//       .EscribirTexto("Tel Cliente:"+data.telefono)
+//       .Feed(1)
+//       .EscribirTexto("Ticket Apartado:" + idApartadoCreado)
+//       .EscribirTexto("_________________________________________")
+//       .Feed(1)
+//       .EscribirTexto("ARTICULO        | CANT |  P/U            ")
+//       .Feed(1)
+//       .EscribirTexto("_________________________________________")
+//       .Feed(1)
+//       .EscribirTexto(this.cadenaProductos)
+//       .Feed(1)
+//       .EscribirTexto("_________________________________________")
+//       .Feed(1)
+//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
+//       .EscribirTexto("Total:" + data.total + "MXN")
+//       .Feed(1)
+//       .EscribirTexto(this.variablesGL.numeroALetras(data.total, {
+//         plural: 'PESOS MEXICANOS',
+//         singular: 'PESO MEXICANO',
+//         centPlural: 'CENTAVOS',
+//         centSingular: 'CENTAVO'
+//       }))
+//       .Feed(1)
+//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+//       .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+//       .Feed(1)
+//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+//       .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
+//       .Feed(2)
+//       .Feed(2)
+//       .Corte(1)
+//     try {
+//       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+
+//       if (respuesta == true) {
+//         this.toastr.success( 'Exito!');
+//    this.cadenaProductos = ""
+//       } else {
+//         console.log("Error: " + respuesta);
+//       }
+
+//     } catch (error) {
+//       console.log(error)
+//       this.toastr.warning(error, 'Atencion!');
+//       //Limpiar objetos al finalizar una compra correct
+//    this.cadenaProductos = ""
+//     }
+//   }
 
 }

@@ -74,6 +74,7 @@ export class InventarioComponent implements OnInit {
       { field: 'sku', header: 'SKU' },
       { field: 'descripcion', header: 'Descripcion' },
       { field: 'existencia', header: 'Existencia' },
+      
       // { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
       // { field: 'precio', header: 'precio' },
@@ -485,28 +486,39 @@ this.getArticulos()
 
     });
   }
-  // getTallas() {
-  //   this.loading = true;
-  //   this.tallasService.getTallas().subscribe(response => {
-  //     if (response.exito) {
-  //       this.listTallas = response.respuesta;
 
-  //       this.tallaOptions = this.listTallas.map(talla => ({
-  //         label: talla.nombre,
-  //         value: talla.idTalla
-  //       }));
-  //       console.log(this.tallaOptions);
-  //       this.loading = false;
-  //     } else {
-  //       this.loading = false;
 
-  //     }
-  //   }, err => {
-  //     this.loading = false;
+  sumarExistencia(articulo: productoModel): void {
 
-  //   });
-  // }
+    const existenciaNumerica = parseInt(articulo.existencia, 10) || 0;
+    articulo.existencia = (existenciaNumerica + 1).toString();
+   
 
+   this.actualizarArticulo(articulo); 
+  }
+  
+  restarExistencia(articulo: productoModel): void {
+    const existenciaNumerica = parseInt(articulo.existencia, 10) || 0;
+    if (existenciaNumerica > 0) {
+      articulo.existencia = (existenciaNumerica - 1).toString();
+       this.actualizarArticulo(articulo);
+    }
+  }
+
+  actualizarArticulo(articulo: productoModel){
+    
+    this.articuloService.actualizaArticulo(articulo).subscribe(response => {
+      if(response.exito){
+          this.toastr.success("Se modifico el Stock", 'Exito!!');
+        
+      }else{
+          this.toastr.error(response.mensaje, 'Ups!!');
+      }
+    }, err => {
+      console.log('error actualiza proveedor ', err);
+      this.toastr.error('Hubo un problema al conectar con los servicios en linea','Ups!!');
+    });
+  }
 
 }
 
@@ -521,9 +533,7 @@ export class CSVRecord {
   public fechaIngreso: string;
   public idUbicacion: any;
   public idCategoria: any;
-  // public idTalla: any;
-  // public talla:string;
-   public ubicacion:string;
+  public ubicacion:string;
   public categoria:string;
   public imagen: string;
   public sku: string;
@@ -536,7 +546,6 @@ export class CSVRecord {
   ) {
 
   }
-
 
 
 }

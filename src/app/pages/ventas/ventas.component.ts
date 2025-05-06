@@ -708,13 +708,14 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
             console.log("Impresión correcta");
             this.display = false;
           } else {
+            this.totalVenta=0
             console.log("Error: " + respuesta);
           }
 
         } catch (error) {
           this.isButtonDisabled = false; // Habilitar el botón al finalizar
           console.log(error)
-          this.toastr.warning(error, 'Atencion!');
+        //  this.toastr.warning(error, 'Atencion!');
           //Limpiar objetos al finalizar una compra correcta
           this.cadenaProductos = ""
           this.RegistraVenta = new VentaModel();
@@ -723,6 +724,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
           this.total = 0
           this.articlesShell = []
           this.display = false;
+          this.totalVenta=0
         }
 
 
@@ -905,9 +907,6 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
         align: 'center',
       });
       
-      // doc.text('$' + producto.precio.toFixed(2), 50, posicionY, {
-      //   align: 'center',
-      // });
       posicionY += nombreDividido.length * 3;
     });
 
@@ -937,19 +936,8 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       posicionY,
       { maxWidth: 53 }
     );
-  //  // posicionY += espaciado;
-  //   // Total en letras
-  //   const totalEnLetras = this.variablesGL.numeroALetras(
-  //     this.total - this.descuento,
-  //     {
-  //       plural: 'PESOS MEXICANOS',
-  //       singular: 'PESO MEXICANO',
-  //       centPlural: 'CENTAVOS',
-  //       centSingular: 'CENTAVO',
-  //     }
-  //   );
-  //   doc.text(totalEnLetras, margenIzquierdo, posicionY, { maxWidth: 53 });
-  //   posicionY += espaciado;
+
+  this.totalVenta=0
     doc.autoPrint(); // Para impresión automática
 
     window.open(doc.output('bloburl'), '_blank');

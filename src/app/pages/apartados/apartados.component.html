@@ -85,7 +85,9 @@
                 <td>
                   {{rowData['fecha'] | date: 'dd/MM/yyyy, hh:mm a'}}
                 </td>
-
+                <td>
+                  {{rowData['fechaEntrega'] | date: 'dd/MM/yyyy, hh:mm a'}}
+                </td>
                 <td>
                   <p-badge *ngIf="rowData['status'] == 'Entregado'" [value]="rowData.status" severity="warning"
                     size="large" styleClass="mr-2"></p-badge>
@@ -119,7 +121,7 @@
       styleClass="p-fluid">
       <ng-template pTemplate="content">
         <div class="row">
-          <div class="col-5">
+          <div class="col-4">
             <div class="field">
               <p-autoComplete [(ngModel)]="selectedClient" [suggestions]="filteredClients" placeholder="Selecciona cliente"
                 (completeMethod)="getResultsClients($event)" field="nombre" [dropdown]="true">
@@ -136,7 +138,31 @@
             <button pButton pRipple icon="pi pi-plus" class="bs-link-color"
             (click)="openModalAdd()"></button>
           </div>
-          <div class="col-3">
+            <div class="col-2">
+            <div class="dialog-content">
+
+              <h6>Fecha de levantamiento:</h6>
+              <p>{{  this.apartado.fecha | date: 'dd/MM/yyyy HH:mm' }}</p>
+
+
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="dialog-content">
+              <h6>Fecha de Entrega:</h6>
+              <p-calendar
+              [(ngModel)]="apartado.fechaEntrega"
+              name="fechaEntrega"
+              [showTime]="true"
+              [hourFormat]="'24'"
+              dateFormat="dd/mm/yy"
+              [locale]="es"
+              class="w-full"
+            ></p-calendar>
+            </div>
+          </div>
+          
+          <div class="col-1">
             <div class="dialog-content">
 
                 <h6>Articulos seleccionados: {{articulos}}</h6>
@@ -144,7 +170,7 @@
 
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-1">
 
               <h6>Total:$ {{total}}</h6>
 
@@ -194,13 +220,19 @@
 
        <ng-template pTemplate="body" let-rowData let-columns="columns">
          <tr>
-           <td *ngIf="rowData.existencia != 0">
+          <!-- TODO :se comento por que se solicito que se aparten sin stock -->
+           <!-- <td *ngIf="rowData.existencia != 0">
              <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning"
                      (click)="addProductApartado(rowData)"></button>
-           </td>
-           <td *ngIf="rowData.existencia == 0">
+           </td> -->
+         
+           <!-- <td *ngIf="rowData.existencia == 0">
              <label>Sin stock</label>
-           </td>
+           </td> -->
+           <td >
+            <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-warning"
+                    (click)="addProductApartado(rowData)"></button>
+          </td>
            <td *ngFor="let col of columns">
              {{rowData[col.field]}}
            </td>
