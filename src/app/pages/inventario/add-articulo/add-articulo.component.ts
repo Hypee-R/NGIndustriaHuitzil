@@ -206,13 +206,49 @@ actualizarArticulo(){
   });
 }
 
-capturarFile(event){
-  const fotografiaCaptura=event.target.files[0]
-  this.extraerBase64(fotografiaCaptura).then((imagen: any) => {
-    this.previsualizacion = imagen.base;
-    this.producto.imagen=imagen.base
-  })
+capturarFile(event: any) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => {
+    const img = new Image();
+    img.src = reader.result as string;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const maxWidth = 800; // ancho máximo deseado
+      const maxHeight = 800;
+      let width = img.width;
+      let height = img.height;
+
+      // Redimensionar manteniendo proporción
+      if (width > height) {
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width = (width * maxHeight) / height;
+          height = maxHeight;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(img, 0, 0, width, height);
+
+      // Convertir a base64 con compresión JPEG
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7); // calidad de 0.7
+
+      this.previsualizacion = compressedBase64;
+      this.producto.imagen = compressedBase64;
+    };
+  };
 }
+
 
 extraerBase64 = async ($event: any) => new Promise((resolve, reject) => {
   try {

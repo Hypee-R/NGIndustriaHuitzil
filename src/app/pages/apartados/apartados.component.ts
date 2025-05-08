@@ -342,6 +342,7 @@ export class ApartadosComponent implements OnInit {
     this.articulos = 0
     this.selectedClient = undefined
     this.apartado.fecha = new Date()
+   
   }
 
 
@@ -699,108 +700,61 @@ const doc = new jsPDF({
       centSingular: 'CENTAVO',
     });
   
-    // Logo
+
+  
+    const margen = 5;
+    let y = 10;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+  
     const margenIzquierdo = 5;
  
     const margenSuperior = 10;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
     const logoUrl = '/assets/img/LogoSole.jpeg';
+const logoHeight = 20;
+const logoWidth = 50;
 
-     // Reducción del tamaño del logo para que se ajuste al ancho de 58 mm
-     doc.addImage(logoUrl, 'PNG', margenIzquierdo, margenSuperior, 50, 20); // Ajustar el tamaño del logo
-      // Título
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.text("***ABONO***", 29, cursorY, { align: 'center' });
-      cursorY += 8;
-  
-      // Información
-      doc.setFontSize(8);
-      doc.setFont("helvetica", "normal");
-      doc.text(`Fecha: ${fechaFormateada}`, marginLeft, cursorY); cursorY += 4;
-      doc.text(`Caja: ${data.idCaja}`, marginLeft, cursorY); cursorY += 4;
-      
-      doc.text(`Ticket Abono: ${data.idApartado}-${data.noTicketPago}`, marginLeft, cursorY); cursorY += 4;
-      doc.text(`Tipo de Pago: ${data.tipoPagoValida}`, marginLeft, cursorY); cursorY += 6;
-  
-      // Total y letras
-      doc.text(`Total: $${Number(data.cantidad).toFixed(2)} MXN`, marginLeft, cursorY); cursorY += 4;
-      doc.text(doc.splitTextToSize(textoEnLetras, 50), marginLeft, cursorY); cursorY += 8;
-  
-      // Restante y letras
-      doc.text(`Restante: $${Number(this.selectedApartado.resto).toFixed(2)} MXN`, marginLeft, cursorY); cursorY += 4;
-      doc.text(doc.splitTextToSize(textoRestanteLetras, 50), marginLeft, cursorY); cursorY += 10;
-  
-      // Mensaje final
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(9);
-      doc.text("***Gracias por su preferencia***", 29, cursorY, { align: 'center' });
-  
-      // Descargar
+// Insertar logo en la parte superior
+doc.addImage(logoUrl, 'PNG', margenIzquierdo, margenSuperior, logoWidth, logoHeight);
+
+// Asegurarte de que el texto no se ensime con el logo
+cursorY = margenSuperior + logoHeight + 2; // espacio de 2 mm debajo del logo
+
+// Continúa con el contenido
+doc.setFont('helvetica', 'bold');
+doc.text("***ABONO***", 29, cursorY, { align: 'center' });
+cursorY += 6;
+
+doc.setFont('helvetica', 'normal');
+doc.setFontSize(7);
+doc.text(`Fecha: ${fechaFormateada}`, marginLeft, cursorY); cursorY += 4;
+doc.text(`Caja: ${data.idCaja}`, marginLeft, cursorY); cursorY += 4;
+
+doc.text(`Ticket Abono: ${data.idApartado}-${data.noTicketPago}`, marginLeft, cursorY); cursorY += 4;
+doc.text(`Tipo de Pago: ${data.tipoPagoValida}`, marginLeft, cursorY); cursorY += 6;
+
+// Total y letras
+doc.text(`Total: $${Number(data.cantidad).toFixed(2)} MXN`, marginLeft, cursorY); cursorY += 4;
+doc.text(doc.splitTextToSize(textoEnLetras, 50), marginLeft, cursorY); cursorY += 8;
+
+// Restante y letras
+doc.text(`Restante: $${Number(this.selectedApartado.resto).toFixed(2)} MXN`, marginLeft, cursorY); cursorY += 4;
+doc.text(doc.splitTextToSize(textoRestanteLetras, 50), marginLeft, cursorY); cursorY += 10;
+
+// Mensaje final
+doc.setFont("helvetica", "bold");
+doc.setFontSize(9);
+doc.text("***Gracias por su preferencia***", 29, cursorY, { align: 'center' });
+
+
+   
       doc.autoPrint(); // Para impresión automática
 
       window.open(doc.output('bloburl'), '_blank');
    
-    //code Impresion
-    // const conector = new ConectorPluginV3();
-    // conector
-    //   .Iniciar()
-    //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-    //   .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-    //   .Feed(1)
-    //   .EscribirTexto("***ABONO***")
-    //   .Feed(1)
-    //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-    //   .Feed(1)
-    //   .EscribirTexto("Fecha:" + data.fecha)
-    //   .Feed(1)
-    //   .EscribirTexto("Caja:" + data.idCaja)
-    //   .Feed(1)
-    //   .EscribirTexto("Ticket Abono:" + data.idApartado+'-'+data.noTicketPago)
-    //   .Feed(1)
-    //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-    //   .Feed(1)
-    //   .EscribirTexto("Tipo Pago:" + data.tipoPagoValida)
-    //   .Feed(1)
-
-    //   .EscribirTexto("Total:$" + data.cantidad + "MXN")
-    //   .Feed(2)
-    //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-    //   .EscribirTexto(this.variablesGL.numeroALetras(data.cantidad, {
-    //     plural: 'PESOS MEXICANOS',
-    //     singular: 'PESO MEXICANO',
-    //     centPlural: 'CENTAVOS',
-    //     centSingular: 'CENTAVO'
-    //   }))
-    //   .Feed(2)
-    //   .EscribirTexto("Restante:$" + this.selectedApartado.resto)
-    //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-    //   .EscribirTexto(this.variablesGL.numeroALetras( this.selectedApartado.resto, {
-    //     plural: 'PESOS MEXICANOS',
-    //     singular: 'PESO MEXICANO',
-    //     centPlural: 'CENTAVOS',
-    //     centSingular: 'CENTAVO'
-    //   }))
-    //   .Feed(3)
-    //   .Corte(1)
-
-    // try {
-    //   const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
-
-    //   if (respuesta == true) {
-    //     this.toastr.success( 'Exito!');
-
-    //   } else {
-    //     console.log("Error: " + respuesta);
-    //   }
-
-    // } catch (error) {
-    //   console.log(error)
-    //   this.toastr.warning(error, 'Atencion!');
-    //   //Limpiar objetos al finalizar una compra correct
-
-    // }
+   
   }
   deletePagoApartado(viewPago: PagoApartado){
     Swal.fire({
@@ -885,9 +839,15 @@ const fechaFormateadaEntrega = `${dia1}/${mes1}/${anio1} ${horas1}:${minutos1}`;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
   
-    const logoUrl = '/assets/img/LogoSole.jpeg'; // Usa ruta relativa o absoluta válida
-    doc.addImage(logoUrl, 'JPEG', margen, y, 48, 15);
-    y += 18;
+    const margenIzquierdo = 5;
+ 
+    const margenSuperior = 10;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    const logoUrl = '/assets/img/LogoSole.jpeg';
+
+     // Reducción del tamaño del logo para que se ajuste al ancho de 58 mm
+     doc.addImage(logoUrl, 'PNG', margenIzquierdo, margenSuperior, 50, 20); // Ajustar el tamaño del logo
   
     doc.setFont('helvetica', 'bold');
     doc.text('***APARTADO SUCURSAL***', 29, y, { align: 'center' });
@@ -946,131 +906,12 @@ const fechaFormateadaEntrega = `${dia1}/${mes1}/${anio1} ${horas1}:${minutos1}`;
     doc.autoPrint(); // Para impresión automática
 
     window.open(doc.output('bloburl'), '_blank');
+
+    this.apartado.fechaEntrega=null
+    //Limpiar objetos al finalizar una compra correct
+     this.cadenaProductos = ""
   }
 
-//   async geeneraTicketApartado(data: CatApartadoModel,idApartadoCreado:number) {
-//     console.log(data.articulosApartados)
-//     data.articulosApartados.forEach(element => {
-//       element.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
-//       this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN"  + "|" + "$" +  element.subtotal + "MXN" + "\n".toString()
 
-//     });
-
-// // Convertir la cadena de fecha a un objeto Date
-// const fecha = new Date(data.fecha);
-// // Formatear la fecha
-// const dia = String(fecha.getDate()).padStart(2, '0'); // Día con dos dígitos
-// const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Mes con dos dígitos (Enero es 0)
-// const anio = fecha.getFullYear(); // Año con cuatro dígitos
-
-// // Construir la fecha formateada
-// const fechaFormateada = `${dia}/${mes}/${anio}`;
-//     //code Impresion
-//     const conector = new ConectorPluginV3();
-//     conector
-//       .Iniciar()
-//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-//       .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-//       .Feed(1)
-//       .EscribirTexto("***APARTADO SUCURSAL***")
-//       .Feed(1)
-//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-//       .EscribirTexto("Fecha:" + fechaFormateada)
-//       .Feed(1)
-//       .EscribirTexto("Cliente:"+data.idCliente)
-//       .Feed(1)
-//       .EscribirTexto("Cliente Nombre:"+this.selectedClient.nombreCompleto)
-//       .Feed(1)
-//       .EscribirTexto("Tel Cliente:"+data.telefono)
-//       .Feed(1)
-//       .EscribirTexto("Ticket Apartado:" + idApartadoCreado)
-//       .Feed(1)
-//       .EscribirTexto("_________________________________________")
-//       .Feed(1)
-//       .EscribirTexto("ARTICULO        | CANT |  P/U  |  TOTAL  ")
-//       .Feed(1)
-//       .EscribirTexto("_________________________________________")
-//       .Feed(1)
-//       .EscribirTexto(this.cadenaProductos)
-//       .Feed(1)
-//       .EscribirTexto("_________________________________________")
-//       .Feed(1)
-//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
-//       .EscribirTexto("Total:" + data.total + "MXN")
-//       .Feed(1)
-//       .EscribirTexto(this.variablesGL.numeroALetras(data.total, {
-//         plural: 'PESOS MEXICANOS',
-//         singular: 'PESO MEXICANO',
-//         centPlural: 'CENTAVOS',
-//         centSingular: 'CENTAVO'
-//       }))
-//       .Feed(1)
-//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-//       .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
-//       .Feed(1)
-//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-//       .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
-//       .Feed(2)
-//       .Feed(2)
-//       .Corte(1)
-//       .Iniciar()
-//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-//       .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-//       .Feed(1)
-//       .EscribirTexto("***APARTADO CLIENTE***")
-//       .Feed(1)
-//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-//       .EscribirTexto("Fecha:" + fechaFormateada)
-//       .Feed(1)
-//       .EscribirTexto("Cliente:"+data.idCliente)
-//       .Feed(1)
-//       .EscribirTexto("Tel Cliente:"+data.telefono)
-//       .Feed(1)
-//       .EscribirTexto("Ticket Apartado:" + idApartadoCreado)
-//       .EscribirTexto("_________________________________________")
-//       .Feed(1)
-//       .EscribirTexto("ARTICULO        | CANT |  P/U            ")
-//       .Feed(1)
-//       .EscribirTexto("_________________________________________")
-//       .Feed(1)
-//       .EscribirTexto(this.cadenaProductos)
-//       .Feed(1)
-//       .EscribirTexto("_________________________________________")
-//       .Feed(1)
-//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
-//       .EscribirTexto("Total:" + data.total + "MXN")
-//       .Feed(1)
-//       .EscribirTexto(this.variablesGL.numeroALetras(data.total, {
-//         plural: 'PESOS MEXICANOS',
-//         singular: 'PESO MEXICANO',
-//         centPlural: 'CENTAVOS',
-//         centSingular: 'CENTAVO'
-//       }))
-//       .Feed(1)
-//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-//       .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
-//       .Feed(1)
-//       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-//       .EscribirTexto("***Conserva este comprobante para la entrega de tu pedido***")
-//       .Feed(2)
-//       .Feed(2)
-//       .Corte(1)
-//     try {
-//       const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
-
-//       if (respuesta == true) {
-//         this.toastr.success( 'Exito!');
-//    this.cadenaProductos = ""
-//       } else {
-//         console.log("Error: " + respuesta);
-//       }
-
-//     } catch (error) {
-//       console.log(error)
-//       this.toastr.warning(error, 'Atencion!');
-//       //Limpiar objetos al finalizar una compra correct
-//    this.cadenaProductos = ""
-//     }
-//   }
 
 }

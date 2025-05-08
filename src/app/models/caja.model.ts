@@ -10,6 +10,7 @@ export class CajaModel{
   montoCierre: number;
   idEmpleadoNavigation : UsuarioModel
   venta: VentaModel[];
+  estatus: boolean;
   constructor(){
     this.idCaja = 0;
     this.idEmpleado = 0;
@@ -17,5 +18,6 @@ export class CajaModel{
     this.monto = 1000;
     this.fechaCierre = null;
     this.montoCierre = 1000;
+    this.estatus = false;
   }
 }

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import ConectorPluginV3 from 'src/app/services/ConectorPluginV3';
@@ -19,6 +19,7 @@ export class OpenCashComponent implements OnInit {
   impresoraSeleccionada: string = "Caja";
   @Input() _accion: string;
   @Input() _caja: CajaModel;
+  @Output() _CajaSelected = new EventEmitter<CajaModel>();
   rows = 0;
   accion = '';
   submitted = false;
@@ -117,6 +118,7 @@ export class OpenCashComponent implements OnInit {
       this.ventasService.openCaja(this.openCashModel).subscribe(response => {
         console.log(response);
         if (response.exito) {
+          this._CajaSelected.emit(response.respuesta);
           this.toastr.success(response.mensaje, 'Exito!');
           this.submitted = false;
           this.variablesGL.showDialog.next(false);
@@ -140,6 +142,7 @@ export class OpenCashComponent implements OnInit {
         this.ventasService.closeCaja(this.openCashModel).subscribe(response => {
           console.log(response);
           if (response.exito) {
+            this._CajaSelected.emit(response.respuesta);
             this.toastr.success(response.mensaje, 'Exito!');
             this.submitted = false;
             this.variablesGL.showDialog.next(false);

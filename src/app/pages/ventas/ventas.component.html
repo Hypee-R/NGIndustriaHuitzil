@@ -1,16 +1,14 @@
-<!-- <div [ngClass]="{'container': statusPanubicacion <= 10}">
-  <div class="card shadow mb-5 bg-body rounded"> -->
-<!-- <span class="lstick"></span> -->
+
 
 <p-card header="Vendedor : {{user.nombre }}  ({{title}})" [style]="cardStyle">
   <!-- TODO:DESCOMENTAR CUANDO ESTE LISTO -->
   <div class="row">
     <div class="col-8 md:col-6 d-flex align-items-center">
-      <!-- <div class="input-container" style="flex: 1; margin-right: 20px;">
+      <div class="input-container" style="flex: 1; margin-right: 20px;">
         <span class="label">Selecciona un cliente: </span>
         <p-dropdown [filter]="true" [options]="clientes" [(ngModel)]="selectedcliente"
           optionLabel="nombre" (onChange)="onClienteChange($event)"></p-dropdown>
-      </div> -->
+      </div>
 
 
       <div class="radio-group">
@@ -24,7 +22,7 @@
 
     <div class="col-md-9">
       <div class="col-6">
-        <div class="p-inputgroup improved-input">
+        <div class="p-inputgroup improved-input" *ngIf="this.selectedOption.value == 'VEN'">
           <span class="p-inputgroup-addon improved-addon"><i class="pi pi-search"></i></span>
           <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras"
             [(ngModel)]="queryString" autofocus (change)="onchangeShear()">
@@ -33,8 +31,9 @@
 
       </div>
       <br>
-      <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" [columns]="cols" [rows]="rows"
-        [paginator]="true" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
+      <div *ngIf="this.selectedOption.value != 'ABN'">
+      <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" scrollHeight="400px"  [columns]="cols" [rows]="rows"
+        [paginator]="false" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
         currentPageReportTemplate="Mostrando {first} a {last}  productos">
 
         <!-- Header template -->
@@ -81,6 +80,9 @@
           </div>
         </ng-template>
       </p-table>
+     </div>
+ 
+
 
     </div>
 
@@ -156,7 +158,6 @@
         <span style="font-size: 1.5rem; margin-left: 0.5rem;">Limpiar</span>
       </div>
 
-
     </div>
 
   </div>
@@ -168,7 +169,7 @@
 <!-- </div>
 
 </div> -->
-<app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''"></app-open-cash>
+<app-open-cash [_accion]="accion" [_caja]="cashModel" *ngIf="accion != ''" (_CajaSelected)="statusCaja($event)"></app-open-cash>
 <!-- <app-add-cliente [_accion]="accionAdd" *ngIf="accionAdd != ''" (saveCliente)="getClientes()"></app-add-cliente> ya no se ocupa aqui la busqueda del cliente-->
 <app-open-productos [_accion]="openProducts" [_articles]="articles" [_articlesSelected]="articlesSelected"
   [_nArticles]="articulos" *ngIf="openProducts != ''" (_articulosS)="addProductVenta($event)"></app-open-productos>
@@ -341,139 +342,6 @@
     </ng-template>
   </p-dialog>
 
-<!-- <p-dialog header="Finalizar Venta"  [(visible)]="display" [style]="{width: '60vw'}">
-  <div class="container">
-
-
-    <div class="row">
-
-
-      <div class="col-sm">
-        <h5>Total de articulos: {{articulos}}</h5>
-
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm">
-        <button pButton type="button" label="Tarjeta" icon="pi pi-credit-card"
-          class="p-button-rounded p-button-warning p-button-lg" badge="8" badgeClass="p-badge-info"
-          (click)="PostVentaRegistro('TARJETA')" [disabled]="isButtonDisabled"></button>
-      </div>
-      <div class="col-sm">
-        <app-discount-selector (discountSelected)="onDiscountSelected($event)"></app-discount-selector>
-
-      </div>
-
-    </div>
-
-    <br>
-    <div class="row">
-      <div class="col-sm">
-        <button pButton type="button" label="Efectivo" icon="pi pi-money-bill"
-          class="p-button-rounded p-button-secondary p-button-lg" badge="8" badgeClass="p-badge-info"
-          (click)="PostVentaRegistro('EFECTIVO')" [disabled]="isButtonDisabled"></button>
-      </div>
-      <div class="col-sm">
-        <h5>Subtotal:<button pButton pRipple icon="pi pi-dollar" type="button" class="p-button-rounded p-button-warning"
-            label="{{this.total}}"></button> </h5>
-
-
-      </div>
-
-    </div>
-    <br>
-    <div class="row">
-
-      <div class="col-sm">
-
-        <button pButton type="button" label="Multiple" icon="pi pi-money-bill"
-          class="p-button-rounded p-button-success  p-button-lg" badge="8" badgeClass="p-badge-info"
-          [icon]="activeState[0] ? 'pi pi-minus' : 'pi pi-plus'" (click)="toggle(0)"
-          styleClass="p-button-text"></button>
-
-
-      </div>
-      <div class="col-sm">
-
-        <h3>TOTAL: <button pButton pRipple icon="pi pi-dollar" type="button" class="p-button-rounded p-button-danger"
-            label="{{this.total-this.descuento}}"></button> </h3>
-        <span style="font-size: 1rem;">{{totalLetra }}</span>
-      </div>
-
-    </div>
-    <p-accordion>
-      <p-accordionTab header="Datos de Pago Multiple" [(selected)]="activeState[0]">
-
-        <div class="row">
-
-          <div class="col-sm-4">
-            <br>
-            <span class="p-float-label">
-
-              <p-inputNumber [(ngModel)]="totalMultipleT" id="float-input1" (change)="changePage()"></p-inputNumber>
-              <label for="float-input1">Tarjeta</label>
-            </span>
-
-
-          </div>
-
-          <div class="col-sm-4">
-
-            <br>
-            <span class="p-float-label">
-
-              <p-inputNumber [(ngModel)]="totalMultipleF" id="float-input2" (change)="changePage()"></p-inputNumber>
-              <label for="float-input2">Efectivo</label>
-            </span>
-
-          </div>
-
-          <div class="col-sm-4">
-            <br>
-            <button pButton pRipple type="button" icon="pi pi-money-bill" label="Pagar Multiple"
-              [disabled]="isButtonDisabled" class="p-button-rounded p-button-success"
-              (click)="PostVentaRegistro('MULTIPLE')"></button>
-
-
-          </div>
-        </div>
-      </p-accordionTab>
-
-    </p-accordion>
-    <br>
-
-    <div class="row">
-      <div class="col-sm">
-        <h5>SU PAGO : </h5>
-        <div class="p-inputgroup">
-          <span class="p-inputgroup-addon">$</span>
-          <input type="number" pInputText placeholder="Ingresar monto" [(ngModel)]="this.totalVenta"
-            (change)="changePage()">
-
-          <span class="p-inputgroup-addon">.00</span>
-        </div>
-      </div>
-      <div class="col-sm">
-
-        <h5>SU CAMBIO: </h5>
-        <button pButton pRipple icon="pi pi-sync" type="button" label="Success"
-          class="p-button-rounded p-button-success p-button-lg" label=" {{this.cambioVenta}}"></button>
-
-      </div>
-
-    </div>
-  </div>
-
-
-  <ng-template pTemplate="footer">
-    <div class="progress-container">
-      <div class="progress-bar"></div>
-      <div class="progress-dot"></div>
-    </div>
-
-
-  </ng-template>
-</p-dialog> -->
 
 <p-dialog header="Cotización " [(visible)]="displayCotizacion" [style]="{width: '80vw'}">
   <div class="row" id="htmlData">

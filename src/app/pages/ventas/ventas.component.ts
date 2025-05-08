@@ -7,7 +7,6 @@ import { InventarioService } from 'src/app/services/inventario.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { jsPDF } from "jspdf";
-import html2canvas from 'html2canvas';
 import { VentaModel } from 'src/app/models/venta.model';
 import { VentaArticuloModel } from 'src/app/models/VentaArticulo.Model';
 import { formatDate } from '@angular/common';
@@ -17,6 +16,7 @@ import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 import { CambiosDevolucionesModel } from 'src/app/models/cambios-devoluciones.model';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { CatTiposPago } from 'src/app/models/tipoPago';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-ventas',
@@ -78,10 +78,10 @@ export class VentasComponent implements OnInit {
   //Datos de cancelacion
   lstCambiosDevoluciones: CambiosDevolucionesModel[] = [];
   selectedCambio: CambiosDevolucionesModel;
-  selectedOption: any = { value: 'SAL', label: 'SALIDA' };
+  selectedOption: any = { value: 'VEN', label: 'VENTA' };
   options = [
-    // { value: 'VEN', label: 'VENTA' },
-    // { value: 'ABN', label: 'ABONO' },
+    { value: 'VEN', label: 'VENTA' },
+    { value: 'ABN', label: 'ABONO' },
     { value: 'SAL', label: 'SALIDA' },
     { value: 'ENT', label: 'ENTRADA' },
    
@@ -115,20 +115,22 @@ export class VentasComponent implements OnInit {
     private cambiosDevolucionesService: VentasService,
     private clientesService: ClientesService
   ) {
+ 
     this.tiposDePago = [
       {
         id: 1,
         nombre: 'MOVIMIENTOS',
         descripcion: 'momientos de articulos',
-        icon: 'pi pi-money-bill',}
-     
+        icon: 'pi pi-money-bill',
+      },
+      {
+        id: 2,
+        nombre: 'APARTADOS',
+        descripcion: 'Pago con tarjeta',
+        icon: 'pi pi-money-bill',
+      },
     ];
-    this.title = 'SALIDA DE PRODUCTO';
-    this.titlePay = 'SALIDA';
-    this.iconPay = 'pi pi-download';
-    this.cardStyle = {
-      background: '#e2f6fd', // Valor predeterminado
-    };
+
     this.selectedclienteNameAdvanced = new CatClienteModel()
     this.cols = [
 
@@ -151,22 +153,67 @@ export class VentasComponent implements OnInit {
     } else {
       this.rows = 6
     }
+    const option = localStorage.getItem('opcion');
+    // console.info(option);
+    if (option != undefined) {
+      const op = JSON.parse(option);
+      this.selectedOption = { value: op, label: 'VENTA' };
 
+      if (op == 'VEN') {
+        this.titlePay = 'PAGAR';
+        this.iconPay = 'pi pi-money-bill';
+        this.title = 'VENTA';
+        this.cardStyle = {
+          background: '#ffffff ', // Valor predeterminado
+        };
+        this.getTiposPago();
+      } else if (op == 'ABN') {
+        this.titlePay = 'ABONO';
+        this.title = 'ABONO';
+        this.iconPay = 'pi pi-upload';
+        this.cardStyle = {
+          background: '#fdfddc', // Valor predeterminado
+        };
+      } else if (op == 'ENT') {
+        this.titlePay = 'ENTRADA';
+        this.title = 'ENTRADA DE EFECTIVO';
+        this.iconPay = 'pi pi-upload';
+        this.cardStyle = {
+          background: '#fdfddc', // Valor predeterminado
+        };
+      } else {
+        this.title = 'SALIDA DE EFECTIVO';
+        this.titlePay = 'SALIDA';
+        this.iconPay = 'pi pi-download';
+        this.cardStyle = {
+          background: '#e2f6fd', // Valor predeterminado
+        };
+      }
+
+      //this.selectedOption = op;
+    } else {
+      this.selectedOption = { value: 'VEN', label: 'VENTA' };
+    }
+    setTimeout(() => {
+      if (this.selectedOption.value === 'VEN') {
+        this.myInput.nativeElement.focus();
+      }
+    });
   }
-
  
   selectedValues: string[] = [];
   handleVisibilityChange() {
     if (document.hidden) {
-      if (this.selectedOption.value == 'SAL') {
+      if (this.selectedOption.value == 'VEN') {
         this.myInput.nativeElement.focus();
       }
     } else {
-      if (this.selectedOption.value == 'SAL') {
+      if (this.selectedOption.value == 'VEN') {
         this.myInput.nativeElement.focus();
       }
     }
   }
+
 
   async ngAfterViewInit() {
     document.addEventListener(
@@ -174,19 +221,25 @@ export class VentasComponent implements OnInit {
       this.handleVisibilityChange.bind(this)
     );
     setTimeout(() => {
-      if (this.selectedOption.value === 'SAL') {
+      if (this.selectedOption.value === 'VEN') {
         this.myInput.nativeElement.focus();
       }
     });
   }
 
+
   async ngOnInit() {
 
     this.loading = false
     this.getCaja();
+
     this.getClientes()
     this.user = JSON.parse(localStorage.getItem('usuario'));
+    setTimeout(() => {
+      this.myInput.nativeElement.focus();
+    });
   }
+
   getClientes() {
     this.clientes = []
     this.clientesService.getClientesBySucursal().subscribe(response => {
@@ -229,12 +282,16 @@ export class VentasComponent implements OnInit {
   }
 
   openCashRegister() {
+    if (this.cashOpen) {
+      this.toastr.info('Ya hay una caja abierta', 'Atención!');
+      return;
+    }
     this.accionCancelacion = '';
     this.openProducts = ""
     this.accionAdd = ''
     this.accion = 'Abrir';
     this.getCaja();
-    this.cashOpen = true;
+   
 
   }
 
@@ -283,6 +340,11 @@ export class VentasComponent implements OnInit {
   }
 
   addProductVenta(product: productoModel) {
+    if (this.myInput != undefined) {
+      this.myInput.nativeElement.focus();
+    }
+
+
     let artc = new productoVentaModel()
     artc.descripcion = product.descripcion
     artc.precio = product.precio
@@ -300,11 +362,31 @@ export class VentasComponent implements OnInit {
       centSingular: 'CENTAVO'
     });
   }
+
   cancelarCompra() {
-    this.toastr.info('Se limpio la Venta correctamente', 'Atención!');
-    this.articulos = 0
-    this.total = 0
-    this.articlesShell = []
+    if (this.articlesShell.length == 0) {
+      return;
+    }
+    Swal.fire({
+      title: `Está seguro de limpiar la venta`,
+      icon: 'question',
+      showDenyButton: true,
+      confirmButtonText: 'Aceptar',
+      denyButtonText: `Cancelar`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.toastr.error('Se cancelo la Venta correctamente', 'Atención!');
+        this.articulos = 0;
+        this.total = 0;
+        this.articlesShell = [];
+        localStorage.setItem('ticket', JSON.stringify(this.articlesShell));
+      } else if (result.isDenied) {
+      }
+    });
+    // this.toastr.info('Se limpio la Venta correctamente', 'Atención!');
+    // this.articulos = 0
+    // this.total = 0
+    // this.articlesShell = []
 
   }
 
@@ -351,52 +433,59 @@ export class VentasComponent implements OnInit {
 
 
   getCaja() {
-    this.ventasService.getCaja().subscribe(resp => {
-      console.log('data vcaja ', resp);
-      if (resp.exito) {
-        this.cashModel = resp.respuesta;
-        if (this.cashModel.fecha != null && this.cashModel.fechaCierre == null) {
-          if (this.accion == 'Abrir') {
-            console.log('No se puede abrir caja, hay una abierta...');
-            this.toastr.info('Actualmente hay una caja abierta', 'Atención!');
-            return;
+    this.ventasService.getCaja().subscribe(
+      (resp) => {
+        if (resp.exito) {
+          this.cashOpen = true;
+          //this.myInput.nativeElement.focus();
+          this.cashModel = resp.respuesta;
+          if (
+            this.cashModel.fecha != null &&
+            this.cashModel.fechaCierre == null
+          ) {
+            if (this.accion == 'Abrir') {
+              //console.log('No se puede abrir caja, hay una abierta...');
+              this.toastr.info('Actualmente hay una caja abierta', 'Atención!');
+              return;
+            }
+          } else if (
+            this.cashModel.fecha != null &&
+            this.cashModel.fechaCierre != null
+          ) {
+            if (this.accion == 'Abrir') {
+              //console.log('Abrir caja...');
+              this.cashModel = new CajaModel();
+            } else if (this.accion == 'Cerrar') {
+              console.log('ya está cerrada la caja');
+              this.toastr.info('Ya está cerrada la caja', 'Atención!');
+              this.accion = 'Status';
+            }
           }
 
-        } else if (this.cashModel.fecha != null && this.cashModel.fechaCierre != null) {
-          if (this.accion == 'Abrir') {
-            console.log('Abrir caja...');
-            this.cashModel = new CajaModel();
-          } else if (this.accion == 'Cerrar') {
-            console.log('ya está cerrada la caja');
-            this.toastr.info('Ya está cerrada la caja', 'Atención!');
-            this.accion = 'Status';
-          }
-        }
-
-
-
-        setTimeout(() => {
-          this.variablesGL.showDialog.next(true);
-        }, 100);
-
-
-      } else {
-
-        if (this.accion == 'Abrir') {
-          this.cashModel = new CajaModel();
           setTimeout(() => {
             this.variablesGL.showDialog.next(true);
           }, 100);
         } else {
-          this.toastr.info(resp.mensaje, 'Atención!');
+          // console.log('Esta cerrada la caja')
+          this.cashOpen = false;
+          this.myInput.nativeElement.disabled = true;
+          // this.openNewCashRegister()
+          // this.openCashRegister()
+          if (this.accion == 'Abrir') {
+            this.cashModel = new CajaModel();
+            setTimeout(() => {
+              this.variablesGL.showDialog.next(true);
+            }, 100);
+          } else {
+            this.toastr.info(resp.mensaje, 'Atención!');
+          }
         }
-
-      }
-    },
-      err => {
+      },
+      (err) => {
         this.toastr.error('Error al obtener status de la caja', 'Error!');
         this.cashModel = new CajaModel();
-      });
+      }
+    );
   }
 
   onchangeShear() {
@@ -438,38 +527,131 @@ export class VentasComponent implements OnInit {
       this.toastr.error('Ingrese un elemento de busqueda', 'Atención!');
     }
   }
-
   showDialog() {
+    //this.nameInput.nativeElement.focus();
+    this.pagando = false;
+    if (!this.cashOpen) {
+      this.toastr.error('Abre una caja para continuar', 'Atención!');
+      return;
+    }
 
-    this.ventasService.getCaja().subscribe(resp => {
-      console.log('Pagar Valida Caja ', resp);
-      if (resp.exito) {
-        this.cashModel = resp.respuesta;
-
-        if (this.cashModel.fechaCierre !== null) {
-          this.toastr.error("Caja Cerrada Abrir nueva", 'Error!');
-        } else {
-
-          if (this.articulos == 0) {
-            this.toastr.warning('No hay Articulos por pagar', 'Atención!');
-          } else {
-            this.display = true;
-            this.isButtonDisabled = false; // Habilitar el botón al finalizar
-          }
-        }
-
+    //console.info('selectedOption-->', this.selectedOption.value);
+    if (this.selectedOption.value == 'ABN') {
+      this.showMultiples = false;
+      this.getTiposPago();
+      this.totalVenta = this.total;
+      if (this.selectedcliente == undefined) {
+        this.toastr.error(
+          'Seleccione un cliente para realizar la venta',
+          'Atención!'
+        );
+        return;
       }
-    },
-      err => {
-        this.toastr.error('Error al obtener status de la caja', 'Error!');
-        this.cashModel = new CajaModel();
-      });
 
+      this.ventasService.getCaja().subscribe(
+        (resp) => {
+          if (resp.exito) {
+            this.cashModel = resp.respuesta;
 
+            if (!this.cashModel.estatus) {
+              this.toastr.error('Caja Cerrada Abrir nueva', 'Error!');
+            } else {
+              /* if (this.articulos == 0) {
+                this.toastr.warning('No hay Articulos por pagar', 'Atención!');
+              } else {*/
+              this.display = true;
+              //  }
+            }
+          }
+        },
+        (err) => {
+          this.toastr.error('Error al obtener status de la caja', 'Error!');
+          this.cashModel = new CajaModel();
+        }
+      );
+    } else if (this.selectedOption.value == 'VEN') {
+      this.showMultiples = false;
+      this.getTiposPago();
+      this.totalVenta = this.total;
+      if (this.selectedcliente == undefined) {
+        this.toastr.error(
+          'Seleccione un cliente para realizar la venta',
+          'Atención!'
+        );
+        return;
+      }
 
+      this.ventasService.getCaja().subscribe(
+        (resp) => {
+          if (resp.exito) {
+            this.cashModel = resp.respuesta;
 
+            if (!this.cashModel.fecha) {
+              this.toastr.error('Caja Cerrada Abrir nueva', 'Error!');
+            } else {
+              if (this.articulos == 0) {
+                this.toastr.warning('No hay Articulos por pagar', 'Atención!');
+              } else {
+                this.display = true;
+              }
+            }
+          }
+        },
+        (err) => {
+          this.toastr.error('Error al obtener status de la caja', 'Error!');
+          this.cashModel = new CajaModel();
+        }
+      );
+    } else if (this.selectedOption.value == 'ENT') {
+      if (this.articulos == 0) {
+        this.toastr.warning('No hay Articulos para entregar', 'Atención!');
+        return;
+      }
+      this.display = true;
 
+      // this.PostVentaRegistroMov('ENTRADA');
+      //this.display = true;
+    } else {
+      if (this.articulos == 0) {
+        this.toastr.warning('No hay Articulos para dar salida', 'Atención!');
+        return;
+      }
+      this.display = true;
+      //this.PostVentaRegistroMov('SALIDA');
+      //this.display = true;
+    }
   }
+  // showDialog() {
+
+  //   this.ventasService.getCaja().subscribe(resp => {
+  //     console.log('Pagar Valida Caja ', resp);
+  //     if (resp.exito) {
+  //       this.cashModel = resp.respuesta;
+
+  //       if (this.cashModel.fechaCierre !== null) {
+  //         this.toastr.error("Caja Cerrada Abrir nueva", 'Error!');
+  //       } else {
+
+  //         if (this.articulos == 0) {
+  //           this.toastr.warning('No hay Articulos por pagar', 'Atención!');
+  //         } else {
+  //           this.display = true;
+  //           this.isButtonDisabled = false; // Habilitar el botón al finalizar
+  //         }
+  //       }
+
+  //     }
+  //   },
+  //     err => {
+  //       this.toastr.error('Error al obtener status de la caja', 'Error!');
+  //       this.cashModel = new CajaModel();
+  //     });
+
+
+
+
+
+  // }
 
   showDialogCotizacion() {
     if (this.articulos == 0) {
@@ -868,17 +1050,11 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
 
 
   onOptionChange(value: any): void {
- 
-    // setTimeout(() => {
-    //   if (this.selectedOption.value === 'SAL') {
-    //     this.title = 'SALIDA DE PRODUCTO';
-    //   this.titlePay = 'SALIDA';
-    //   this.iconPay = 'pi pi-download';
-    //   this.cardStyle = {
-    //     background: '#e2f6fd', // Valor predeterminado
-    //   };
-    //   }
-    // });
+    setTimeout(() => {
+      if (this.selectedOption.value === 'VEN') {
+        this.myInput.nativeElement.focus();
+      }
+    });
 
     this.total = 0;
     this.articlesShell = [];
@@ -886,7 +1062,20 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     const op = JSON.parse(option);
     this.checked = false;
     this.articulos = 0;
- 
+    this.tiposDePago = [
+      {
+        id: 1,
+        nombre: 'MOVIMIENTOS',
+        descripcion: 'momientos de articulos',
+        icon: 'pi pi-money-bill',
+      },
+      {
+        id: 2,
+        nombre: 'APARTADOS',
+        descripcion: 'Pago con tarjeta',
+        icon: 'pi pi-money-bill',
+      },
+    ];
     //console.log()
     if (op == value) {
       const ticket = localStorage.getItem('ticket');
@@ -897,42 +1086,38 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
         this.articulos += a.cantidad;
       });
     }
-    
     //localStorage.setItem('ticket', JSON.stringify(this.articlesShell));
-    // if (value == 'VEN') {
-    //   this.titlePay = 'PAGAR';
-    //   this.iconPay = 'pi pi-money-bill';
-    //   this.title = 'VENTA';
-    //   this.cardStyle = {
-    //     background: '#ffffff ', // Valor predeterminado
-    //   };
-    //   this.getTiposPago();
-    // } else 
-    // if (value == 'ABN') {
-    //   this.titlePay = 'ABONO';
-    //   this.title = 'ABONO';
-    //   this.iconPay = 'pi pi-wallet';
-    //   this.cardStyle = {
-    //     background: '#e1d9f1',
-    //   };
-    // } else 
-    if (value == 'ENT') {
+    if (value == 'VEN') {
+      this.titlePay = 'PAGAR';
+      this.iconPay = 'pi pi-money-bill';
+      this.title = 'VENTA';
+      this.cardStyle = {
+        background: '#ffffff ', // Valor predeterminado
+      };
+      this.getTiposPago();
+    } else if (value == 'ABN') {
+      this.titlePay = 'ABONO';
+      this.title = 'ABONO';
+      this.iconPay = 'pi pi-wallet';
+      this.cardStyle = {
+        background: '#e1d9f1',
+      };
+    } else if (value == 'ENT') {
       this.titlePay = 'ENTRADA';
-      this.title = 'ENTRADA DE PRODUCTO';
+      this.title = 'ENTRADA DE EFECTIVO';
       this.iconPay = 'pi pi-upload';
       this.cardStyle = {
         background: '#fdfddc', // Valor predeterminado
       };
-    // } else 
-    // if (value == 'DEV') {
-    //   this.title = 'DEVOLUCION DE PRODUCTO';
-    //   this.titlePay = 'DEVOLUCION';
-    //   this.iconPay = 'pi pi-download';
-    //   this.cardStyle = {
-    //     background: '#d9d2e9', // Valor predeterminado
-    //   };
+    } else if (value == 'DEV') {
+      this.title = 'DEVOLUCION DE EFECTIVO';
+      this.titlePay = 'DEVOLUCION';
+      this.iconPay = 'pi pi-download';
+      this.cardStyle = {
+        background: '#d9d2e9', // Valor predeterminado
+      };
     } else {
-      this.title = 'SALIDA DE PRODUCTO';
+      this.title = 'SALIDA DE EFECTIVO';
       this.titlePay = 'SALIDA';
       this.iconPay = 'pi pi-download';
       this.cardStyle = {
@@ -965,6 +1150,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       }
     );
   }
+  
   downloadPDF(tipo: String) {
     const doc = new jsPDF({
       orientation: 'portrait',
@@ -1054,7 +1240,7 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     );
     doc.text(totalEnLetras, margenIzquierdo, posicionY, { maxWidth: 70 });
 
-    doc.save('ticket.pdf');
+    doc.save( `ticket${this.RegistraVenta.noTicket}.pdf `);
   }
 
   cancelMultiple() {
@@ -1076,5 +1262,15 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       this.variablesGL.showDialog.next(false);
     }, 100);
   }
+
+  onClienteChange(event: any) {
+    setTimeout(() => {
+      this.myInput.nativeElement.focus();
+    });
+  }
+  statusCaja(caja: CajaModel) {
+    this.cashOpen = caja.estatus;
+  }
+
 
 }

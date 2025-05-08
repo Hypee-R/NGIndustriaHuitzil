@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiService: "https://demo.kodeinnventors.com:9110/",
+  apiService: "http://localhost:5000/",
  // apiService: "http://localhost:5000/",
   //apiService: "https://huitzil-servicesapi.herokuapp.com/",
    // apiService: "https://huitzildev.azurewebsites.net/"
