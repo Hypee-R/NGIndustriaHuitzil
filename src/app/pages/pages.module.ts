@@ -83,6 +83,7 @@ import { VentasCajaComponent } from './informes/ventas-caja/ventas-caja.componen
 import { EnvioComponent } from './contro-envios/envio/envio.component';
 import { PanelModule } from 'primeng/panel';
 import { CancelacionComponent } from './ventas/cancelacion/cancelacion.component';
+import { ProduccionComponent } from './produccion/produccion.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -173,7 +174,8 @@ import { CancelacionComponent } from './ventas/cancelacion/cancelacion.component
         ControEnviosComponent,
         VentasCajaComponent,
         EnvioComponent,
-        CancelacionComponent
+        CancelacionComponent,
+        ProduccionComponent,
     ]
 })
 export class PagesModule { }
