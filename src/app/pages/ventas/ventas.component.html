@@ -46,6 +46,7 @@
                 {{col.header}}
               </div>
             </th>
+            <th style="width: 1rem">Descuento</th>
           </tr>
         </ng-template>
 
@@ -70,6 +71,16 @@
                 {{ rowData[col.field] }}
               </ng-template>
             </td>
+            <td>
+              <p-dropdown 
+                [options]="discountOptions" 
+                [(ngModel)]="rowData.descuento" 
+                (onChange)="onDiscountChange( rowData.descuento,i)" 
+                placeholder="Selecciona un descuento" 
+                [style]="{'width':'120px'}"
+                [appendTo]="'body'">
+              </p-dropdown>
+            </td>
           </tr>
         </ng-template>
 
@@ -87,7 +98,15 @@
     </div>
 
     <div class="col-md-3">
+      <div class="row">
 
+        <p-checkbox [(ngModel)]="esVentaPlataforma" binary="true" (ngModelChange)="actualizarPrecios()">
+
+        </p-checkbox>
+        <label for="ventaPlataforma">Plataforma</label>
+
+        <br>
+      </div>
         <div class="row">
           <button pButton label="Inventario" icon="pi pi-shopping-cart" (click)="openProductsM()"
             class="mr-2 custom-button-inventario" [ngStyle]="{ padding: '1rem' }"></button>

@@ -27,7 +27,7 @@ import Swal from 'sweetalert2';
 
 
 export class VentasComponent implements OnInit {
-
+  esVentaPlataforma: boolean = false;
   activeState: boolean[] = [false];
   cadenaProductos: string = "\n";
   impresoras = [];
@@ -107,6 +107,9 @@ export class VentasComponent implements OnInit {
   tipoPago1: CatTiposPago;
   tipoPago2: CatTiposPago;
   selectedLista: any;
+
+  discountOptions: any[] = [];   // Opciones del dropdown para el descuento
+
   constructor(
     private toastr: ToastrService,
     private ventasService: VentasService,
@@ -115,7 +118,18 @@ export class VentasComponent implements OnInit {
     private cambiosDevolucionesService: VentasService,
     private clientesService: ClientesService
   ) {
- 
+    this.discountOptions = [
+      { label: '0%', value: 0 },
+      { label: '5%', value: 5 },
+      { label: '10%', value: 10 },
+      { label: '15%', value: 15 },
+      { label: '20%', value: 20 },
+      { label: '25%', value: 25 },
+      { label: '30%', value: 30 },
+      { label: '50%', value: 50 },
+      { label: '75%', value: 75 },
+      { label: '100%', value: 100 }
+    ];
     this.tiposDePago = [
       {
         id: 1,
@@ -553,7 +567,7 @@ export class VentasComponent implements OnInit {
           if (resp.exito) {
             this.cashModel = resp.respuesta;
 
-            if (!this.cashModel.estatus) {
+            if (!this.cashModel.fecha) {
               this.toastr.error('Caja Cerrada Abrir nueva', 'Error!');
             } else {
               /* if (this.articulos == 0) {
@@ -621,37 +635,7 @@ export class VentasComponent implements OnInit {
       //this.display = true;
     }
   }
-  // showDialog() {
-
-  //   this.ventasService.getCaja().subscribe(resp => {
-  //     console.log('Pagar Valida Caja ', resp);
-  //     if (resp.exito) {
-  //       this.cashModel = resp.respuesta;
-
-  //       if (this.cashModel.fechaCierre !== null) {
-  //         this.toastr.error("Caja Cerrada Abrir nueva", 'Error!');
-  //       } else {
-
-  //         if (this.articulos == 0) {
-  //           this.toastr.warning('No hay Articulos por pagar', 'Atención!');
-  //         } else {
-  //           this.display = true;
-  //           this.isButtonDisabled = false; // Habilitar el botón al finalizar
-  //         }
-  //       }
-
-  //     }
-  //   },
-  //     err => {
-  //       this.toastr.error('Error al obtener status de la caja', 'Error!');
-  //       this.cashModel = new CajaModel();
-  //     });
-
-
-
-
-
-  // }
+ 
 
   showDialogCotizacion() {
     if (this.articulos == 0) {
@@ -1039,7 +1023,8 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     const descuento = (this.total * porcentajeDescuento) / 100;
     console.log(descuento)
 
-    this.descuento = descuento
+    // this.descuento = descuento
+    this.descuento = Math.ceil(descuento);  // Redondea hacia arriba
     this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
       plural: 'PESOS MEXICANOS',
       singular: 'PESO MEXICANO',
@@ -1273,4 +1258,46 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
   }
 
 
+  actualizarPrecios(): void {
+    console.info(this.total);
+    this.total = this.esVentaPlataforma ? this.total * 1.25 : this.total / 1.25;
+  }
+
+
+
+   // Actualizar el descuento de un producto
+   onDiscountChange(discount: number, index: number) {
+    console.info("DISCOUNT---->", discount);
+  
+    // Acceder al producto de la lista `articlesShell` en el índice dado
+    const product = this.articlesShell[index];
+  
+    // Aplicar el descuento al precio del producto
+    
+    const precioConDescuento = discount > 0
+    ? product.precio - (product.precio * discount / 100)
+    : product.precio;  // Si no hay descuento, mantener el precio original
+    // Guardar el precio con descuento en el producto
+    product.precioConDescuento = precioConDescuento;
+  
+    // Actualizar el precio con descuento en el objeto
+    this.articlesShell[index].precioConDescuento = precioConDescuento;
+  
+    // Llamar a una función para actualizar el total y el número de productos
+    this.updateTotals();
+  }
+  
+  updateTotals() {
+    // Recalcular el total y la cantidad
+    this.total = 0;
+    this.articulos = 0;
+  
+    // Iterar sobre todos los productos para recalcular el total y la cantidad
+    this.articlesShell.forEach(item => {
+      this.total += item.precioConDescuento * item.cantidad;  // Sumar el total
+      this.articulos += item.cantidad;  // Contar la cantidad total de artículos
+    });
+  
+  
+  }
 }
