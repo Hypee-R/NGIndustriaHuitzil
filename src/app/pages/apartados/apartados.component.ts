@@ -350,6 +350,7 @@ export class ApartadosComponent implements OnInit {
   async addApartado() {
 
     console.log(this.selectedClient)
+    
     if (this.articulosApartados.length == 0) {
       this.toastr.warning('Selecciona al menos un articulo', 'Aviso!');
       return
@@ -360,6 +361,11 @@ export class ApartadosComponent implements OnInit {
     }
     if (this.selectedClient.idCliente===undefined || this.selectedClient.idCliente === 0 ) {
       this.toastr.warning('Selecciona un cliente', 'Aviso!');
+      return
+    }
+    if(this.apartado.vendedor===undefined || this.apartado.vendedor===null|| this.apartado.vendedor===''){
+
+      this.toastr.warning('Agrega Vendedor', 'Aviso!');
       return
     }
 
@@ -847,10 +853,10 @@ const fechaFormateadaEntrega = `${dia1}/${mes1}/${anio1} ${horas1}:${minutos1}`;
     const logoUrl = '/assets/img/LogoSole.jpeg';
 
      // Reducción del tamaño del logo para que se ajuste al ancho de 58 mm
-     doc.addImage(logoUrl, 'PNG', margenIzquierdo, margenSuperior, 50, 20); // Ajustar el tamaño del logo
-  
+     //doc.addImage(logoUrl, 'PNG', margenIzquierdo, margenSuperior, 50, 20); // Ajustar el tamaño del logo
+     doc.text('***SOLE***', 29, y, { align: 'center' });
     doc.setFont('helvetica', 'bold');
-    doc.text('***APARTADO SUCURSAL***', 29, y, { align: 'center' });
+    doc.text('***APARTADO***', 29, y, { align: 'center' });
     y += 6;
   
     doc.setFont('helvetica', 'normal');
@@ -908,6 +914,7 @@ const fechaFormateadaEntrega = `${dia1}/${mes1}/${anio1} ${horas1}:${minutos1}`;
     window.open(doc.output('bloburl'), '_blank');
 
     this.apartado.fechaEntrega=null
+    this.apartado.vendedor=null
     //Limpiar objetos al finalizar una compra correct
      this.cadenaProductos = ""
   }

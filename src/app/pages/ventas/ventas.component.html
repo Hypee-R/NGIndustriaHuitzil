@@ -31,7 +31,7 @@
 
       </div>
       <br>
-      <div *ngIf="this.selectedOption.value != 'ABN'">
+      <div *ngIf="this.selectedOption.value != 'ABN' && selectedOption?.value !== 'SLN' ">
       <p-table *appRefreshTable="articulos" #dt [value]="articlesShell" scrollHeight="400px"  [columns]="cols" [rows]="rows"
         [paginator]="false" [responsive]="true" responsiveLayout="scroll" [rowHover]="true"
         currentPageReportTemplate="Mostrando {first} a {last}  productos">
@@ -146,10 +146,7 @@
         class="col-md-6 custom-height d-flex justify-content-center align-items-center ">
         <span style="font-size: 3.5rem;">{{total | currency:'MXN' }}</span>
       </div>
-      <div *ngIf="selectedOption.value == 'ABN'" class="col-md-6 custom-height d-flex justify-content-start align-items-center">
-
-
-
+      <div *ngIf="selectedOption.value == 'ABN' || selectedOption.value == 'SLN'" class="col-md-6 custom-height d-flex justify-content-start align-items-center">
 
                 <div class="p-inputgroup">
                   <span class="p-inputgroup-addon improved-addon"><i class="pi pi-money-bill"></i></span>
@@ -160,7 +157,7 @@
 
       </div>
 
-      <div *ngIf="selectedOption.value != 'VEN' && selectedOption.value != 'ABN'"
+      <div *ngIf="selectedOption.value != 'VEN' && selectedOption.value != 'ABN'&& selectedOption.value != 'SLN'"
         class="col-md-6 custom-height d-flex justify-content-center align-items-center ">
         <span style="font-size: 1.5rem;">{{articulos}} artículos seleccionados</span>
       </div>
@@ -198,12 +195,14 @@
   [_allCambiosDevoluciones]="lstCambiosDevoluciones" (saveCambioDevolucion)="getCambiosyDevoluciones()"
   *ngIf="accionCancelacion != ''"></app-cancelacion>
 
-  <p-dialog header="{{ selectedOption.value == 'VEN' ? 'FINALIZAR VENTA' :
+  <p-dialog header="{{ 
+  selectedOption.value == 'VEN' ? 'FINALIZAR VENTA' :
   selectedOption.value == 'ENT' ? 'FINALIZAR ENTRADA' :
-  selectedOption.value == 'ABN' ? 'FINALIZAR ABONO' :'FINALIZAR SALIDA' }}" [style]="{width: selectedOption.value == 'VEN' || selectedOption.value == 'ABN' ? '60vw' : '20vw'}" [(visible)]="display">
+  selectedOption.value == 'SLN' ? 'FINALIZAR RETIRO' :
+  selectedOption.value == 'ABN' ? 'FINALIZAR ABONO' :'FINALIZAR SALIDA' }}" [style]="{width: selectedOption.value == 'VEN' || selectedOption.value == 'ABN'  || selectedOption.value == 'SLN' ? '60vw' : '20vw'}" [(visible)]="display">
     <div class="container">
       <div class="row">
-        <div class="col-sm" *ngIf="selectedOption.value != 'ABN'">
+        <div class="col-sm" *ngIf="selectedOption.value != 'ABN' && selectedOption.value != 'SLN' ">
           <h5>Total de articulos: {{articulos}}</h5>
         </div>
       </div>
@@ -347,7 +346,24 @@
           class="p-button-rounded p-button-success p-button-lg" label=" {{this.cambioVenta}}"></button>
       </div>
     </div>
+    <div class="row"
+      *ngIf="selectedOption.value == 'SLN' && !showMultiples  && !showMultiples">
+      <div class="col-sm">
+        <h5>SU RETIRO : </h5>
+        <div class="p-inputgroup">
+          <span class="p-inputgroup-addon">$</span>
+          <input type="number" #myInput [autofocus]="focusPay" pInputText placeholder="Ingresar monto"
+            [(ngModel)]="this.totalVenta" (change)="changePage()">
+          <span class="p-inputgroup-addon">.00</span>
+        </div>
+      </div>
   
+      <div class="col-sm">
+        <h5>SU CAMBIO: </h5>
+        <button pButton pRipple icon="pi pi-sync" type="button" label="Success"
+          class="p-button-rounded p-button-success p-button-lg" label=" {{this.cambioVenta}}"></button>
+      </div>
+    </div>
   
     </div>
   

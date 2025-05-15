@@ -58,6 +58,9 @@
                   RESTO
                 </th>
                 <th>
+                  VENDEDOR
+                </th>
+                <th>
                   CANCELAR
                 </th>
               </tr>
@@ -102,6 +105,9 @@
                 <td>
                   {{rowData['resto'] | currency:'MXN'}}
                 </td>
+                <td>
+                  {{rowData['vendedor'] }}
+                </td>
 
                 <td>
                   <div style="display: inline-flex">
@@ -120,6 +126,7 @@
     <p-dialog [(visible)]="showNewReserve" header="Nuevo apartado" [style]="{width: '90%',heigth :'95%'}" [modal]="true"
       styleClass="p-fluid">
       <ng-template pTemplate="content">
+    
         <div class="row">
           <div class="col-4">
             <div class="field">
@@ -174,6 +181,21 @@
 
               <h6>Total:$ {{total}}</h6>
 
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <div class="dialog-content">
+              <h6>Vendedor:</h6>
+              <input
+                type="text"
+                pInputText
+                [(ngModel)]="apartado.vendedor"
+                name="vendedor"
+                class="w-full"
+                placeholder="Nombre del vendedor"
+              />
+            </div>
           </div>
         </div>
         <br>

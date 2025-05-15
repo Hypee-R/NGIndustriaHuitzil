@@ -15,6 +15,7 @@ export class CatApartadoModel{
     resto:number
     type : string;
     noTicket:string;
+    vendedor : string;
     articulosApartados: ApartadoArticuloModel[];
     constructor(){
         this.idApartado = 0

@@ -82,8 +82,9 @@ export class VentasComponent implements OnInit {
   options = [
     { value: 'VEN', label: 'VENTA' },
     { value: 'ABN', label: 'ABONO' },
-    { value: 'SAL', label: 'SALIDA' },
-    { value: 'ENT', label: 'ENTRADA' },
+    { value: 'SLN', label: 'RETIRO' },
+    // { value: 'SAL', label: 'SALIDA' },
+    // { value: 'ENT', label: 'ENTRADA' },
    
     // { value: 'DEV', label: 'DEVOLUCION' },
   ];
@@ -188,21 +189,30 @@ export class VentasComponent implements OnInit {
         this.cardStyle = {
           background: '#fdfddc', // Valor predeterminado
         };
-      } else if (op == 'ENT') {
-        this.titlePay = 'ENTRADA';
-        this.title = 'ENTRADA DE EFECTIVO';
+      }
+       else if (op == 'SLN') {
+        this.titlePay = 'RETIRO';
+        this.title = 'RETIRO';
         this.iconPay = 'pi pi-upload';
         this.cardStyle = {
           background: '#fdfddc', // Valor predeterminado
         };
-      } else {
-        this.title = 'SALIDA DE EFECTIVO';
-        this.titlePay = 'SALIDA';
-        this.iconPay = 'pi pi-download';
-        this.cardStyle = {
-          background: '#e2f6fd', // Valor predeterminado
-        };
       }
+      // } else if (op == 'ENT') {
+      //   this.titlePay = 'ENTRADA';
+      //   this.title = 'ENTRADA DE EFECTIVO';
+      //   this.iconPay = 'pi pi-upload';
+      //   this.cardStyle = {
+      //     background: '#fdfddc', // Valor predeterminado
+      //   };
+      // } else {
+      //   this.title = 'SALIDA DE EFECTIVO';
+      //   this.titlePay = 'SALIDA';
+      //   this.iconPay = 'pi pi-download';
+      //   this.cardStyle = {
+      //     background: '#e2f6fd', // Valor predeterminado
+      //   };
+      // }
 
       //this.selectedOption = op;
     } else {
@@ -550,7 +560,8 @@ export class VentasComponent implements OnInit {
     }
 
     //console.info('selectedOption-->', this.selectedOption.value);
-    if (this.selectedOption.value == 'ABN') {
+    
+    if (this.selectedOption.value == 'ABN' ||this.selectedOption.value == 'SLN' ) {
       this.showMultiples = false;
       this.getTiposPago();
       this.totalVenta = this.total;
@@ -839,72 +850,73 @@ const mes = String(fecha.getMonth() + 1).padStart(2, '0');
 const anio = fecha.getFullYear();
 
 const fechaFormateada = `${dia}/${mes}/${anio}`;
+this.downloadNewPdf("VENTA");
         //code Impresion
-        const conector = new ConectorPluginV3();
-        conector
-          .Iniciar()
-          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-          .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-          .Feed(1)
-          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-          .EscribirTexto("Caja:" + this.cashModel.idCaja)
-          .Feed(1)
-          .EscribirTexto("Cajero:" + this.user.nombre)
-          .Feed(1)
-          .EscribirTexto("Fecha:" + fechaFormateada)
-          .Feed(1)
-          .EscribirTexto("Ticket:" + this.RegistraVenta.noTicket)
-          .Feed(1)
-          .EscribirTexto("Articulos:" + this.articulos)
-          .Feed(1)
-          .EscribirTexto("_________________________________________")
-          .Feed(1)
-          .EscribirTexto("ARTICULO        | CANT |  P/U  |  TOTAL  ")
-          .Feed(1)
-          .EscribirTexto("_________________________________________")
-          .Feed(1)
-          .EscribirTexto(this.cadenaProductos)
-          .Feed(1)
-          .EscribirTexto("_________________________________________")
-          .Feed(1)
-          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
-          .EscribirTexto("Descuento:" + this.descuento + "MXN")
-          .Feed(1)
-          .EscribirTexto("Subtotal:" + this.RegistraVenta.subtotal + "MXN")
-          .Feed(1)
-          .EscribirTexto("Total:" + this.getDescuentoAplicado(this.total, this.descuento) + "MXN")
-          .Feed(1)
-          .EscribirTexto("Tipo Pago:" + this.getTotalmontoMultiple(this.RegistraVenta))
-          .Feed(1)
-          .EscribirTexto("Cambio:" + this.cambioVenta + "MXN")
-          .Feed(1)
-          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-          .EscribirTexto(this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
-            plural: 'PESOS MEXICANOS',
-            singular: 'PESO MEXICANO',
-            centPlural: 'CENTAVOS',
-            centSingular: 'CENTAVO'
-          }))
-          .Feed(1)
-          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-          .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
-          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-          .Feed(1)
-          .EscribirTexto("***Venta publico Gral, Si requiere factura solicitarla durante la venta***")
-          .Feed(1)
-          .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
-          // .Feed(2)
-          .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-          .ImprimirCodigoDeBarrasCodabar(this.RegistraVenta.noTicket, 100, 2, 12)
-          // .Feed(2)
-          .Feed(3)
-          .Corte(1)
+        // const conector = new ConectorPluginV3();
+        // conector
+        //   .Iniciar()
+        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+        //   .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+        //   .Feed(1)
+        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+        //   .EscribirTexto("Caja:" + this.cashModel.idCaja)
+        //   .Feed(1)
+        //   .EscribirTexto("Cajero:" + this.user.nombre)
+        //   .Feed(1)
+        //   .EscribirTexto("Fecha:" + fechaFormateada)
+        //   .Feed(1)
+        //   .EscribirTexto("Ticket:" + this.RegistraVenta.noTicket)
+        //   .Feed(1)
+        //   .EscribirTexto("Articulos:" + this.articulos)
+        //   .Feed(1)
+        //   .EscribirTexto("_________________________________________")
+        //   .Feed(1)
+        //   .EscribirTexto("ARTICULO        | CANT |  P/U  |  TOTAL  ")
+        //   .Feed(1)
+        //   .EscribirTexto("_________________________________________")
+        //   .Feed(1)
+        //   .EscribirTexto(this.cadenaProductos)
+        //   .Feed(1)
+        //   .EscribirTexto("_________________________________________")
+        //   .Feed(1)
+        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
+        //   .EscribirTexto("Descuento:" + this.descuento + "MXN")
+        //   .Feed(1)
+        //   .EscribirTexto("Subtotal:" + this.RegistraVenta.subtotal + "MXN")
+        //   .Feed(1)
+        //   .EscribirTexto("Total:" + this.getDescuentoAplicado(this.total, this.descuento) + "MXN")
+        //   .Feed(1)
+        //   .EscribirTexto("Tipo Pago:" + this.getTotalmontoMultiple(this.RegistraVenta))
+        //   .Feed(1)
+        //   .EscribirTexto("Cambio:" + this.cambioVenta + "MXN")
+        //   .Feed(1)
+        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+        //   .EscribirTexto(this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
+        //     plural: 'PESOS MEXICANOS',
+        //     singular: 'PESO MEXICANO',
+        //     centPlural: 'CENTAVOS',
+        //     centSingular: 'CENTAVO'
+        //   }))
+        //   .Feed(1)
+        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+        //   .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+        //   .Feed(1)
+        //   .EscribirTexto("***Venta publico Gral, Si requiere factura solicitarla durante la venta***")
+        //   .Feed(1)
+        //   .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
+        //   // .Feed(2)
+        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+        //   .ImprimirCodigoDeBarrasCodabar(this.RegistraVenta.noTicket, 100, 2, 12)
+        //   // .Feed(2)
+        //   .Feed(3)
+        //   .Corte(1)
 
 
-        try {
-          const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+        // try {
+        //   const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
 
-          if (respuesta == true) {
+        //   if (respuesta == true) {
             this.isButtonDisabled = false; // Habilitar el botón al finalizar
             //Limpiar objetos al finalizar una compra correcta
             this.cadenaProductos = ""
@@ -921,23 +933,23 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
             this.toastr.success(resp.mensaje, 'Exito!');
             console.log("Impresión correcta");
             this.display = false;
-          } else {
-            console.log("Error: " + respuesta);
-          }
+          // } else {
+          //   console.log("Error: " + respuesta);
+          // }
 
-        } catch (error) {
-          this.isButtonDisabled = false; // Habilitar el botón al finalizar
-          console.log(error)
-          this.toastr.warning(error, 'Atencion!');
-          //Limpiar objetos al finalizar una compra correcta
-          this.cadenaProductos = ""
-          this.RegistraVenta = new VentaModel();
-          this.ventaArticulo = [];
-          this.articulos = 0
-          this.total = 0
-          this.articlesShell = []
-          this.display = false;
-        }
+        // } catch (error) {
+        //   this.isButtonDisabled = false; // Habilitar el botón al finalizar
+        //   console.log(error)
+        //   this.toastr.warning(error, 'Atencion!');
+        //   //Limpiar objetos al finalizar una compra correcta
+        //   this.cadenaProductos = ""
+        //   this.RegistraVenta = new VentaModel();
+        //   this.ventaArticulo = [];
+        //   this.articulos = 0
+        //   this.total = 0
+        //   this.articlesShell = []
+        //   this.display = false;
+        // }
 
 
 
@@ -1087,28 +1099,37 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
       this.cardStyle = {
         background: '#e1d9f1',
       };
-    } else if (value == 'ENT') {
-      this.titlePay = 'ENTRADA';
-      this.title = 'ENTRADA DE EFECTIVO';
-      this.iconPay = 'pi pi-upload';
-      this.cardStyle = {
-        background: '#fdfddc', // Valor predeterminado
-      };
-    } else if (value == 'DEV') {
-      this.title = 'DEVOLUCION DE EFECTIVO';
-      this.titlePay = 'DEVOLUCION';
-      this.iconPay = 'pi pi-download';
-      this.cardStyle = {
-        background: '#d9d2e9', // Valor predeterminado
-      };
-    } else {
-      this.title = 'SALIDA DE EFECTIVO';
-      this.titlePay = 'SALIDA';
-      this.iconPay = 'pi pi-download';
-      this.cardStyle = {
-        background: '#e2f6fd', // Valor predeterminado
-      };
     }
+      else if (value == 'SLN') {
+        this.titlePay = 'RETIRO';
+        this.title = 'RETIRO';
+        this.iconPay = 'pi pi-wallet';
+        this.cardStyle = {
+          background: '#fdfddc',
+        };
+      }
+    // } else if (value == 'ENT') {
+    //   this.titlePay = 'ENTRADA';
+    //   this.title = 'ENTRADA DE EFECTIVO';
+    //   this.iconPay = 'pi pi-upload';
+    //   this.cardStyle = {
+    //     background: '#fdfddc', // Valor predeterminado
+    //   };
+    // } else if (value == 'DEV') {
+    //   this.title = 'DEVOLUCION DE EFECTIVO';
+    //   this.titlePay = 'DEVOLUCION';
+    //   this.iconPay = 'pi pi-download';
+    //   this.cardStyle = {
+    //     background: '#d9d2e9', // Valor predeterminado
+    //   };
+    // } else {
+    //   this.title = 'SALIDA DE EFECTIVO';
+    //   this.titlePay = 'SALIDA';
+    //   this.iconPay = 'pi pi-download';
+    //   this.cardStyle = {
+    //     background: '#e2f6fd', // Valor predeterminado
+    //   };
+    // }
     if (this.cashOpen == false) {
       this.toastr.warning(
         'Abre una caja para realizar movimientos',
@@ -1263,7 +1284,129 @@ const fechaFormateada = `${dia}/${mes}/${anio}`;
     this.total = this.esVentaPlataforma ? this.total * 1.25 : this.total / 1.25;
   }
 
+  downloadNewPdf(tipo: String) {
 
+    const fecha = this.RegistraVenta.fecha;
+
+
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const anio = fecha.getFullYear();
+    
+
+    const fechaFormateada = `${dia}/${mes}/${anio}`;
+
+
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: [58, 200 + this.articlesShell.length * 12], // Ajuste para 58mm de ancho
+    });
+
+    const margenIzquierdo = 5;
+    const espaciado = 5;
+    const margenSuperior = 10;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    const logoUrl = '/assets/img/LogoSole.jpeg';
+
+    // Reducción del tamaño del logo para que se ajuste al ancho de 58 mm
+    doc.addImage(logoUrl, 'PNG', margenIzquierdo, margenSuperior, 50, 20); // Ajustar el tamaño del logo
+
+    let posicionY = margenSuperior + 25;
+    const espaciadoDeSeccion = 5;
+
+    posicionY += espaciadoDeSeccion;
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${tipo}`, 30, posicionY);
+
+    // Información de la venta
+    posicionY += espaciado;
+    doc.text(`Caja: ${this.cashModel.idCaja}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(`Cajero: ${this.user.nombre}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(`Fecha: ${fechaFormateada}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(`Ticket: ${this.RegistraVenta.noTicket}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(`Artículos: ${this.articulos}`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+
+    doc.setLineWidth(0.3);
+    doc.line(margenIzquierdo, posicionY, 53, posicionY); // Ajuste de línea a 53 mm para el ancho de 58 mm
+    posicionY += espaciado;
+
+    // Encabezado de los artículos
+    doc.setFontSize(7);
+    doc.text('ARTÍCULO', margenIzquierdo, posicionY);
+    doc.text('CANT', 40, posicionY, { align: 'center' });
+    doc.text('P/U', 50, posicionY, { align: 'center' });
+    // doc.text('TOTAL', 55, posicionY, { align: 'right' });
+
+    posicionY += espaciado;
+    doc.line(margenIzquierdo, posicionY, 53, posicionY); // Línea de separación ajustada
+
+    // Listado de artículos
+    this.articlesShell.forEach((producto) => {
+      const nombreDividido = doc.splitTextToSize(producto.descripcion, 35);
+      doc.setFontSize(6);
+      doc.text(nombreDividido, margenIzquierdo, posicionY);
+      doc.text(producto.cantidad.toString(), 40, posicionY, { align: 'center', });
+      doc.text('$' + (producto.precioConDescuento !== 0 ? producto.precioConDescuento : producto.precio).toFixed(2), 50, posicionY, {
+        align: 'center',
+      });
+      
+      // doc.text('$' + producto.precio.toFixed(2), 50, posicionY, {
+      //   align: 'center',
+      // });
+      posicionY += nombreDividido.length * 3;
+    });
+
+    doc.line(margenIzquierdo, posicionY, 53, posicionY);
+    posicionY += espaciado;
+
+    // Resumen de la venta
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Descuento: ${this.descuento} MXN`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(`Subtotal: ${this.RegistraVenta.subtotal} MXN`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+    doc.text(
+      `Total: ${this.getDescuentoAplicado(this.total, this.descuento)} MXN`,
+      margenIzquierdo,
+      posicionY
+    );
+    posicionY += espaciado;
+    doc.text(`Cambio: ${this.cambioVenta} MXN`, margenIzquierdo, posicionY);
+    posicionY += espaciado;
+
+    // Advertencia de la venta pública
+    doc.setFontSize(7);
+    doc.text(
+      '***Gracias por su preferencia***',
+      margenIzquierdo,
+      posicionY,
+      { maxWidth: 53 }
+    );
+  //  // posicionY += espaciado;
+  //   // Total en letras
+  //   const totalEnLetras = this.variablesGL.numeroALetras(
+  //     this.total - this.descuento,
+  //     {
+  //       plural: 'PESOS MEXICANOS',
+  //       singular: 'PESO MEXICANO',
+  //       centPlural: 'CENTAVOS',
+  //       centSingular: 'CENTAVO',
+  //     }
+  //   );
+  //   doc.text(totalEnLetras, margenIzquierdo, posicionY, { maxWidth: 53 });
+  //   posicionY += espaciado;
+    doc.autoPrint(); // Para impresión automática
+
+    window.open(doc.output('bloburl'), '_blank');
+  }
 
    // Actualizar el descuento de un producto
    onDiscountChange(discount: number, index: number) {
