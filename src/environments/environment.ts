@@ -4,11 +4,8 @@
 
 export const environment = {
   production: false,
-  //apiService: "https://pos-api.uniformeshuitzil.com:9110/",
-  apiService: "https://jussaseguridadindustrial.kodeinnventors.com:4436/",
-  //apiService: "http://localhost:5000/",
-  //apiService: "https://huitzil-servicesapi.herokuapp.com/",
-   // apiService: "https://huitzildev.azurewebsites.net/"
+  //apiService: "https://jussaseguridadindustrial.kodeinnventors.com:4436/",
+  apiService: "http://localhost:5000/",
 };
 
 /*
