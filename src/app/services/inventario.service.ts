@@ -11,6 +11,7 @@ import { ResponseModelImprime } from '../models/responseImprime.model';
   providedIn: 'root'
 })
 export class InventarioService {
+ 
 
   constructor(
     private http: HttpClient,
@@ -161,6 +162,16 @@ export class InventarioService {
       .get<ResponseModel>(
         environment.apiService +
           `Inventario/ConsultaByUbicacion?idUbicacion=${iduUbicacion}`
+      )
+      .pipe(map((res) => res));
+  }
+
+
+  getSubCategoriasByCategoria(idCategoria: any) {
+    return this.http
+      .get<ResponseModel>(
+        environment.apiService +
+          `Inventario/ConsultaByCategoria?idCategoria=${idCategoria}`
       )
       .pipe(map((res) => res));
   }

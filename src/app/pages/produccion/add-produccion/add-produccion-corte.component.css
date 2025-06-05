@@ -1,0 +1,24 @@
+/* ::ng-deep .p-datatable td, 
+::ng-deep .p-datatable th {
+  padding: 0.4rem 0.6rem !important;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+::ng-deep .p-dialog {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .p-tabview {
+    margin-top: 1rem;
+  }
+  
+  .p-card {
+    padding: 1rem;
+  }
+  
+  .p-inputtext, .p-dropdown {
+    margin-bottom: 0.5rem;
+  }
+   */

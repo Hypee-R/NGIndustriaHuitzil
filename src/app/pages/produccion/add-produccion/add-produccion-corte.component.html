@@ -1,0 +1,282 @@
+<p-dialog [(visible)]="visibleDialog" [style]="{ width: '95vw' }" 
+          [modal]="true" header="{{accion}} Producción" styleClass="p-fluid">
+
+  <ng-template pTemplate="content">
+    <p-card>
+      <!-- DATOS GENERALES -->
+      <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-12 p-md-3">
+          <label for="status">Status</label>
+          <p-dropdown 
+            [options]="listStatus" 
+      
+            [(ngModel)]="corte.status" 
+            placeholder="Selecciona un Status" 
+            [disabled]="statusOrder === 'TERMINADO'">
+          </p-dropdown>
+          <small class="p-error" *ngIf="submitted && !corte.status">El status es requerido</small>
+        </div>
+
+        <div class="p-field p-col-12 p-md-3">
+          <label for="folio">No Folio</label>
+          <input type="text" id="folio" pInputText [(ngModel)]="corte.folio" required />
+          <small class="p-error" *ngIf="submitted && !corte.folio">El folio es requerido</small>
+          <small class="p-error" *ngIf="submitted && corte.folio?.length > 0 && corte.folio?.length <= 2">
+            El folio debe tener mínimo 2 caracteres
+          </small>
+        </div>
+
+        <div class="p-field p-col-12 p-md-3">
+          <label for="responsable">Responsable</label>
+          <input type="text" id="responsable" pInputText [(ngModel)]="corte.responsable" required />
+          <small class="p-error" *ngIf="submitted && !corte.responsable">Responsable requerido</small>
+          <small class="p-error" *ngIf="submitted && corte.responsable?.length > 0 && corte.responsable?.length <= 2">
+            Debe tener mínimo 2 caracteres
+          </small>
+        </div>
+
+        <div class="p-field p-col-12 p-md-3">
+          <label for="comentarios">Comentarios</label>
+          <input type="text" id="comentarios" pInputText [(ngModel)]="corte.comentarios" />
+        </div>
+      </div>
+
+      <!-- SECCIÓN DE TABLAS -->
+      <div class="p-grid">
+        <!-- TABLA DE ARTÍCULOS -->
+        <div class="p-col-12 p-md-6">
+          <p-tabView *ngIf="accion === 'Agregar'">
+            <p-tabPanel header="Artículos">
+              <!-- Filtros -->
+              <div class="p-grid p-ai-center p-mb-2">
+                <div class="p-col-12 p-md-6">
+                  <label class="p-mb-1">Categoría</label>
+                  <p-dropdown 
+                    [options]="listCategorias"
+                    optionLabel="nombre"
+                    [filter]="true"
+                    filterBy="nombre"
+                    [(ngModel)]="categoriaSeleccionada"
+                    (onChange)="filterstable($event.value)"
+                    [disabled]="articlesSelected.length > 0"
+                    [showClear]="true">
+                  </p-dropdown>
+                </div>
+
+                <div class="p-col-12 p-md-6">
+                  <label class="p-mb-1">Buscar</label>
+                  <span class="p-input-icon-left w-full">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar..." />
+                  </span>
+                </div>
+              </div>
+
+              <!-- Tabla Artículos -->
+              <p-table #dt 
+                [value]="articles" 
+                [columns]="colsProducts"
+                [rows]="10"
+                [paginator]="true"
+                [responsive]="true"
+                [scrollable]="true"
+                scrollHeight="380px"
+                [rowHover]="true"
+                dataKey="idProducto"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+                styleClass="p-datatable-sm p-datatable-gridlines">
+
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th style="width: 40px;"></th>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                      {{ col.header }}
+                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                  <tr>
+                    <td class="text-center">
+                      <button pButton icon="pi pi-plus" class="p-button-rounded p-button-warning p-button-sm"
+                              (click)="addProduct(rowData)">
+                      </button>
+                    </td>
+                    <td *ngFor="let col of columns">{{ rowData[col.field] }}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </p-tabPanel>
+          </p-tabView>
+        </div>
+
+        <!-- TABLA DE ARTÍCULOS SELECCIONADOS -->
+        <div class="p-col-12 p-md-6">
+          <p-tabView>
+            <p-tabPanel header="Cantidad Total {{cantidadTotal}} Artículos">
+              <p-table [value]="articlesSelected"
+                       [columns]="colsProductsSelected"
+                       [rows]="100"
+                       [paginator]="true"
+                       [scrollable]="true"
+                       scrollHeight="480px"
+                       [rowHover]="true"
+                       dataKey="idProducto"
+                       styleClass="p-datatable-sm">
+
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngIf="accion !== 'Actualizar'" style="width: 2em;"></th>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                      {{col.header}} <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                  <tr>
+                    <td *ngIf="accion !== 'Actualizar'">
+                      <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm"
+                              (click)="removeProduct(rowData)">
+                      </button>
+                    </td>
+                    <td>{{rowData.sku}}</td>
+                    <td>{{rowData.descripcion}}</td>
+                    <td style="max-width: 100px" pEditableColumn>
+                      <p-cellEditor>
+                        <ng-template pTemplate="input">
+                          <input type="number" pInputText [(ngModel)]="rowData.existencia"
+                                 (blur)="changeRowArticle(rowData)"
+                                 (keydown.enter)="changeRowArticle(rowData)"
+                                 (keydown.escape)="changeRowArticle(rowData)" />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                          {{rowData.existencia}}
+                        </ng-template>
+                      </p-cellEditor>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </p-tabPanel>
+          </p-tabView>
+        </div>
+      </div>
+
+      <!-- MATERIALS SECTION PUEDE SEGUIR IGUAL APLICANDO MISMAS MEJORAS -->
+ <!-- TABLA DE MATERIALES -->
+ <div class="p-col-12 p-md-6">
+    <p-tabView *ngIf="accion === 'Agregar'">
+      <p-tabPanel header="Materiales">
+        <!-- Filtros -->
+        <div class="p-grid p-ai-center p-mb-2">
+           
+
+            <div class="p-col-12 p-md-6">
+              <label class="p-mb-1">Buscar</label>
+              <span class="p-input-icon-left w-full">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar..." />
+              </span>
+            </div>
+          </div>
+
+        <!-- Tabla MATERIALES -->
+        <p-table #dt 
+        [value]="listMateriales" 
+        [loading]="loadingTablaMateriales"
+        loadingIcon="pi pi-spinner"
+        [columns]="cols" [rows]="10" 
+        [paginator]="true" 
+        [responsive]="true"
+        [scrollable]="true"
+        scrollHeight="380px" 
+          dataKey="idProducto"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+          styleClass="p-datatable-sm p-datatable-gridlines">
+
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width: 40px;"></th>
+              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+              <td class="text-center">
+                <button pButton icon="pi pi-plus" class="p-button-rounded p-button-warning p-button-sm"
+                        (click)="addMaterial(rowData)">
+                </button>
+              </td>
+              <td *ngFor="let col of columns">{{ rowData[col.field] }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+
+  <!-- TABLA DE MATERIALES SELECCIONADOS -->
+  <div class="p-col-12 p-md-6">
+    <p-tabView>
+      <p-tabPanel header="Cantidad Total {{cantidadTotalM}} Materiales">
+        <p-table [value]="materialSelected"
+                 [columns]="colsProductsSelectedM"
+                 [rows]="100"
+                 [paginator]="true"
+                 [scrollable]="true"
+                 scrollHeight="480px"
+                 [rowHover]="true"
+                 dataKey="idProducto"
+                 styleClass="p-datatable-sm">
+
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngIf="accion !== 'Actualizar'" style="width: 2em;"></th>
+              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                {{col.header}} <p-sortIcon [field]="col.field"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+              <td *ngIf="accion !== 'Actualizar'">
+                <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm"
+                        (click)="removeProductM(rowData)">
+                </button>
+              </td>
+              <td>{{rowData.nombre}}</td>
+              <td>{{rowData.tipoMedicion}}</td>
+              <td style="max-width: 100px" pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <input type="number" pInputText [(ngModel)]="rowData.stock"
+                           (blur)="changeRowArticleM(rowData)"
+                           (keydown.enter)="changeRowArticleM(rowData)"
+                           (keydown.escape)="changeRowArticleM(rowData)" />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{rowData.stock}}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+
+    </p-card>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button pButton pRipple label="Cancelar" icon="pi pi-times" type="button" class="p-button-text" (click)="hideDialog()"></button>
+    <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveDataProduccion()"></button>
+</ng-template>
+</p-dialog>

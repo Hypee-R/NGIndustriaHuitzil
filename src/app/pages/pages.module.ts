@@ -5,8 +5,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ContentComponent } from '../content/content.component';
 import { SharedModule } from '../shared/shared.module';
 import { ContentRoutingModule } from '../content/content-routing.module';
-
-
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { InventarioComponent } from './inventario/inventario.component';
 import { ComprasComponent } from './compras/compras.component';
@@ -16,7 +14,6 @@ import { InformesComponent } from './informes/informes.component';
 import { UbicacionesComponent } from './ubicaciones/ubicaciones.component';
 import { CategoriasComponent } from './categorias/categorias.component';
 import { ProveedoresComponent } from './proveedores/proveedores.component';
-// import { TallasComponent } from './tallas/tallas.component';
 import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { RolesComponent } from './roles/roles.component';
@@ -50,11 +47,9 @@ import {DividerModule} from 'primeng/divider';
 import {KnobModule} from 'primeng/knob';
 import {PickListModule} from 'primeng/picklist';
 import { AvatarModule } from 'primeng/avatar';
-import { AvatarGroupModule } from 'primeng/avatargroup';
 import { ChipModule } from 'primeng/chip';
 import { AddUsuarioComponent } from './usuarios/add-usuario/add-usuario.component';
 import { AddProveedorComponent } from './proveedores/add-proveedor/add-proveedor.component';
-// import { AddTallaComponent } from './tallas/add-talla/add-talla.component';
 import { AddubicacionComponent } from './ubicaciones/add-ubicacion/add-ubicacion.component';
 import { AddcategoriaComponent } from './categorias/add-categoria/add-categoria.component';
 import { AddRolComponent } from './roles/add-rol/add-rol.component';
@@ -84,6 +79,9 @@ import { EnvioComponent } from './contro-envios/envio/envio.component';
 import { PanelModule } from 'primeng/panel';
 import { CancelacionComponent } from './ventas/cancelacion/cancelacion.component';
 import { ProduccionComponent } from './produccion/produccion.component';
+import { AddProduccionCorteComponent } from './produccion/add-produccion/add-produccion-corte.component';
+import { FieldsetModule } from 'primeng/fieldset';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -91,6 +89,7 @@ import { ProduccionComponent } from './produccion/produccion.component';
         ReactiveFormsModule,
         SharedModule,
         ContentRoutingModule,
+        FieldsetModule,
         // StoreModule.forFeature('viewUsers', usersReducer),
         //PrimeNG
         KnobModule,
@@ -148,13 +147,12 @@ import { ProduccionComponent } from './produccion/produccion.component';
         UbicacionesComponent,
         CategoriasComponent,
         ProveedoresComponent,
-
         MiPerfilComponent,
         UsuariosComponent,
         RolesComponent,
         AddUsuarioComponent,
         AddProveedorComponent,
-
+        AddProduccionCorteComponent,
         AddRolComponent,
         MaterialesComponent,
         AddcategoriaComponent,
