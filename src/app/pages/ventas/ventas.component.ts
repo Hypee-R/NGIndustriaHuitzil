@@ -564,7 +564,7 @@ export class VentasComponent implements OnInit {
     if (this.selectedOption.value == 'ABN' ||this.selectedOption.value == 'SLN' ) {
       this.showMultiples = false;
       this.getTiposPago();
-      this.totalVenta = this.total;
+      //this.totalVenta = this.total;
       if (this.selectedcliente == undefined) {
         this.toastr.error(
           'Seleccione un cliente para realizar la venta',
@@ -597,7 +597,7 @@ export class VentasComponent implements OnInit {
     } else if (this.selectedOption.value == 'VEN') {
       this.showMultiples = false;
       this.getTiposPago();
-      this.totalVenta = this.total;
+      //this.totalVenta = this.total;
       if (this.selectedcliente == undefined) {
         this.toastr.error(
           'Seleccione un cliente para realizar la venta',
@@ -717,6 +717,7 @@ export class VentasComponent implements OnInit {
     console.log('TIPO PAGO===>',tipoPago)
     this.isButtonDisabled = true;
     if (tipoPago == "MULTIPLE") {
+      this.showMultiples = true;
       this.totalVenta = this.totalMultipleT + this.totalMultipleF;
 
       if (this.totalVenta > this.total) {
@@ -726,11 +727,60 @@ export class VentasComponent implements OnInit {
         this.RegistraVenta.total = this.totalVenta; // Asignar totalVenta a total si es mayor que total actual
       }
 
+      
 
+      // this.changePage();
+      // this.RegistraVentaValid(tipoPago);
+      this.pagando = true;
+      // this.changePage();
+      this.isButtonDisabled = false;
+      // this.RegistraVentaValid('MULTIPLE');
+
+    }
+
+    if (tipoPago == 'MUL') {
+      if (
+        this.totalMultipleF == undefined ||
+        this.totalMultipleT == undefined
+      ) {
+        this.toastr.warning(
+          'Error el importe debe ser mayor o igual al total de la venta, Usted pago:' +
+            this.totalVenta +
+            ', y el total es: ' +
+            this.total +
+            '.',
+          'Error!'
+        );
+        this.isButtonDisabled = false;
+        return;
+      }
+
+      if (this.tipoPago1 == undefined || this.tipoPago2 == undefined) {
+        this.toastr.warning('Debes Seleccionar un tipo de pago', 'Error!');
+        this.isButtonDisabled = false;
+        return;
+      }
+
+      var total = this.totalMultipleF + this.totalMultipleT - this.descuento;
+      console.log(total - this.descuento);
+      if (this.total > total) {
+        this.toastr.warning(
+          'Error el importe debe ser mayor o igual al total de la venta, \nUsted pago: ' +
+            total +
+            ', y el total es: ' +
+            this.total +
+            '.',
+          'Error!'
+        );
+        this.isButtonDisabled = false;
+        return;
+      }
+
+      this.pagando = false;
       this.changePage();
-      this.RegistraVentaValid(tipoPago);
+      this.RegistraVentaValid('MULTIPLE');
 
-
+      //console.log('PAGO MULTIPLE');
     }
     if (tipoPago == "EFECTIVO") {
       console.info(this.totalVenta, this.total - this.descuento)
@@ -760,13 +810,14 @@ export class VentasComponent implements OnInit {
       }
     }
 
-  if (this.selectedOption.value == 'ENT') {
-    this.changePage();
-    this.RegistraVentaValid(tipoPago);
-  } else {
-    this.changePage();
-    this.RegistraVentaValid(tipoPago);
-  }
+      if (this.selectedOption.value == 'ENT') {
+        this.changePage();
+        this.RegistraVentaValid(tipoPago);
+      } else {
+        this.changePage();
+        this.RegistraVentaValid(tipoPago);
+      }
+
   }
 
 
@@ -786,182 +837,187 @@ export class VentasComponent implements OnInit {
 
   //Funcion de Venta Limpio separada
   async RegistraVentaValid(tipoPago: string) {
-    this.articlesShell.forEach(element => {
-      const vt = new VentaArticuloModel();
+    if(!this.pagando){
 
-      vt.idArticulo = element.idArticulo;
-      vt.cantidad = element.cantidad;
-      vt.precioUnitario = element.precio;
-      vt.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
-      //vt.articulo = element;
-
-      //Genera Cadena para Impresion Ticket con salto de pagina
-      this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN" + "|" + "$" + vt.subtotal + "MXN" + "\n".toString()
-
-      this.ventaArticulo.push(vt);
-    });
-
-    const format = 'yyyy-MM-dd';
-    const locale = 'en-US';
-    const formattedDate = formatDate(new Date, format, locale);
-    // Obtener la fecha y hora actual
-    const currentDate = new Date();
-
-    // Obtener los últimos 2 dígitos del año (e.g., '24' para 2024)
-    const year = currentDate.getFullYear().toString().slice(-2);
-
-    // Obtener el mes en formato de 2 dígitos (e.g., '08' para agosto)
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-
-    // Obtener el día en formato de 2 dígitos (e.g., '26' para el día 26)
-    const day = currentDate.getDate().toString().padStart(2, '0');
-
-    // Generar un número aleatorio de 2 dígitos (entre 10 y 99)
-    const randomTwoDigits = Math.floor(Math.random() * 90 + 10).toString();
-
+      this.articlesShell.forEach(element => {
+        const vt = new VentaArticuloModel();
   
-    this.RegistraVenta.idCaja = this.cashModel.idCaja;
-   // this.RegistraVenta.fecha = new Date;
-    this.RegistraVenta.noArticulos = this.articlesShell.length
-    this.RegistraVenta.noTicket = year + month + day + randomTwoDigits;
-    this.RegistraVenta.subtotal = this.total;
-    this.RegistraVenta.tipoPago = tipoPago;
-    this.RegistraVenta.tipoVenta = this.selectedOption.value 
-    this.RegistraVenta.total = this.total - this.descuento;
-    this.RegistraVenta.tarjeta = this.totalMultipleT;
-    this.RegistraVenta.efectivo = this.totalMultipleF;
-    this.RegistraVenta.ventaArticulo = this.ventaArticulo;
-    this.RegistraVenta.descuento = this.porcentajeDescuentoAplicar;
-
-
-
-    console.log(JSON.stringify(this.RegistraVenta));
-    this.ventasService.postRegistroVenta(this.RegistraVenta).subscribe(async resp => {
-      console.log('data=> ', resp);
-      if (resp.exito) {
-        console.log(this.selectedclienteNameAdvanced)
-        console.log(this.clienteName)
-        console.log(this.RegistraVenta.fecha)
-        const fecha = this.RegistraVenta.fecha;
-
-
-const dia = String(fecha.getDate()).padStart(2, '0');
-const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-const anio = fecha.getFullYear();
-
-const fechaFormateada = `${dia}/${mes}/${anio}`;
-this.downloadNewPdf("VENTA");
-        //code Impresion
-        // const conector = new ConectorPluginV3();
-        // conector
-        //   .Iniciar()
-        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-        //   .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-        //   .Feed(1)
-        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-        //   .EscribirTexto("Caja:" + this.cashModel.idCaja)
-        //   .Feed(1)
-        //   .EscribirTexto("Cajero:" + this.user.nombre)
-        //   .Feed(1)
-        //   .EscribirTexto("Fecha:" + fechaFormateada)
-        //   .Feed(1)
-        //   .EscribirTexto("Ticket:" + this.RegistraVenta.noTicket)
-        //   .Feed(1)
-        //   .EscribirTexto("Articulos:" + this.articulos)
-        //   .Feed(1)
-        //   .EscribirTexto("_________________________________________")
-        //   .Feed(1)
-        //   .EscribirTexto("ARTICULO        | CANT |  P/U  |  TOTAL  ")
-        //   .Feed(1)
-        //   .EscribirTexto("_________________________________________")
-        //   .Feed(1)
-        //   .EscribirTexto(this.cadenaProductos)
-        //   .Feed(1)
-        //   .EscribirTexto("_________________________________________")
-        //   .Feed(1)
-        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
-        //   .EscribirTexto("Descuento:" + this.descuento + "MXN")
-        //   .Feed(1)
-        //   .EscribirTexto("Subtotal:" + this.RegistraVenta.subtotal + "MXN")
-        //   .Feed(1)
-        //   .EscribirTexto("Total:" + this.getDescuentoAplicado(this.total, this.descuento) + "MXN")
-        //   .Feed(1)
-        //   .EscribirTexto("Tipo Pago:" + this.getTotalmontoMultiple(this.RegistraVenta))
-        //   .Feed(1)
-        //   .EscribirTexto("Cambio:" + this.cambioVenta + "MXN")
-        //   .Feed(1)
-        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-        //   .EscribirTexto(this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
-        //     plural: 'PESOS MEXICANOS',
-        //     singular: 'PESO MEXICANO',
-        //     centPlural: 'CENTAVOS',
-        //     centSingular: 'CENTAVO'
-        //   }))
-        //   .Feed(1)
-        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-        //   .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
-        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-        //   .Feed(1)
-        //   .EscribirTexto("***Venta publico Gral, Si requiere factura solicitarla durante la venta***")
-        //   .Feed(1)
-        //   .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
-        //   // .Feed(2)
-        //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-        //   .ImprimirCodigoDeBarrasCodabar(this.RegistraVenta.noTicket, 100, 2, 12)
-        //   // .Feed(2)
-        //   .Feed(3)
-        //   .Corte(1)
-
-
-        // try {
-        //   const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
-
-        //   if (respuesta == true) {
-            this.isButtonDisabled = false; // Habilitar el botón al finalizar
-            //Limpiar objetos al finalizar una compra correcta
-            this.cadenaProductos = ""
-            this.RegistraVenta = new VentaModel();
-            this.ventaArticulo = [];
-            this.articulos = 0
-            this.total = 0
-            this.articlesShell = []
-            this.totalVenta = 0
-            this.totalMultipleF = 0;
-            this.totalMultipleT = 0;
-            this.activeState = [false];
-            this.totalVenta = 0
-            this.toastr.success(resp.mensaje, 'Exito!');
-            console.log("Impresión correcta");
-            this.display = false;
-          // } else {
-          //   console.log("Error: " + respuesta);
-          // }
-
-        // } catch (error) {
-        //   this.isButtonDisabled = false; // Habilitar el botón al finalizar
-        //   console.log(error)
-        //   this.toastr.warning(error, 'Atencion!');
-        //   //Limpiar objetos al finalizar una compra correcta
-        //   this.cadenaProductos = ""
-        //   this.RegistraVenta = new VentaModel();
-        //   this.ventaArticulo = [];
-        //   this.articulos = 0
-        //   this.total = 0
-        //   this.articlesShell = []
-        //   this.display = false;
-        // }
-
-
-
-      }
-
-    },
-      err => {
-        console.log('error -> ', err);
-        this.toastr.error('Ocurrió un error al hacer la operación', 'Error!');
-        this.isButtonDisabled = false; // Habilitar el botón al finalizar
+        vt.idArticulo = element.idArticulo;
+        vt.cantidad = element.cantidad;
+        vt.precioUnitario = element.precio;
+        vt.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
+        //vt.articulo = element;
+  
+        //Genera Cadena para Impresion Ticket con salto de pagina
+        this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN" + "|" + "$" + vt.subtotal + "MXN" + "\n".toString()
+  
+        this.ventaArticulo.push(vt);
       });
+  
+      const format = 'yyyy-MM-dd';
+      const locale = 'en-US';
+      const formattedDate = formatDate(new Date, format, locale);
+      // Obtener la fecha y hora actual
+      const currentDate = new Date();
+  
+      // Obtener los últimos 2 dígitos del año (e.g., '24' para 2024)
+      const year = currentDate.getFullYear().toString().slice(-2);
+  
+      // Obtener el mes en formato de 2 dígitos (e.g., '08' para agosto)
+      const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+  
+      // Obtener el día en formato de 2 dígitos (e.g., '26' para el día 26)
+      const day = currentDate.getDate().toString().padStart(2, '0');
+  
+      // Generar un número aleatorio de 2 dígitos (entre 10 y 99)
+      const randomTwoDigits = Math.floor(Math.random() * 90 + 10).toString();
+  
+    
+      this.RegistraVenta.idCaja = this.cashModel.idCaja;
+     // this.RegistraVenta.fecha = new Date;
+      this.RegistraVenta.noArticulos = this.articlesShell.length
+      this.RegistraVenta.noTicket = year + month + day + randomTwoDigits;
+      this.RegistraVenta.subtotal = this.total;
+      this.RegistraVenta.tipoPago = tipoPago;
+      this.RegistraVenta.tipoVenta = this.selectedOption.value 
+      this.RegistraVenta.total = this.total - this.descuento;
+      this.RegistraVenta.tarjeta = this.totalMultipleT;
+      this.RegistraVenta.efectivo = this.totalMultipleF;
+      this.RegistraVenta.ventaArticulo = this.ventaArticulo;
+      this.RegistraVenta.descuento = this.porcentajeDescuentoAplicar;
+  
+  
+  
+      console.log(JSON.stringify(this.RegistraVenta));
+      this.ventasService.postRegistroVenta(this.RegistraVenta).subscribe(async resp => {
+        console.log('data=> ', resp);
+        if (resp.exito) {
+          console.log(this.selectedclienteNameAdvanced)
+          console.log(this.clienteName)
+          console.log(this.RegistraVenta.fecha)
+          const fecha = this.RegistraVenta.fecha;
+  
+  
+  const dia = String(fecha.getDate()).padStart(2, '0');
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const anio = fecha.getFullYear();
+  
+  const fechaFormateada = `${dia}/${mes}/${anio}`;
+  this.downloadNewPdf("VENTA");
+          //code Impresion
+          // const conector = new ConectorPluginV3();
+          // conector
+          //   .Iniciar()
+          //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+          //   .DescargarImagenDeInternetEImprimir("https://huitzil.netlify.app/assets/img/LogoSole.jpeg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+          //   .Feed(1)
+          //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+          //   .EscribirTexto("Caja:" + this.cashModel.idCaja)
+          //   .Feed(1)
+          //   .EscribirTexto("Cajero:" + this.user.nombre)
+          //   .Feed(1)
+          //   .EscribirTexto("Fecha:" + fechaFormateada)
+          //   .Feed(1)
+          //   .EscribirTexto("Ticket:" + this.RegistraVenta.noTicket)
+          //   .Feed(1)
+          //   .EscribirTexto("Articulos:" + this.articulos)
+          //   .Feed(1)
+          //   .EscribirTexto("_________________________________________")
+          //   .Feed(1)
+          //   .EscribirTexto("ARTICULO        | CANT |  P/U  |  TOTAL  ")
+          //   .Feed(1)
+          //   .EscribirTexto("_________________________________________")
+          //   .Feed(1)
+          //   .EscribirTexto(this.cadenaProductos)
+          //   .Feed(1)
+          //   .EscribirTexto("_________________________________________")
+          //   .Feed(1)
+          //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
+          //   .EscribirTexto("Descuento:" + this.descuento + "MXN")
+          //   .Feed(1)
+          //   .EscribirTexto("Subtotal:" + this.RegistraVenta.subtotal + "MXN")
+          //   .Feed(1)
+          //   .EscribirTexto("Total:" + this.getDescuentoAplicado(this.total, this.descuento) + "MXN")
+          //   .Feed(1)
+          //   .EscribirTexto("Tipo Pago:" + this.getTotalmontoMultiple(this.RegistraVenta))
+          //   .Feed(1)
+          //   .EscribirTexto("Cambio:" + this.cambioVenta + "MXN")
+          //   .Feed(1)
+          //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+          //   .EscribirTexto(this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
+          //     plural: 'PESOS MEXICANOS',
+          //     singular: 'PESO MEXICANO',
+          //     centPlural: 'CENTAVOS',
+          //     centSingular: 'CENTAVO'
+          //   }))
+          //   .Feed(1)
+          //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+          //   .EscribirTexto("***GRACIAS POR SU PREFERENCIA***")
+          //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+          //   .Feed(1)
+          //   .EscribirTexto("***Venta publico Gral, Si requiere factura solicitarla durante la venta***")
+          //   .Feed(1)
+          //   .EscribirTexto("Suc. Frontera: 8666350209 Suc Monclova: 8666320215")
+          //   // .Feed(2)
+          //   .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+          //   .ImprimirCodigoDeBarrasCodabar(this.RegistraVenta.noTicket, 100, 2, 12)
+          //   // .Feed(2)
+          //   .Feed(3)
+          //   .Corte(1)
+  
+  
+          // try {
+          //   const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
+  
+          //   if (respuesta == true) {
+              this.isButtonDisabled = false; // Habilitar el botón al finalizar
+              //Limpiar objetos al finalizar una compra correcta
+              this.cadenaProductos = ""
+              this.RegistraVenta = new VentaModel();
+              this.ventaArticulo = [];
+              this.articulos = 0
+              this.total = 0
+              this.articlesShell = []
+              this.totalVenta = 0
+              this.totalMultipleF = 0;
+              this.totalMultipleT = 0;
+              this.activeState = [false];
+            
+              this.toastr.success(resp.mensaje, 'Exito!');
+              console.log("Impresión correcta");
+              this.display = false;
+            // } else {
+            //   console.log("Error: " + respuesta);
+            // }
+  
+          // } catch (error) {
+          //   this.isButtonDisabled = false; // Habilitar el botón al finalizar
+          //   console.log(error)
+          //   this.toastr.warning(error, 'Atencion!');
+          //   //Limpiar objetos al finalizar una compra correcta
+          //   this.cadenaProductos = ""
+          //   this.RegistraVenta = new VentaModel();
+          //   this.ventaArticulo = [];
+          //   this.articulos = 0
+          //   this.total = 0
+          //   this.articlesShell = []
+          //   this.display = false;
+          // }
+  
+  
+  
+        }
+  
+      },
+        err => {
+          console.log('error -> ', err);
+          this.toastr.error('Ocurrió un error al hacer la operación', 'Error!');
+          this.isButtonDisabled = false; // Habilitar el botón al finalizar
+        });
+  
+    }
 
+    
 
   }
 
@@ -992,8 +1048,7 @@ this.downloadNewPdf("VENTA");
 
 
   changePage() {
-    // console.log(this.totalVenta + ":" + this.total)
-    // console.log(this.total -this.descuento)
+
 
     if (this.totalVenta > this.total - this.descuento) {
       this.cambioVenta = Math.abs(this.total - this.totalVenta - this.descuento);
@@ -1003,8 +1058,7 @@ this.downloadNewPdf("VENTA");
     } else {
       console.log("no es igual");
       this.cambioVenta = 0
-      // this.toastr.error("Error el importe no esta correcto, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
-
+    
     }
 
 
