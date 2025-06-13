@@ -30,15 +30,12 @@ export class ProduccionComponent implements OnInit {
    materialProduccion: any[] = [];
    showAdd: boolean = false;
    listCategorias: CategoriaModel[] = [];
-    // listSubcategorias: SubCategoriaModel[] = [];
    categoriaSeleccionada: any;
    subCategoriaSelected: any;
    constructor(
      public variablesGL: VariablesService,
      private produccionService: ProduccionService,
-      private inventarioService: InventarioService,
       private categoriesService: CategoriasService,
-      // private subCategoriaService: SubCategoriasService,
       private toastr: ToastrService
    ) {
      this.cols = [
@@ -99,42 +96,42 @@ export class ProduccionComponent implements OnInit {
     );
   }
 
-  filterstable(categoria: any) {
-    this.categoriaSeleccionada = categoria;
-    // this.listSubcategorias = [];
-    this.subCategoriaSelected = undefined;
-    this.table.filter('', 'categoria', 'contains');
-    this.table.filter('', 'subcategoria', 'contains');
-    if (categoria != null) {
-      this.table.filter(categoria.nombre, 'categoria', 'contains');
-      // this.subCategoriaService
-      //   .getSubCategoriasByCategoria(categoria.idCategoria)
-      //   .subscribe(
-      //     (response) => {
-      //       if (response.exito) {
-      //         for (let sub of response.respuesta) {
-      //           this.listSubcategorias.push(sub);
-      //         }
-      //       }
-      //     },
-      //     (err) => { }
-      //   );
-    } else {
-      this.table.filter('', 'categoria', 'contains');
-      this.table.filter('', 'subcategoria', 'contains');
-      // this.listSubcategorias = [];
-      this.table.reset();
-    }
-  }
+  // filterstable(categoria: any) {
+  //   this.categoriaSeleccionada = categoria;
+  //   // this.listSubcategorias = [];
+  //   this.subCategoriaSelected = undefined;
+  //   this.table.filter('', 'categoria', 'contains');
+  //   this.table.filter('', 'subcategoria', 'contains');
+  //   if (categoria != null) {
+  //     this.table.filter(categoria.nombre, 'categoria', 'contains');
+  //     // this.subCategoriaService
+  //     //   .getSubCategoriasByCategoria(categoria.idCategoria)
+  //     //   .subscribe(
+  //     //     (response) => {
+  //     //       if (response.exito) {
+  //     //         for (let sub of response.respuesta) {
+  //     //           this.listSubcategorias.push(sub);
+  //     //         }
+  //     //       }
+  //     //     },
+  //     //     (err) => { }
+  //     //   );
+  //   } else {
+  //     this.table.filter('', 'categoria', 'contains');
+  //     this.table.filter('', 'subcategoria', 'contains');
+  //     // this.listSubcategorias = [];
+  //     this.table.reset();
+  //   }
+  // }
 
-  filterstableSub(subCategoria: any) {
-    if (subCategoria != null) {
-      this.table.filter(subCategoria.nombre, 'subcategoria', 'contains');
-    } else {
-      //this.table.reset();
-      //this.listSubcategorias = []
-    }
-  }
+  // filterstableSub(subCategoria: any) {
+  //   if (subCategoria != null) {
+  //     this.table.filter(subCategoria.nombre, 'subcategoria', 'contains');
+  //   } else {
+  //     //this.table.reset();
+  //     //this.listSubcategorias = []
+  //   }
+  // }
  
    openModalAdd() {
     this.accion = 'Agregar';
@@ -255,23 +252,6 @@ export class ProduccionComponent implements OnInit {
      );
    }
 
-   getArticulos() {
-   // this.loading = false;
-    // this.inventarioService.getArticulos().subscribe(
-    //   (response) => {
-    //     if (response.exito) {
-    //       this.articles = response.respuesta;
-    //       this.loading = false;
-    //     }
-    //   },
-    //   (err) => {
-    //     this.loading = false;
-    //     this.toastr.error(
-    //       'Hubo un problema al conectar con los servicios en linea',
-    //       'Ups!!'
-    //     );
-    //   }
-    // );
-  }
+
 
 }

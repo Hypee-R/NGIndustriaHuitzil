@@ -12,7 +12,7 @@
       
             [(ngModel)]="corte.status" 
             placeholder="Selecciona un Status" 
-            [disabled]="statusOrder === 'TERMINADO'">
+            [disabled]="statusOrder === 'FINALIZADO'">
           </p-dropdown>
           <small class="p-error" *ngIf="submitted && !corte.status">El status es requerido</small>
         </div>
@@ -164,7 +164,7 @@
         </div>
       </div>
 
-      <!-- MATERIALS SECTION PUEDE SEGUIR IGUAL APLICANDO MISMAS MEJORAS -->
+
  <!-- TABLA DE MATERIALES -->
  <div class="p-col-12 p-md-6">
     <p-tabView *ngIf="accion === 'Agregar'">

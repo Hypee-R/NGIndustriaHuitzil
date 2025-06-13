@@ -36,7 +36,7 @@ export class AddProduccionCorteComponent implements OnInit {
   accion = '';
   articles: ArticulosProduccionModel[] = [];
   corte: CatProduccionCorteModel = new CatProduccionCorteModel();
-  listStatus: String[] = ["SIN INICIAR", "EN PROCESO", "TERMINADO"];
+  listStatus: String[] = ["SIN INICIAR", "EN PROCESO", "FINALIZADO"];
   dialogSubscription: Subscription = new Subscription();
   listCategorias: CategoriaModel[] = [];
   categoriaSeleccionada: any;
@@ -54,7 +54,8 @@ export class AddProduccionCorteComponent implements OnInit {
   cols = [
     { field: 'nombre', header: 'Nombre' },
     { field: 'tipoMedicion', header: 'Tipo Medición' },
-    { field: 'status', header: 'Tipo Medición' },
+    { field: 'status', header: 'Status' },
+    { field: 'stock', header: 'Stock' },
   ];
 
   colsProductsSelectedM = [
@@ -82,11 +83,14 @@ export class AddProduccionCorteComponent implements OnInit {
         this.accion = this._accion;
         this.cantidadTotal = 0;
         if(this._editCorte){
+          console.log('Edit Corte', this._editCorte);
           this.corte = this._editCorte;
+          this.corte.articulos = this._articulosProduccion;
+          this.corte.materiales = this._materialesProduccion;
           
         }
         if(this._accion){
-         
+          this.getMateriales();
           if(this.accion == 'Actualizar'){
             this.statusOrder = this._editCorte.status;
             this.articlesSelected = this._articulosProduccion;
@@ -95,6 +99,10 @@ export class AddProduccionCorteComponent implements OnInit {
               this.cantidadTotal += Number(art.existencia);
              }
             )
+            this.materialSelected.forEach((art) => {
+              this.cantidadTotalM += Number(art.stock);         
+
+            }     )
           }
           else{
             this.categoriaSeleccionada = undefined;
@@ -112,7 +120,7 @@ export class AddProduccionCorteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  this.getMateriales();
+
   this.getCategorias();  
   }
 
@@ -131,18 +139,16 @@ export class AddProduccionCorteComponent implements OnInit {
   saveDataProduccion(){
     this.submitted = true;
     if(this.corte.folio?.length > 0 && this.corte.folio?.length > 2){
-      console.log(this._accion)
+      console.log( "_accion-->",this._accion)
       if(this._accion == 'Agregar'){
         this.guardarProduccion();
       }else{
         this.validaStatus()
-        ///this.actualizarProduccion();
       }
     }
   }
 
   guardarProduccion(){
-   // console.log(this.articlesSelected)
     if(this.articlesSelected.length == 0){
       this.toastr.error('Agrega al menos un articulo', 'Atención!');
       return;
@@ -159,11 +165,13 @@ export class AddProduccionCorteComponent implements OnInit {
     this.corte.materiales=this.materialSelected;
 
      console.info('Produccion Save-->',this.corte)
+     this.generatePDFOrdenProduccion(this.corte);
     this.produccionCorte.agregaProduccionCorte(this.corte).subscribe(response => {
       if(response.exito){
+    
           this.toastr.success(response.mensaje, 'Exito!!');
           this.hideDialog();
-          this.generatePDFOrdenProduccion(this.corte); 
+
           setTimeout(() => {
             this.saveProduccion.emit(true);
           }, 100);
@@ -181,11 +189,9 @@ export class AddProduccionCorteComponent implements OnInit {
     this.categoriesService.getCategorias().subscribe(
       (response) => {
         if (response.exito) {
-
-         // this.listCategorias.push(new CategoriaModel());
           for (let categoria of response.respuesta) {
             this.listCategorias.push(categoria);
-           // this.loading=false
+
           }
         }
       },
@@ -216,17 +222,17 @@ export class AddProduccionCorteComponent implements OnInit {
   actualizarProduccion(){ 
     this.produccionCorte.actualizaArticulosProduccionCorte(this.corte).subscribe(response => {
       if(response.exito){
-          /*this.toastr.success(response.mensaje, 'Exito!!');
+          this.toastr.success(response.mensaje, 'Exito!!');
           this.hideDialog();
           setTimeout(() => {
             this.saveProduccion.emit(true);
-          }, 100);*/
+          }, 100);
       }else{
           this.toastr.error(response.mensaje, 'Ups!!');
       }
     }, err => {
       ///console.log('error actualiza categoria ', err);
-      //this.toastr.error('Hubo un problema al conectar con los servicios en linea','Ups!!');
+      this.toastr.error('Hubo un problema al conectar con los servicios en linea','Ups!!');
     });
   }
 
@@ -419,7 +425,8 @@ export class AddProduccionCorteComponent implements OnInit {
     });
 }
 
-generatePDFOrdenProduccion(corte: any): void {
+generatePDFOrdenProduccion(corte: CatProduccionCorteModel): void {
+  console.log('Generando PDF para la orden de producción:', corte);
   const doc = new jsPDF();
 
   // Título
@@ -493,13 +500,7 @@ generatePDFOrdenProduccion(corte: any): void {
         doc.text(`Dirección: ${p.direccion}`, 14, y + 18);
       });
 
-      // doc.setFontSize(11);
-      // doc.text(`Ubicación de "${m.nombre}"`, 14, (doc as any).lastAutoTable?.finalY + 30);
-      // m.ubicaciones?.forEach(u => {
-      //   doc.setFontSize(10);
-      //   doc.text(`Dirección: ${u.direccion}`, 14, (doc as any).lastAutoTable?.finalY + 36);
-      //   doc.text(`Encargado: ${u.nombreEncargado} ${u.apellidoPEncargado}`, 14, (doc as any).lastAutoTable?.finalY + 42);
-      // });
+      
     });
   }
 
