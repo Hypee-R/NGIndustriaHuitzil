@@ -17,6 +17,9 @@ import ConectorPluginV3 from "src/app/services/ConectorPluginV3";
 import Swal from 'sweetalert2'
 import { PrimeNGConfig } from 'primeng/api';
 import { jsPDF } from "jspdf";
+import { UsuariosService } from 'src/app/services/usuarios.service';
+import { UsuarioModel } from 'src/app/models/usuarios.model';
+import { ResponseModel } from 'src/app/models/response.model';
 @Component({
   selector: 'app-apartados',
   templateUrl: './apartados.component.html',
@@ -85,6 +88,7 @@ export class ApartadosComponent implements OnInit {
     private apartadoService: ApartadosService,
     private inventarioService: InventarioService,
     private ventasService: VentasService,
+     private usuariosService: UsuariosService,
 
   ) {
     this.selectedArticuloAdvanced = new productoModel()
@@ -160,7 +164,9 @@ export class ApartadosComponent implements OnInit {
 
   }
   es: any;
+  listUsuarios: UsuarioModel[] = [];
   ngOnInit(): void {
+    
     this.primengConfig.setTranslation({
       dayNames: ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
       dayNamesShort: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
@@ -172,7 +178,26 @@ export class ApartadosComponent implements OnInit {
       today: 'Hoy',
       clear: 'Limpiar',
       // otros textos opcionales
-    });
+    }
+  
+  
+  );
+ 
+
+  this.usuariosService.getUsuarios().subscribe({
+    next: (response: ResponseModel) => {
+      if (response.exito && response.respuesta) {
+     
+        this.listUsuarios = response.respuesta
+      }
+
+      console.log('Usuarios obtenidos:', this.listUsuarios);
+    },
+    error: (err) => {
+      console.error('Error al obtener usuarios:', err);
+    }
+  });
+ 
   
     this.getClientes()
     this.getApartados()

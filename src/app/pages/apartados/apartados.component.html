@@ -168,10 +168,25 @@
           <div class="col-12 md:col-6">
             <div class="dialog-content">
               <h6>Vendedor:</h6>
+              <p-dropdown
+                [options]="listUsuarios"
+                optionLabel="nombre"
+                optionValue="nombre"
+                [(ngModel)]="apartado.vendedor"
+                placeholder="Selecciona un vendedor"
+                class="w-full"
+                name="vendedor">
+              </p-dropdown>
+            </div>
+          </div>
+          
+          <!-- <div class="col-12 md:col-6">
+            <div class="dialog-content">
+              <h6>Vendedor:</h6>
               <input type="text" pInputText [(ngModel)]="apartado.vendedor" name="vendedor" class="w-full"
                      placeholder="Nombre del vendedor" />
             </div>
-          </div>
+          </div> -->
         </div>
     
         <hr class="my-3">
