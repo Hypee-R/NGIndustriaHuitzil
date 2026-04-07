@@ -28,6 +28,7 @@ import Swal from 'sweetalert2';
 
 export class VentasComponent implements OnInit {
   esVentaPlataforma: boolean = false;
+  montoPlataforma: number = 0;
   activeState: boolean[] = [false];
   cadenaProductos: string = "\n";
   impresoras = [];
@@ -354,12 +355,7 @@ export class VentasComponent implements OnInit {
     this.articulos += 1
     this.total += product.precio
     console.log(this.total)
-    this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
-      plural: 'PESOS MEXICANOS',
-      singular: 'PESO MEXICANO',
-      centPlural: 'CENTAVOS',
-      centSingular: 'CENTAVO'
-    });
+    this.actualizarTotalLetra();
 
   }
 
@@ -379,12 +375,7 @@ export class VentasComponent implements OnInit {
     this.articlesShell.push(artc)
     this.articulos += 1
     this.total += product.precio
-    this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
-      plural: 'PESOS MEXICANOS',
-      singular: 'PESO MEXICANO',
-      centPlural: 'CENTAVOS',
-      centSingular: 'CENTAVO'
-    });
+    this.actualizarTotalLetra();
   }
 
   cancelarCompra() {
@@ -657,12 +648,7 @@ export class VentasComponent implements OnInit {
       this.toastr.warning('No hay Articulos para vizualizar cotizacion', 'Atención!');
     } else {
       this.displayCotizacion = true;
-      this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
-        plural: 'PESOS MEXICANOS',
-        singular: 'PESO MEXICANO',
-        centPlural: 'CENTAVOS',
-        centSingular: 'CENTAVO'
-      });
+      this.actualizarTotalLetra();
     }
 
   }
@@ -724,8 +710,8 @@ export class VentasComponent implements OnInit {
       this.showMultiples = true;
       this.totalVenta = this.totalMultipleT + this.totalMultipleF;
 
-      if (this.totalVenta > this.total) {
-        const sobrante = this.totalVenta - this.total;
+      if (this.totalVenta > this.getTotalConDescuento()) {
+        const sobrante = this.totalVenta - this.getTotalConDescuento();
         this.totalMultipleF -= sobrante;
         this.cambioVenta = sobrante
         this.RegistraVenta.total = this.totalVenta; // Asignar totalVenta a total si es mayor que total actual
@@ -767,12 +753,12 @@ export class VentasComponent implements OnInit {
 
       var total = this.totalMultipleF + this.totalMultipleT - this.descuento;
       console.log(total - this.descuento);
-      if (this.total > total) {
+      if (this.getTotalConDescuento() > total) {
         this.toastr.warning(
           'Error el importe debe ser mayor o igual al total de la venta, \nUsted pago: ' +
             total +
             ', y el total es: ' +
-            this.total +
+            this.getTotalConDescuento() +
             '.',
           'Error!'
         );
@@ -787,8 +773,8 @@ export class VentasComponent implements OnInit {
       //console.log('PAGO MULTIPLE');
     }
     if (tipoPago == "EFECTIVO") {
-      console.info(this.totalVenta, this.total - this.descuento)
-      if (this.totalVenta >= (this.total - this.descuento)) {
+      console.info(this.totalVenta, this.getTotalConDescuento())
+      if (this.totalVenta >= this.getTotalConDescuento()) {
         this.changePage();
         this.RegistraVentaValid(tipoPago);
 
@@ -802,7 +788,7 @@ export class VentasComponent implements OnInit {
     }
     if (tipoPago == "TARJETA") {
       this.toastr.warning("Recuerda Validar el cobro en terminal la venta se registrara ", 'Atencion!');
-      if (this.totalVenta == this.total - this.descuento) {
+      if (this.totalVenta == this.getTotalConDescuento()) {
         this.changePage();
         this.RegistraVentaValid(tipoPago); {
 
@@ -884,7 +870,7 @@ export class VentasComponent implements OnInit {
       this.RegistraVenta.subtotal = this.total;
       this.RegistraVenta.tipoPago = tipoPago;
       this.RegistraVenta.tipoVenta = this.selectedOption.value 
-      this.RegistraVenta.total = this.total - this.descuento;
+      this.RegistraVenta.total = this.getTotalConDescuento();
       this.RegistraVenta.tarjeta = this.totalMultipleT;
       this.RegistraVenta.efectivo = this.totalMultipleF;
       this.RegistraVenta.ventaArticulo = this.ventaArticulo;
@@ -986,6 +972,9 @@ export class VentasComponent implements OnInit {
               this.totalMultipleF = 0;
               this.totalMultipleT = 0;
               this.activeState = [false];
+             // this.esVentaPlataforma = false;
+              this.montoPlataforma = 0;
+              this.descuento = 0;
             
               this.toastr.success(resp.mensaje, 'Exito!');
               console.log("Impresión correcta");
@@ -1037,7 +1026,34 @@ export class VentasComponent implements OnInit {
 
   //
   getDescuentoAplicado(total: number, descuento: number): number {
-    return total - descuento;
+    return total + this.getMontoPlataforma() - descuento;
+  }
+
+  getMontoPlataforma(): number {
+    return this.esVentaPlataforma ? Math.max(0, Number(this.montoPlataforma) || 0) : 0;
+  }
+
+  getTotalConPlataforma(): number {
+    return this.total + this.getMontoPlataforma();
+  }
+
+  getTotalConDescuento(): number {
+    return this.getTotalConPlataforma() - this.descuento;
+  }
+
+  onMontoPlataformaChange(): void {
+    this.montoPlataforma = Math.max(0, Number(this.montoPlataforma) || 0);
+    this.changePage();
+    this.actualizarTotalLetra();
+  }
+
+  actualizarTotalLetra(): void {
+    this.totalLetra = this.variablesGL.numeroALetras(this.getTotalConDescuento(), {
+      plural: 'PESOS MEXICANOS',
+      singular: 'PESO MEXICANO',
+      centPlural: 'CENTAVOS',
+      centSingular: 'CENTAVO'
+    });
   }
 
   getTotalmontoMultiple(venta: VentaModel): string {
@@ -1054,8 +1070,8 @@ export class VentasComponent implements OnInit {
   changePage() {
 
 
-    if (this.totalVenta > this.total - this.descuento) {
-      this.cambioVenta = Math.abs(this.total - this.totalVenta - this.descuento);
+    if (this.totalVenta > this.getTotalConDescuento()) {
+      this.cambioVenta = Math.abs(this.getTotalConDescuento() - this.totalVenta);
 
 
       this.toastr.success("Su cambio es :" + this.cambioVenta, 'Cambio!');
@@ -1090,17 +1106,12 @@ export class VentasComponent implements OnInit {
 
     this.porcentajeDescuentoAplicar = porcentajeDescuento
     // Calcular el descuento
-    const descuento = (this.total * porcentajeDescuento) / 100;
+    const descuento = (this.getTotalConPlataforma() * porcentajeDescuento) / 100;
     console.log(descuento)
 
     // this.descuento = descuento
     this.descuento = Math.ceil(descuento);  // Redondea hacia arriba
-    this.totalLetra = this.variablesGL.numeroALetras(this.total - this.descuento, {
-      plural: 'PESOS MEXICANOS',
-      singular: 'PESO MEXICANO',
-      centPlural: 'CENTAVOS',
-      centSingular: 'CENTAVO'
-    });
+    this.actualizarTotalLetra();
   }
 
 
@@ -1344,8 +1355,11 @@ export class VentasComponent implements OnInit {
 
 
   actualizarPrecios(): void {
-    console.info(this.total);
-    this.total = this.esVentaPlataforma ? this.total * 1.25 : this.total / 1.25;
+    if (!this.esVentaPlataforma) {
+      this.montoPlataforma = 0;
+    }
+    this.changePage();
+    this.actualizarTotalLetra();
   }
 
   downloadNewPdf(tipo: String) {
@@ -1504,6 +1518,8 @@ export class VentasComponent implements OnInit {
       this.total += item.precioConDescuento * item.cantidad;  // Sumar el total
       this.articulos += item.cantidad;  // Contar la cantidad total de artículos
     });
+
+    this.actualizarTotalLetra();
   
   
   }

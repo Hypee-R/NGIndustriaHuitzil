@@ -99,14 +99,24 @@
 
     <div class="col-md-3">
       <div class="row">
-
-        <p-checkbox [(ngModel)]="esVentaPlataforma" binary="true" (ngModelChange)="actualizarPrecios()">
-
-        </p-checkbox>
-        <label for="ventaPlataforma">Plataforma</label>
-
-        <br>
+        <div style="display: inline-flex; align-items: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap;">
+          <p-checkbox inputId="ventaPlataforma" [(ngModel)]="esVentaPlataforma" binary="true" (ngModelChange)="actualizarPrecios()">
+          </p-checkbox>
+          <label for="ventaPlataforma" style="margin: 0; display: inline-block;">Plataforma</label>
+        </div>
       </div>
+      <br>
+      <div class="row" *ngIf="esVentaPlataforma">
+        <div style="max-width: 220px; width: 100%;">
+          <div class="p-inputgroup">
+            <span class="p-inputgroup-addon">$</span>
+            <input type="number" pInputText placeholder="Ingresa el monto" [(ngModel)]="montoPlataforma"
+              (ngModelChange)="onMontoPlataformaChange()" [min]="0">
+          </div>
+          <small class="d-block" style="margin-top: 4px; color: #6c757d;">Ingresa el monto</small>
+        </div>
+      </div>
+      <br *ngIf="esVentaPlataforma">
         <div class="row">
           <button pButton label="Inventario" icon="pi pi-shopping-cart" (click)="openProductsM()"
             class="mr-2 custom-button-inventario" [ngStyle]="{ padding: '1rem' }"></button>
@@ -144,7 +154,7 @@
     <div class="row ">
       <div *ngIf="selectedOption.value == 'VEN'"
         class="col-md-6 custom-height d-flex justify-content-center align-items-center ">
-        <span style="font-size: 3.5rem;">{{total | currency:'MXN' }}</span>
+        <span style="font-size: 3.5rem;">{{getTotalConPlataforma() | currency:'MXN' }}</span>
       </div>
       <div *ngIf="selectedOption.value == 'ABN' || selectedOption.value == 'SLN'" class="col-md-6 custom-height d-flex justify-content-start align-items-center">
 
@@ -219,11 +229,11 @@
           </div>
           <div class="col-sm" *ngIf="i == 1 && selectedOption.value=='VEN'">
             <h5>Subtotal:<button pButton pRipple icon="pi pi-dollar" type="button" class="p-button  p-button-warning"
-                label="{{this.total}}"></button> </h5>
+                label="{{getTotalConPlataforma()}}"></button> </h5>
           </div>
           <div class="col-sm" *ngIf="i == 2 ">
             <h3>TOTAL: <button pButton pRipple icon="pi pi-dollar" type="button" class="p-button p-button-danger"
-                label="{{this.total-this.descuento}}"></button> </h3>
+                label="{{getTotalConDescuento()}}"></button> </h3>
             <span style="font-size: 1rem;">{{totalLetra }}</span>
           </div>
         </div>
@@ -459,7 +469,7 @@
             <label>Articulos: {{articulos}}</label>
           </div>
           <div class="col-4">
-            <label>Totales:$ {{total}} MXN</label>
+            <label>Totales:$ {{getTotalConDescuento()}} MXN</label>
           </div>
           <div class="col-4">
             <label>{{totalLetra}} </label>
