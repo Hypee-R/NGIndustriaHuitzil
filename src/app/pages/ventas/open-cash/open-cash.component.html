@@ -1,20 +1,26 @@
 
-<p-dialog [(visible)]="visibleDialog" [style]="{width: '650px'}" header="{{accion}} Caja: {{this.openCashModel.idCaja}} de {{this.user.nombre}}" [modal]="true"styleClass="p-fluid" appendTo="body">
+<p-dialog [(visible)]="visibleDialog" [style]="{width: '650px'}" 
+[header]="accion === 'Status' ? 'Estatus de la caja:' + openCashModel?.idCaja : (accion === 'Abrir' && openCashModel?.idCaja === 0 ? 'Nueva CAJA para ' + user.nombre : accion + ' Caja: ' + openCashModel.idCaja + ' de ' + user.nombre)" [modal]="true"styleClass="p-fluid" appendTo="body">
 <h5>Sucursal:{{this.user.ubicacion}}</h5>
+<span class="p-tag p-tag-danger" *ngIf="openCashModel?.fechaCierre != null">CAJA CERRADA</span>
 
     <ng-template pTemplate="content"  >
 
         <ng-container *ngIf="accion == 'Abrir'; else cerrarTemplate">
+            <div class="field" *ngIf="openCashModel?.ultimoMonto != 0">
+                <label>Monto anterior de caja:</label>
+                <label><strong>{{+openCashModel.ultimoMonto | currency:'MXN'}}</strong></label>
+            </div>
             <div class="field">
                 <label for="descripcion">Monto en caja</label>
-                <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.monto" required />
+                <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.monto" required [disabled]="openCashModel?.fechaCierre != null" />
                 <small class="p-error" *ngIf="submitted && !openCashModel.monto || openCashModel?.monto == 0">El monto
                     es requerido.</small>
             </div>
             <div class="field">
                 <label for="descripcion">Fecha y Hora</label>
                 <p-calendar [(ngModel)]="fecha" [showTime]="true" [showSeconds]="true" inputId="time" required="true"
-                    dateFormat="dd/mm/yy" disabled="true"></p-calendar>
+                    dateFormat="dd/mm/yy" [disabled]="true"></p-calendar>
                 <small class="p-error" *ngIf="submitted && !fecha">La fecha y hora es requerida.</small>
             </div>
         </ng-container>
@@ -28,7 +34,7 @@
 
                 <div class="field">
                     <label for="descripcion">Monto Cierre</label>
-                    <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.montoCierre" required />
+                    <input type="number" pInputText id="descripcion" [(ngModel)]="openCashModel.montoCierre" required [disabled]="openCashModel?.fechaCierre != null" />
                     <small class="p-error"
                         *ngIf="submitted && !openCashModel.montoCierre || openCashModel?.montoCierre == 0">El monto
                         cierre es requerido.</small>
@@ -41,7 +47,7 @@
 
                 <div class="field">
                     <label for="motivo">Motivo Direrencia</label>
-                    <input  pInputText id="motivo" [(ngModel)]="motivo" />
+                    <input  pInputText id="motivo" [(ngModel)]="motivo" [disabled]="openCashModel?.fechaCierre != null" />
                     <small class="p-error" *ngIf="submitted && openCashModel.monto+this.totalVentas!=openCashModel.montoCierre">Hay diferencia, Agregar motivo.</small>
                 </div>
 
@@ -103,7 +109,7 @@
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cerrar" icon="pi pi-times" type="button" class="p-button-text"
             (click)="hideDialog()"></button>
-        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" [disabled]="accion == 'Status'"
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" [disabled]="accion == 'Status' || openCashModel?.fechaCierre != null"
             (click)="saveCaja()"></button>
     </ng-template>
 

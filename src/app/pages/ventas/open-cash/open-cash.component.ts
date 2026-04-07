@@ -64,6 +64,9 @@ export class OpenCashComponent implements OnInit {
         }
         if (this._caja) {
           this.openCashModel = this._caja;
+          if (this.accion === 'Abrir' && Number(this.openCashModel.ultimoMonto) > 0) {
+            this.openCashModel.monto = Number(this.openCashModel.ultimoMonto);
+          }
           console.log(this.openCashModel.fecha)
           this.fecha = this.openCashModel.fecha != '' ? this.variablesGL.getFormatoFecha(this.openCashModel.fecha) : new Date();
           this.GetInformacionCaja()

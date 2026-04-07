@@ -8,6 +8,7 @@ export class CajaModel{
   monto: number;
   fechaCierre: string;
   montoCierre: number;
+  ultimoMonto: Number;
   idEmpleadoNavigation : UsuarioModel
   venta: VentaModel[];
   estatus: boolean;
@@ -19,5 +20,6 @@ export class CajaModel{
     this.fechaCierre = null;
     this.montoCierre = 1000;
     this.estatus = false;
+    this.ultimoMonto = 0;
   }
 }

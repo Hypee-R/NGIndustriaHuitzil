@@ -460,6 +460,7 @@ export class VentasComponent implements OnInit {
     this.ventasService.getCaja().subscribe(
       (resp) => {
         if (resp.exito) {
+          console.log(resp.respuesta)
           this.cashOpen = true;
           //this.myInput.nativeElement.focus();
           this.cashModel = resp.respuesta;
@@ -476,9 +477,14 @@ export class VentasComponent implements OnInit {
             this.cashModel.fecha != null &&
             this.cashModel.fechaCierre != null
           ) {
+             this.cashOpen = false;
+             var montoAnterior = this.cashModel.montoCierre;
             if (this.accion == 'Abrir') {
               //console.log('Abrir caja...');
               this.cashModel = new CajaModel();
+              this.cashModel.ultimoMonto = montoAnterior;
+             
+              // SE AGREGA EL MONTO DE CIERRE DE LA CAJA ANTERIOR
             } else if (this.accion == 'Cerrar') {
               console.log('ya está cerrada la caja');
               this.toastr.info('Ya está cerrada la caja', 'Atención!');
@@ -490,11 +496,9 @@ export class VentasComponent implements OnInit {
             this.variablesGL.showDialog.next(true);
           }, 100);
         } else {
-          // console.log('Esta cerrada la caja')
           this.cashOpen = false;
           this.myInput.nativeElement.disabled = true;
-          // this.openNewCashRegister()
-          // this.openCashRegister()
+    
           if (this.accion == 'Abrir') {
             this.cashModel = new CajaModel();
             setTimeout(() => {
@@ -1329,7 +1333,13 @@ export class VentasComponent implements OnInit {
     });
   }
   statusCaja(caja: CajaModel) {
-    this.cashOpen = caja.estatus;
+    //this.cashOpen = caja.estatus;
+    if(caja.idCaja != 0 && caja.fechaCierre != null){
+      this.cashOpen = false;
+    }
+    else{
+      this.cashOpen = true;
+    }
   }
 
 

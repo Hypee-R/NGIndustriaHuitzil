@@ -24,7 +24,7 @@
       <div class="col-6">
         <div class="p-inputgroup improved-input" *ngIf="this.selectedOption.value == 'VEN'">
           <span class="p-inputgroup-addon improved-addon"><i class="pi pi-search"></i></span>
-          <input type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras"
+          <input #fileInput type="text" pInputText placeholder="Ingrese el nombre del producto/SKU/codigo de barras"
             [(ngModel)]="queryString" autofocus (change)="onchangeShear()">
         </div>
 
@@ -114,12 +114,12 @@
 
         <br>
         <div class="row">
-          <button pButton label="Abrir caja" icon="pi pi-money-bill" (click)="openCashRegister()"
+          <button pButton label="Abrir caja" icon="pi pi-money-bill" [disabled]="cashOpen" (click)="openCashRegister()"
             class="custom-button-abrir-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
         </div>
         <br>
         <div class="row">
-          <button pButton label="Cerrar caja" icon="pi pi-folder" (click)="closeCashRegister()"
+          <button pButton label="Cerrar caja" icon="pi pi-folder" [disabled]="!cashOpen" (click)="closeCashRegister()"
             class="custom-button-cerrar-caja mr-2" [ngStyle]="{  padding: '1rem'}"></button>
         </div>
         <br>
