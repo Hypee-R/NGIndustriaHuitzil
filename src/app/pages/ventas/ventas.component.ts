@@ -20,6 +20,7 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
 import { UsuarioModel } from 'src/app/models/usuarios.model';
 import { ResponseModel } from 'src/app/models/response.model';
 import Swal from 'sweetalert2';
+import { CONCEPTOS_ABONO, ConceptoAbono } from 'src/app/models/conceptos-abono.model';
 
 @Component({
   selector: 'app-ventas',
@@ -30,6 +31,8 @@ import Swal from 'sweetalert2';
 
 
 export class VentasComponent implements OnInit {
+  conceptosAbono: ConceptoAbono[] = CONCEPTOS_ABONO;
+  selectedConceptoAbono: number;
   esVentaPlataforma: boolean = false;
   montoPlataforma: number = 0;
   activeState: boolean[] = [false];
@@ -89,7 +92,7 @@ export class VentasComponent implements OnInit {
     { value: 'SLN', label: 'RETIRO' },
     // { value: 'SAL', label: 'SALIDA' },
     // { value: 'ENT', label: 'ENTRADA' },
-   
+
     // { value: 'DEV', label: 'DEVOLUCION' },
   ];
   title = 'VENTA';
@@ -102,7 +105,7 @@ export class VentasComponent implements OnInit {
   checked: boolean = false;
   iconPay = 'pi pi-money-bill';
   tiposDePago: CatTiposPago[];
-  
+
   cashOpen = false;
   @ViewChild('fileInput', { static: false }) myInput!: any;
   showMultiples = false;
@@ -198,7 +201,7 @@ export class VentasComponent implements OnInit {
           background: '#fdfddc', // Valor predeterminado
         };
       }
-       else if (op == 'SLN') {
+      else if (op == 'SLN') {
         this.titlePay = 'RETIRO';
         this.title = 'RETIRO';
         this.iconPay = 'pi pi-upload';
@@ -232,7 +235,7 @@ export class VentasComponent implements OnInit {
       }
     });
   }
- 
+
   selectedValues: string[] = [];
   handleVisibilityChange() {
     if (document.hidden) {
@@ -278,9 +281,9 @@ export class VentasComponent implements OnInit {
       next: (response: ResponseModel) => {
         if (response.exito && response.respuesta) {
           this.listUsuarios = response.respuesta;
-         /* const usuarioEnLista = this.listUsuarios.find(u => Number(u.idUser) == Number(this.user?.id));
-          this.selectedVendedor = usuarioEnLista ?? null;
-          console.log('Usuario seleccionado:', this.selectedVendedor);*/
+          /* const usuarioEnLista = this.listUsuarios.find(u => Number(u.idUser) == Number(this.user?.id));
+           this.selectedVendedor = usuarioEnLista ?? null;
+           console.log('Usuario seleccionado:', this.selectedVendedor);*/
           this.cdr.detectChanges();
         }
       },
@@ -341,7 +344,7 @@ export class VentasComponent implements OnInit {
     this.accionAdd = ''
     this.accion = 'Abrir';
     this.getCaja();
-   
+
 
   }
 
@@ -434,7 +437,7 @@ export class VentasComponent implements OnInit {
     // Define los filtros iniciales
     const initialFilters = {
       queryString: '', // Puedes dejar esto vacío o proporcionar un valor predeterminado si lo deseas
-    //  sucursal: this.variablesGL.getSucursal(), // Obtiene la sucursal actual
+      //  sucursal: this.variablesGL.getSucursal(), // Obtiene la sucursal actual
       sku: '', // Filtro inicial vacío
       descripcion: '', // Filtro inicial vacío
       talla: '', // Filtro inicial vacío
@@ -493,13 +496,13 @@ export class VentasComponent implements OnInit {
             this.cashModel.fecha != null &&
             this.cashModel.fechaCierre != null
           ) {
-             this.cashOpen = false;
-             var montoAnterior = this.cashModel.montoCierre;
+            this.cashOpen = false;
+            var montoAnterior = this.cashModel.montoCierre;
             if (this.accion == 'Abrir') {
               //console.log('Abrir caja...');
               this.cashModel = new CajaModel();
               this.cashModel.ultimoMonto = montoAnterior;
-             
+
               // SE AGREGA EL MONTO DE CIERRE DE LA CAJA ANTERIOR
             } else if (this.accion == 'Cerrar') {
               console.log('ya está cerrada la caja');
@@ -514,7 +517,7 @@ export class VentasComponent implements OnInit {
         } else {
           this.cashOpen = false;
           this.myInput.nativeElement.disabled = true;
-    
+
           if (this.accion == 'Abrir') {
             this.cashModel = new CajaModel();
             setTimeout(() => {
@@ -580,8 +583,8 @@ export class VentasComponent implements OnInit {
     }
 
     //console.info('selectedOption-->', this.selectedOption.value);
-    
-    if (this.selectedOption.value == 'ABN' ||this.selectedOption.value == 'SLN' ) {
+
+    if (this.selectedOption.value == 'ABN' || this.selectedOption.value == 'SLN') {
       this.showMultiples = false;
       this.getTiposPago();
       //this.totalVenta = this.total;
@@ -666,7 +669,7 @@ export class VentasComponent implements OnInit {
       //this.display = true;
     }
   }
- 
+
 
   showDialogCotizacion() {
     if (this.articulos == 0) {
@@ -729,8 +732,22 @@ export class VentasComponent implements OnInit {
 
 
   async PostVentaRegistro(tipoPago: string) {
-    console.log('TIPO PAGO===>',tipoPago)
+    console.log('TIPO PAGO===>', tipoPago)
     this.isButtonDisabled = true;
+    // Validación de concepto de abono y monto válido al inicio
+    if (this.selectedOption.value == 'ABN') {
+      if (!this.selectedConceptoAbono) {
+        this.toastr.warning('Debes seleccionar un concepto de abono.', 'Concepto requerido');
+        this.isButtonDisabled = false;
+        return;
+      }
+      if (!this.totalVenta || this.totalVenta <= 0) {
+        this.toastr.warning('Debes ingresar una cantidad válida para el abono.', 'Cantidad inválida');
+        this.isButtonDisabled = false;
+        return;
+      }
+      (this.RegistraVenta as any).idConcepto = this.selectedConceptoAbono;
+    }
     if (tipoPago == "MULTIPLE") {
       this.showMultiples = true;
       this.totalVenta = this.totalMultipleT + this.totalMultipleF;
@@ -742,7 +759,7 @@ export class VentasComponent implements OnInit {
         this.RegistraVenta.total = this.totalVenta; // Asignar totalVenta a total si es mayor que total actual
       }
 
-      
+
 
       // this.changePage();
       // this.RegistraVentaValid(tipoPago);
@@ -760,10 +777,10 @@ export class VentasComponent implements OnInit {
       ) {
         this.toastr.warning(
           'Error el importe debe ser mayor o igual al total de la venta, Usted pago:' +
-            this.totalVenta +
-            ', y el total es: ' +
-            this.total +
-            '.',
+          this.totalVenta +
+          ', y el total es: ' +
+          this.total +
+          '.',
           'Error!'
         );
         this.isButtonDisabled = false;
@@ -781,10 +798,10 @@ export class VentasComponent implements OnInit {
       if (this.getTotalConDescuento() > total) {
         this.toastr.warning(
           'Error el importe debe ser mayor o igual al total de la venta, \nUsted pago: ' +
-            total +
-            ', y el total es: ' +
-            this.getTotalConDescuento() +
-            '.',
+          total +
+          ', y el total es: ' +
+          this.getTotalConDescuento() +
+          '.',
           'Error!'
         );
         this.isButtonDisabled = false;
@@ -804,7 +821,7 @@ export class VentasComponent implements OnInit {
         this.RegistraVentaValid(tipoPago);
 
       } else {
-        this.isButtonDisabled=false
+        this.isButtonDisabled = false
         this.toastr.warning("Error el importe debe ser mayor o igual al total de la venta, Usted pago:" + this.totalVenta + ", y el total es:" + this.total + ".", 'Error!');
 
       }
@@ -825,13 +842,21 @@ export class VentasComponent implements OnInit {
       }
     }
 
-      if (this.selectedOption.value == 'ENT') {
-        this.changePage();
-        this.RegistraVentaValid(tipoPago);
-      } else {
-        this.changePage();
-        this.RegistraVentaValid(tipoPago);
+    if (this.selectedOption.value == 'ABN') {
+      if (!this.selectedConceptoAbono) {
+        this.toastr.warning('Debes seleccionar un concepto de abono.', 'Concepto requerido');
+        this.isButtonDisabled = false;
+        return;
       }
+      (this.RegistraVenta as any).idConcepto = this.selectedConceptoAbono;
+    }
+    if (this.selectedOption.value == 'ENT') {
+      this.changePage();
+      this.RegistraVentaValid(tipoPago);
+    } else {
+      this.changePage();
+      this.RegistraVentaValid(tipoPago);
+    }
 
   }
 
@@ -852,58 +877,58 @@ export class VentasComponent implements OnInit {
 
   //Funcion de Venta Limpio separada
   async RegistraVentaValid(tipoPago: string) {
-    if(!this.pagando){
+    if (!this.pagando) {
 
       this.articlesShell.forEach(element => {
         const vt = new VentaArticuloModel();
-  
+
         vt.idArticulo = element.idArticulo;
         vt.cantidad = element.cantidad;
         vt.precioUnitario = element.precio;
         vt.subtotal = element.precio * element.cantidad; // Multiplica el precio por la cantidad
         //vt.articulo = element;
-  
+
         //Genera Cadena para Impresion Ticket con salto de pagina
         this.cadenaProductos += element.descripcion + "|" + element.cantidad + "|" + "$" + element.precio + "MXN" + "|" + "$" + vt.subtotal + "MXN" + "\n".toString()
-  
+
         this.ventaArticulo.push(vt);
       });
-  
+
       const format = 'yyyy-MM-dd';
       const locale = 'en-US';
       const formattedDate = formatDate(new Date, format, locale);
       // Obtener la fecha y hora actual
       const currentDate = new Date();
-  
+
       // Obtener los últimos 2 dígitos del año (e.g., '24' para 2024)
       const year = currentDate.getFullYear().toString().slice(-2);
-  
+
       // Obtener el mes en formato de 2 dígitos (e.g., '08' para agosto)
       const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-  
+
       // Obtener el día en formato de 2 dígitos (e.g., '26' para el día 26)
       const day = currentDate.getDate().toString().padStart(2, '0');
-  
+
       // Generar un número aleatorio de 2 dígitos (entre 10 y 99)
       const randomTwoDigits = Math.floor(Math.random() * 90 + 10).toString();
-  
-    
+
+
       this.RegistraVenta.idCaja = this.cashModel.idCaja;
-     // this.RegistraVenta.fecha = new Date;
+      // this.RegistraVenta.fecha = new Date;
       this.RegistraVenta.noArticulos = this.articlesShell.length
       this.RegistraVenta.noTicket = year + month + day + randomTwoDigits;
       this.RegistraVenta.subtotal = this.total;
       this.RegistraVenta.tipoPago = tipoPago;
-      this.RegistraVenta.tipoVenta = this.selectedOption.value 
+      this.RegistraVenta.tipoVenta = this.selectedOption.value
       this.RegistraVenta.vendedor = (this.selectedVendedor?.idUser || this.user?.id || '').toString();
       this.RegistraVenta.total = this.getTotalConDescuento();
       this.RegistraVenta.tarjeta = this.totalMultipleT;
       this.RegistraVenta.efectivo = this.totalMultipleF;
       this.RegistraVenta.ventaArticulo = this.ventaArticulo;
       this.RegistraVenta.descuento = this.porcentajeDescuentoAplicar;
-  
-  
-  
+
+
+
       console.log(JSON.stringify(this.RegistraVenta));
       this.ventasService.postRegistroVenta(this.RegistraVenta).subscribe(async resp => {
         console.log('data=> ', resp);
@@ -912,14 +937,14 @@ export class VentasComponent implements OnInit {
           console.log(this.clienteName)
           console.log(this.RegistraVenta.fecha)
           const fecha = this.RegistraVenta.fecha;
-  
-  
-  const dia = String(fecha.getDate()).padStart(2, '0');
-  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-  const anio = fecha.getFullYear();
-  
-  const fechaFormateada = `${dia}/${mes}/${anio}`;
-  this.downloadNewPdf("VENTA");
+
+
+          const dia = String(fecha.getDate()).padStart(2, '0');
+          const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+          const anio = fecha.getFullYear();
+
+          const fechaFormateada = `${dia}/${mes}/${anio}`;
+          this.downloadNewPdf("VENTA");
           //code Impresion
           // const conector = new ConectorPluginV3();
           // conector
@@ -980,35 +1005,35 @@ export class VentasComponent implements OnInit {
           //   // .Feed(2)
           //   .Feed(3)
           //   .Corte(1)
-  
-  
+
+
           // try {
           //   const respuesta = await conector.imprimirEn(this.impresoraSeleccionada);
-  
+
           //   if (respuesta == true) {
-              this.isButtonDisabled = false; // Habilitar el botón al finalizar
-              //Limpiar objetos al finalizar una compra correcta
-              this.cadenaProductos = ""
-              this.RegistraVenta = new VentaModel();
-              this.ventaArticulo = [];
-              this.articulos = 0
-              this.total = 0
-              this.articlesShell = []
-              this.totalVenta = 0
-              this.totalMultipleF = 0;
-              this.totalMultipleT = 0;
-              this.activeState = [false];
-             // this.esVentaPlataforma = false;
-              this.montoPlataforma = 0;
-              this.descuento = 0;
-            
-              this.toastr.success(resp.mensaje, 'Exito!');
-              console.log("Impresión correcta");
-              this.display = false;
-            // } else {
-            //   console.log("Error: " + respuesta);
-            // }
-  
+          this.isButtonDisabled = false; // Habilitar el botón al finalizar
+          //Limpiar objetos al finalizar una compra correcta
+          this.cadenaProductos = ""
+          this.RegistraVenta = new VentaModel();
+          this.ventaArticulo = [];
+          this.articulos = 0
+          this.total = 0
+          this.articlesShell = []
+          this.totalVenta = 0
+          this.totalMultipleF = 0;
+          this.totalMultipleT = 0;
+          this.activeState = [false];
+          // this.esVentaPlataforma = false;
+          this.montoPlataforma = 0;
+          this.descuento = 0;
+
+          this.toastr.success(resp.mensaje, 'Exito!');
+          console.log("Impresión correcta");
+          this.display = false;
+          // } else {
+          //   console.log("Error: " + respuesta);
+          // }
+
           // } catch (error) {
           //   this.isButtonDisabled = false; // Habilitar el botón al finalizar
           //   console.log(error)
@@ -1022,21 +1047,21 @@ export class VentasComponent implements OnInit {
           //   this.articlesShell = []
           //   this.display = false;
           // }
-  
-  
-  
+
+
+
         }
-  
+
       },
         err => {
           console.log('error -> ', err);
           this.toastr.error('Ocurrió un error al hacer la operación', 'Error!');
           this.isButtonDisabled = false; // Habilitar el botón al finalizar
         });
-  
+
     }
 
-    
+
 
   }
 
@@ -1095,16 +1120,17 @@ export class VentasComponent implements OnInit {
 
   changePage() {
 
+    if (this.selectedOption.value != 'ABN') {
+      if (this.totalVenta > this.getTotalConDescuento()) {
+        this.cambioVenta = Math.abs(this.getTotalConDescuento() - this.totalVenta);
 
-    if (this.totalVenta > this.getTotalConDescuento()) {
-      this.cambioVenta = Math.abs(this.getTotalConDescuento() - this.totalVenta);
 
+        this.toastr.success("Su cambio es :" + this.cambioVenta, 'Cambio!');
+      } else {
+        console.log("no es igual");
+        this.cambioVenta = 0
 
-      this.toastr.success("Su cambio es :" + this.cambioVenta, 'Cambio!');
-    } else {
-      console.log("no es igual");
-      this.cambioVenta = 0
-    
+      }
     }
 
 
@@ -1195,14 +1221,14 @@ export class VentasComponent implements OnInit {
         background: '#e1d9f1',
       };
     }
-      else if (value == 'SLN') {
-        this.titlePay = 'RETIRO';
-        this.title = 'RETIRO';
-        this.iconPay = 'pi pi-wallet';
-        this.cardStyle = {
-          background: '#fdfddc',
-        };
-      }
+    else if (value == 'SLN') {
+      this.titlePay = 'RETIRO';
+      this.title = 'RETIRO';
+      this.iconPay = 'pi pi-wallet';
+      this.cardStyle = {
+        background: '#fdfddc',
+      };
+    }
     // } else if (value == 'ENT') {
     //   this.titlePay = 'ENTRADA';
     //   this.title = 'ENTRADA DE EFECTIVO';
@@ -1234,7 +1260,7 @@ export class VentasComponent implements OnInit {
     //localStorage.setItem('opcion', JSON.stringify(value));
   }
 
-    getTiposPago() {
+  getTiposPago() {
     this.tiposDePago = [];
     this.ventasService.getTipoVenta().subscribe(
       (response) => {
@@ -1251,7 +1277,7 @@ export class VentasComponent implements OnInit {
       }
     );
   }
-  
+
   downloadPDF(tipo: String) {
     const doc = new jsPDF({
       orientation: 'portrait',
@@ -1341,7 +1367,7 @@ export class VentasComponent implements OnInit {
     );
     doc.text(totalEnLetras, margenIzquierdo, posicionY, { maxWidth: 70 });
 
-    doc.save( `ticket${this.RegistraVenta.noTicket}.pdf `);
+    doc.save(`ticket${this.RegistraVenta.noTicket}.pdf `);
   }
 
   cancelMultiple() {
@@ -1353,7 +1379,7 @@ export class VentasComponent implements OnInit {
     this.getTiposPago();
   }
 
-  
+
   addedInventario(precio: any) {
     this.selectedLista = precio;
     this.listaSelected = this.selectedLista.descripcion;
@@ -1371,10 +1397,10 @@ export class VentasComponent implements OnInit {
   }
   statusCaja(caja: CajaModel) {
     //this.cashOpen = caja.estatus;
-    if(caja.idCaja != 0 && caja.fechaCierre != null){
+    if (caja.idCaja != 0 && caja.fechaCierre != null) {
       this.cashOpen = false;
     }
-    else{
+    else {
       this.cashOpen = true;
     }
   }
@@ -1396,7 +1422,7 @@ export class VentasComponent implements OnInit {
     const dia = String(fecha.getDate()).padStart(2, '0');
     const mes = String(fecha.getMonth() + 1).padStart(2, '0');
     const anio = fecha.getFullYear();
-    
+
 
     const fechaFormateada = `${dia}/${mes}/${anio}`;
 
@@ -1461,7 +1487,7 @@ export class VentasComponent implements OnInit {
       doc.text('$' + (producto.precioConDescuento !== 0 ? producto.precioConDescuento : producto.precio).toFixed(2), 50, posicionY, {
         align: 'center',
       });
-      
+
       // doc.text('$' + producto.precio.toFixed(2), 50, posicionY, {
       //   align: 'center',
       // });
@@ -1494,51 +1520,51 @@ export class VentasComponent implements OnInit {
       posicionY,
       { maxWidth: 53 }
     );
-  //  // posicionY += espaciado;
-  //   // Total en letras
-  //   const totalEnLetras = this.variablesGL.numeroALetras(
-  //     this.total - this.descuento,
-  //     {
-  //       plural: 'PESOS MEXICANOS',
-  //       singular: 'PESO MEXICANO',
-  //       centPlural: 'CENTAVOS',
-  //       centSingular: 'CENTAVO',
-  //     }
-  //   );
-  //   doc.text(totalEnLetras, margenIzquierdo, posicionY, { maxWidth: 53 });
-  //   posicionY += espaciado;
+    //  // posicionY += espaciado;
+    //   // Total en letras
+    //   const totalEnLetras = this.variablesGL.numeroALetras(
+    //     this.total - this.descuento,
+    //     {
+    //       plural: 'PESOS MEXICANOS',
+    //       singular: 'PESO MEXICANO',
+    //       centPlural: 'CENTAVOS',
+    //       centSingular: 'CENTAVO',
+    //     }
+    //   );
+    //   doc.text(totalEnLetras, margenIzquierdo, posicionY, { maxWidth: 53 });
+    //   posicionY += espaciado;
     doc.autoPrint(); // Para impresión automática
 
     window.open(doc.output('bloburl'), '_blank');
   }
 
-   // Actualizar el descuento de un producto
-   onDiscountChange(discount: number, index: number) {
+  // Actualizar el descuento de un producto
+  onDiscountChange(discount: number, index: number) {
     console.info("DISCOUNT---->", discount);
-  
+
     // Acceder al producto de la lista `articlesShell` en el índice dado
     const product = this.articlesShell[index];
-  
+
     // Aplicar el descuento al precio del producto
-    
+
     const precioConDescuento = discount > 0
-    ? product.precio - (product.precio * discount / 100)
-    : product.precio;  // Si no hay descuento, mantener el precio original
+      ? product.precio - (product.precio * discount / 100)
+      : product.precio;  // Si no hay descuento, mantener el precio original
     // Guardar el precio con descuento en el producto
     product.precioConDescuento = precioConDescuento;
-  
+
     // Actualizar el precio con descuento en el objeto
     this.articlesShell[index].precioConDescuento = precioConDescuento;
-  
+
     // Llamar a una función para actualizar el total y el número de productos
     this.updateTotals();
   }
-  
+
   updateTotals() {
     // Recalcular el total y la cantidad
     this.total = 0;
     this.articulos = 0;
-  
+
     // Iterar sobre todos los productos para recalcular el total y la cantidad
     this.articlesShell.forEach(item => {
       this.total += item.precioConDescuento * item.cantidad;  // Sumar el total
@@ -1546,7 +1572,7 @@ export class VentasComponent implements OnInit {
     });
 
     this.actualizarTotalLetra();
-  
-  
+
+
   }
 }
