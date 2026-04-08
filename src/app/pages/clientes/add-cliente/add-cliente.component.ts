@@ -6,6 +6,7 @@ import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
+import { UBICACION_MERMA } from 'src/app/constants';
 import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 @Component({
   selector: 'app-add-cliente',
@@ -61,7 +62,7 @@ export class AddClienteComponent implements OnInit {
   getSucursales(){
     this.ubicacionesService.getUbicaciones().subscribe(response => {
       if(response.exito){
-        this.listSucursales = response.respuesta;
+        this.listSucursales = response.respuesta.filter(ubicacion => ubicacion.idUbicacion !== UBICACION_MERMA);
         console.log( this.listSucursales)
       }
     });

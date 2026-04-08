@@ -8,6 +8,7 @@ import { RolesService } from 'src/app/services/roles.service';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
+import { UBICACION_MERMA } from 'src/app/constants';
 
 @Component({
   selector: 'app-add-usuario',
@@ -70,7 +71,7 @@ export class AddUsuarioComponent implements OnInit, OnDestroy {
 getSucursales(){
   this.ubicacionesService.getUbicaciones().subscribe(response => {
     if(response.exito){
-      this.listSucursales = response.respuesta;
+      this.listSucursales = response.respuesta.filter(ubicacion => ubicacion.idUbicacion !== UBICACION_MERMA);
       console.log( this.listSucursales)
     }
   });

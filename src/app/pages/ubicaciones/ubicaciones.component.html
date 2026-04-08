@@ -70,15 +70,17 @@
                                     </th>
                                 </tr>
                             </ng-template>
-                            <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr>
-                                    <td>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns" >
+                                <tr *ngIf="rowData.idUbicacion != UBICACION_MERMA" >
+                                    <td >
                                         <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                                     </td>
                                     <td>
                                         <div style="display: inline-flex">
-                                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editubicacion(rowData)"></button>
-                                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" style="margin-left: 3px;" (click)="deleteubicacion(rowData)"></button>
+                                            <button  pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editubicacion(rowData)"></button>
+                                            <button  pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" style="margin-left: 3px;" (click)="deleteubicacion(rowData)" ></button>
+                                        <!-- Importar la constante en el template -->
+                                        <ng-container ></ng-container>
                                         </div>
                                     </td>
                                     <td *ngFor="let col of columns">

@@ -6,12 +6,14 @@ import Swal from 'sweetalert2'
 import { ToastrService } from 'ngx-toastr';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
 import { VariablesService } from 'src/app/services/variablesGL.service';
+import { UBICACION_MERMA } from 'src/app/constants';
 @Component({
   selector: 'app-ubicaciones',
   templateUrl: './ubicaciones.component.html',
   styleUrls: ['./ubicaciones.component.css']
 })
 export class UbicacionesComponent implements OnInit {
+    UBICACION_MERMA = UBICACION_MERMA;
   
     rows = 0;
     accion = '';
@@ -76,6 +78,10 @@ export class UbicacionesComponent implements OnInit {
     }
   
     editubicacion(ubicacion: UbicacionModel){
+      if (ubicacion.idUbicacion === UBICACION_MERMA) {
+        this.toastr.warning('Esta ubicación no se puede modificar.');
+        return;
+      }
       this.accion = 'Actualizar';
       this.selectedubicacion = {...ubicacion};
       setTimeout(() => {
@@ -84,6 +90,10 @@ export class UbicacionesComponent implements OnInit {
     }
   
     deleteubicacion(ubicacion: UbicacionModel){
+      if (ubicacion.idUbicacion === UBICACION_MERMA) {
+        this.toastr.warning('Esta ubicación no se puede eliminar.');
+        return;
+      }
       Swal.fire({
         title: `Está seguro de eliminar la ubicacion ${ubicacion.direccion}?`,
         icon: 'question',
@@ -112,6 +122,11 @@ export class UbicacionesComponent implements OnInit {
     }
   
     deleteSelectedubicacions(){
+      const contieneProtegida = this.selectedubicaciones?.some(u => u.idUbicacion === UBICACION_MERMA);
+      if (contieneProtegida) {
+        this.toastr.warning('No se puede eliminar la ubicación protegida.');
+        return;
+      }
       Swal.fire({
         title: `Está seguro de eliminar las ${this.selectedubicaciones.length} ubicacions?`,
         icon: 'question',

@@ -11,6 +11,7 @@ import { CategoriaModel } from 'src/app/models/categoria.model';
 import { TallasService } from 'src/app/services/tallas.service';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
+import { UBICACION_MERMA } from 'src/app/constants';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 
@@ -157,12 +158,13 @@ getCampos(){
 
   this.ubicacionesService.getUbicaciones().subscribe(response => {
     if(response.exito){
-      for(let ubicacion of response.respuesta){
-        this.listUbicaciones.push(ubicacion)
-      }
+      // Filtrar la ubicación protegida
+      this.listUbicaciones = response.respuesta.filter(ubicacion => ubicacion.idUbicacion !== UBICACION_MERMA);
       if(this.variablesGL.getSucursal()){
         let ubiPreselected = this.listUbicaciones.find(x => x.direccion == this.variablesGL.getSucursal());
-        this.producto.idUbicacion = ubiPreselected.idUbicacion;
+        if (ubiPreselected) {
+          this.producto.idUbicacion = ubiPreselected.idUbicacion;
+        }
       }
     }
   }, err => {

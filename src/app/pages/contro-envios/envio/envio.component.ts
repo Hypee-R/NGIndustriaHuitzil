@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { UbicacionModel } from 'src/app/models/ubicacion.model';
 import { VariablesService } from 'src/app/services/variablesGL.service';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
+import { UBICACION_MERMA } from 'src/app/constants';
 import { ConfirmationService, MessageService, ConfirmEventType, Message } from 'primeng/api';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { productoModel } from 'src/app/models/productos.model';
@@ -135,8 +136,7 @@ export class EnvioComponent implements OnInit {
     this.listUbicaciones.shift();
     this.ubicacionesService.getUbicaciones().subscribe(response => {
       if (response.exito) {
-        this.listUbicaciones = response.respuesta;
-
+        this.listUbicaciones = response.respuesta.filter(ubicacion => ubicacion.idUbicacion !== UBICACION_MERMA);
         // if(this.variablesGL.getSucursal()){
         //   let ubiPreselected = this.listUbicaciones.find(x => x.direccion == this.variablesGL.getSucursal());
         // }
