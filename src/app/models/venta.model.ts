@@ -14,6 +14,7 @@ export class VentaModel {
     total?: number;
     tarjeta?: number;
     efectivo?: number;
+    vendedor?: string;
     caja?: CajaModel;
     descuento?: number;
     ventaArticulo: VentaArticuloModel[];
@@ -29,6 +30,7 @@ export class VentaModel {
       this.total = 0;
       this.tarjeta = 0;
       this.efectivo = 0;
+    this.vendedor = '';
 this.descuento=0;
     }
 }

@@ -16,6 +16,9 @@ import { UsuarioAuthModel } from 'src/app/models/usuario-auth.model';
 import { CambiosDevolucionesModel } from 'src/app/models/cambios-devoluciones.model';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { CatTiposPago } from 'src/app/models/tipoPago';
+import { UsuariosService } from 'src/app/services/usuarios.service';
+import { UsuarioModel } from 'src/app/models/usuarios.model';
+import { ResponseModel } from 'src/app/models/response.model';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -109,6 +112,8 @@ export class VentasComponent implements OnInit {
   tipoPago1: CatTiposPago;
   tipoPago2: CatTiposPago;
   selectedLista: any;
+  listUsuarios: UsuarioModel[] = [];
+  selectedVendedor: UsuarioModel = null;
 
   discountOptions: any[] = [];   // Opciones del dropdown para el descuento
 
@@ -118,7 +123,9 @@ export class VentasComponent implements OnInit {
     private variablesGL: VariablesService,
     private inventarioService: InventarioService,
     private cambiosDevolucionesService: VentasService,
-    private clientesService: ClientesService
+    private clientesService: ClientesService,
+    private usuariosService: UsuariosService,
+    private cdr: ChangeDetectorRef
   ) {
     this.discountOptions = [
       { label: '0%', value: 0 },
@@ -260,8 +267,26 @@ export class VentasComponent implements OnInit {
 
     this.getClientes()
     this.user = JSON.parse(localStorage.getItem('usuario'));
+    this.getUsuarios();
     setTimeout(() => {
       this.myInput.nativeElement.focus();
+    });
+  }
+
+  getUsuarios() {
+    this.usuariosService.getUsuarios().subscribe({
+      next: (response: ResponseModel) => {
+        if (response.exito && response.respuesta) {
+          this.listUsuarios = response.respuesta;
+         /* const usuarioEnLista = this.listUsuarios.find(u => Number(u.idUser) == Number(this.user?.id));
+          this.selectedVendedor = usuarioEnLista ?? null;
+          console.log('Usuario seleccionado:', this.selectedVendedor);*/
+          this.cdr.detectChanges();
+        }
+      },
+      error: () => {
+        this.toastr.error('No se pudieron cargar los vendedores', 'Error!');
+      }
     });
   }
 
@@ -451,7 +476,7 @@ export class VentasComponent implements OnInit {
     this.ventasService.getCaja().subscribe(
       (resp) => {
         if (resp.exito) {
-          console.log(resp.respuesta)
+          //console.log(resp.respuesta)
           this.cashOpen = true;
           //this.myInput.nativeElement.focus();
           this.cashModel = resp.respuesta;
@@ -870,6 +895,7 @@ export class VentasComponent implements OnInit {
       this.RegistraVenta.subtotal = this.total;
       this.RegistraVenta.tipoPago = tipoPago;
       this.RegistraVenta.tipoVenta = this.selectedOption.value 
+      this.RegistraVenta.vendedor = (this.selectedVendedor?.idUser || this.user?.id || '').toString();
       this.RegistraVenta.total = this.getTotalConDescuento();
       this.RegistraVenta.tarjeta = this.totalMultipleT;
       this.RegistraVenta.efectivo = this.totalMultipleF;
