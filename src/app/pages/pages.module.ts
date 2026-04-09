@@ -84,6 +84,7 @@ import { EnvioComponent } from './contro-envios/envio/envio.component';
 import { PanelModule } from 'primeng/panel';
 import { CancelacionComponent } from './ventas/cancelacion/cancelacion.component';
 import { CheckboxModule } from 'primeng/checkbox';
+import { SendMermaDialogComponent } from './inventario/send-merma-dialog/send-merma-dialog.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -175,7 +176,8 @@ import { CheckboxModule } from 'primeng/checkbox';
         ControEnviosComponent,
         VentasCajaComponent,
         EnvioComponent,
-        CancelacionComponent
+        CancelacionComponent,
+        SendMermaDialogComponent
     ]
 })
 export class PagesModule { }

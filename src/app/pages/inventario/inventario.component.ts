@@ -11,6 +11,7 @@ import { CategoriaModel } from 'src/app/models/categoria.model';
 import { TallasService } from 'src/app/services/tallas.service';
 import { CategoriasService } from 'src/app/services/categorias.service';
 import { UbicacionesService } from 'src/app/services/ubicaciones.service';
+import { UBICACION_MERMA } from 'src/app/constants';
 
 
 export interface imagen64 {
@@ -37,8 +38,10 @@ export class InventarioComponent implements OnInit {
   listUbicaciones: UbicacionModel[] = [];
   listCategorias: CategoriaModel[] = [];
   selectedArticulo: productoModel = new productoModel();
+  selectedArticuloMerma: productoModel = new productoModel();
   selectedArticulos: productoModel[];
   imagenes: imagen64[] = []
+  showMermaDialog = false;
   //variables de filtros
 
   tallaOptions: any[] = [];
@@ -51,7 +54,9 @@ export class InventarioComponent implements OnInit {
     descripcion: '',
     talla: null, // Aquí será el id de la talla seleccionada
     categoria: null, // Aquí será el id de la categoría seleccionada
-    ubicacion: this.variablesGL.getSucursal()
+    ubicacion: (this.variablesGL.getRol() === 'Administrador' || this.variablesGL.getRol() === 'Gestion')
+      ? null
+      : this.variablesGL.getSucursal()
   };
     // Modelo de filtros
   public csvRecords: any[] = [];
@@ -78,8 +83,8 @@ export class InventarioComponent implements OnInit {
       // { field: 'talla', header: 'Talla' },
       { field: 'ubicacion', header: 'Ubicacion' },
       // { field: 'precio', header: 'precio' },
-      { field: '', header: 'Etiqueta'}
-
+      { field: '', header: 'Etiqueta'},
+      { field: '', header: 'Merma'}
     ];
     this.statusPantalla = this.variablesGL.getStatusPantalla();
     let status = this.variablesGL.getPantalla();
@@ -188,6 +193,77 @@ console.info("STATUS pantalla->",this.statusPantalla)
     setTimeout(() => {
       this.variablesGL.showDialog.next(true);
     }, 100);
+  }
+
+   showMerma(producto : productoModel){
+    this.selectedArticuloMerma = { ...producto };
+    this.showMermaDialog = true;
+  }
+
+  closeMermaDialog(): void {
+    this.showMermaDialog = false;
+    this.selectedArticuloMerma = new productoModel();
+  }
+
+  isMermaSelected(): boolean {
+    const selectedUbicacion = this.filterModel?.ubicacion;
+    if (!selectedUbicacion) {
+      return false;
+    }
+
+    const ubicacionEncontrada = this.listUbicaciones.find(
+      ubicacion => ubicacion.direccion === selectedUbicacion
+    );
+
+    if (ubicacionEncontrada?.idUbicacion === UBICACION_MERMA) {
+      return true;
+    }
+
+    return String(selectedUbicacion).trim().toUpperCase() === 'MERMA';
+  }
+
+  enviarAMerma(event: { cantidad: number; motivo: string }): void {
+    const cantidad = Number(event?.cantidad ?? 0);
+    const existenciaActual = Number(this.selectedArticuloMerma?.existencia ?? 0);
+
+    if (!cantidad || cantidad < 1 || cantidad > existenciaActual) {
+      this.toastr.warning('La cantidad a enviar a merma no es valida.', 'Validacion');
+      return;
+    }
+
+    const articuloMerma = { ...this.selectedArticuloMerma };
+    articuloMerma.idArticulo = 0;
+    articuloMerma.status = 'MERMA';
+    articuloMerma.idUbicacion = UBICACION_MERMA;
+    articuloMerma.ubicacion = 'MERMA';
+    articuloMerma.existencia = cantidad.toString();
+    articuloMerma.motivo = event?.motivo || '';
+
+    const articuloOrigen = { ...this.selectedArticuloMerma };
+    articuloOrigen.existencia = (existenciaActual - cantidad).toString();
+
+    this.articuloService.agregaArticulo(articuloMerma).subscribe(addResponse => {
+      if (!addResponse.exito) {
+        this.toastr.error(addResponse.mensaje || 'No se pudo registrar el articulo en merma', 'Ups!!');
+        return;
+      }
+
+      this.articuloService.actualizaArticulo(articuloOrigen).subscribe(updateResponse => {
+        if (updateResponse.exito) {
+          this.toastr.success('Merma registrada como articulo nuevo', 'Exito!!');
+          this.closeMermaDialog();
+          this.getArticulos();
+        } else {
+          this.toastr.warning(updateResponse.mensaje || 'Se creo la merma, pero no se actualizo el stock origen', 'Atencion');
+          this.getArticulos();
+        }
+      }, () => {
+        this.toastr.warning('Se creo la merma, pero hubo un problema al actualizar el stock origen', 'Atencion');
+        this.getArticulos();
+      });
+    }, () => {
+      this.toastr.error('Hubo un problema al registrar el articulo en merma', 'Ups!!');
+    });
   }
   ///Eliminar componetne
 

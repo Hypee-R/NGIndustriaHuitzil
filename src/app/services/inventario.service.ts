@@ -126,11 +126,11 @@ export class InventarioService {
     if (talla) params.set('talla', talla);
 
     if(this.variablesGL.getRol() === 'Administrador'||this.variablesGL.getRol() == 'Gestion'){
-   
-     //   params.set('ubicacion', null);
-
+      if (ubicacion) {
+        params.set('ubicacion', ubicacion);
+      }
     }else{
-     params.set('ubicacion', this.variablesGL.getSucursal());
+      params.set('ubicacion', this.variablesGL.getSucursal());
     }
 
 

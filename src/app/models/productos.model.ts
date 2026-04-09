@@ -14,6 +14,7 @@ export class productoModel{
   ubicacion:string;
   categoria:string;
   imagen:string;
+  motivo?: string;
   precio:number;
   sku: string;
   CantMovimiento? : number
@@ -29,6 +30,7 @@ export class productoModel{
     // this.talla='';
     this.ubicacion='';
     this.imagen='';
+    this.motivo = '';
     this.precio = 0.00;
     this.sku = '';
     this.CantMovimiento = 0;

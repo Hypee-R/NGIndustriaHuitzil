@@ -1,0 +1,42 @@
+<p-dialog [(visible)]="visible" (visibleChange)="onVisibleChange($event)" [modal]="true" [style]="{ width: '30rem' }" header="Enviar a merma">
+  <ng-template pTemplate="content">
+    <div class="field">
+      <label class="block">Articulo</label>
+      <div class="info-box">{{ articulo.descripcion }} ({{ articulo.sku }})</div>
+    </div>
+
+    <div class="field mt-3">
+      <label for="cantidadMerma">Cantidad a enviar</label>
+      <p-inputNumber
+        inputId="cantidadMerma"
+        [(ngModel)]="cantidadMerma"
+        [min]="1"
+        [max]="existenciaDisponible"
+        [showButtons]="true"
+        [useGrouping]="false"
+      ></p-inputNumber>
+      <small class="p-error" *ngIf="submitted && (!cantidadMerma || cantidadMerma < 1)">
+        Ingresa una cantidad valida.
+      </small>
+      <small class="p-error" *ngIf="submitted && cantidadMerma > existenciaDisponible">
+        La cantidad no puede ser mayor a la existencia actual ({{ existenciaDisponible }}).
+      </small>
+    </div>
+
+    <div class="field mt-3">
+      <label for="motivoMerma">Motivo (opcional)</label>
+      <textarea
+        id="motivoMerma"
+        pInputTextarea
+        rows="3"
+        [(ngModel)]="motivo"
+        placeholder="Ejemplo: producto dañado"
+      ></textarea>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button pButton pRipple type="button" label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+    <button pButton pRipple type="button" label="Enviar" icon="pi pi-check" [disabled]="cantidadInvalida" (click)="enviarAMerma()"></button>
+  </ng-template>
+</p-dialog>
