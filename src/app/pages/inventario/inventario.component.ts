@@ -39,9 +39,11 @@ export class InventarioComponent implements OnInit {
   listCategorias: CategoriaModel[] = [];
   selectedArticulo: productoModel = new productoModel();
   selectedArticuloMerma: productoModel = new productoModel();
+  selectedArticuloRebanadas: productoModel = new productoModel();
   selectedArticulos: productoModel[];
   imagenes: imagen64[] = []
   showMermaDialog = false;
+  showRebanadasDialog = false;
   //variables de filtros
 
   tallaOptions: any[] = [];
@@ -200,6 +202,64 @@ console.info("STATUS pantalla->",this.statusPantalla)
     this.showMermaDialog = true;
   }
 
+  crearRebanadas(articulo: productoModel) {
+    this.selectedArticuloRebanadas = { ...articulo };
+    this.showRebanadasDialog = true;
+  }
+
+  closeRebanadasDialog(): void {
+    this.showRebanadasDialog = false;
+    this.selectedArticuloRebanadas = new productoModel();
+  }
+
+  confirmarCrearRebanadas(event: { costoRebanada: number; descripcionRebanada: string }): void {
+    const existenciaActual = Number(this.selectedArticuloRebanadas?.existencia ?? 0);
+
+    if (existenciaActual < 1) {
+      this.toastr.warning('No hay existencia disponible para crear rebanadas.', 'Validacion');
+      return;
+    }
+
+    const costoRebanada = Number(event?.costoRebanada ?? 0);
+    if (!costoRebanada || costoRebanada <= 0) {
+      this.toastr.warning('Ingresa un costo por rebanada valido.', 'Validacion');
+      return;
+    }
+
+    //const nuevoSkuRebanadas = this.selectedArticuloRebanadas.sku;
+    const articuloRebanadas = { ...this.selectedArticuloRebanadas };
+    articuloRebanadas.idArticulo = 0;
+    articuloRebanadas.sku = this.selectedArticuloRebanadas.sku + '-RB';
+    articuloRebanadas.descripcion = articuloRebanadas.descripcion + ' - REBANADAS';
+    articuloRebanadas.existencia = '8';
+
+    const articuloOrigen = { ...this.selectedArticuloRebanadas };
+    articuloOrigen.existencia = String(existenciaActual - 1);
+
+    this.articuloService.agregaArticulo(articuloRebanadas).subscribe(addResponse => {
+      if (!addResponse.exito) {
+        this.toastr.error(addResponse.mensaje || 'No se pudo crear el articulo por rebanadas', 'Ups!!');
+        return;
+      }
+
+      this.articuloService.actualizaArticulo(articuloOrigen).subscribe(updateResponse => {
+        if (updateResponse.exito) {
+          this.toastr.success('Articulo por rebanadas creado correctamente', 'Exito!!');
+          this.closeRebanadasDialog();
+          this.getArticulos();
+        } else {
+          this.toastr.warning(updateResponse.mensaje || 'Se creo el SKU de rebanadas, pero no se actualizo el stock origen', 'Atencion');
+          this.getArticulos();
+        }
+      }, () => {
+        this.toastr.warning('Se creo el SKU de rebanadas, pero hubo un problema al actualizar el stock origen', 'Atencion');
+        this.getArticulos();
+      });
+    }, () => {
+      this.toastr.error('Hubo un problema al crear el articulo por rebanadas', 'Ups!!');
+    });
+  }
+
   closeMermaDialog(): void {
     this.showMermaDialog = false;
     this.selectedArticuloMerma = new productoModel();
@@ -237,7 +297,7 @@ console.info("STATUS pantalla->",this.statusPantalla)
     articuloMerma.idUbicacion = UBICACION_MERMA;
     articuloMerma.ubicacion = 'MERMA';
     articuloMerma.existencia = cantidad.toString();
-    articuloMerma.motivo = event?.motivo || '';
+    articuloMerma.motivoMerma = event?.motivo || '';
 
     const articuloOrigen = { ...this.selectedArticuloMerma };
     articuloOrigen.existencia = (existenciaActual - cantidad).toString();
@@ -501,6 +561,7 @@ this.getArticulos()
     this.inventarioService.searchProductDemanda(filters).subscribe(response => {
       if (response.exito) {
         this.listArticulos = response.respuesta;
+        console.log('Articulos obtenidos: ', this.listArticulos);
         this.loading = false;
         for (let art of this.listArticulos) {
           this.imagenes.push({ id: art.idArticulo, imagen64c: art.imagen })

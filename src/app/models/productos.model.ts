@@ -15,6 +15,7 @@ export class productoModel{
   categoria:string;
   imagen:string;
   motivo?: string;
+  motivoMerma?: string;
   precio:number;
   sku: string;
   CantMovimiento? : number
@@ -31,6 +32,7 @@ export class productoModel{
     this.ubicacion='';
     this.imagen='';
     this.motivo = '';
+    this.motivoMerma = '';
     this.precio = 0.00;
     this.sku = '';
     this.CantMovimiento = 0;

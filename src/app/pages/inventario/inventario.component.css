@@ -37,3 +37,61 @@
 .p-ripple {
   --ripple-color: rgba(0, 0, 0, 0.3); /* Color del efecto ripple */
 }
+
+.existencia-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.existencia-value {
+  min-width: 1rem;
+  min-width: 1rem;
+  text-align: center;
+  font-weight: 600;
+  color: #334155;
+  font-size: 0.95rem;
+}
+
+.existencia-btn {
+  width: 1.65rem;
+  height: 1.65rem;
+  min-width: 1.65rem;
+  border: 0;
+  padding: 0;
+  font-size: 0.7rem;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.existencia-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.2);
+  filter: brightness(1.03);
+}
+
+.existencia-btn:focus {
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.35);
+}
+
+.existencia-btn-minus {
+  background: #fa6868;
+}
+
+.existencia-btn-plus {
+  background: #65da90;
+}
+
+.btn-rebanadas-soft {
+  background: #f6c1d0;
+  color: #7a2942;
+}
+
+.btn-rebanadas-soft:hover {
+  background: #f3afc4;
+}
+
+.btn-rebanadas-soft:focus {
+  box-shadow: 0 0 0 3px rgba(246, 193, 208, 0.55);
+}

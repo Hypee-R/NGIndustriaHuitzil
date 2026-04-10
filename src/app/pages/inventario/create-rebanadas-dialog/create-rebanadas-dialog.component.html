@@ -1,0 +1,59 @@
+<p-dialog
+  [(visible)]="visible"
+  (visibleChange)="onVisibleChange($event)"
+  [modal]="true"
+  [style]="{ width: '34rem' }"
+  header="Crear rebanadas"
+>
+  <ng-template pTemplate="content">
+    <div class="field">
+      <label class="block">Articulo</label>
+      <div class="info-box">{{ articulo.descripcion }} ({{ articulo.sku }})</div>
+    </div>
+
+    <div class="field mt-3">
+      <label class="block">Existencia actual</label>
+      <div class="info-box">{{ articulo.existencia }}</div>
+      <small class="p-error" *ngIf="submitted && existenciaDisponible < 1">
+        No hay existencia disponible para crear rebanadas.
+      </small>
+    </div>
+
+    <!--<div class="field mt-3">
+      <label for="descripcionRebanada">Descripcion a vender por rebanada</label>
+      <textarea
+        id="descripcionRebanada"
+        pInputTextarea
+        rows="3"
+        [(ngModel)]="descripcionRebanada"
+      ></textarea>
+      <small class="p-error" *ngIf="submitted && !descripcionRebanada?.trim()">
+        La descripcion es requerida.
+      </small>
+    </div>-->
+
+    <div class="field mt-3">
+      <label for="costoRebanada">Costo por rebanada</label>
+      <p-inputNumber
+        inputId="costoRebanada"
+        [(ngModel)]="costoRebanada"
+        mode="currency"
+        currency="MXN"
+        locale="es-MX"
+        [min]="0"
+      ></p-inputNumber>
+      <small class="p-error" *ngIf="submitted && (!costoRebanada || costoRebanada <= 0)">
+        Ingresa un costo por rebanada mayor a 0.
+      </small>
+    </div>
+
+   <!--<div class="help-text mt-3">
+      Se descontara 1 pieza del articulo original y se creara un nuevo SKU con existencia 8 para venta por rebanadas.
+    </div>-->
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button pButton pRipple type="button" label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+    <button pButton pRipple type="button" label="Confirmar" icon="pi pi-check" [disabled]="formInvalid" (click)="crearRebanadas()"></button>
+  </ng-template>
+</p-dialog>
